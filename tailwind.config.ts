@@ -12,8 +12,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        serif: ["Playfair Display", "serif"],
+        sans: ["Montserrat", "sans-serif"],
+        serif: ["Poppins", "sans-serif"],
+        heading: ["Poppins", "sans-serif"],
+        body: ["Montserrat", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -68,6 +70,22 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontSize: {
+        "heading-h1": ["clamp(2rem, 5vw, 3.5rem)", { lineHeight: "1.1", fontWeight: "700", letterSpacing: "-0.01em" }],
+        "heading-h2": ["clamp(1.75rem, 4vw, 3rem)", { lineHeight: "1.1", fontWeight: "600", letterSpacing: "-0.01em" }],
+        "heading-h3": ["clamp(1.25rem, 3vw, 2rem)", { lineHeight: "1.2", fontWeight: "600", letterSpacing: "-0.01em" }],
+        "label": ["0.75rem", { lineHeight: "1.5", letterSpacing: "0.22em", fontWeight: "600" }],
+      },
+      letterSpacing: {
+        "label": "0.22em",
+        "heading": "-0.01em",
+        "body": "0.04em",
+      },
+      opacity: {
+        "subtle": "0.05",
+        "light": "0.1",
+        "medium": "0.15",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0", opacity: "0" },
@@ -93,6 +111,14 @@ export default {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        "float-slow": {
+          "0%, 100%": { transform: "translateY(0px)", opacity: "0.3" },
+          "50%": { transform: "translateY(-30px)", opacity: "0.5" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -101,6 +127,8 @@ export default {
         "fade-out": "fade-out 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
         "slide-in-right": "slide-in-right 0.3s ease-out",
+        "float": "float 8s ease-in-out infinite",
+        "float-slow": "float-slow 12s ease-in-out infinite",
       },
     },
   },

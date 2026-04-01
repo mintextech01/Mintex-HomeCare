@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+export type { SiteImages } from "@/config/siteImageConfig";
+import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
 
 export interface Testimonial {
   id: string;
@@ -77,6 +79,8 @@ interface AdminContextType {
   setJobPositions: React.Dispatch<React.SetStateAction<JobPosition[]>>;
   contactInfo: ContactInfo;
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
+  siteImages: SiteImages;
+  setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>;
 }
 
 const defaultTestimonials: Testimonial[] = [
@@ -138,7 +142,13 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
     const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : fallback;
+    if (!stored) return fallback;
+    const parsed = JSON.parse(stored);
+    // For plain objects, merge with fallback so newly added keys get their defaults
+    if (typeof fallback === "object" && fallback !== null && !Array.isArray(fallback)) {
+      return { ...(fallback as object), ...parsed } as T;
+    }
+    return parsed;
   } catch { return fallback; }
 }
 
@@ -151,6 +161,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [submissions, setSubmissions] = useState<ContactSubmission[]>(() => loadFromStorage("mintex_submissions", []));
   const [jobPositions, setJobPositions] = useState<JobPosition[]>(() => loadFromStorage("mintex_positions", defaultJobPositions));
   const [contactInfo, setContactInfo] = useState<ContactInfo>(() => loadFromStorage("mintex_contact_info", defaultContactInfo));
+  const [siteImages, setSiteImages] = useState<SiteImages>(() => loadFromStorage("mintex_site_images", defaultSiteImages));
 
   useEffect(() => { localStorage.setItem("mintex_testimonials", JSON.stringify(testimonials)); }, [testimonials]);
   useEffect(() => { localStorage.setItem("mintex_team", JSON.stringify(teamMembers)); }, [teamMembers]);
@@ -159,9 +170,12 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => { localStorage.setItem("mintex_submissions", JSON.stringify(submissions)); }, [submissions]);
   useEffect(() => { localStorage.setItem("mintex_positions", JSON.stringify(jobPositions)); }, [jobPositions]);
   useEffect(() => { localStorage.setItem("mintex_contact_info", JSON.stringify(contactInfo)); }, [contactInfo]);
+  useEffect(() => { localStorage.setItem("mintex_site_images", JSON.stringify(siteImages)); }, [siteImages]);
 
   const login = (username: string, password: string) => {
-    if (username === "admin" && password === "mintex2025") {
+    const validUser = import.meta.env.VITE_ADMIN_USERNAME ?? "admin";
+    const validPass = import.meta.env.VITE_ADMIN_PASSWORD ?? "mintex2025";
+    if (username === validUser && password === validPass) {
       setIsAuthenticated(true);
       localStorage.setItem("mintex_auth", "true");
       return true;
@@ -180,7 +194,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AdminContext.Provider value={{ isAuthenticated, login, logout, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, addSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo }}>
+    <AdminContext.Provider value={{ isAuthenticated, login, logout, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, addSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages }}>
       {children}
     </AdminContext.Provider>
   );

@@ -39,12 +39,12 @@ const ContactSection = () => {
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
 
   return (
-    <section id="contact" className="py-16 md:py-20 bg-hero-bg">
+    <section id="contact" className="py-16 md:py-20">
       <div className="container mx-auto px-4">
         <AnimatedSection className="text-center mb-12">
           <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">Get In Touch</p>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-3">Ready to Get Started?</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto font-sans">Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare.</p>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">Ready to Get Started?</h2>
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare.</p>
         </AnimatedSection>
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           <AnimatedSection>
@@ -74,7 +74,7 @@ const ContactSection = () => {
           <AnimatedSection delay={0.2}>
             <div className="space-y-6">
               <div>
-                <h3 className="font-serif text-xl font-semibold text-foreground mb-5">Contact Information</h3>
+                <h3 className="font-serif text-2xl font-semibold text-foreground mb-5">Contact Information</h3>
                 <ul className="space-y-4 text-muted-foreground font-sans">
                   <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5 shrink-0" /><div><a href={`tel:+1${phoneLink}`} className="text-foreground font-medium hover:text-accent transition-colors">{contactInfo.phone}</a><br /><span className="text-sm">Fax: {contactInfo.fax}</span></div></li>
                   <li className="flex items-center gap-3"><Mail className="h-5 w-5 text-primary shrink-0" /><a href={`mailto:${contactInfo.email}`} className="hover:text-accent transition-colors">{contactInfo.email}</a></li>
@@ -83,7 +83,7 @@ const ContactSection = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="font-serif text-lg font-semibold text-foreground mb-3">Follow Us</h3>
+                <h3 className="font-serif text-xl font-semibold text-foreground mb-3">Follow Us</h3>
                 <div className="flex gap-3">
                   <a href="#" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
                   <a href="#" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>

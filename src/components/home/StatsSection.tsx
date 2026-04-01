@@ -36,21 +36,20 @@ const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
 };
 
 const StatsSection = () => (
-  <section className="py-14 bg-hero-bg border-y border-border">
+  <section className="py-14 bg-[#102A43] border-y border-border">
     <div className="container mx-auto px-4">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
         {stats.map((stat, i) => (
           <AnimatedSection key={stat.label} delay={i * 0.1} className="text-center">
             <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
               <stat.icon className="h-6 w-6 text-accent" />
             </div>
             <Counter target={stat.value} suffix={stat.suffix} />
-            <p className="text-sm text-muted-foreground mt-1 font-sans">{stat.label}</p>
+            <p className="text-sm text-gray-300 mt-1 font-sans">{stat.label}</p>
           </AnimatedSection>
         ))}
       </div>
     </div>
   </section>
 );
-
 export default StatsSection;

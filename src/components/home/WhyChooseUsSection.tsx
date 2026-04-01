@@ -2,34 +2,100 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { ClipboardList, UserCheck, Clock, DollarSign, MessageCircle, ShieldCheck } from "lucide-react";
 
 const features = [
-  { icon: ClipboardList, title: "Personalized Care Plans", desc: "Every care plan is custom-tailored to match the unique needs, preferences, and goals of each client." },
-  { icon: UserCheck, title: "Certified & Compassionate Caregivers", desc: "Our caregivers are thoroughly vetted, trained, licensed, and passionate about providing exceptional care." },
-  { icon: Clock, title: "Available 24/7", desc: "We provide round-the-clock care services including holidays and weekends. Help is always just a call away." },
-  { icon: DollarSign, title: "Affordable & Transparent Pricing", desc: "No hidden fees. We work with families to create care plans that fit their budget." },
-  { icon: MessageCircle, title: "Family Communication", desc: "Regular updates and open communication so families always know how their loved ones are doing." },
-  { icon: ShieldCheck, title: "Licensed & Insured", desc: "Fully licensed by the State of New Jersey, bonded, and insured for your complete peace of mind." },
+  { icon: ClipboardList, title: "Personalized Care Plans",           desc: "Every care plan is custom-tailored to match the unique needs, preferences, and goals of each client.",                                       accent: "primary" },
+  { icon: UserCheck,    title: "Certified & Compassionate Caregivers", desc: "Our caregivers are thoroughly vetted, trained, licensed, and passionate about providing exceptional care.",                                 accent: "accent"  },
+  { icon: Clock,        title: "Available 24/7",                     desc: "We provide round-the-clock care services including holidays and weekends. Help is always just a call away.",                                   accent: "primary" },
+  { icon: DollarSign,   title: "Affordable & Transparent Pricing",   desc: "No hidden fees. We work with families to create care plans that fit their budget.",                                                            accent: "accent"  },
+  { icon: MessageCircle,title: "Family Communication",               desc: "Regular updates and open communication so families always know how their loved ones are doing.",                                                accent: "primary" },
+  { icon: ShieldCheck,  title: "Licensed & Insured",                 desc: "Fully licensed by the State of New Jersey, bonded, and insured for your complete peace of mind.",                                              accent: "accent"  },
 ];
 
 const WhyChooseUsSection = () => (
-  <section id="why-choose-us" className="py-16 md:py-20 bg-background">
+  <section id="why-choose-us" className="relative py-16 md:py-24 overflow-hidden">
+
+    {/* Subtle dot-grid background */}
+    <div
+      className="pointer-events-none absolute inset-0 opacity-[0.03]"
+      style={{
+        backgroundImage: "radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)",
+        backgroundSize: "28px 28px",
+      }}
+    />
+
+    {/* Decorative blobs */}
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute rounded-full bg-accent/6"  style={{ width: 360, height: 360, top: "-10%",  left: "-6%"  }} />
+      <div className="absolute rounded-full bg-primary/5" style={{ width: 280, height: 280, bottom: "-8%", right: "-5%" }} />
+    </div>
+
     <div className="container mx-auto px-4">
-      <AnimatedSection className="text-center mb-12">
-        <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">Why Us</p>
-        <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-3">Why Families Trust MintexCare</h2>
+
+      {/* ── Editorial header ── */}
+      <AnimatedSection className="mb-14">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.22em] mb-3">
+              Why Us
+            </p>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
+              Why Families Trust<br className="hidden md:block" /> MintexCare
+            </h2>
+          </div>
+          <p className="text-muted-foreground font-sans text-base leading-relaxed max-w-xs md:text-right">
+            Six pillars that make us the trusted choice for families across New Jersey.
+          </p>
+        </div>
+        <div className="mt-8 h-px bg-border" />
       </AnimatedSection>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      {/* ── Feature grid ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {features.map((f, i) => (
-          <AnimatedSection key={f.title} delay={i * 0.1}>
-            <div className="text-center p-6 rounded-xl hover:bg-hero-bg transition-colors duration-300">
-              <div className="h-14 w-14 rounded-full bg-hero-bg flex items-center justify-center mx-auto mb-4">
-                <f.icon className="h-7 w-7 text-primary" />
+          <AnimatedSection key={f.title} delay={i * 0.08}>
+            <div className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full overflow-hidden">
+
+              {/* Animated top accent bar */}
+              <div
+                className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ${
+                  f.accent === "accent" ? "bg-accent" : "bg-primary"
+                }`}
+              />
+
+              {/* Large background number watermark */}
+              <span className="pointer-events-none absolute -bottom-4 -right-1 text-[88px] font-serif font-bold leading-none select-none opacity-[0.04] text-foreground">
+                {i + 1}
+              </span>
+
+              {/* Icon */}
+              <div
+                className={`h-11 w-11 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-all duration-300 ${
+                  f.accent === "accent"
+                    ? "bg-accent/10 group-hover:bg-accent/15"
+                    : "bg-primary/10 group-hover:bg-primary/15"
+                }`}
+              >
+                <f.icon
+                  className={`h-5 w-5 transition-colors ${
+                    f.accent === "accent" ? "text-accent" : "text-primary"
+                  }`}
+                />
               </div>
-              <h3 className="font-serif font-semibold text-foreground mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground font-sans leading-relaxed">{f.desc}</p>
+
+              {/* Text */}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-serif font-semibold text-foreground text-lg mb-1.5 leading-snug pr-2">
+                  {f.title}
+                </h3>
+                <p className="text-base text-muted-foreground font-sans leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
+
             </div>
           </AnimatedSection>
         ))}
       </div>
+
     </div>
   </section>
 );

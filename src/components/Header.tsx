@@ -47,17 +47,27 @@ const Header = () => {
     ? "bg-background/95 backdrop-blur-md shadow-sm"
     : "bg-transparent";
 
-  const textColor = scrolled || !isHome ? "text-foreground" : "text-white";
+  const textColor = "text-foreground";
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}>
       <div className="container mx-auto px-4 flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img
-            src={logo}
-            alt="MintexCare logo"
-            className={`h-16 md:h-20 w-auto transition-all ${scrolled || !isHome ? "" : "brightness-0 invert"}`}
-          />
+        <Link to="/" className="flex items-center gap-2.5 shrink-0">
+          <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0">
+            <img
+              src={logo}
+              alt="MintexCare logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="hidden sm:flex flex-col justify-center gap-0.5">
+            <span className="text-base md:text-lg font-bold text-primary tracking-tight leading-none">
+              MintexCare
+            </span>
+            <span className="text-[10px] md:text-xs text-muted-foreground font-semibold tracking-wider uppercase">
+              Compassionate Care
+            </span>
+          </div>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
@@ -86,8 +96,8 @@ const Header = () => {
 
         <button className="lg:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
           {mobileOpen
-            ? <X className={`h-6 w-6 ${scrolled || !isHome ? "text-foreground" : "text-white"}`} />
-            : <Menu className={`h-6 w-6 ${scrolled || !isHome ? "text-foreground" : "text-white"}`} />}
+            ? <X className="h-6 w-6 text-foreground" />
+            : <Menu className="h-6 w-6 text-foreground" />}
         </button>
       </div>
 

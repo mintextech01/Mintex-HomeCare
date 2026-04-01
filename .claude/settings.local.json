@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/M/AppData/Roaming/**)",
+      "Read(//c/Users/M/AppData/Local/**)",
+      "Read(//c/Users/M/**)",
+      "Bash(npm install:*)",
+      "Read(//usr/local/**)",
+      "Read(//usr/**)",
+      "Bash(command -v node)",
+      "Bash(\"/c/Program Files/nodejs/npm\" install)",
+      "Bash(PATH=\"/c/Program Files/nodejs:$PATH\" \"/c/Program Files/nodejs/npm\" install)",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
+      "Bash(npm run:*)"
+    ]
+  }
+}

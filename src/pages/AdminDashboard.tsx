@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo } from "@/contexts/AdminContext";
+import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,14 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 
-type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "services" | "submissions" | "positions" | "contact-info";
+type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
 
 const AdminDashboard = () => {
-  const { isAuthenticated, logout, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, jobPositions, setJobPositions, contactInfo, setContactInfo } = useAdmin();
+  const { isAuthenticated, logout, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages } = useAdmin();
   const { toast } = useToast();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,6 +28,7 @@ const AdminDashboard = () => {
     { key: "testimonials" as Tab, label: "Testimonials", icon: MessageSquare },
     { key: "team" as Tab, label: "Team Members", icon: Users },
     { key: "gallery" as Tab, label: "Gallery", icon: Image },
+    { key: "site-images" as Tab, label: "Site Images", icon: Layers },
     { key: "services" as Tab, label: "Services", icon: Settings },
     { key: "positions" as Tab, label: "Job Positions", icon: Briefcase },
     { key: "contact-info" as Tab, label: "Contact Info", icon: Phone },
@@ -69,6 +71,7 @@ const AdminDashboard = () => {
           {tab === "testimonials" && <TestimonialsTab testimonials={testimonials} setTestimonials={setTestimonials} toast={toast} />}
           {tab === "team" && <TeamTab teamMembers={teamMembers} setTeamMembers={setTeamMembers} toast={toast} />}
           {tab === "gallery" && <GalleryTab gallery={gallery} setGallery={setGallery} toast={toast} />}
+          {tab === "site-images" && <SiteImagesTab siteImages={siteImages} setSiteImages={setSiteImages} teamMembers={teamMembers} setTeamMembers={setTeamMembers} toast={toast} />}
           {tab === "services" && <ServicesTab services={services} setServices={setServices} toast={toast} />}
           {tab === "positions" && <PositionsTab positions={jobPositions} setPositions={setJobPositions} toast={toast} />}
           {tab === "contact-info" && <ContactInfoTab contactInfo={contactInfo} setContactInfo={setContactInfo} toast={toast} />}
@@ -178,16 +181,35 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
 /* ── Gallery ── */
 const GalleryTab = ({ gallery, setGallery, toast }: any) => {
   const [url, setUrl] = useState(""); const [caption, setCaption] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const galleryFileRef = useRef<HTMLInputElement>(null);
   const add = () => { if (!url) return; setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url, caption }]); setUrl(""); setCaption(""); toast({ title: "Added" }); };
   const remove = (id: string) => { setGallery((prev: any[]) => prev.filter((g: any) => g.id !== id)); toast({ title: "Removed" }); };
+  const handleGalleryFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url: dataUrl, caption }]);
+      setCaption(""); toast({ title: "Image uploaded and added" });
+    } catch { toast({ title: "Upload failed", variant: "destructive" }); }
+    finally { setUploading(false); if (galleryFileRef.current) galleryFileRef.current.value = ""; }
+  };
 
   return (
     <div>
       <h1 className="text-2xl font-serif font-bold text-foreground mb-6">Gallery</h1>
       <Card className="mb-6 shadow-sm"><CardContent className="pt-6 space-y-3">
-        <Input placeholder="Image URL" value={url} onChange={e => setUrl(e.target.value)} className="font-sans" />
-        <Input placeholder="Caption" value={caption} onChange={e => setCaption(e.target.value)} className="font-sans" />
-        <Button onClick={add} className="font-sans"><Plus className="h-4 w-4 mr-1" /> Add Image</Button>
+        <Input placeholder="Image URL (or upload below)" value={url} onChange={e => setUrl(e.target.value)} className="font-sans" />
+        <Input placeholder="Caption (optional)" value={caption} onChange={e => setCaption(e.target.value)} className="font-sans" />
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={add} className="font-sans"><Plus className="h-4 w-4 mr-1" /> Add by URL</Button>
+          <label className={`flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background font-sans text-sm cursor-pointer hover:bg-accent/10 transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+            <Upload className="h-4 w-4" /> {uploading ? "Processing…" : "Upload from PC"}
+            <input ref={galleryFileRef} type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleGalleryFile} />
+          </label>
+        </div>
       </CardContent></Card>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {gallery.map((g: any) => (
@@ -331,7 +353,8 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
     toast({ title: "Contact info updated" });
   };
 
-  const mapSrc = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(form.address)}`;
+  const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
+  const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${mapsKey}&q=${encodeURIComponent(form.address)}`;
 
   return (
     <div>
@@ -408,4 +431,306 @@ const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
   );
 };
 
+
+/* ── Image upload utility ── */
+const fileToDataUrl = (file: File, maxWidth = 1400, quality = 0.85): Promise<string> =>
+  new Promise((resolve, reject) => {
+    // SVG: keep as-is
+    if (file.type === "image/svg+xml") {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+      return;
+    }
+    // Raster images: resize + compress via canvas
+    const img = new window.Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const canvas = document.createElement("canvas");
+      let { width, height } = img;
+      if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
+      canvas.width = width; canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error("Failed to load image")); };
+    img.src = objectUrl;
+  });
+
+/* ── Site Images ── */
+
+const ImageField = ({
+  imgKey, label, description, siteImages, setSiteImages, toast,
+}: {
+  imgKey: SiteImageKey; label: string; description: string;
+  siteImages: SiteImages; setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>; toast: any;
+}) => {
+  const [editing, setEditing] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const current = siteImages[imgKey];
+  const [draft, setDraft] = useState(current);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const save = () => {
+    if (!draft.trim()) return;
+    setSiteImages(prev => ({ ...prev, [imgKey]: draft.trim() }));
+    setEditing(false);
+    toast({ title: "Image updated", description: label + " is now live on the website." });
+  };
+  const cancel = () => { setDraft(current); setEditing(false); };
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setDraft(dataUrl);
+    } catch {
+      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const previewSrc = editing ? (draft || current) : current;
+  const isUploaded = previewSrc.startsWith("data:");
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
+      <div className="shrink-0">
+        <img
+          src={previewSrc}
+          alt={label}
+          className="w-full sm:w-36 h-24 object-cover rounded-xl border border-border bg-muted"
+          onError={e => { (e.target as HTMLImageElement).src = "https://placehold.co/144x96?text=No+Image"; }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-sans font-semibold text-foreground text-sm">{label}</p>
+        <p className="font-sans text-xs text-muted-foreground mb-2 leading-snug">{description}</p>
+        {editing ? (
+          <div className="space-y-2">
+            {/* URL input */}
+            <Input
+              value={draft.startsWith("data:") ? "" : draft}
+              onChange={e => setDraft(e.target.value)}
+              placeholder="Paste image URL here…"
+              className="font-sans text-sm"
+            />
+            {/* Divider */}
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[11px] font-sans">or upload from PC</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+            {/* Upload button */}
+            <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
+              ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
+              <Upload className="h-4 w-4 shrink-0" />
+              {uploading ? "Processing…" : draft.startsWith("data:") ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={uploading}
+                onChange={handleFile}
+              />
+            </label>
+            {draft.startsWith("data:") && (
+              <p className="text-[11px] text-accent font-sans">✓ File loaded — click Save to apply</p>
+            )}
+            <div className="flex gap-2 pt-1">
+              <Button size="sm" onClick={save} disabled={uploading} className="font-sans">Save</Button>
+              <Button size="sm" variant="outline" onClick={cancel} className="font-sans">Cancel</Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <p className="font-sans text-xs text-muted-foreground truncate flex-1">
+              {isUploaded ? "📁 Uploaded file" : current}
+            </p>
+            <Button size="sm" variant="outline" onClick={() => { setDraft(current); setEditing(true); }} className="font-sans shrink-0">
+              <Edit className="h-3 w-3 mr-1" /> Change
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+
+/* ── Team Member Photo Field (used inside SiteImagesTab) ── */
+const TeamMemberPhotoField = ({
+  member, setTeamMembers, toast,
+}: {
+  member: any;
+  setTeamMembers: React.Dispatch<React.SetStateAction<any[]>>;
+  toast: any;
+}) => {
+  const [editing, setEditing] = React.useState(false);
+  const [uploading, setUploading] = React.useState(false);
+  const [draft, setDraft] = React.useState(member.photoUrl);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const save = () => {
+    if (!draft.trim()) return;
+    setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === member.id ? { ...m, photoUrl: draft.trim() } : m));
+    setEditing(false);
+    toast({ title: "Photo updated", description: member.name + "'s photo is now live." });
+  };
+  const cancel = () => { setDraft(member.photoUrl); setEditing(false); };
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setDraft(dataUrl);
+    } catch {
+      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const previewSrc = editing ? (draft || member.photoUrl) : member.photoUrl;
+  const isUploaded = previewSrc.startsWith("data:");
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
+      <div className="shrink-0">
+        <img
+          src={previewSrc}
+          alt={member.name}
+          className="w-full sm:w-36 h-24 object-cover rounded-xl border border-border bg-muted"
+          onError={e => { (e.target as HTMLImageElement).src = "https://placehold.co/144x96?text=No+Photo"; }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-sans font-semibold text-foreground text-sm">{member.name}</p>
+        <p className="font-sans text-xs text-muted-foreground mb-2 leading-snug">{member.role} — photo shown in the Meet Our Team section</p>
+        {editing ? (
+          <div className="space-y-2">
+            <Input
+              value={draft.startsWith("data:") ? "" : draft}
+              onChange={e => setDraft(e.target.value)}
+              placeholder="Paste photo URL here…"
+              className="font-sans text-sm"
+            />
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[11px] font-sans">or upload from PC</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+            <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
+              ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
+              <Upload className="h-4 w-4 shrink-0" />
+              {uploading ? "Processing…" : draft.startsWith("data:") ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={uploading}
+                onChange={handleFile}
+              />
+            </label>
+            {draft.startsWith("data:") && (
+              <p className="text-[11px] text-accent font-sans">✓ File loaded — click Save to apply</p>
+            )}
+            <div className="flex gap-2 pt-1">
+              <Button size="sm" onClick={save} disabled={uploading} className="font-sans">Save</Button>
+              <Button size="sm" variant="outline" onClick={cancel} className="font-sans">Cancel</Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <p className="font-sans text-xs text-muted-foreground truncate flex-1">
+              {isUploaded ? "📁 Uploaded file" : member.photoUrl}
+            </p>
+            <Button size="sm" variant="outline" onClick={() => { setDraft(member.photoUrl); setEditing(true); }} className="font-sans shrink-0">
+              <Edit className="h-3 w-3 mr-1" /> Change
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers, toast }: {
+  siteImages: SiteImages; setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>;
+  teamMembers: any[]; setTeamMembers: React.Dispatch<React.SetStateAction<any[]>>; toast: any;
+}) => (
+  <div>
+    <div className="flex items-center justify-between mb-2">
+      <h1 className="text-2xl font-serif font-bold text-foreground">Site Images</h1>
+      <a href="/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-sans text-accent hover:underline">
+        <Eye className="h-4 w-4" /> View Website
+      </a>
+    </div>
+    <p className="text-sm text-muted-foreground font-sans mb-6">
+      Edit any image across the website — organized by page and section. Changes go live instantly.
+    </p>
+    <div className="space-y-5">
+      {SITE_IMAGE_GROUPS.map(group => (
+        <Card key={group.page} className="shadow-sm">
+          <CardHeader className="pb-1">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-serif">{group.page}</CardTitle>
+              <a href={group.pageUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
+                <Eye className="h-3 w-3" /> View section
+              </a>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {group.fields.map(f => (
+              <ImageField
+                key={f.key}
+                imgKey={f.key}
+                label={f.label}
+                description={f.description}
+                siteImages={siteImages}
+                setSiteImages={setSiteImages}
+                toast={toast}
+              />
+            ))}
+          </CardContent>
+        </Card>
+      ))}
+    {/* Team member photos section */}
+      {teamMembers.length > 0 ? (
+        <Card className="shadow-sm">
+          <CardHeader className="pb-1">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-serif">About Us Page — Meet Our Team</CardTitle>
+              <a href="/about" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
+                <Eye className="h-3 w-3" /> View section
+              </a>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {teamMembers.map((m: any) => (
+              <TeamMemberPhotoField key={m.id} member={m} setTeamMembers={setTeamMembers} toast={toast} />
+            ))}
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="shadow-sm">
+          <CardContent className="pt-6 pb-5 text-center text-sm text-muted-foreground font-sans">
+            No team members yet. <button className="text-accent underline" onClick={() => {}}>Add them in the Team Members tab</button> to manage their photos here.
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  </div>
+);
 export default AdminDashboard;
