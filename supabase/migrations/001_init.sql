@@ -83,6 +83,14 @@ ALTER TABLE job_positions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "anon_all_testimonials" ON testimonials;
+DROP POLICY IF EXISTS "anon_all_team_members" ON team_members;
+DROP POLICY IF EXISTS "anon_all_gallery" ON gallery;
+DROP POLICY IF EXISTS "anon_all_services" ON services;
+DROP POLICY IF EXISTS "anon_all_job_positions" ON job_positions;
+DROP POLICY IF EXISTS "anon_all_contact_submissions" ON contact_submissions;
+DROP POLICY IF EXISTS "anon_all_site_settings" ON site_settings;
+
 CREATE POLICY "anon_all_testimonials" ON testimonials FOR ALL TO anon USING (true) WITH CHECK (true);
 CREATE POLICY "anon_all_team_members" ON team_members FOR ALL TO anon USING (true) WITH CHECK (true);
 CREATE POLICY "anon_all_gallery" ON gallery FOR ALL TO anon USING (true) WITH CHECK (true);
@@ -98,6 +106,10 @@ CREATE POLICY "anon_all_site_settings" ON site_settings FOR ALL TO anon USING (t
 INSERT INTO storage.buckets (id, name, public)
   VALUES ('mintex-images', 'mintex-images', true)
   ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "storage_public_select" ON storage.objects;
+DROP POLICY IF EXISTS "storage_public_insert" ON storage.objects;
+DROP POLICY IF EXISTS "storage_public_delete" ON storage.objects;
 
 CREATE POLICY "storage_public_select" ON storage.objects FOR SELECT TO anon USING (bucket_id = 'mintex-images');
 CREATE POLICY "storage_public_insert" ON storage.objects FOR INSERT TO anon WITH CHECK (bucket_id = 'mintex-images');
