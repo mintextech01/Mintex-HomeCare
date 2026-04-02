@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export interface Testimonial {
   id: string;
@@ -64,6 +65,7 @@ interface AdminContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => boolean;
   logout: () => void;
+  isLoading: boolean;
   testimonials: Testimonial[];
   setTestimonials: React.Dispatch<React.SetStateAction<Testimonial[]>>;
   teamMembers: TeamMember[];
@@ -82,6 +84,8 @@ interface AdminContextType {
   siteImages: SiteImages;
   setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>;
 }
+
+// ── Default data ──────────────────────────────────────────────────────────────
 
 const defaultTestimonials: Testimonial[] = [
   { id: "1", name: "Sarah M.", text: "MintexCare has been a blessing for our family. Their caregivers are incredibly professional and genuinely caring. Mom looks forward to their visits every day.", rating: 5, location: "Edison, NJ" },
@@ -137,14 +141,65 @@ const defaultServices: ServiceItem[] = [
   { id: "n6", title: "Occupational Therapy", description: "Helping patients relearn daily tasks and regain independence in everyday activities.", icon: "Hand", category: "nursing" },
 ];
 
-const AdminContext = createContext<AdminContextType | undefined>(undefined);
+// ── Row mappers (DB snake_case ↔ TS camelCase) ────────────────────────────────
+
+const fromTestimonialRow = (r: any): Testimonial => ({ id: r.id, name: r.name, text: r.text, rating: r.rating, location: r.location });
+const toTestimonialRow = (t: Testimonial) => ({ id: t.id, name: t.name, text: t.text, rating: t.rating, location: t.location });
+
+const fromTeamMemberRow = (r: any): TeamMember => ({ id: r.id, name: r.name, role: r.role, photoUrl: r.photo_url, bio: r.bio });
+const toTeamMemberRow = (m: TeamMember) => ({ id: m.id, name: m.name, role: m.role, photo_url: m.photoUrl, bio: m.bio });
+
+const fromGalleryRow = (r: any): GalleryImage => ({ id: r.id, url: r.url, caption: r.caption });
+const toGalleryRow = (g: GalleryImage) => ({ id: g.id, url: g.url, caption: g.caption });
+
+const fromServiceRow = (r: any): ServiceItem => ({ id: r.id, title: r.title, description: r.description, icon: r.icon, category: r.category });
+const toServiceRow = (s: ServiceItem) => ({ id: s.id, title: s.title, description: s.description, icon: s.icon, category: s.category });
+
+const fromPositionRow = (r: any): JobPosition => ({ id: r.id, title: r.title, type: r.type, description: r.description, requirements: r.requirements, active: r.active });
+const toPositionRow = (p: JobPosition) => ({ id: p.id, title: p.title, type: p.type, description: p.description, requirements: p.requirements, active: p.active });
+
+const fromSubmissionRow = (r: any): ContactSubmission => ({ id: r.id, name: r.name, email: r.email, phone: r.phone, service: r.service, message: r.message, date: r.date, read: r.read });
+const toSubmissionRow = (s: ContactSubmission) => ({ id: s.id, name: s.name, email: s.email, phone: s.phone, service: s.service, message: s.message, date: s.date, read: s.read });
+
+// ── Supabase sync helpers ─────────────────────────────────────────────────────
+
+async function syncTable<T extends { id: string }>(
+  table: string,
+  items: T[],
+  toRow: (item: T) => Record<string, unknown>
+) {
+  try {
+    const { data: existing } = await supabase.from(table).select("id");
+    const existingIds = (existing ?? []).map((e: any) => e.id as string);
+    const currentIds = items.map(i => i.id);
+    const toDelete = existingIds.filter(id => !currentIds.includes(id));
+
+    if (items.length > 0) {
+      await supabase.from(table).upsert(items.map(toRow), { onConflict: "id" });
+    }
+    if (toDelete.length > 0) {
+      await supabase.from(table).delete().in("id", toDelete);
+    }
+  } catch (err) {
+    console.error(`Failed to sync ${table}:`, err);
+  }
+}
+
+async function saveSetting(key: string, value: unknown) {
+  try {
+    await supabase.from("site_settings").upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" });
+  } catch (err) {
+    console.error(`Failed to save setting ${key}:`, err);
+  }
+}
+
+// ── Fallback: localStorage (used when Supabase is not configured) ─────────────
 
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
     const stored = localStorage.getItem(key);
     if (!stored) return fallback;
     const parsed = JSON.parse(stored);
-    // For plain objects, merge with fallback so newly added keys get their defaults
     if (typeof fallback === "object" && fallback !== null && !Array.isArray(fallback)) {
       return { ...(fallback as object), ...parsed } as T;
     }
@@ -152,25 +207,184 @@ function loadFromStorage<T>(key: string, fallback: T): T {
   } catch { return fallback; }
 }
 
+// ── Context ───────────────────────────────────────────────────────────────────
+
+const AdminContext = createContext<AdminContextType | undefined>(undefined);
+
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem("mintex_auth") === "true");
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(() => loadFromStorage("mintex_testimonials", defaultTestimonials));
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(() => loadFromStorage("mintex_team", defaultTeamMembers));
-  const [gallery, setGallery] = useState<GalleryImage[]>(() => loadFromStorage("mintex_gallery", []));
-  const [services, setServices] = useState<ServiceItem[]>(() => loadFromStorage("mintex_services", defaultServices));
-  const [submissions, setSubmissions] = useState<ContactSubmission[]>(() => loadFromStorage("mintex_submissions", []));
-  const [jobPositions, setJobPositions] = useState<JobPosition[]>(() => loadFromStorage("mintex_positions", defaultJobPositions));
-  const [contactInfo, setContactInfo] = useState<ContactInfo>(() => loadFromStorage("mintex_contact_info", defaultContactInfo));
-  const [siteImages, setSiteImages] = useState<SiteImages>(() => loadFromStorage("mintex_site_images", defaultSiteImages));
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => { localStorage.setItem("mintex_testimonials", JSON.stringify(testimonials)); }, [testimonials]);
-  useEffect(() => { localStorage.setItem("mintex_team", JSON.stringify(teamMembers)); }, [teamMembers]);
-  useEffect(() => { localStorage.setItem("mintex_gallery", JSON.stringify(gallery)); }, [gallery]);
-  useEffect(() => { localStorage.setItem("mintex_services", JSON.stringify(services)); }, [services]);
-  useEffect(() => { localStorage.setItem("mintex_submissions", JSON.stringify(submissions)); }, [submissions]);
-  useEffect(() => { localStorage.setItem("mintex_positions", JSON.stringify(jobPositions)); }, [jobPositions]);
-  useEffect(() => { localStorage.setItem("mintex_contact_info", JSON.stringify(contactInfo)); }, [contactInfo]);
-  useEffect(() => { localStorage.setItem("mintex_site_images", JSON.stringify(siteImages)); }, [siteImages]);
+  const [testimonials, setTestimonialsState] = useState<Testimonial[]>([]);
+  const [teamMembers, setTeamMembersState] = useState<TeamMember[]>([]);
+  const [gallery, setGalleryState] = useState<GalleryImage[]>([]);
+  const [services, setServicesState] = useState<ServiceItem[]>([]);
+  const [submissions, setSubmissionsState] = useState<ContactSubmission[]>([]);
+  const [jobPositions, setJobPositionsState] = useState<JobPosition[]>([]);
+  const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
+  const [siteImages, setSiteImagesState] = useState<SiteImages>(defaultSiteImages);
+
+  // Load all data from Supabase (or localStorage fallback) on mount
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      // Fallback to localStorage for local dev without Supabase
+      setTestimonialsState(loadFromStorage("mintex_testimonials", defaultTestimonials));
+      setTeamMembersState(loadFromStorage("mintex_team", defaultTeamMembers));
+      setGalleryState(loadFromStorage("mintex_gallery", []));
+      setServicesState(loadFromStorage("mintex_services", defaultServices));
+      setSubmissionsState(loadFromStorage("mintex_submissions", []));
+      setJobPositionsState(loadFromStorage("mintex_positions", defaultJobPositions));
+      setContactInfoState(loadFromStorage("mintex_contact_info", defaultContactInfo));
+      setSiteImagesState(loadFromStorage("mintex_site_images", defaultSiteImages));
+      setIsLoading(false);
+      return;
+    }
+
+    const loadAll = async () => {
+      try {
+        const [
+          { data: tData },
+          { data: tmData },
+          { data: gData },
+          { data: sData },
+          { data: subData },
+          { data: pData },
+          { data: settingsData },
+        ] = await Promise.all([
+          supabase.from("testimonials").select("*").order("created_at"),
+          supabase.from("team_members").select("*").order("created_at"),
+          supabase.from("gallery").select("*").order("created_at"),
+          supabase.from("services").select("*").order("created_at"),
+          supabase.from("contact_submissions").select("*").order("date", { ascending: false }),
+          supabase.from("job_positions").select("*").order("created_at"),
+          supabase.from("site_settings").select("*"),
+        ]);
+
+        setTestimonialsState(tData && tData.length > 0 ? tData.map(fromTestimonialRow) : defaultTestimonials);
+        setTeamMembersState(tmData && tmData.length > 0 ? tmData.map(fromTeamMemberRow) : defaultTeamMembers);
+        setGalleryState(gData ? gData.map(fromGalleryRow) : []);
+        setServicesState(sData && sData.length > 0 ? sData.map(fromServiceRow) : defaultServices);
+        setSubmissionsState(subData ? subData.map(fromSubmissionRow) : []);
+        setJobPositionsState(pData && pData.length > 0 ? pData.map(fromPositionRow) : defaultJobPositions);
+
+        const contactSetting = settingsData?.find((s: any) => s.key === "contact_info");
+        setContactInfoState(contactSetting ? (contactSetting.value as ContactInfo) : defaultContactInfo);
+
+        const imagesSetting = settingsData?.find((s: any) => s.key === "site_images");
+        setSiteImagesState(imagesSetting ? { ...defaultSiteImages, ...(imagesSetting.value as SiteImages) } : defaultSiteImages);
+      } catch (err) {
+        console.error("Failed to load from Supabase, using defaults:", err);
+        setTestimonialsState(defaultTestimonials);
+        setTeamMembersState(defaultTeamMembers);
+        setServicesState(defaultServices);
+        setJobPositionsState(defaultJobPositions);
+        setContactInfoState(defaultContactInfo);
+        setSiteImagesState(defaultSiteImages);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAll();
+  }, []);
+
+  // ── Wrapped setters: update React state AND sync to Supabase ────────────────
+
+  const setTestimonials = useCallback((action: React.SetStateAction<Testimonial[]>) => {
+    setTestimonialsState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        syncTable("testimonials", next, toTestimonialRow);
+      } else {
+        localStorage.setItem("mintex_testimonials", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setTeamMembers = useCallback((action: React.SetStateAction<TeamMember[]>) => {
+    setTeamMembersState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        syncTable("team_members", next, toTeamMemberRow);
+      } else {
+        localStorage.setItem("mintex_team", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setGallery = useCallback((action: React.SetStateAction<GalleryImage[]>) => {
+    setGalleryState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        syncTable("gallery", next, toGalleryRow);
+      } else {
+        localStorage.setItem("mintex_gallery", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setServices = useCallback((action: React.SetStateAction<ServiceItem[]>) => {
+    setServicesState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        syncTable("services", next, toServiceRow);
+      } else {
+        localStorage.setItem("mintex_services", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setSubmissions = useCallback((action: React.SetStateAction<ContactSubmission[]>) => {
+    setSubmissionsState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        syncTable("contact_submissions", next, toSubmissionRow);
+      } else {
+        localStorage.setItem("mintex_submissions", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setJobPositions = useCallback((action: React.SetStateAction<JobPosition[]>) => {
+    setJobPositionsState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        syncTable("job_positions", next, toPositionRow);
+      } else {
+        localStorage.setItem("mintex_positions", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setContactInfo = useCallback((action: React.SetStateAction<ContactInfo>) => {
+    setContactInfoState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        saveSetting("contact_info", next);
+      } else {
+        localStorage.setItem("mintex_contact_info", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
+
+  const setSiteImages = useCallback((action: React.SetStateAction<SiteImages>) => {
+    setSiteImagesState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      if (isSupabaseConfigured) {
+        saveSetting("site_images", next);
+      } else {
+        localStorage.setItem("mintex_site_images", JSON.stringify(next));
+      }
+      return next;
+    });
+  }, []);
 
   const login = (username: string, password: string) => {
     const validUser = import.meta.env.VITE_ADMIN_USERNAME ?? "admin";
@@ -190,11 +404,29 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   const addSubmission = (sub: Omit<ContactSubmission, "id" | "date" | "read">) => {
     const newSub: ContactSubmission = { ...sub, id: Date.now().toString(), date: new Date().toISOString(), read: false };
-    setSubmissions(prev => [newSub, ...prev]);
+    setSubmissionsState(prev => [newSub, ...prev]);
+    if (isSupabaseConfigured) {
+      supabase.from("contact_submissions").insert(toSubmissionRow(newSub)).then(({ error }) => { if (error) console.error(error); });
+    } else {
+      setSubmissionsState(prev => {
+        localStorage.setItem("mintex_submissions", JSON.stringify(prev));
+        return prev;
+      });
+    }
   };
 
   return (
-    <AdminContext.Provider value={{ isAuthenticated, login, logout, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, addSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages }}>
+    <AdminContext.Provider value={{
+      isAuthenticated, login, logout, isLoading,
+      testimonials, setTestimonials,
+      teamMembers, setTeamMembers,
+      gallery, setGallery,
+      services, setServices,
+      submissions, setSubmissions, addSubmission,
+      jobPositions, setJobPositions,
+      contactInfo, setContactInfo,
+      siteImages, setSiteImages,
+    }}>
       {children}
     </AdminContext.Provider>
   );

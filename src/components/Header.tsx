@@ -112,7 +112,7 @@ const Header = () => {
               </Link>
             ))}
             <a href="tel:+17322685112" className="flex items-center gap-2 text-sm font-medium text-foreground py-3 border-b border-border">
-              <Phone className="h-4 w-4" /> (732) 268-5113
+              <Phone className="h-4 w-4" /> (732) 268-5112
             </a>
             <Link to="/contact" onClick={() => setMobileOpen(false)} className="mt-4">
               <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full">Request Care</Button>

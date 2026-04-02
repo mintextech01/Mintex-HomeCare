@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo } from "@/contexts/AdminContext";
+import { uploadImageToStorage, isSupabaseConfigured } from "@/lib/supabase";
 import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,12 +17,20 @@ import { iconNames } from "@/lib/iconMap";
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
 
 const AdminDashboard = () => {
-  const { isAuthenticated, logout, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages } = useAdmin();
+  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages } = useAdmin();
   const { toast } = useToast();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!isAuthenticated) return <Navigate to="/admin" replace />;
+  if (isLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-hero-bg">
+      <div className="text-center space-y-3">
+        <div className="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-muted-foreground font-sans text-sm">Loading admin panel…</p>
+      </div>
+    </div>
+  );
 
   const tabs = [
     { key: "dashboard" as Tab, label: "Dashboard", icon: LayoutDashboard },
@@ -190,8 +199,13 @@ const GalleryTab = ({ gallery, setGallery, toast }: any) => {
     if (!file) return;
     setUploading(true);
     try {
-      const dataUrl = await fileToDataUrl(file);
-      setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url: dataUrl, caption }]);
+      let imageUrl: string;
+      if (isSupabaseConfigured) {
+        imageUrl = await uploadImageToStorage(file);
+      } else {
+        imageUrl = await fileToDataUrl(file);
+      }
+      setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url: imageUrl, caption }]);
       setCaption(""); toast({ title: "Image uploaded and added" });
     } catch { toast({ title: "Upload failed", variant: "destructive" }); }
     finally { setUploading(false); if (galleryFileRef.current) galleryFileRef.current.value = ""; }
@@ -486,10 +500,15 @@ const ImageField = ({
     if (!file) return;
     setUploading(true);
     try {
-      const dataUrl = await fileToDataUrl(file);
-      setDraft(dataUrl);
+      let imageUrl: string;
+      if (isSupabaseConfigured) {
+        imageUrl = await uploadImageToStorage(file);
+      } else {
+        imageUrl = await fileToDataUrl(file);
+      }
+      setDraft(imageUrl);
     } catch {
-      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -497,7 +516,7 @@ const ImageField = ({
   };
 
   const previewSrc = editing ? (draft || current) : current;
-  const isUploaded = previewSrc.startsWith("data:");
+  const isUploaded = previewSrc.startsWith("data:") || (isSupabaseConfigured && previewSrc !== current && previewSrc.startsWith("http"));
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
@@ -591,10 +610,15 @@ const TeamMemberPhotoField = ({
     if (!file) return;
     setUploading(true);
     try {
-      const dataUrl = await fileToDataUrl(file);
-      setDraft(dataUrl);
+      let imageUrl: string;
+      if (isSupabaseConfigured) {
+        imageUrl = await uploadImageToStorage(file);
+      } else {
+        imageUrl = await fileToDataUrl(file);
+      }
+      setDraft(imageUrl);
     } catch {
-      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -602,7 +626,7 @@ const TeamMemberPhotoField = ({
   };
 
   const previewSrc = editing ? (draft || member.photoUrl) : member.photoUrl;
-  const isUploaded = previewSrc.startsWith("data:");
+  const isUploaded = previewSrc.startsWith("data:") || (isSupabaseConfigured && previewSrc !== member.photoUrl && previewSrc.startsWith("http"));
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
