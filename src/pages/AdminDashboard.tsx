@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo } from "@/contexts/AdminContext";
-import { uploadImageToStorage, isSupabaseConfigured } from "@/lib/supabase";
 import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -199,13 +198,8 @@ const GalleryTab = ({ gallery, setGallery, toast }: any) => {
     if (!file) return;
     setUploading(true);
     try {
-      let imageUrl: string;
-      if (isSupabaseConfigured) {
-        imageUrl = await uploadImageToStorage(file);
-      } else {
-        imageUrl = await fileToDataUrl(file);
-      }
-      setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url: imageUrl, caption }]);
+      const dataUrl = await fileToDataUrl(file);
+      setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url: dataUrl, caption }]);
       setCaption(""); toast({ title: "Image uploaded and added" });
     } catch { toast({ title: "Upload failed", variant: "destructive" }); }
     finally { setUploading(false); if (galleryFileRef.current) galleryFileRef.current.value = ""; }
@@ -500,15 +494,10 @@ const ImageField = ({
     if (!file) return;
     setUploading(true);
     try {
-      let imageUrl: string;
-      if (isSupabaseConfigured) {
-        imageUrl = await uploadImageToStorage(file);
-      } else {
-        imageUrl = await fileToDataUrl(file);
-      }
-      setDraft(imageUrl);
+      const dataUrl = await fileToDataUrl(file);
+      setDraft(dataUrl);
     } catch {
-      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -516,7 +505,7 @@ const ImageField = ({
   };
 
   const previewSrc = editing ? (draft || current) : current;
-  const isUploaded = previewSrc.startsWith("data:") || (isSupabaseConfigured && previewSrc !== current && previewSrc.startsWith("http"));
+  const isUploaded = previewSrc.startsWith("data:");
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
@@ -610,15 +599,10 @@ const TeamMemberPhotoField = ({
     if (!file) return;
     setUploading(true);
     try {
-      let imageUrl: string;
-      if (isSupabaseConfigured) {
-        imageUrl = await uploadImageToStorage(file);
-      } else {
-        imageUrl = await fileToDataUrl(file);
-      }
-      setDraft(imageUrl);
+      const dataUrl = await fileToDataUrl(file);
+      setDraft(dataUrl);
     } catch {
-      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -626,7 +610,7 @@ const TeamMemberPhotoField = ({
   };
 
   const previewSrc = editing ? (draft || member.photoUrl) : member.photoUrl;
-  const isUploaded = previewSrc.startsWith("data:") || (isSupabaseConfigured && previewSrc !== member.photoUrl && previewSrc.startsWith("http"));
+  const isUploaded = previewSrc.startsWith("data:");
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
