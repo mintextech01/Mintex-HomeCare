@@ -32,9 +32,9 @@ const TestimonialsSection = () => {
           {/* ── LEFT: label + heading + stats + nav ── */}
           <AnimatedSection from="left">
 
-            <p className="text-xs font-semibold text-accent uppercase tracking-[0.22em] mb-3 font-sans">
+            <h1 className="text-xs font-bold text-accent uppercase tracking-[0.22em] mb-3 font-sans">
               Testimonials
-            </p>
+            </h1>
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-snug mb-3">
               What Families Say About Us
             </h2>
