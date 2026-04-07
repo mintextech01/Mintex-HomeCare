@@ -171,7 +171,7 @@ const Services = () => {
         <section className="py-10 bg-white">
           <div className="container mx-auto px-6">
             <div className="relative rounded-3xl overflow-hidden min-h-[340px] md:min-h-[420px]"
-              style={{ background: "linear-gradient(135deg, #2a66b0 0%, #0be3e3 100%)" }}>
+              style={{ background: "linear-gradient(135deg, #2a66b0 0%, #0891b2 100%)" }}>
               <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full bg-white/10" />
               <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-white/10" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-white/5" />
@@ -325,7 +325,7 @@ const Services = () => {
           <div className="container mx-auto px-6">
             <AnimatedSection>
               <div className="relative rounded-3xl overflow-hidden px-10 py-16 md:px-16 text-center"
-                style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 50%, #0be3e3 100%)" }}>
+                style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 50%, #0891b2 100%)" }}>
                 <div className="pointer-events-none absolute top-0 right-0 w-64 h-64 rounded-full bg-white/10 -translate-y-1/2 translate-x-1/4" />
                 <div className="pointer-events-none absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/10 translate-y-1/2 -translate-x-1/4" />
                 <div className="relative z-10">

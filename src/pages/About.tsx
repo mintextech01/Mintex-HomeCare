@@ -486,7 +486,7 @@ const About = () => {
           <div className="container mx-auto px-6">
             <AnimatedSection>
               <div className="relative rounded-3xl overflow-hidden px-6 py-12 sm:px-10 sm:py-16 md:px-16"
-                style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0be3e3 100%)" }}>
+                style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)" }}>
                 <div className="pointer-events-none absolute top-0 right-0 w-72 h-72 rounded-full bg-white/10 -translate-y-1/2 translate-x-1/4" />
                 <div className="pointer-events-none absolute bottom-0 left-0 w-52 h-52 rounded-full bg-white/8 translate-y-1/2 -translate-x-1/4" />
 

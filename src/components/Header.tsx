@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/Homecare.svg";
+import logo from "@/assets/Artboard 133 copy (1).svg";
+
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -52,15 +53,14 @@ const Header = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBg}`}>
       <div className="container mx-auto px-4 flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center">
-  <img
-    src={logo}
-    alt="MintexCare"
-    /* Increased to h-20 (mobile) and h-28 (desktop) */
-    /* Added scale-110 to push the visual weight further */
-    className="h-20 md:h-28 w-auto object-contain transform scale-110 origin-left" 
-  />
-</Link>
+        <Link title="/" className="flex items-center">
+        <img
+           src={logo}
+          alt="MintexCare"
+           /* Increased from h-20/28 to h-24/32 and scale to 125 */
+           className="h-24 md:h-32 w-auto object-contain transform scale-125 origin-left" 
+         />
+      </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map(link => (

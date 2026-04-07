@@ -23,8 +23,8 @@
     --muted: 180 30% 96%;
     --muted-foreground: 214 20% 46%;
 
-    /* #0be3e3 — brand cyan */
-    --accent: 180 91% 47%;
+    /* #0891b2 — brand cyan */
+    --accent: 192 91% 37%;
     --accent-foreground: 214 66% 12%;
 
     --destructive: 0 84% 60%;
@@ -64,7 +64,7 @@
     --secondary-foreground: 180 20% 95%;
     --muted: 214 30% 18%;
     --muted-foreground: 180 20% 65%;
-    --accent: 180 91% 47%;
+    --accent: 192 91% 37%;
     --accent-foreground: 214 66% 10%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 180 20% 95%;
