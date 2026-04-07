@@ -1,0 +1,1 @@
+const fs = require("fs"); const svg = require("fs").readFileSync("c:/Users/M/Downloads/lovable-export-29907502/src/assets/mintexcare-logo-backup.svg","utf8"); console.log(svg.substring(0,100));

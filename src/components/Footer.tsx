@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
-import logo from "@/assets/mintexcare-logo.svg";
+import logo from "@/assets/Homecare.svg";
 
 const Footer = () => {
   const { contactInfo } = useAdmin();
@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-14 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <img src={logo} alt="MintexCare" className="h-16 w-auto brightness-0 invert mb-3" />
+            <img src={logo} alt="MintexCare" className="h-20 md:h-28 w-auto object-contain transform scale-110 origin-left brightness-0 invert mb-4" />
             <p className="text-sm italic mb-4 text-white/70">Care you can believe in</p>
             <p className="text-sm text-white/80 leading-relaxed">MintexCare is a trusted home healthcare agency based in New Jersey, providing compassionate, high-quality care to individuals in the comfort of their own homes.</p>
             <div className="flex gap-3 mt-5">

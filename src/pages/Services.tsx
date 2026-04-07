@@ -7,14 +7,101 @@ import { Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { getIcon } from "@/lib/iconMap";
 import { ArrowRight, CheckCircle, Star, Users, Clock, ShieldCheck } from "lucide-react";
+import React from "react";
 
 const stats = [
-  { value: "500+", label: "Families Served", icon: Users },
-  { value: "99%",  label: "Satisfying Care",  icon: Star  },
-  { value: "24/7", label: "Always Available", icon: Clock },
-  { value: "10+",  label: "Years of Service", icon: ShieldCheck },
+  { value: "500+", label: "Families Served",  icon: Users       },
+  { value: "99%",  label: "Satisfying Care",   icon: Star        },
+  { value: "24/7", label: "Always Available",  icon: Clock       },
+  { value: "10+",  label: "Years of Service",  icon: ShieldCheck },
 ];
 
+/* 4-colour palette cycling across cards */
+const palettes = [
+  { solid: "#2a66b0", bg: "rgba(42,102,176,0.08)"  },
+  { solid: "#0891b2", bg: "rgba(8,145,178,0.08)"   },
+  { solid: "#14b8a6", bg: "rgba(20,184,166,0.08)"  },
+  { solid: "#6366f1", bg: "rgba(99,102,241,0.08)"  },
+];
+
+const nursingPalettes = [
+  { solid: "#0891b2", bg: "rgba(8,145,178,0.08)"   },
+  { solid: "#2a66b0", bg: "rgba(42,102,176,0.08)"  },
+  { solid: "#06b6d4", bg: "rgba(6,182,212,0.08)"   },
+  { solid: "#14b8a6", bg: "rgba(20,184,166,0.08)"  },
+];
+
+/* ── Reusable service card ── */
+const ServiceCard = ({
+  s, i, palette,
+}: {
+  s: { id: string; title: string; description: string; icon: string };
+  i: number;
+  palette: { solid: string; bg: string };
+}) => {
+  const Icon = getIcon(s.icon);
+  return (
+    <AnimatedSection delay={i * 0.07} className="h-full">
+      {/*
+        svc-card      → CSS: card lifts + shadow on hover
+        svc-icon-ring → CSS: outer circle border, rotates on hover
+        svc-icon-inner→ CSS: inner white circle, radial fill expands from
+                            centre (0×0 → 100%×100%) on hover
+        icon-svg      → CSS: colour transitions brand → white on hover
+      */}
+      <div
+        className="svc-card group relative bg-white rounded-2xl p-8 border border-gray-100 h-full flex flex-col items-center text-center"
+        style={{ "--icon-color": palette.solid } as React.CSSProperties}
+      >
+        {/* top accent line slides in on hover */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
+          style={{ background: palette.solid }}
+        />
+
+        {/* ── Double-circle icon (exact Carenix / pbminfotech ihbox-style-9) ── */}
+        <div
+          className="svc-icon-ring mb-7"
+          style={{ "--icon-color": palette.solid } as React.CSSProperties}
+        >
+          <div
+            className="svc-icon-inner"
+            style={{ "--icon-color": palette.solid } as React.CSSProperties}
+          >
+            <Icon
+              className="icon-svg w-7 h-7"
+              style={{ color: palette.solid }}
+            />
+          </div>
+        </div>
+
+        {/* Title */}
+        <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">
+          {s.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-sm text-gray-500 leading-relaxed flex-1">
+          {s.description}
+        </p>
+
+        {/* Learn More */}
+        <Link
+          to="/contact"
+          className="svc-learn-more inline-flex items-center gap-2 mt-6 text-sm font-bold"
+          style={{ color: palette.solid }}
+        >
+          Learn More
+          <ArrowRight className="arrow-icon h-4 w-4" />
+        </Link>
+      </div>
+    </AnimatedSection>
+  );
+};
+
+/* ════════════════════════════════════════════
+   PAGE
+   ════════════════════════════════════════════ */
 const Services = () => {
   const { services } = useAdmin();
   const homeServices    = services.filter(s => s.category === "home");
@@ -29,14 +116,12 @@ const Services = () => {
             HERO
         ══════════════════════════════════════ */}
         <section className="relative pt-32 pb-20 bg-white">
-          {/* Soft blobs */}
           <div className="pointer-events-none absolute top-0 right-0 w-[520px] h-[520px] rounded-full opacity-30"
             style={{ background: "radial-gradient(circle, #e0eeff 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
           <div className="pointer-events-none absolute bottom-0 left-0 w-[360px] h-[360px] rounded-full opacity-20"
             style={{ background: "radial-gradient(circle, #d0f5f5 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
 
           <div className="container mx-auto px-6 relative z-10">
-            {/* Breadcrumb pill */}
             <div className="flex justify-center mb-10">
               <span className="inline-flex items-center gap-2 border border-[#2a66b0]/20 rounded-full px-4 py-1.5 text-xs font-medium text-[#2a66b0] bg-blue-50">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2a66b0] inline-block" />
@@ -44,7 +129,6 @@ const Services = () => {
               </span>
             </div>
 
-            {/* Headline */}
             <div className="text-center max-w-3xl mx-auto mb-6">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
                 Trusted Home Care<br />
@@ -56,7 +140,6 @@ const Services = () => {
               patient-centered approach — every step of the way.
             </p>
 
-            {/* CTA row */}
             <div className="flex items-center justify-center gap-4 mb-16">
               <Link to="/contact"
                 className="inline-flex items-center gap-2 bg-[#2a66b0] text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-[#1f4f8a] transition-all hover:scale-105 shadow-lg shadow-[#2a66b0]/25">
@@ -68,7 +151,6 @@ const Services = () => {
               </a>
             </div>
 
-            {/* Stats row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               {stats.map(({ value, label, icon: Icon }) => (
                 <div key={label} className="flex flex-col items-center gap-2 bg-gray-50 rounded-2xl px-5 py-5 border border-gray-100">
@@ -84,20 +166,17 @@ const Services = () => {
         </section>
 
         {/* ══════════════════════════════════════
-            VISUAL BANNER — care image + overlay stats
+            VISUAL BANNER
         ══════════════════════════════════════ */}
         <section className="py-10 bg-white">
           <div className="container mx-auto px-6">
             <div className="relative rounded-3xl overflow-hidden min-h-[340px] md:min-h-[420px]"
               style={{ background: "linear-gradient(135deg, #2a66b0 0%, #0be3e3 100%)" }}>
-
-              {/* Decorative circles */}
               <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full bg-white/10" />
               <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-white/10" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-white/5" />
 
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 p-10 md:p-14">
-                {/* Left text */}
                 <div className="text-white max-w-sm">
                   <span className="inline-block text-xs font-semibold bg-white/20 rounded-full px-3 py-1 mb-4 tracking-wider uppercase">
                     Why Choose Us
@@ -114,35 +193,22 @@ const Services = () => {
                   </Link>
                 </div>
 
-                {/* Right: floating stat cards */}
                 <div className="flex flex-col gap-4 w-full md:w-auto">
-                  <div className="flex items-center gap-4 bg-white rounded-2xl px-6 py-4 shadow-xl">
-                    <div className="w-10 h-10 rounded-full bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0">
-                      <Users className="w-5 h-5 text-[#2a66b0]" />
+                  {[
+                    { Icon: Users,       val: "500+",      sub: "Happy Families",        cls: "bg-[#2a66b0]/10", icls: "text-[#2a66b0]" },
+                    { Icon: Star,        val: "99%",       sub: "Satisfying Treatment",  cls: "bg-cyan-500/10",  icls: "text-cyan-500"  },
+                    { Icon: ShieldCheck, val: "NJ Licensed", sub: "State Certified Agency", cls: "bg-green-500/10", icls: "text-green-500" },
+                  ].map(({ Icon, val, sub, cls, icls }) => (
+                    <div key={sub} className="flex items-center gap-4 bg-white rounded-2xl px-6 py-4 shadow-xl">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${cls}`}>
+                        <Icon className={`w-5 h-5 ${icls}`} />
+                      </div>
+                      <div>
+                        <p className="text-xl font-bold text-gray-900 leading-none">{val}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xl font-bold text-gray-900 leading-none">500+</p>
-                      <p className="text-xs text-gray-500 mt-0.5">Happy Families</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 bg-white rounded-2xl px-6 py-4 shadow-xl">
-                    <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                      <Star className="w-5 h-5 text-cyan-500" />
-                    </div>
-                    <div>
-                      <p className="text-xl font-bold text-gray-900 leading-none">99%</p>
-                      <p className="text-xs text-gray-500 mt-0.5">Satisfying Treatment</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 bg-white rounded-2xl px-6 py-4 shadow-xl">
-                    <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
-                      <ShieldCheck className="w-5 h-5 text-green-500" />
-                    </div>
-                    <div>
-                      <p className="text-xl font-bold text-gray-900 leading-none">NJ Licensed</p>
-                      <p className="text-xs text-gray-500 mt-0.5">State Certified Agency</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -151,163 +217,78 @@ const Services = () => {
 
         {/* ══════════════════════════════════════
             HOME CARE SERVICES
+            bg-[#f7f8f9] matches Carenix light section bg
         ══════════════════════════════════════ */}
-        <section className="py-20 bg-white">
+        <section className="py-24 bg-[#f7f8f9]">
           <div className="container mx-auto px-6">
 
-            {/* Section header */}
-            <AnimatedSection className="mb-14">
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                <div>
-                  <span className="inline-block text-xs font-semibold text-[#2a66b0] uppercase tracking-widest mb-3 bg-blue-50 px-3 py-1 rounded-full">
-                    Home Care
-                  </span>
-                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                    Home Care Services
-                  </h2>
-                </div>
-                <p className="text-gray-500 text-sm leading-relaxed max-w-xs md:text-right">
-                  Comprehensive care solutions tailored to your unique needs and lifestyle
-                </p>
+            {/* Section header — lines + label + heading + subtitle */}
+            <AnimatedSection className="text-center mb-16">
+              <div className="inline-flex items-center gap-3 mb-5">
+                <span className="h-px w-10 bg-[#2a66b0] inline-block" />
+                <span className="text-xs font-extrabold text-[#2a66b0] uppercase tracking-[0.25em]">
+                  Home Care
+                </span>
+                <span className="h-px w-10 bg-[#2a66b0] inline-block" />
               </div>
-              <div className="mt-8 h-px bg-gray-100" />
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Home Care <span className="text-[#2a66b0]">Services</span>
+              </h2>
+              <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
+                Comprehensive care solutions tailored to your unique needs and lifestyle
+              </p>
             </AnimatedSection>
 
-            {/* Cards grid — 3D style */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {homeServices.map((s, i) => {
-                const Icon = getIcon(s.icon);
-                // Cycle through 4 gradient palettes
-                const palettes = [
-                  { grad: "from-[#2a66b0] to-[#1a4a8a]", shadow: "rgba(42,102,176,0.45)", iconBg: "bg-white/20", iconColor: "text-white" },
-                  { grad: "from-[#0891b2] to-[#0e7490]", shadow: "rgba(8,145,178,0.45)",  iconBg: "bg-white/20", iconColor: "text-white" },
-                  { grad: "from-[#0f766e] to-[#0d5c57]", shadow: "rgba(15,118,110,0.45)", iconBg: "bg-white/20", iconColor: "text-white" },
-                  { grad: "from-[#1d4ed8] to-[#1e3a8a]", shadow: "rgba(29,78,216,0.45)",  iconBg: "bg-white/20", iconColor: "text-white" },
-                ];
-                const p = palettes[i % palettes.length];
-                return (
-                  <AnimatedSection key={s.id} delay={i * 0.04} className="h-full">
-                    <div
-                      className="group flex flex-col h-full rounded-3xl overflow-hidden cursor-pointer"
-                      style={{
-                        transition: "transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s ease",
-                        boxShadow: `0 8px 24px ${p.shadow.replace("0.45", "0.18")}`,
-                        transform: "perspective(800px) rotateX(0deg) translateY(0px)",
-                      }}
-                      onMouseEnter={e => {
-                        (e.currentTarget as HTMLDivElement).style.transform = "perspective(800px) rotateX(4deg) translateY(-10px)";
-                        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 28px 48px ${p.shadow}`;
-                      }}
-                      onMouseLeave={e => {
-                        (e.currentTarget as HTMLDivElement).style.transform = "perspective(800px) rotateX(0deg) translateY(0px)";
-                        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 8px 24px ${p.shadow.replace("0.45", "0.18")}`;
-                      }}
-                    >
-                      {/* ── Gradient top banner ── */}
-                      <div className={`relative bg-gradient-to-br ${p.grad} px-6 pt-8 pb-10 flex flex-col gap-4 overflow-hidden`}>
-                        {/* Decorative circles */}
-                        <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-white/10" />
-                        <div className="absolute bottom-0 left-4 w-16 h-16 rounded-full bg-white/5" />
-
-                        {/* Index badge */}
-                        <span className="self-start text-[10px] font-bold bg-white/15 text-white rounded-full px-2.5 py-0.5 tracking-widest select-none">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-
-                        {/* Floating icon */}
-                        <div className={`relative z-10 w-14 h-14 rounded-2xl ${p.iconBg} backdrop-blur-sm flex items-center justify-center shadow-lg ring-1 ring-white/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                          <Icon className={`h-7 w-7 ${p.iconColor}`} />
-                        </div>
-
-                        {/* Title on gradient */}
-                        <h3 className="relative z-10 font-bold text-white text-base leading-snug pr-4">{s.title}</h3>
-                      </div>
-
-                      {/* ── White content area ── */}
-                      <div className="flex flex-col flex-1 bg-white px-6 pt-5 pb-6">
-                        {/* Connector notch */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className={`h-0.5 w-8 rounded-full bg-gradient-to-r ${p.grad}`} />
-                          <div className={`h-0.5 w-3 rounded-full bg-gradient-to-r ${p.grad} opacity-40`} />
-                        </div>
-
-                        <p className="text-xs text-gray-500 leading-relaxed flex-1">{s.description}</p>
-
-                        <Link
-                          to="/contact"
-                          className="inline-flex items-center gap-1.5 mt-5 text-xs font-bold group-hover:gap-3 transition-all duration-200"
-                          style={{ color: p.shadow.includes("42,102") ? "#2a66b0" : p.shadow.includes("8,145") ? "#0891b2" : p.shadow.includes("15,118") ? "#0f766e" : "#1d4ed8" }}
-                        >
-                          Learn more <ArrowRight className="h-3 w-3" />
-                        </Link>
-                      </div>
-                    </div>
-                  </AnimatedSection>
-                );
-              })}
+              {homeServices.map((s, i) => (
+                <ServiceCard
+                  key={s.id}
+                  s={s}
+                  i={i}
+                  palette={palettes[i % palettes.length]}
+                />
+              ))}
             </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════
-            SKILLED NURSING
+            SKILLED NURSING SERVICES
         ══════════════════════════════════════ */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-24 bg-white">
           <div className="container mx-auto px-6">
 
-            {/* Section header */}
-            <AnimatedSection className="mb-14">
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                <div>
-                  <span className="inline-block text-xs font-semibold text-cyan-600 uppercase tracking-widest mb-3 bg-cyan-50 px-3 py-1 rounded-full">
-                    Specialized Care
-                  </span>
-                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                    Skilled Nursing<br />Facility Services
-                  </h2>
-                </div>
-                <div className="flex flex-col items-start md:items-end gap-2">
-                  <p className="text-gray-500 text-sm leading-relaxed max-w-xs md:text-right">
-                    Specialized clinical care for maximum independence and quality of life
-                  </p>
-                  {nursingServices.length > 0 && (
-                    <span className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 text-xs font-medium text-gray-700 shadow-sm">
-                      <span className="w-2 h-2 rounded-full bg-[#2a66b0]" />
-                      {nursingServices.length} Specialized Services
-                    </span>
-                  )}
-                </div>
+            <AnimatedSection className="text-center mb-16">
+              <div className="inline-flex items-center gap-3 mb-5">
+                <span className="h-px w-10 bg-[#0891b2] inline-block" />
+                <span className="text-xs font-extrabold text-[#0891b2] uppercase tracking-[0.25em]">
+                  Specialized Care
+                </span>
+                <span className="h-px w-10 bg-[#0891b2] inline-block" />
               </div>
-              <div className="mt-8 h-px bg-gray-200" />
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Skilled Nursing <span className="text-[#0891b2]">Facility Services</span>
+              </h2>
+              <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
+                Specialized clinical care for maximum independence and quality of life
+              </p>
+              {nursingServices.length > 0 && (
+                <span className="inline-flex items-center gap-2 mt-4 bg-cyan-50 border border-cyan-100 rounded-full px-4 py-1.5 text-xs font-medium text-cyan-700">
+                  <span className="w-2 h-2 rounded-full bg-[#0891b2]" />
+                  {nursingServices.length} Specialized Services
+                </span>
+              )}
             </AnimatedSection>
 
-            {/* Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {nursingServices.map((s, i) => {
-                const Icon = getIcon(s.icon);
-                const accent = i % 2 === 0;
-                return (
-                  <AnimatedSection key={s.id} delay={i * 0.06} className="h-full">
-                    <div className="group relative flex gap-4 p-6 rounded-2xl bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full overflow-hidden">
-                      {/* Top accent bar */}
-                      <div className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ${accent ? "bg-[#2a66b0]" : "bg-cyan-500"}`} />
-                      {/* Watermark */}
-                      <span className="pointer-events-none absolute -bottom-3 -right-1 text-[72px] font-bold leading-none select-none opacity-[0.04] text-gray-900">
-                        {i + 1}
-                      </span>
-                      {/* Icon */}
-                      <div className={`h-11 w-11 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-transform duration-300 ${accent ? "bg-blue-50 group-hover:bg-blue-100" : "bg-cyan-50 group-hover:bg-cyan-100"}`}>
-                        <Icon className={`h-5 w-5 ${accent ? "text-[#2a66b0]" : "text-cyan-600"}`} />
-                      </div>
-                      {/* Text */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-gray-900 mb-1.5 leading-snug text-sm">{s.title}</h3>
-                        <p className="text-xs text-gray-500 leading-relaxed">{s.description}</p>
-                      </div>
-                    </div>
-                  </AnimatedSection>
-                );
-              })}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {nursingServices.map((s, i) => (
+                <ServiceCard
+                  key={s.id}
+                  s={s}
+                  i={i}
+                  palette={nursingPalettes[i % nursingPalettes.length]}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -319,9 +300,9 @@ const Services = () => {
           <div className="container mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {[
-                { icon: ShieldCheck, title: "Building Trust", desc: "We earn your confidence through consistent, quality care every single day." },
-                { icon: Users,       title: "Community Involvement", desc: "Deeply rooted in New Jersey, serving families across our community." },
-                { icon: CheckCircle, title: "Security and Privacy", desc: "Your health information is always handled with the highest standards." },
+                { icon: ShieldCheck, title: "Building Trust",        desc: "We earn your confidence through consistent, quality care every single day." },
+                { icon: Users,       title: "Community Involvement", desc: "Deeply rooted in New Jersey, serving families across our community."       },
+                { icon: CheckCircle, title: "Security and Privacy",  desc: "Your health information is always handled with the highest standards."      },
               ].map(({ icon: Icon, title, desc }) => (
                 <AnimatedSection key={title} className="flex gap-4 items-start">
                   <div className="w-10 h-10 rounded-full bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
