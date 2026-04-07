@@ -60,7 +60,7 @@ const Header = () => {
            /* Increased from h-20/28 to h-24/32 and scale to 125 */
            className="h-24 md:h-32 w-auto object-contain transform scale-125 origin-left" 
          />
-      </Link>
+    </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map(link => (

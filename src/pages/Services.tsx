@@ -42,58 +42,41 @@ const ServiceCard = ({
   const Icon = getIcon(s.icon);
   return (
     <AnimatedSection delay={i * 0.07} className="h-full">
-      {/*
-        svc-card      → CSS: card lifts + shadow on hover
-        svc-icon-ring → CSS: outer circle border, rotates on hover
-        svc-icon-inner→ CSS: inner white circle, radial fill expands from
-                            centre (0×0 → 100%×100%) on hover
-        icon-svg      → CSS: colour transitions brand → white on hover
-      */}
+      {/* svc-card-wrapper → creates the "back card" shadow via ::before */}
       <div
-        className="svc-card group relative bg-white rounded-2xl p-8 border border-gray-100 h-full flex flex-col items-center text-center"
+        className="svc-card-wrapper h-full"
         style={{ "--icon-color": palette.solid } as React.CSSProperties}
       >
-        {/* top accent line slides in on hover */}
         <div
-          className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
-          style={{ background: palette.solid }}
-        />
-
-        {/* ── Double-circle icon (exact Carenix / pbminfotech ihbox-style-9) ── */}
-        <div
-          className="svc-icon-ring mb-7"
-          style={{ "--icon-color": palette.solid } as React.CSSProperties}
+          className="svc-card group relative bg-white rounded-2xl p-8 border border-gray-100 h-full flex flex-col items-center text-center"
         >
+          {/* top accent line slides in on hover */}
           <div
-            className="svc-icon-inner"
-            style={{ "--icon-color": palette.solid } as React.CSSProperties}
+            className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
+            style={{ background: palette.solid }}
+          />
+
+          {/* ── Carenix-style icon box ── */}
+          <div
+            className="svc-icon-box mb-7"
+            style={{
+              "--icon-color": palette.solid,
+              "--icon-bg": palette.bg,
+            } as React.CSSProperties}
           >
-            <Icon
-              className="icon-svg w-7 h-7"
-              style={{ color: palette.solid }}
-            />
+            <Icon className="icon-svg w-7 h-7" style={{ color: palette.solid }} />
           </div>
+
+          {/* Title */}
+          <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">
+            {s.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-sm text-gray-500 leading-relaxed flex-1">
+            {s.description}
+          </p>
         </div>
-
-        {/* Title */}
-        <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">
-          {s.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-sm text-gray-500 leading-relaxed flex-1">
-          {s.description}
-        </p>
-
-        {/* Learn More */}
-        <Link
-          to="/contact"
-          className="svc-learn-more inline-flex items-center gap-2 mt-6 text-sm font-bold"
-          style={{ color: palette.solid }}
-        >
-          Learn More
-          <ArrowRight className="arrow-icon h-4 w-4" />
-        </Link>
       </div>
     </AnimatedSection>
   );

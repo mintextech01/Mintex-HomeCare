@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
-import logo from "@/assets/Homecare.svg";
+import logo from "@/assets/Artboard 133 copy (1).svg";
 
 const Footer = () => {
   const { contactInfo } = useAdmin();
