@@ -195,8 +195,8 @@ a, button {
   top: 8px;
   bottom: 0;
   border-radius: 16px;
-  background: #f0f0f0;
-  border: 1px solid #e8e8e8;
+  background: #e4e8ee;
+  border: 1px solid #d8dde6;
   z-index: 0;
 }
 
@@ -212,11 +212,11 @@ a, button {
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.12);
 }
 
-/* ── Icon box: rounded square, light brand-tint default ── */
+/* ── Icon box: circle, light brand-tint default ── */
 .svc-icon-box {
   width: 80px;
   height: 80px;
-  border-radius: 14px;
+  border-radius: 50%;
   background-color: var(--icon-bg, rgba(42,102,176,0.10));
   display: flex;
   align-items: center;
@@ -258,3 +258,21 @@ a, button {
   color: #ffffff !important;
   transform: translateY(-3px) scale(1.1);
 }
+
+/* ── Section background decorative elements ── */
+@keyframes svc-float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-12px) rotate(3deg); }
+}
+@keyframes svc-float-mid {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes svc-pulse-ring {
+  0%, 100% { opacity: 0.04; transform: translate(-50%, -50%) scale(1); }
+  50%       { opacity: 0.07; transform: translate(-50%, -50%) scale(1.04); }
+}
+
+.svc-deco-float  { animation: svc-float-slow 9s ease-in-out infinite; }
+.svc-deco-mid    { animation: svc-float-mid  6s ease-in-out infinite; }
+.svc-deco-pulse  { animation: svc-pulse-ring 7s ease-in-out infinite; }
