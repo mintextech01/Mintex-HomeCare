@@ -52,7 +52,7 @@ const WhyChooseUsSection = () => (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {features.map((f, i) => (
           <AnimatedSection key={f.title} delay={i * 0.08}>
-            <div className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full overflow-hidden">
+            <div className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full overflow-hidden bg-[#e8ebed]">
 
               {/* Animated top accent bar */}
               <div
@@ -62,7 +62,7 @@ const WhyChooseUsSection = () => (
               />
 
               {/* Large background number watermark */}
-              <span className="pointer-events-none absolute -bottom-4 -right-1 text-[88px] font-serif font-bold leading-none select-none opacity-[0.04] text-foreground">
+              <span className="pointer-events-none absolute -bottom-4 -right-1 text-[88px] font-serif font-bold leading-none select-none opacity-[0.06] text-foreground">
                 {i + 1}
               </span>
 

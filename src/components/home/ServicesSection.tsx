@@ -4,12 +4,12 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Clock, Home, Stethoscope, Activity, Dumbbell, Building2 } from "lucide-react";
 
 const SERVICE_META = [
-  { icon: Clock,       label: "Hourly Care",           title: "Flexible hourly support",       description: "Flexible hourly visits tailored to your schedule — from a few hours a week to daily support.",              btnClass: "bg-sky-200 hover:bg-sky-300 text-slate-800",       btnLabel: "Learn more",    link: "/services", imgKey: "serviceCard1" as const },
-  { icon: Home,        label: "Live-In Care",           title: "Round-the-clock home care",      description: "A dedicated caregiver lives with your loved one for continuous, personalized support.",                    btnClass: "bg-purple-300 hover:bg-purple-400 text-slate-800", btnLabel: "Explore care",  link: "/services", imgKey: "serviceCard2" as const },
-  { icon: Activity,    label: "Post-Surgery Recovery",  title: "Recover safely at home",         description: "Medication reminders, mobility assistance, and wound monitoring — all at home.",                          btnClass: "bg-[#d4d56b] hover:bg-[#c4c55b] text-slate-800",  btnLabel: "Get started",   link: "/services", imgKey: "serviceCard3" as const },
-  { icon: Stethoscope, label: "Skilled Nursing",        title: "Clinical care at home",          description: "Licensed nurses providing IV therapy, wound treatment, and chronic disease management.",                   btnClass: "bg-sky-200 hover:bg-sky-300 text-slate-800",       btnLabel: "View scope",    link: "/services", imgKey: "serviceCard4" as const },
-  { icon: Dumbbell,    label: "Rehab Support",          title: "Regain your independence",       description: "Therapy aides helping clients rebuild mobility and confidence after illness or injury.",                   btnClass: "bg-purple-300 hover:bg-purple-400 text-slate-800", btnLabel: "Learn more",    link: "/services", imgKey: "serviceCard5" as const },
-  { icon: Building2,   label: "Facility Staffing",      title: "Reliable facility staffing",     description: "HHA and CNA staffing for assisted living, nursing homes, and rehab centers across NJ.",                  btnClass: "bg-[#d4d56b] hover:bg-[#c4c55b] text-slate-800",  btnLabel: "Partner with us", link: "/services", imgKey: "serviceCard6" as const },
+  { icon: Clock,       label: "Hourly Care",           title: "Flexible hourly support",       description: "Flexible hourly visits tailored to your schedule — from a few hours a week to daily support.",              btnLabel: "Learn more",    link: "/services", imgKey: "serviceCard1" as const },
+  { icon: Home,        label: "Live-In Care",           title: "Round-the-clock home care",      description: "A dedicated caregiver lives with your loved one for continuous, personalized support.",                    btnLabel: "Explore care",  link: "/services", imgKey: "serviceCard2" as const },
+  { icon: Activity,    label: "Post-Surgery Recovery",  title: "Recover safely at home",         description: "Medication reminders, mobility assistance, and wound monitoring — all at home.",                          btnLabel: "Get started",   link: "/services", imgKey: "serviceCard3" as const },
+  { icon: Stethoscope, label: "Skilled Nursing",        title: "Clinical care at home",          description: "Licensed nurses providing IV therapy, wound treatment, and chronic disease management.",                   btnLabel: "View scope",    link: "/services", imgKey: "serviceCard4" as const },
+  { icon: Dumbbell,    label: "Rehab Support",          title: "Regain your independence",       description: "Therapy aides helping clients rebuild mobility and confidence after illness or injury.",                   btnLabel: "Learn more",    link: "/services", imgKey: "serviceCard5" as const },
+  { icon: Building2,   label: "Facility Staffing",      title: "Reliable facility staffing",     description: "HHA and CNA staffing for assisted living, nursing homes, and rehab centers across NJ.",                  btnLabel: "Partner with us", link: "/services", imgKey: "serviceCard6" as const },
 ];
 
 const ServicesSection = () => {
@@ -84,7 +84,8 @@ const ServicesSection = () => {
                       </p>
                       <Link
                         to={service.link}
-                        className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-sans font-semibold text-sm transition-colors duration-200 ${service.btnClass}`}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-sans font-semibold text-sm transition-all duration-200 hover:scale-105"
+                        style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                       >
                         {service.btnLabel}
                         <ArrowRight className="h-4 w-4" />
@@ -101,7 +102,8 @@ const ServicesSection = () => {
         <AnimatedSection className="text-center mt-12">
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-sans font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-105"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-sans font-semibold transition-all duration-200 hover:scale-105"
+            style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
           >
             View All Services <ArrowRight className="h-4 w-4" />
           </Link>

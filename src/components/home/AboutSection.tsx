@@ -150,7 +150,8 @@ const AboutSection = () => {
             {/* CTA */}
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 bg-[#2a66b0] text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-[#1f4f8a] transition-all hover:scale-105 shadow-lg shadow-[#2a66b0]/25"
+              className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
             >
               Learn More About Us <ArrowRight className="h-4 w-4" />
             </Link>

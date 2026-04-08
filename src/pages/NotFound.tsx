@@ -23,7 +23,7 @@ const NotFound = () => {
             Sorry, the page you're looking for doesn't exist or has been moved.
           </p>
           <Link to="/">
-            <Button className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 font-sans">
+            <Button className="rounded-full px-8 font-semibold" style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
               <Home className="h-4 w-4 mr-2" /> Back to Home
             </Button>
           </Link>

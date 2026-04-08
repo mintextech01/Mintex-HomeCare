@@ -14,7 +14,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import FloatingCTA from "@/components/FloatingCTA";
 
 const Index = () => (
   <>
@@ -48,7 +47,6 @@ const Index = () => (
       <ContactSection />
     </main>
     <Footer />
-    <FloatingCTA />
     <ScrollToTop />
     <WhatsAppButton />
   </>

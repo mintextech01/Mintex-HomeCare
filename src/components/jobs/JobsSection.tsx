@@ -96,12 +96,11 @@ export function JobsSection({
                 Try adjusting your search or filter criteria to find more opportunities.
               </p>
               <Button
-                variant="outline"
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedFilter("all");
                 }}
-                className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
+                className="rounded-full font-medium text-foreground hover:text-primary transition-colors glass-btn"
               >
                 Reset Filters
               </Button>

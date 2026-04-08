@@ -93,13 +93,14 @@ const Careers = () => {
                 <div className="flex flex-wrap gap-3">
                   <a
                     href="#positions"
-                    className="inline-flex items-center gap-2 bg-accent text-white font-sans font-semibold px-8 py-3.5 rounded-full hover:bg-accent/90 transition-all hover:scale-105 shadow-lg shadow-accent/25"
+                    className="inline-flex items-center gap-2 font-sans font-semibold px-8 py-3.5 rounded-full transition-all hover:scale-105"
+                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                   >
                     View Openings
                   </a>
                   <a
                     href="#apply-section"
-                    className="inline-flex items-center gap-2 border-2 border-gray-200 text-gray-700 font-sans font-semibold px-8 py-3.5 rounded-full hover:border-primary hover:text-primary transition-all bg-white"
+                    className="inline-flex items-center gap-2 font-sans font-medium px-8 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn"
                   >
                     Apply Now
                   </a>
@@ -237,7 +238,8 @@ const Careers = () => {
 
                 <a
                   href="#apply-section"
-                  className="inline-flex items-center gap-2 bg-accent text-white font-sans font-semibold px-7 py-3.5 rounded-full hover:bg-accent/90 transition-all hover:scale-105 shadow-lg shadow-accent/20"
+                  className="inline-flex items-center gap-2 font-sans font-semibold px-7 py-3.5 rounded-full transition-all hover:scale-105"
+                  style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                 >
                   Learn More <ArrowRight className="h-4 w-4" />
                 </a>
@@ -448,7 +450,8 @@ const Careers = () => {
                       <Button
                         type="submit"
                         size="lg"
-                        className="w-full bg-accent text-white hover:bg-accent/90 rounded-full font-sans font-semibold hover:scale-[1.02] transition-all shadow-lg shadow-accent/20"
+                        className="w-full rounded-full font-semibold hover:scale-[1.02] transition-all"
+                        style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                       >
                         Submit Application <ArrowRight className="h-4 w-4 ml-1" />
                       </Button>

@@ -102,7 +102,8 @@ export function JobDetailModal({ job, isOpen, onOpenChange, onApplyClick }: JobD
           <div className="flex gap-3 pt-4">
             <Button
               size="lg"
-              className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold"
+              className="flex-1 rounded-full font-semibold"
+              style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
               onClick={() => {
                 onApplyClick(job);
                 onOpenChange(false);
@@ -112,8 +113,7 @@ export function JobDetailModal({ job, isOpen, onOpenChange, onApplyClick }: JobD
             </Button>
             <Button
               size="lg"
-              variant="outline"
-              className="flex-1"
+              className="flex-1 rounded-full font-medium text-foreground hover:text-primary transition-colors glass-btn"
               onClick={() => onOpenChange(false)}
             >
               Close

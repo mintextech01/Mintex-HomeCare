@@ -68,7 +68,7 @@ const ContactSection = () => {
                 </SelectContent>
               </Select>
               <Textarea placeholder="Your Message" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} rows={4} className="font-sans" />
-              <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-sans">Send Message</Button>
+              <Button type="submit" size="lg" className="w-full rounded-full font-semibold" style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>Send Message</Button>
             </form>
           </AnimatedSection>
           <AnimatedSection delay={0.2}>

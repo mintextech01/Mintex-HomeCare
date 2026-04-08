@@ -36,7 +36,7 @@ const CareersSection = () => {
             ))}
           </ul>
           <Link to="/careers">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 font-sans hover-scale">Apply Now</Button>
+            <Button size="lg" className="rounded-full px-8 font-semibold hover-scale" style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>Apply Now</Button>
           </Link>
         </AnimatedSection>
       </div>

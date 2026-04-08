@@ -65,7 +65,7 @@ const TestimonialsSection = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => go(current - 1)}
-                className="h-11 w-11 rounded-full bg-white border border-border flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm"
+                className="h-11 w-11 rounded-full glass-btn flex items-center justify-center text-foreground hover:text-primary transition-all duration-200"
                 aria-label="Previous"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -75,7 +75,7 @@ const TestimonialsSection = () => {
               </span>
               <button
                 onClick={() => go(current + 1)}
-                className="h-11 w-11 rounded-full bg-white border border-border flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm"
+                className="h-11 w-11 rounded-full glass-btn flex items-center justify-center text-foreground hover:text-primary transition-all duration-200"
                 aria-label="Next"
               >
                 <ChevronRight className="h-5 w-5" />

@@ -331,7 +331,8 @@ const NursingSection = () => {
         <AnimatedSection className="text-center mt-10" delay={0.15}>
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-sans font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-105"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-sans font-semibold text-sm transition-all duration-200 hover:scale-105"
+            style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
           >
             View All Services <ArrowRight className="h-4 w-4 flex-shrink-0" />
           </Link>

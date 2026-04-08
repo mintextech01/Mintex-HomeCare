@@ -315,7 +315,8 @@ const Contact = () => {
                         <Button
                           type="submit"
                           size="lg"
-                          className="w-full h-13 rounded-xl font-sans text-base gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25"
+                          className="w-full rounded-full font-semibold text-base gap-2"
+                          style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                         >
                           <Send className="h-4 w-4" />
                           Send Message
@@ -477,16 +478,15 @@ const Contact = () => {
                     <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                       <a href={`tel:+1${phoneLink}`}>
                         <Button
-                          variant="outline"
-                          className="border-white/25 text-white hover:bg-white/10 rounded-xl font-sans gap-2 bg-transparent w-full sm:w-auto"
+                          className="rounded-full gap-2 w-full sm:w-auto font-medium text-foreground hover:text-primary transition-colors glass-btn"
                         >
                           <Phone className="h-4 w-4" /> Call Now
                         </Button>
                       </a>
                       <a href={`mailto:${contactInfo.email}`}>
                         <Button
-                          className="rounded-xl font-sans gap-2 w-full sm:w-auto text-foreground font-semibold"
-                          style={{ background: "hsl(180 91% 47%)" }}
+                          className="rounded-full gap-2 w-full sm:w-auto font-semibold"
+                          style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                         >
                           <Mail className="h-4 w-4" /> Email Us
                         </Button>

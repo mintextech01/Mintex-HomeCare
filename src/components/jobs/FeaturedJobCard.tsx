@@ -78,7 +78,8 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
               <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   size="lg"
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-base"
+                  className="w-full rounded-full font-semibold text-base"
+                  style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                   onClick={(e) => {
                     e.stopPropagation();
                     onApplyClick(job);
@@ -90,8 +91,7 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="border-border/50 hover:border-accent/50"
+                  className="rounded-full font-medium text-foreground hover:text-primary transition-colors glass-btn"
                   onClick={(e) => {
                     e.stopPropagation();
                     onDetailsClick(job);

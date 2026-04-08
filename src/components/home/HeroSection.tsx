@@ -175,7 +175,7 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.58 }}
-              className="inline-flex items-center justify-center gap-2 text-sm font-sans text-muted-foreground text-center w-full"
+             className="inline-flex items-center justify-center gap-2 text-sm font-sans font-bold text-muted-foreground text-center w-full"
            > 
             <ShieldCheck className="h-4 w-4 text-accent shrink-0" />
               Licensed &amp; Insured | Serving All of New Jersey

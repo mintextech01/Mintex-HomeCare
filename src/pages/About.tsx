@@ -82,11 +82,12 @@ const About = () => {
 
                 <div className="flex flex-wrap gap-3 mb-12">
                   <Link to="/contact"
-                    className="inline-flex items-center gap-2 bg-[#2a66b0] text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-[#1f4f8a] transition-all hover:scale-105 shadow-lg shadow-[#2a66b0]/25">
+                    className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105"
+                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
                     Get in Touch <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link to="/services"
-                    className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 font-semibold text-sm px-7 py-3.5 rounded-full hover:border-[#2a66b0] hover:text-[#2a66b0] transition-all">
+                    className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn">
                     Our Services
                   </Link>
                 </div>
@@ -504,7 +505,8 @@ const About = () => {
                     </p>
                   </div>
                   <Link to="/contact"
-                    className="shrink-0 inline-flex items-center gap-2 bg-white text-[#2a66b0] font-bold text-sm px-9 py-4 rounded-full hover:bg-white/90 transition-all hover:scale-105 shadow-lg whitespace-nowrap">
+                    className="shrink-0 inline-flex items-center gap-2 font-bold text-sm px-9 py-4 rounded-full transition-all hover:scale-105 whitespace-nowrap"
+                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
                     Get in Touch <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>

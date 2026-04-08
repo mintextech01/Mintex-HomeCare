@@ -122,11 +122,12 @@ const Services = () => {
             </p>
             <div className="flex items-center justify-center gap-4 mb-16">
               <Link to="/contact"
-                className="inline-flex items-center gap-2 bg-[#2a66b0] text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-[#1f4f8a] transition-all hover:scale-105 shadow-lg shadow-[#2a66b0]/25">
+                className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105"
+                style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
                 Get Started <ArrowRight className="h-4 w-4" />
               </Link>
               <a href="tel:+17322685112"
-                className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 font-semibold text-sm px-7 py-3.5 rounded-full hover:border-[#2a66b0] hover:text-[#2a66b0] transition-all">
+                className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn">
                 Contact Us
               </a>
             </div>
@@ -166,7 +167,8 @@ const Services = () => {
                     Connect with our professional caregivers who are ready to help you manage your health with dignity and compassion.
                   </p>
                   <Link to="/contact"
-                    className="inline-flex items-center gap-2 bg-white text-[#2a66b0] font-semibold text-sm px-6 py-3 rounded-full hover:bg-white/90 transition-all">
+                    className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-full transition-all hover:scale-105"
+                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
                     Make a Schedule <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -370,7 +372,8 @@ const Services = () => {
                     Our care coordinators are ready to help you find the right service for your loved one — at no obligation.
                   </p>
                   <Link to="/contact"
-                    className="inline-flex items-center gap-2 bg-white text-[#2a66b0] font-bold text-sm px-8 py-3.5 rounded-full hover:bg-white/90 transition-all hover:scale-105 shadow-lg">
+                    className="inline-flex items-center gap-2 font-bold text-sm px-8 py-3.5 rounded-full transition-all hover:scale-105"
+                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
                     Contact Us Today <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
