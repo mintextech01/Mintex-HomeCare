@@ -18,6 +18,20 @@ import FloatingCTA from "@/components/FloatingCTA";
 
 const Index = () => (
   <>
+    {/* ── Liquid Glass ambient background ── */}
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+      {/* Primary blue orb — top-left */}
+      <div className="glass-orb glass-orb-blue"  style={{ top: "-180px",  left: "-180px" }} />
+      {/* Cyan orb — bottom-right */}
+      <div className="glass-orb glass-orb-cyan"  style={{ bottom: "5%",   right: "-140px" }} />
+      {/* Teal orb — center */}
+      <div className="glass-orb glass-orb-teal"  style={{ top: "42%",     left: "38%" }} />
+      {/* Indigo accent — top-right */}
+      <div className="glass-orb glass-orb-indigo" style={{ top: "8%",     right: "12%" }} />
+      {/* Extra subtle blue — bottom-left */}
+      <div className="glass-orb glass-orb-blue"  style={{ bottom: "18%",  left: "5%",   opacity: 0.5, width: "380px", height: "380px" }} />
+    </div>
+
     <Header />
     <main>
       <HeroSection />

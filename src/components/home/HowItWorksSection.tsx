@@ -25,16 +25,16 @@ const steps = [
   },
 ];
 
-// Wider viewBox (1200 × 340) gives a longer-feeling road
+// Full-width road: enters from left edge at y=240, exits right edge at y=240
+// Peaks at y=90, valleys at y=240 — viewBox 1200 × 340
 const ROAD_PATH =
-  "M 0,260 C 80,260 120,260 180,260 C 300,260 360,100 460,100 C 560,100 640,260 760,260 C 850,260 920,100 1020,100 C 1100,100 1160,100 1200,100";
+  "M 0,240 C 80,240 160,240 240,240 C 340,240 400,90 480,90 C 560,90 620,240 720,240 C 820,240 880,90 960,90 C 1060,90 1140,240 1200,240";
 
-// Stop coordinates matched to path peaks/valleys
 const STOPS = [
-  { x: 180,  y: 260, labelSide: "bottom" as const, color: "primary" as const },
-  { x: 460,  y: 100, labelSide: "top"    as const, color: "accent"  as const },
-  { x: 760,  y: 260, labelSide: "bottom" as const, color: "primary" as const },
-  { x: 1020, y: 100, labelSide: "top"    as const, color: "accent"  as const },
+  { x: 240,  y: 240, labelSide: "bottom" as const, color: "primary" as const },
+  { x: 480,  y: 90,  labelSide: "top"    as const, color: "accent"  as const },
+  { x: 720,  y: 240, labelSide: "bottom" as const, color: "primary" as const },
+  { x: 960,  y: 90,  labelSide: "top"    as const, color: "accent"  as const },
 ];
 
 const HowItWorksSection = () => {
@@ -42,11 +42,8 @@ const HowItWorksSection = () => {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section
-      ref={ref}
-      className="relative py-20 md:py-28 overflow-hidden"
-    >
-      {/* ── subtle dot-grid ── */}
+    <section ref={ref} className="relative py-20 md:py-28 overflow-hidden">
+      {/* subtle dot-grid */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.035]"
         style={{
@@ -56,9 +53,8 @@ const HowItWorksSection = () => {
         }}
       />
 
+      {/* ── Header ── */}
       <div className="container mx-auto px-4 relative z-10">
-
-        {/* ── Header row ── */}
         <div className="flex items-start justify-between mb-10 md:mb-14">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -74,78 +70,195 @@ const HowItWorksSection = () => {
               <span className="text-primary">Easy</span>
             </h2>
           </motion.div>
-
-          {/* Ghost step count — top right */}
-          <div
-            className="hidden md:block text-[100px] lg:text-[150px] font-serif font-bold leading-none select-none pointer-events-none text-foreground/[0.04]"
-          >
+          <div className="hidden md:block text-[100px] lg:text-[150px] font-serif font-bold leading-none select-none pointer-events-none text-foreground/[0.04]">
             04
           </div>
         </div>
+      </div>
 
-        {/* ══════════════════════════════════════
-            DESKTOP: Winding Road Infographic
-            ══════════════════════════════════════ */}
-        <div
-          className="hidden lg:block relative w-full"
-          style={{ aspectRatio: "1200 / 340" }}
+      {/* ══════════════════════════════════════
+          DESKTOP: Full-Width Winding Road
+          ══════════════════════════════════════ */}
+      <div
+        className="hidden lg:block relative w-full"
+        style={{ aspectRatio: "1200 / 340" }}
+      >
+        {/* Road SVG — spans 100% width, no container padding */}
+        <svg
+          viewBox="0 0 1200 340"
+          className="absolute inset-0 w-full h-full"
+          preserveAspectRatio="none"
+          fill="none"
         >
-          {/* SVG Road — viewBox 1200×340 for a longer road */}
-          <svg
-            viewBox="0 0 1200 340"
-            className="absolute inset-0 w-full h-full"
-            preserveAspectRatio="none"
-            fill="none"
-          >
-            {/* Soft brand-blue glow around road */}
-            <path
-              d={ROAD_PATH}
-              stroke="hsl(214 66% 44% / 0.12)"
-              strokeWidth="84"
-              strokeLinecap="round"
-            />
-            {/* Road edge — dark grey kerb */}
-            <path
-              d={ROAD_PATH}
-              stroke="hsl(220 15% 28%)"
-              strokeWidth="64"
-              strokeLinecap="round"
-            />
-            {/* Road body — near-black asphalt */}
-            <path
-              d={ROAD_PATH}
-              stroke="hsl(220 15% 10%)"
-              strokeWidth="54"
-              strokeLinecap="round"
-            />
-            {/* Animated white centre dashes */}
-            <motion.path
-              d={ROAD_PATH}
-              stroke="rgba(255,255,255,0.38)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="22 16"
-              animate={{ strokeDashoffset: [0, -38] }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-          </svg>
+          {/* Glow halo */}
+          <path
+            d={ROAD_PATH}
+            stroke="hsl(214 66% 44% / 0.15)"
+            strokeWidth="90"
+            strokeLinecap="butt"
+          />
+          {/* Kerb / edge */}
+          <path
+            d={ROAD_PATH}
+            stroke="hsl(220 15% 28%)"
+            strokeWidth="62"
+            strokeLinecap="butt"
+          />
+          {/* Asphalt body */}
+          <path
+            d={ROAD_PATH}
+            stroke="hsl(220 15% 12%)"
+            strokeWidth="50"
+            strokeLinecap="butt"
+          />
+          {/* Animated centre dashes */}
+          <motion.path
+            d={ROAD_PATH}
+            stroke="rgba(255,255,255,0.35)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeDasharray="22 16"
+            animate={{ strokeDashoffset: [0, -38] }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+        </svg>
 
-          {/* ── Step markers (hexagons) + labels ── */}
-          {STOPS.map((stop, i) => {
-            const step = steps[i];
+        {/* ── Step markers + label cards ── */}
+        {STOPS.map((stop, i) => {
+          const step = steps[i];
+          const Icon = step.icon;
+          const isPrimary = stop.color === "primary";
+
+          const leftPct = (stop.x / 1200) * 100;
+          const topPct  = (stop.y / 340)  * 100;
+
+          const hexGrad = isPrimary
+            ? "linear-gradient(135deg, hsl(214 66% 50%), hsl(214 66% 36%))"
+            : "linear-gradient(135deg, hsl(180 84% 42%), hsl(180 84% 28%))";
+          const glowColor = isPrimary
+            ? "hsl(214 66% 44% / 0.45)"
+            : "hsl(180 84% 39% / 0.45)";
+          const stepNumColor = isPrimary
+            ? "hsl(214 66% 44%)"
+            : "hsl(180 60% 36%)";
+
+          return (
+            <motion.div
+              key={step.title}
+              className="absolute"
+              style={{
+                left: `${leftPct}%`,
+                top:  `${topPct}%`,
+                transform: "translate(-50%, -50%)",
+              }}
+              initial={{ opacity: 0, scale: 0.4 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.5 + i * 0.2, type: "spring", stiffness: 200 }}
+            >
+              {/* Pulse ring */}
+              <motion.div
+                className="absolute rounded-full"
+                style={{
+                  width: 56, height: 56,
+                  top: "50%", left: "50%",
+                  marginLeft: -28, marginTop: -28,
+                  background: glowColor,
+                }}
+                animate={{ scale: [1, 2], opacity: [0.5, 0] }}
+                transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.5, ease: "easeOut" }}
+              />
+
+              {/* Hexagon icon */}
+              <div
+                className="relative z-10 w-14 h-14 flex items-center justify-center"
+                style={{
+                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  background: hexGrad,
+                  filter: `drop-shadow(0 0 10px ${glowColor})`,
+                }}
+              >
+                <Icon className="h-6 w-6 text-white" />
+              </div>
+
+              {/* Label card — above or below */}
+              <div
+                className={`absolute left-1/2 -translate-x-1/2 w-52 ${
+                  stop.labelSide === "top"
+                    ? "bottom-full mb-5"
+                    : "top-full mt-5"
+                }`}
+              >
+                {/* Connector dot */}
+                {stop.labelSide === "top" ? (
+                  <div className="flex justify-center mb-1.5">
+                    <div className="w-px h-4" style={{ background: stepNumColor, opacity: 0.5 }} />
+                  </div>
+                ) : (
+                  <div className="flex justify-center mb-1.5">
+                    <div className="w-px h-4" style={{ background: stepNumColor, opacity: 0.5 }} />
+                  </div>
+                )}
+
+                <div className="glass-card rounded-2xl px-4 py-3.5 text-center">
+                  <p
+                    className="text-[10px] font-bold font-sans tracking-[0.25em] mb-1.5 uppercase"
+                    style={{ color: stepNumColor }}
+                  >
+                    Step {String(i + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="font-serif font-bold text-foreground text-[15px] mb-1.5 leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground font-sans leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+
+                {stop.labelSide === "bottom" && (
+                  <div className="flex justify-center mt-1.5">
+                    <div className="w-px h-4" style={{ background: stepNumColor, opacity: 0.5 }} />
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* ══════════════════════════════════════
+          MOBILE: Vertical Timeline
+          ══════════════════════════════════════ */}
+      <div className="lg:hidden container mx-auto px-4 relative pl-12">
+        {/* Animated vertical line */}
+        <div className="absolute left-[calc(1rem+20px)] top-4 bottom-4 w-px overflow-hidden">
+          <motion.div
+            className="w-full h-full"
+            style={{
+              background: "linear-gradient(180deg, hsl(214 66% 44%), hsl(180 84% 39%))",
+              transformOrigin: "top",
+            }}
+            initial={{ scaleY: 0 }}
+            animate={inView ? { scaleY: 1 } : {}}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+          />
+        </div>
+
+        {/* Traveling dot */}
+        <motion.span
+          className="absolute w-[6px] h-[6px] rounded-full bg-accent"
+          style={{ left: "calc(1rem + 17px)", boxShadow: "0 0 8px hsl(180 84% 39%)" }}
+          initial={{ top: "0%" }}
+          animate={inView ? { top: ["0%", "100%"] } : {}}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "linear", delay: 0.8 }}
+        />
+
+        <div className="space-y-6">
+          {steps.map((step, i) => {
+            const isPrimary = i % 2 === 0;
             const Icon = step.icon;
-            const isPrimary = stop.color === "primary";
-
-            // Convert SVG coordinates → % of container (viewBox 1200×340)
-            const leftPct = (stop.x / 1200) * 100;
-            const topPct  = (stop.y / 340)  * 100;
-
             const hexGrad = isPrimary
               ? "linear-gradient(135deg, hsl(214 66% 50%), hsl(214 66% 36%))"
               : "linear-gradient(135deg, hsl(180 84% 42%), hsl(180 84% 28%))";
-            const glowColor = isPrimary
-              ? "hsl(214 66% 44% / 0.4)"
-              : "hsl(180 84% 39% / 0.4)";
             const stepNumColor = isPrimary
               ? "hsl(214 66% 44%)"
               : "hsl(180 60% 36%)";
@@ -153,56 +266,29 @@ const HowItWorksSection = () => {
             return (
               <motion.div
                 key={step.title}
-                className="absolute"
-                style={{
-                  left: `${leftPct}%`,
-                  top:  `${topPct}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-                initial={{ opacity: 0, scale: 0.4 }}
-                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.5 + i * 0.2, type: "spring", stiffness: 200 }}
+                className="relative"
+                initial={{ opacity: 0, x: 24 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.18 }}
               >
-                {/* Pulse ring */}
-                <motion.div
-                  className="absolute rounded-full"
-                  style={{
-                    width: 56, height: 56,
-                    top: "50%", left: "50%",
-                    marginLeft: -28, marginTop: -28,
-                    background: glowColor,
-                  }}
-                  animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
-                  transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.5, ease: "easeOut" }}
-                />
-
-                {/* Hexagon icon */}
                 <div
-                  className="relative z-10 w-14 h-14 flex items-center justify-center cursor-default"
+                  className="absolute -left-[2.6rem] top-3 h-10 w-10 flex items-center justify-center z-10"
                   style={{
                     clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                     background: hexGrad,
-                    filter: `drop-shadow(0 0 10px ${glowColor})`,
                   }}
                 >
-                  <Icon className="h-6 w-6 text-white" />
+                  <Icon className="h-5 w-5 text-white" />
                 </div>
 
-                {/* Label — above or below */}
-                <div
-                  className={`absolute left-1/2 -translate-x-1/2 w-44 text-center ${
-                    stop.labelSide === "top"
-                      ? "bottom-full mb-7"
-                      : "top-full mt-7"
-                  }`}
-                >
+                <div className="glass-card rounded-2xl px-5 py-4">
                   <p
-                    className="text-xs font-bold font-sans tracking-[0.28em] mb-1.5"
+                    className="text-[10px] font-bold font-sans tracking-[0.22em] mb-1 uppercase"
                     style={{ color: stepNumColor }}
                   >
-                    STEP {String(i + 1).padStart(2, "0")}
+                    Step {String(i + 1).padStart(2, "0")}
                   </p>
-                  <h3 className="font-serif font-semibold text-foreground text-base mb-1.5">
+                  <h3 className="font-serif font-bold text-foreground text-lg mb-1.5">
                     {step.title}
                   </h3>
                   <p className="text-sm text-muted-foreground font-sans leading-relaxed">
@@ -213,85 +299,6 @@ const HowItWorksSection = () => {
             );
           })}
         </div>
-
-        {/* ══════════════════════════════════════
-            MOBILE: Vertical Timeline
-            ══════════════════════════════════════ */}
-        <div className="lg:hidden relative pl-12">
-          {/* Animated vertical line */}
-          <div className="absolute left-5 top-4 bottom-4 w-px overflow-hidden">
-            <motion.div
-              className="w-full h-full"
-              style={{
-                background: "linear-gradient(180deg, hsl(214 66% 44%), hsl(180 84% 39%))",
-                transformOrigin: "top",
-              }}
-              initial={{ scaleY: 0 }}
-              animate={inView ? { scaleY: 1 } : {}}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-            />
-          </div>
-
-          {/* Traveling dot */}
-          <motion.span
-            className="absolute left-[17px] w-[6px] h-[6px] rounded-full bg-accent"
-            style={{ boxShadow: "0 0 8px hsl(180 84% 39%)" }}
-            initial={{ top: "0%" }}
-            animate={inView ? { top: ["0%", "100%"] } : {}}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "linear", delay: 0.8 }}
-          />
-
-          <div className="space-y-6">
-            {steps.map((step, i) => {
-              const isPrimary = i % 2 === 0;
-              const Icon = step.icon;
-              const hexGrad = isPrimary
-                ? "linear-gradient(135deg, hsl(214 66% 50%), hsl(214 66% 36%))"
-                : "linear-gradient(135deg, hsl(180 84% 42%), hsl(180 84% 28%))";
-              const stepNumColor = isPrimary
-                ? "hsl(214 66% 44%)"
-                : "hsl(180 60% 36%)";
-
-              return (
-                <motion.div
-                  key={step.title}
-                  className="relative"
-                  initial={{ opacity: 0, x: 24 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.18 }}
-                >
-                  {/* Hexagon dot on timeline */}
-                  <div
-                    className="absolute -left-[2.6rem] top-3 h-10 w-10 flex items-center justify-center z-10"
-                    style={{
-                      clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                      background: hexGrad,
-                    }}
-                  >
-                    <Icon className="h-5 w-5 text-white" />
-                  </div>
-
-                  {/* Card — light style */}
-                  <div className="bg-white/80 border border-border rounded-xl px-5 py-4 shadow-sm">
-                    <p
-                      className="text-xs font-bold font-sans tracking-[0.22em] mb-1"
-                      style={{ color: stepNumColor }}
-                    >
-                      STEP {String(i + 1).padStart(2, "0")}
-                    </p>
-                    <h3 className="font-serif font-semibold text-foreground text-lg mb-1.5">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground font-sans leading-relaxed">
-                      {step.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
       </div>
     </section>
   );

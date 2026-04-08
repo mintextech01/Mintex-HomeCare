@@ -163,7 +163,7 @@ const HeroSection = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-full px-7 h-12 text-sm font-sans border border-border text-foreground transition-colors duration-200 w-full hover:bg-[#0BE5E5] hover:text-white hover:border-[#0BE5E5] hover:font-bold"
+                className="rounded-full px-7 h-12 text-sm font-sans border border-border text-foreground transition-colors duration-200 w-full hover:bg-[#0891b2] hover:text-white hover:border-[#0891b2] hover:font-bold"
               >
                 <Phone className="h-4 w-4 mr-2" />
                 Call Us: (732) 268-5112

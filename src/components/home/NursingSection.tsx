@@ -289,7 +289,7 @@ const NursingSection = () => {
                   to="/services"
                   className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer hover:-translate-y-2"
                 >
-                  {/* Title + arrow */}
+                  {/* Title */}
                   <div className="flex items-start justify-between px-4 pt-5 pb-3 gap-2 flex-shrink-0">
                     <span className="font-sans font-semibold text-sm text-foreground leading-snug">
                       {card.title}
@@ -302,14 +302,10 @@ const NursingSection = () => {
                     className="relative mx-3 mb-3 rounded-xl overflow-hidden flex-1 min-h-[160px] sm:min-h-[200px] lg:min-h-[230px]"
                     style={{ backgroundColor: card.bg }}
                   >
-                    {/* Custom image (when set in admin) or default SVG illustration */}
+                    {/* Illustration */}
                     <div className="absolute inset-0 flex items-end justify-center pb-1 transition-opacity duration-300 group-hover:opacity-0">
                       {customImg ? (
-                        <img
-                          src={customImg}
-                          alt={card.title}
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={customImg} alt={card.title} className="w-full h-full object-cover" />
                       ) : (
                         card.illustration
                       )}
