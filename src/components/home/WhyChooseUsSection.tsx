@@ -65,7 +65,7 @@ const WhyChooseUsSection = () => (
               <span className="pointer-events-none absolute -bottom-4 -right-1 text-[88px] font-serif font-bold leading-none select-none opacity-[0.06] text-foreground">
                 {i + 1}
               </span>
-
+ 
               {/* Icon */}
               <div
                 className={`h-11 w-11 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-all duration-300 ${
