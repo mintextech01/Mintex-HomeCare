@@ -111,7 +111,7 @@ const Services = () => {
               </span>
             </div>
             <div className="text-center max-w-3xl mx-auto mb-6">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
                 Trusted Home Care<br />
                 <span className="text-[#2a66b0]">Built Around You</span>
               </h1>
@@ -120,7 +120,7 @@ const Services = () => {
               We are dedicated to providing exceptional home care through a compassionate,
               patient-centered approach — every step of the way.
             </p>
-            <div className="flex items-center justify-center gap-4 mb-16">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
               <Link to="/contact"
                 className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105"
                 style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>

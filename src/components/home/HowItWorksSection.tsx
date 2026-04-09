@@ -228,76 +228,84 @@ const HowItWorksSection = () => {
       {/* ══════════════════════════════════════
           MOBILE: Vertical Timeline
           ══════════════════════════════════════ */}
-      <div className="lg:hidden container mx-auto px-4 relative pl-12">
-        {/* Animated vertical line */}
-        <div className="absolute left-[calc(1rem+20px)] top-4 bottom-4 w-px overflow-hidden">
-          <motion.div
-            className="w-full h-full"
-            style={{
-              background: "linear-gradient(180deg, hsl(214 66% 44%), hsl(180 84% 39%))",
-              transformOrigin: "top",
-            }}
-            initial={{ scaleY: 0 }}
-            animate={inView ? { scaleY: 1 } : {}}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
+      <div className="lg:hidden container mx-auto px-4 mt-2">
+        <div className="relative">
+          {/* Animated vertical line — at left-5 (20px) = center of w-10 icon column */}
+          <div className="absolute left-5 top-2 bottom-2 w-0.5 overflow-hidden">
+            <motion.div
+              className="w-full h-full"
+              style={{
+                background: "linear-gradient(180deg, hsl(214 66% 44%), hsl(180 84% 39%))",
+                transformOrigin: "top",
+              }}
+              initial={{ scaleY: 0 }}
+              animate={inView ? { scaleY: 1 } : {}}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            />
+          </div>
+
+          {/* Traveling dot — centered on the line (left: 20px - 3px = 17px) */}
+          <motion.span
+            className="absolute w-[6px] h-[6px] rounded-full bg-accent z-10"
+            style={{ left: "calc(1.25rem - 3px)", boxShadow: "0 0 8px hsl(180 84% 39%)" }}
+            initial={{ top: "0%" }}
+            animate={inView ? { top: ["0%", "100%"] } : {}}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "linear", delay: 0.8 }}
           />
-        </div>
 
-        {/* Traveling dot */}
-        <motion.span
-          className="absolute w-[6px] h-[6px] rounded-full bg-accent"
-          style={{ left: "calc(1rem + 17px)", boxShadow: "0 0 8px hsl(180 84% 39%)" }}
-          initial={{ top: "0%" }}
-          animate={inView ? { top: ["0%", "100%"] } : {}}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "linear", delay: 0.8 }}
-        />
+          <div className="flex flex-col gap-5">
+            {steps.map((step, i) => {
+              const isPrimary = i % 2 === 0;
+              const Icon = step.icon;
+              const hexGrad = isPrimary
+                ? "linear-gradient(135deg, hsl(214 66% 50%), hsl(214 66% 36%))"
+                : "linear-gradient(135deg, hsl(180 84% 42%), hsl(180 84% 28%))";
+              const stepNumColor = isPrimary
+                ? "hsl(214 66% 44%)"
+                : "hsl(180 60% 36%)";
 
-        <div className="space-y-6">
-          {steps.map((step, i) => {
-            const isPrimary = i % 2 === 0;
-            const Icon = step.icon;
-            const hexGrad = isPrimary
-              ? "linear-gradient(135deg, hsl(214 66% 50%), hsl(214 66% 36%))"
-              : "linear-gradient(135deg, hsl(180 84% 42%), hsl(180 84% 28%))";
-            const stepNumColor = isPrimary
-              ? "hsl(214 66% 44%)"
-              : "hsl(180 60% 36%)";
-
-            return (
-              <motion.div
-                key={step.title}
-                className="relative"
-                initial={{ opacity: 0, x: 24 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.18 }}
-              >
-                <div
-                  className="absolute -left-[2.6rem] top-3 h-10 w-10 flex items-center justify-center z-10"
-                  style={{
-                    clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                    background: hexGrad,
-                  }}
+              return (
+                <motion.div
+                  key={step.title}
+                  className="flex items-start gap-4"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.5, delay: i * 0.18 }}
                 >
-                  <Icon className="h-5 w-5 text-white" />
-                </div>
+                  {/* Icon column — w-10 (40px), centers exactly on the left-5 line */}
+                  <div className="flex-shrink-0 w-10 flex items-center justify-center relative z-10 pt-1">
+                    <div
+                      className="w-10 h-10 flex items-center justify-center"
+                      style={{
+                        clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                        background: hexGrad,
+                      }}
+                    >
+                      <Icon className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
 
-                <div className="glass-card rounded-2xl px-5 py-4">
-                  <p
-                    className="text-[10px] font-bold font-sans tracking-[0.22em] mb-1 uppercase"
-                    style={{ color: stepNumColor }}
-                  >
-                    Step {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className="font-serif font-bold text-foreground text-lg mb-1.5">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground font-sans leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
+                  {/* Card */}
+                  <div className="flex-1 pb-1">
+                    <div className="glass-card rounded-2xl px-5 py-4">
+                      <p
+                        className="text-[10px] font-bold font-sans tracking-[0.22em] mb-1 uppercase"
+                        style={{ color: stepNumColor }}
+                      >
+                        Step {String(i + 1).padStart(2, "0")}
+                      </p>
+                      <h3 className="font-serif font-bold text-foreground text-lg mb-1.5">
+                        {step.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground font-sans leading-relaxed">
+                        {step.desc}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

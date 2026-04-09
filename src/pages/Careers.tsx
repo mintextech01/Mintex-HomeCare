@@ -81,7 +81,7 @@ const Careers = () => {
                   <span className="text-gray-600">Careers</span>
                 </p>
 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-gray-900 leading-[1.1] mb-5">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-gray-900 leading-[1.1] mb-5">
                   Join Our<br />Team At<br />
                   <span className="text-primary">MintexCare</span>
                 </h1>
