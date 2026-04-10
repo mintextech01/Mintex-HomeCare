@@ -5,6 +5,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Link } from "react-router-dom";
+import React from "react";
 import {
   Target, Eye, Heart, CheckCircle, Users, MapPin, Award,
   ArrowRight, ShieldCheck, Clock, Star, Stethoscope, Phone,
@@ -356,61 +357,67 @@ const About = () => {
 
               {/* Mission */}
               <AnimatedSection delay={0}>
-                <div className="relative rounded-3xl overflow-hidden p-8 h-full flex flex-col"
-                  style={{ background: "linear-gradient(135deg, #2a66b0 0%, #1a4a8a 100%)" }}>
-                  <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/8 pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-                  <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-white/5 leading-none">M</span>
-                  <div className="w-13 h-13 w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mb-6 relative z-10">
-                    <Target className="h-6 w-6 text-white" />
+                <div className="svc-card-wrapper h-full" style={{ "--icon-color": "#2a66b0" } as React.CSSProperties}>
+                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden hover:border-transparent hover:shadow-xl transition-all duration-500">
+                    {/* Blue gradient overlay on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl z-0"
+                      style={{ background: "linear-gradient(135deg, #2a66b0 0%, #1a4a8a 100%)" }} />
+                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#2a66b0] z-10" />
+                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 group-hover:text-white/5 leading-none transition-colors duration-500 z-[1]">M</span>
+                    <div className="svc-icon-box mb-7 relative z-[1]" style={{ "--icon-color": "#2a66b0", "--icon-bg": "rgba(42,102,176,0.08)" } as React.CSSProperties}>
+                      <Target className="icon-svg w-7 h-7 text-[#2a66b0] group-hover:text-white transition-colors duration-500" />
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3 group-hover:text-white transition-colors duration-500 relative z-[1]">Mission</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed flex-1 group-hover:text-white/75 transition-colors duration-500 relative z-[1]">
+                      To deliver exceptional, client-centered home care services that promote independence,
+                      dignity, and peace of mind for our clients and their families.
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Mission</h3>
-                  <p className="text-sm text-white/75 leading-relaxed flex-1 relative z-10">
-                    To deliver exceptional, client-centered home care services that promote independence,
-                    dignity, and peace of mind for our clients and their families.
-                  </p>
-                  <div className="mt-8 h-1 w-10 bg-white/30 rounded-full" />
                 </div>
               </AnimatedSection>
 
-                {/* Vision */}
-                <AnimatedSection delay={0.1}>
-                  <div className="relative rounded-3xl bg-gray-50 border border-gray-100 p-8 h-full flex flex-col overflow-hidden">
-                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-300/40 leading-none">V</span>
-                    <div className="w-14 h-14 rounded-2xl bg-[#2a66b0]/10 flex items-center justify-center mb-6">
-                      <Eye className="h-6 w-6 text-[#2a66b0]" />
+              {/* Vision */}
+              <AnimatedSection delay={0.1}>
+                <div className="svc-card-wrapper h-full" style={{ "--icon-color": "#0891b2" } as React.CSSProperties}>
+                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#0891b2]" />
+                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 leading-none">V</span>
+                    <div className="svc-icon-box mb-7" style={{ "--icon-color": "#0891b2", "--icon-bg": "rgba(8,145,178,0.08)" } as React.CSSProperties}>
+                      <Eye className="icon-svg w-7 h-7" style={{ color: "#0891b2" }} />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Vision</h3>
+                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">Vision</h3>
                     <p className="text-sm text-gray-500 leading-relaxed flex-1">
                       To be the most trusted home care provider in New Jersey, known for compassion,
                       reliability, and excellence in care — transforming lives one family at a time.
                     </p>
-                    <div className="mt-8 h-1 w-10 bg-[#2a66b0]/30 rounded-full" />
                   </div>
-                </AnimatedSection>
+                </div>
+              </AnimatedSection>
 
               {/* Values */}
               <AnimatedSection delay={0.2}>
-                <div className="relative rounded-3xl bg-gray-50 border border-gray-100 p-8 h-full flex flex-col overflow-hidden">
-                  <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-300/40 leading-none">V</span>
-                  <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6">
-                    <Heart className="h-6 w-6 text-cyan-500" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-5">Values</h3>
-                  <div className="space-y-3 flex-1">
-                    {values.map(({ label, desc }) => (
-                      <div key={label} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <CheckCircle className="h-3 w-3 text-[#2a66b0]" />
+                <div className="svc-card-wrapper h-full" style={{ "--icon-color": "#14b8a6" } as React.CSSProperties}>
+                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#14b8a6]" />
+                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 leading-none">V</span>
+                    <div className="svc-icon-box mb-7" style={{ "--icon-color": "#14b8a6", "--icon-bg": "rgba(20,184,166,0.08)" } as React.CSSProperties}>
+                      <Heart className="icon-svg w-7 h-7" style={{ color: "#14b8a6" }} />
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-5">Values</h3>
+                    <div className="space-y-3 flex-1">
+                      {values.map(({ label, desc }) => (
+                        <div key={label} className="flex items-start gap-3">
+                          <div className="w-5 h-5 rounded-full bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <CheckCircle className="h-3 w-3 text-[#2a66b0]" />
+                          </div>
+                          <div>
+                            <span className="text-sm font-semibold text-gray-900">{label} </span>
+                            <span className="text-xs text-gray-500">— {desc}</span>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-sm font-semibold text-gray-900">{label} </span>
-                          <span className="text-xs text-gray-500">— {desc}</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                  <div className="mt-6 h-1 w-10 bg-cyan-500/30 rounded-full" />
                 </div>
               </AnimatedSection>
 

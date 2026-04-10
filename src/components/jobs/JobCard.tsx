@@ -21,7 +21,7 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
       transition={{ delay, duration: 0.4 }}
     >
       <Card
-        className="h-full overflow-hidden border-border/50 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 transition-all duration-300 cursor-pointer"
+        className="h-full flex flex-col overflow-hidden border-border/50 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 transition-all duration-300 cursor-pointer"
         onClick={() => onDetailsClick(job)}
       >
         <CardHeader className="pb-3">
@@ -46,7 +46,7 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="flex flex-col flex-1 space-y-4">
           {/* Metadata */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -64,10 +64,10 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
           </div>
 
           {/* Description */}
-          <p className="text-sm text-foreground/70 line-clamp-3 leading-relaxed">{job.description}</p>
+          <p className="text-sm text-foreground/70 line-clamp-3 leading-relaxed flex-1">{job.description}</p>
 
           {/* CTA Buttons */}
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-2 pt-2 mt-auto">
             <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button
                 size="sm"

@@ -6,8 +6,8 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { getIcon } from "@/lib/iconMap";
-import { ArrowRight, CheckCircle, Star, Users, Clock, ShieldCheck } from "lucide-react";
-import React from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, CheckCircle, Star, Users, Clock, ShieldCheck } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
 
 const stats = [
   { value: "500+", label: "Families Served",  icon: Users       },
@@ -63,6 +63,105 @@ const ServiceCard = ({
         </div>
       </div>
     </AnimatedSection>
+  );
+};
+
+/* ── Paginated home-care slider (8 cards per page) ── */
+const CARDS_PER_PAGE = 8;
+
+const HomeCareSlider = ({
+  services,
+}: {
+  services: { id: string; title: string; description: string; icon: string }[];
+}) => {
+  const totalPages = Math.max(1, Math.ceil(services.length / CARDS_PER_PAGE));
+  const [page, setPage] = useState(0);
+  const [isSliding, setIsSliding] = useState(false);
+  const [slideDir, setSlideDir] = useState<"left" | "right">("left");
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const goTo = (next: number, dir: "left" | "right") => {
+    if (isSliding || next === page) return;
+    setSlideDir(dir);
+    setIsSliding(true);
+    timeoutRef.current = setTimeout(() => {
+      setPage(next);
+      setIsSliding(false);
+    }, 400);
+  };
+
+  const pageServices = services.slice(
+    page * CARDS_PER_PAGE,
+    page * CARDS_PER_PAGE + CARDS_PER_PAGE
+  );
+
+  return (
+    <div>
+      {/* slider viewport */}
+      <div className="overflow-hidden">
+        <div
+          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-all duration-400"
+          style={{
+            opacity: isSliding ? 0 : 1,
+            transform: isSliding
+              ? `translateX(${slideDir === "left" ? "-60px" : "60px"})`
+              : "translateX(0)",
+            transition: "opacity 0.4s ease, transform 0.4s ease",
+          }}
+        >
+          {pageServices.map((s, i) => (
+            <ServiceCard
+              key={s.id}
+              s={s}
+              i={i}
+              palette={palettes[i % palettes.length]}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* pagination controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 mt-10">
+          <button
+            onClick={() => goTo(page - 1, "right")}
+            disabled={page === 0 || isSliding}
+            className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i, i > page ? "left" : "right")}
+                disabled={isSliding}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  i === page
+                    ? "bg-[#2a66b0] scale-125"
+                    : "bg-gray-300 hover:bg-gray-400"
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={() => goTo(page + 1, "left")}
+            disabled={page === totalPages - 1 || isSliding}
+            className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -250,11 +349,7 @@ const Services = () => {
                 Comprehensive care solutions tailored to your unique needs and lifestyle
               </p>
             </AnimatedSection>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {homeServices.map((s, i) => (
-                <ServiceCard key={s.id} s={s} i={i} palette={palettes[i % palettes.length]} />
-              ))}
-            </div>
+            <HomeCareSlider services={homeServices} />
           </div>
         </section>
 
@@ -329,27 +424,29 @@ const Services = () => {
         {/* ══════════════════════════════════════
             TRUST STRIP
         ══════════════════════════════════════ */}
-        <section className="py-14 bg-white border-y border-gray-100">
-          <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              {[
-                { icon: ShieldCheck, title: "Building Trust",        desc: "We earn your confidence through consistent, quality care every single day." },
-                { icon: Users,       title: "Community Involvement", desc: "Deeply rooted in New Jersey, serving families across our community."       },
-                { icon: CheckCircle, title: "Security and Privacy",  desc: "Your health information is always handled with the highest standards."      },
-              ].map(({ icon: Icon, title, desc }) => (
-                <AnimatedSection key={title} className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-full bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Icon className="w-5 h-5 text-[#2a66b0]" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-sm mb-1">{title}</h4>
-                    <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
+        <section className="py-14 bg-[#5c8aa6] border-y border-gray-100">
+  <div className="container mx-auto px-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+      {[
+        { icon: ShieldCheck, title: "Building Trust",       desc: "We earn your confidence through consistent, quality care every single day." },
+        { icon: Users,       title: "Community Involvement", desc: "Deeply rooted in New Jersey, serving families across our community."       },
+        { icon: CheckCircle, title: "Security and Privacy",  desc: "Your health information is always handled with the highest standards."      },
+      ].map(({ icon: Icon, title, desc }) => (
+        <AnimatedSection key={title} className="flex gap-4 items-start">
+          {/* Note: I kept the icon background light for contrast, but adjusted it to white/20 for better visibility on blue */}
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <Icon className="w-5 h-5 text-white" />
           </div>
-        </section>
+          <div>
+            {/* Changed text colors to white for better readability on the new blue background */}
+            <h4 className="font-bold text-white text-sm mb-1">{title}</h4>
+            <p className="text-xs text-blue-50 leading-relaxed">{desc}</p>
+          </div>
+        </AnimatedSection>
+      ))}
+    </div>
+  </div>
+</section>
 
         {/* ══════════════════════════════════════
             CTA BANNER

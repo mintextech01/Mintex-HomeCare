@@ -51,7 +51,16 @@ export function JobsSection({
   };
 
   const handleApply = (_job: Job) => {
-    // TODO: open apply form or redirect to application page
+    setIsDetailModalOpen(false);
+    // Wait for dialog to fully close and release body scroll lock before scrolling
+    setTimeout(() => {
+      document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
+      const applySection = document.getElementById("apply-section");
+      if (applySection) {
+        applySection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 400);
   };
 
   return (
