@@ -168,17 +168,19 @@ const HowItWorksSection = () => {
                 transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.5, ease: "easeOut" }}
               />
 
-              {/* Hexagon icon */}
-              <div
+              {/* Hexagon icon — 3D hover spin */}
+              <motion.div
                 className="relative z-10 w-14 h-14 flex items-center justify-center"
                 style={{
                   clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                   background: hexGrad,
                   filter: `drop-shadow(0 0 10px ${glowColor})`,
                 }}
+                whileHover={{ rotateY: 180, scale: 1.15 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
               >
                 <Icon className="h-6 w-6 text-white" />
-              </div>
+              </motion.div>
 
               {/* Label card — above or below */}
               <div

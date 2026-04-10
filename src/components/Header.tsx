@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Phone, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/Artboard 133 copy (1).svg";
+import { motion } from "framer-motion";
 
 const navLinks = [
   { label: "Home",          href: "/" },
@@ -46,8 +47,13 @@ const Header = () => {
 
   return (
     <>
-      {/* ── Sticky Header Bar ── */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerClass}`}>
+      {/* ── Sticky Header Bar — smooth entrance ── */}
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerClass}`}
+      >
         {/* Specular top-edge highlight */}
         {(scrolled || !isHome) && (
           <div
@@ -114,7 +120,7 @@ const Header = () => {
             <Menu className="h-5 w-5 text-foreground" />
           </button>
         </div>
-      </header>
+      </motion.header>
 
       {/* ── Mobile Drawer — rendered OUTSIDE header to avoid z-index conflicts ── */}
       {/* Backdrop */}

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Clock, Home, Stethoscope, Activity, Dumbbell, Building2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SERVICE_META = [
   { icon: Clock,       label: "Hourly Care",           title: "Flexible hourly support",       description: "Flexible hourly visits tailored to your schedule — from a few hours a week to daily support.",              btnLabel: "Learn more",    link: "/services", imgKey: "serviceCard1" as const },
@@ -32,14 +33,22 @@ const ServicesSection = () => {
           </p>
         </AnimatedSection>
 
-        {/* Cards grid */}
+        {/* Cards grid — 3D tilt on hover */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map((service, i) => {
             const Icon = service.icon;
             return (
-              <AnimatedSection key={service.label} delay={i * 0.07}>
-                <div
+              <AnimatedSection key={service.label} delay={i * 0.07} from={i % 2 === 0 ? "rotateUp" : "flip3d"}>
+                <motion.div
                   className="group relative rounded-2xl overflow-hidden cursor-pointer h-[260px] sm:h-[300px] md:h-[360px]"
+                  whileHover={{
+                    scale: 1.03,
+                    rotateY: 2,
+                    rotateX: -2,
+                    boxShadow: "0 25px 50px rgba(0,0,0,0.15), 0 0 30px rgba(38,104,188,0.08)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  style={{ transformStyle: "preserve-3d", perspective: 800 }}
                 >
                   {/* Background image */}
                   <img
@@ -92,7 +101,7 @@ const ServicesSection = () => {
                       </Link>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </AnimatedSection>
             );
           })}

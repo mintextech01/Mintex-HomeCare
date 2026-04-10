@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Phone, ShieldCheck, ArrowRight, Star, Users, Award, HeartPulse } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useRef } from "react";
+import { useMagnetic } from "@/hooks/useScrollAnimations";
 
 /* ─── tiny helpers ─────────────────────────────────────────────────────────── */
 const DotGrid = ({ cols, rows, color = "#0891b2" }: { cols: number; rows: number; color?: string }) => (
@@ -242,9 +244,47 @@ const ImageMosaic = ({
   );
 };
 
+/* ─── Word stagger animation ─────────────────────────────────────────────── */
+const wordStagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.2,
+    },
+  },
+};
+const wordChild = {
+  hidden: { opacity: 0, y: 40, rotateX: -60, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 /* ─── section ──────────────────────────────────────────────────────────────── */
 const HeroSection = () => {
   const { siteImages } = useAdmin();
+  const sectionRef = useRef<HTMLElement>(null);
+  const magneticRef = useMagnetic<HTMLButtonElement>(0.25);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  const smoothBgY = useSpring(bgY, { stiffness: 100, damping: 30 });
+  const smoothTextY = useSpring(textY, { stiffness: 100, damping: 30 });
+  const smoothImageY = useSpring(imageY, { stiffness: 100, damping: 30 });
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   const imgs = {
     topLeft: siteImages.heroTopLeft,
     bottomLeft: siteImages.heroBottomLeft,
@@ -253,11 +293,13 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-background flex items-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen bg-background flex items-center overflow-hidden">
 
-      {/* ════ BACKGROUND LAYER ════════════════════════════════════════════════ */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-
+      {/* ════ BACKGROUND LAYER — parallax ════════════════════════════════════ */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        style={{ y: smoothBgY, scale: bgScale }}
+      >
         {/* large gradient blob — top-right */}
         <div
           className="absolute rounded-full"
@@ -354,20 +396,20 @@ const HeroSection = () => {
         <svg className="absolute opacity-8" style={{ bottom: "38%", left: "8%", width: 100 }} viewBox="0 0 100 30">
           <polyline points="0,15 15,15 20,4 28,26 36,4 44,26 50,15 100,15" fill="none" stroke="#0891b2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      </div>
+      </motion.div>
       {/* ════════════════════════════════════════════════════════════════════ */}
 
-      <div className="container mx-auto px-6 md:px-10 relative z-10">
+      <motion.div className="container mx-auto px-6 md:px-10 relative z-10" style={{ opacity }}>
         <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center py-32 lg:py-0 lg:min-h-screen">
 
-          {/* ── LEFT: Text ── */}
-          <div className="order-2 lg:order-1">
+          {/* ── LEFT: Text — with word stagger + parallax ── */}
+          <motion.div className="order-2 lg:order-1" style={{ y: smoothTextY }}>
 
-            {/* pill badge */}
+            {/* pill badge — depth push */}
             <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6"
             >
               <HeartPulse className="w-4 h-4 text-accent" />
@@ -377,20 +419,36 @@ const HeroSection = () => {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              variants={wordStagger}
+              initial="hidden"
+              animate="visible"
               className="text-4xl sm:text-5xl md:text-6xl xl:text-[4.25rem] font-serif font-bold text-foreground leading-[1.08] mb-5"
+              style={{ perspective: 600 }}
             >
-              Compassionate<br />
-              Home Care<br />
-              <span className="text-accent relative inline-block">
+              {["Compassionate"].map((word, i) => (
+                <motion.span key={i} variants={wordChild} className="inline-block mr-2">{word}</motion.span>
+              ))}
+              <br />
+              {["Home", "Care"].map((word, i) => (
+                <motion.span key={i} variants={wordChild} className="inline-block mr-2">{word}</motion.span>
+              ))}
+              <br />
+              <motion.span variants={wordChild} className="text-accent relative inline-block">
                 in New Jersey
-                {/* underline accent */}
                 <svg className="absolute -bottom-1 left-0 w-full" height="6" viewBox="0 0 200 6" preserveAspectRatio="none">
-                  <path d="M0,5 Q50,0 100,4 Q150,8 200,3" stroke="#0891b2" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.5" />
+                  <motion.path
+                    d="M0,5 Q50,0 100,4 Q150,8 200,3"
+                    stroke="#0891b2"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    opacity="0.5"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1.2, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  />
                 </svg>
-              </span>
+              </motion.span>
             </motion.h1>
 
             <motion.p
@@ -405,13 +463,15 @@ const HeroSection = () => {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.45 }}
+              initial={{ opacity: 0, y: 20, rotateX: 10 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{ duration: 0.7, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col sm:flex-row gap-3 mb-7"
+              style={{ perspective: 600 }}
             >
               <Link to="/contact">
                 <Button
+                  ref={magneticRef}
                   size="lg"
                   className="bg-accent text-white hover:bg-accent/90 rounded-full px-7 h-12 text-sm font-sans font-semibold shadow-lg shadow-accent/25 group w-full sm:w-auto"
                 >
@@ -451,20 +511,21 @@ const HeroSection = () => {
                 Serving All of New Jersey
               </div>
             </motion.div>
-          </div>
+          </motion.div>
 
-          {/* ── RIGHT: Image mosaic ── */}
+          {/* ── RIGHT: Image mosaic — 3D perspective + parallax ── */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            initial={{ opacity: 0, x: 40, rotateY: -8 }}
+            animate={{ opacity: 1, x: 0, rotateY: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            style={{ y: smoothImageY, perspective: 1000 }}
             className="order-1 lg:order-2 hidden lg:flex justify-center items-center"
           >
             <ImageMosaic imgs={imgs} />
           </motion.div>
 
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

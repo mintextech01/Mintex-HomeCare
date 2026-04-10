@@ -2,14 +2,15 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import logo from "@/assets/Artboard 133 copy (1).svg";
+import AnimatedSection from "@/components/AnimatedSection";
 
 const Footer = () => {
   const { contactInfo } = useAdmin();
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
 
   return (
-    <footer className="bg-footer-bg text-footer-foreground">
-      <div className="container mx-auto px-4 py-14 md:py-20">
+    <footer className="bg-footer-bg text-footer-foreground relative overflow-hidden">
+      <div className="container mx-auto px-4 py-14 md:py-20 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <img src={logo} alt="MintexCare" className="h-20 md:h-28 w-auto object-contain transform scale-110 origin-left brightness-0 invert mb-4" />

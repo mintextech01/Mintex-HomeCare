@@ -1,5 +1,6 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { ClipboardList, UserCheck, Clock, DollarSign, MessageCircle, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 
 const features = [
   { icon: ClipboardList, title: "Personalized Care Plans",           desc: "Every care plan is custom-tailored to match the unique needs, preferences, and goals of each client.",                                       accent: "primary" },
@@ -48,11 +49,22 @@ const WhyChooseUsSection = () => (
         <div className="mt-8 h-px bg-border" />
       </AnimatedSection>
 
-      {/* ── Feature grid ── */}
+      {/* ── Feature grid — 3D hover + icon spin ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {features.map((f, i) => (
-          <AnimatedSection key={f.title} delay={i * 0.08}>
-            <div className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full overflow-hidden bg-[#e8ebed]">
+          <AnimatedSection key={f.title} delay={i * 0.08} from={i % 3 === 0 ? "depth" : i % 3 === 1 ? "rotateUp" : "flip3d"}>
+            <motion.div
+              className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card h-full overflow-hidden bg-[#e8ebed]"
+              whileHover={{
+                y: -6,
+                scale: 1.02,
+                rotateX: -1,
+                rotateY: 2,
+                boxShadow: "0 20px 40px rgba(0,0,0,0.1), 0 0 20px rgba(38,104,188,0.06)",
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              style={{ transformStyle: "preserve-3d", perspective: 800 }}
+            >
 
               {/* Animated top accent bar */}
               <div
@@ -65,21 +77,23 @@ const WhyChooseUsSection = () => (
               <span className="pointer-events-none absolute -bottom-4 -right-1 text-[88px] font-serif font-bold leading-none select-none opacity-[0.06] text-foreground">
                 {i + 1}
               </span>
- 
-              {/* Icon */}
-              <div
-                className={`h-11 w-11 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-all duration-300 ${
+
+              {/* Icon — 3D flip on hover */}
+              <motion.div
+                className={`h-11 w-11 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5 ${
                   f.accent === "accent"
                     ? "bg-accent/10 group-hover:bg-accent/15"
                     : "bg-primary/10 group-hover:bg-primary/15"
                 }`}
+                whileHover={{ rotateY: 180, scale: 1.15 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
               >
                 <f.icon
                   className={`h-5 w-5 transition-colors ${
                     f.accent === "accent" ? "text-accent" : "text-primary"
                   }`}
                 />
-              </div>
+              </motion.div>
 
               {/* Text */}
               <div className="flex-1 min-w-0">
@@ -91,7 +105,7 @@ const WhyChooseUsSection = () => (
                 </p>
               </div>
 
-            </div>
+            </motion.div>
           </AnimatedSection>
         ))}
       </div>

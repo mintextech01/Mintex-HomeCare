@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
+import { motion } from "framer-motion";
 
 /**
  * Inline SVG flat-character illustrations — Care.com style.
@@ -284,10 +285,21 @@ const NursingSection = () => {
             {cards.map((card, idx) => {
               const customImg = siteImages[cardKeys[idx]];
               return (
-                <Link
+                <motion.div
                   key={card.title}
+                  whileHover={{
+                    y: -8,
+                    scale: 1.04,
+                    rotateY: 3,
+                    rotateX: -2,
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.12), 0 0 20px rgba(38,104,188,0.06)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  style={{ transformStyle: "preserve-3d", perspective: 600 }}
+                >
+                <Link
                   to="/services"
-                  className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer hover:-translate-y-2"
+                  className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer"
                 >
                   {/* Title */}
                   <div className="flex items-start justify-between px-4 pt-5 pb-3 gap-2 flex-shrink-0">
@@ -322,6 +334,7 @@ const NursingSection = () => {
                     </div>
                   </div>
                 </Link>
+                </motion.div>
               );
             })}
           </div>

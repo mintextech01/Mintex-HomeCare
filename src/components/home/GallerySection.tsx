@@ -1,5 +1,6 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
+import { motion } from "framer-motion";
 
 const GallerySection = () => {
   const { gallery } = useAdmin();
@@ -19,8 +20,18 @@ const GallerySection = () => {
         </AnimatedSection>
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
           {gallery.map((img, i) => (
-            <AnimatedSection key={img.id} delay={i * 0.05}>
-              <div className="break-inside-avoid rounded-xl overflow-hidden shadow-md group">
+            <AnimatedSection key={img.id} delay={i * 0.05} from={i % 3 === 0 ? "depth" : i % 3 === 1 ? "flip3d" : "rotateUp"}>
+              <motion.div
+                className="break-inside-avoid rounded-xl overflow-hidden shadow-md group"
+                whileHover={{
+                  scale: 1.03,
+                  rotateY: 2,
+                  rotateX: -1,
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.15), 0 0 20px rgba(38,104,188,0.06)",
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                style={{ transformStyle: "preserve-3d", perspective: 800 }}
+              >
                 <img
                   src={img.url}
                   alt={img.caption || "Gallery image"}
@@ -32,7 +43,7 @@ const GallerySection = () => {
                     {img.caption}
                   </p>
                 )}
-              </div>
+              </motion.div>
             </AnimatedSection>
           ))}
         </div>

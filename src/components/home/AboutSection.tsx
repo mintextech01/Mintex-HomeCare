@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, CheckCircle, Award, Users, Heart, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { use3DTiltGlow } from "@/hooks/useScrollAnimations";
 
 const features = [
   "Compassionate, certified caregivers",
@@ -19,9 +22,17 @@ const stats = [
 
 const AboutSection = () => {
   const { siteImages } = useAdmin();
+  const sectionRef = useRef<HTMLElement>(null);
+  const tiltRef = use3DTiltGlow<HTMLDivElement>(10, "38, 104, 188");
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
-    <section id="about" className="relative py-20 md:py-28 bg-white overflow-hidden">
+    <section ref={sectionRef} id="about" className="relative py-20 md:py-28 bg-white overflow-hidden">
 
       {/* Soft background blobs */}
       <div className="pointer-events-none absolute inset-0">
@@ -34,12 +45,15 @@ const AboutSection = () => {
       <div className="container mx-auto px-6 md:px-10 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 xl:gap-24 items-center">
 
-          {/* ── LEFT: Image column ── */}
-          <AnimatedSection from="left" className="relative order-2 lg:order-1">
+          {/* ── LEFT: Image column — 3D tilt + parallax ── */}
+          <AnimatedSection from="flip3d" className="relative order-2 lg:order-1">
 
-            {/* Main image */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl"
-              style={{ aspectRatio: "4/5", maxHeight: 560 }}>
+            {/* Main image — with 3D tilt on hover + parallax */}
+            <motion.div
+              ref={tiltRef}
+              className="relative rounded-3xl overflow-hidden shadow-2xl"
+              style={{ aspectRatio: "4/5", maxHeight: 560, y: imageY }}
+            >
               <img
                 src={siteImages.about}
                 alt="Caregiver providing compassionate home care"
@@ -56,7 +70,7 @@ const AboutSection = () => {
                   Dignified, compassionate care<br />in the comfort of home.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Floating experience badge — top-right */}
             <div className="absolute top-2 right-2 md:-top-4 md:right-0 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-gray-100"
@@ -96,8 +110,8 @@ const AboutSection = () => {
             <div className="absolute -bottom-10 right-8 w-32 h-32 rounded-full border-2 border-dashed border-[#2a66b0]/20 pointer-events-none" />
           </AnimatedSection>
 
-          {/* ── RIGHT: Text column ── */}
-          <AnimatedSection from="right" delay={0.15} className="order-1 lg:order-2">
+          {/* ── RIGHT: Text column — depth push reveal ── */}
+          <AnimatedSection from="depth" delay={0.15} className="order-1 lg:order-2">
 
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-6">
@@ -131,19 +145,31 @@ const AboutSection = () => {
               ))}
             </ul>
 
-            {/* Stats grid */}
+            {/* Stats grid — 3D hover lift */}
             <div className="grid grid-cols-2 gap-3 mb-8">
-              {stats.map(({ value, label, icon: Icon }) => (
-                <div key={label}
-                  className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3.5 border border-gray-100">
-                  <div className="w-9 h-9 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0">
+              {stats.map(({ value, label, icon: Icon }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 20, rotateX: 15 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -4, scale: 1.03, boxShadow: "0 12px 30px rgba(38,104,188,0.12)" }}
+                  className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3.5 border border-gray-100 hover-lift-3d"
+                  style={{ perspective: 600 }}
+                >
+                  <motion.div
+                    className="w-9 h-9 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0"
+                    whileHover={{ rotateY: 180, scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  >
                     <Icon className="w-4 h-4 text-[#2a66b0]" />
-                  </div>
+                  </motion.div>
                   <div>
                     <p className="text-xl font-bold text-gray-900 leading-none">{value}</p>
                     <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{label}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 

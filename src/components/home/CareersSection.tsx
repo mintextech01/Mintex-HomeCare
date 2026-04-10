@@ -12,15 +12,15 @@ const CareersSection = () => {
   <section className="py-16 md:py-20">
     <div className="container mx-auto px-4">
       <div className="grid md:grid-cols-2 gap-12 items-center">
-        <AnimatedSection from="left">
+        <AnimatedSection from="flip3d">
           <img
             src={siteImages.careers}
             alt="Healthcare team members"
-            className="rounded-xl shadow-xl w-full object-cover h-[350px] transition-transform duration-500 hover:scale-[1.02]"
+            className="rounded-xl shadow-xl w-full object-cover h-[350px] transition-transform duration-500 hover:scale-[1.02] image-reveal"
             loading="lazy"
           />
         </AnimatedSection>
-        <AnimatedSection delay={0.2} from="right">
+        <AnimatedSection delay={0.2} from="depth">
           <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">Join Us</p>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">Join the MintexCare Team</h2>
           <p className="text-base text-muted-foreground leading-relaxed mb-6 font-sans">

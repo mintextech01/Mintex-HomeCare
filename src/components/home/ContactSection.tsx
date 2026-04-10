@@ -47,8 +47,8 @@ const ContactSection = () => {
           <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare.</p>
         </AnimatedSection>
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          <AnimatedSection>
-            <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+          <AnimatedSection from="flip3d">
+            <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm glow-pulse">
               <div>
                 <Input placeholder="Full Name *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className={`font-sans ${errors.name ? "border-destructive" : ""}`} />
                 {errors.name && <p className="text-xs text-destructive mt-1 font-sans">{errors.name}</p>}
@@ -71,7 +71,7 @@ const ContactSection = () => {
               <Button type="submit" size="lg" className="w-full rounded-full font-semibold" style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>Send Message</Button>
             </form>
           </AnimatedSection>
-          <AnimatedSection delay={0.2}>
+          <AnimatedSection delay={0.2} from="depth">
             <div className="space-y-6">
               <div>
                 <h3 className="font-serif text-2xl font-semibold text-foreground mb-5">Contact Information</h3>

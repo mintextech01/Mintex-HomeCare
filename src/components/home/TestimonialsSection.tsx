@@ -83,16 +83,29 @@ const TestimonialsSection = () => {
             </div>
           </AnimatedSection>
 
-          {/* ── RIGHT: stacked testimonial card ── */}
-          <AnimatedSection from="right">
-            <div className="relative">
+          {/* ── RIGHT: stacked testimonial card — 3D depth ── */}
+          <AnimatedSection from="flip3d">
+            <div className="relative" style={{ perspective: 1000 }}>
 
-              {/* Stacked shadow cards */}
-              <div className="absolute inset-0 bg-accent/15  rounded-3xl translate-x-2 translate-y-2 sm:translate-x-4 sm:translate-y-4" />
-              <div className="absolute inset-0 bg-primary/8 rounded-3xl translate-x-1 translate-y-1 sm:translate-x-2 sm:translate-y-2" />
+              {/* Stacked shadow cards — 3D depth layers */}
+              <motion.div
+                className="absolute inset-0 bg-accent/15 rounded-3xl"
+                animate={{ x: [8, 10, 8], y: [8, 10, 8] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.div
+                className="absolute inset-0 bg-primary/8 rounded-3xl"
+                animate={{ x: [4, 6, 4], y: [4, 6, 4] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              />
 
-              {/* Main card */}
-              <div className="relative bg-white rounded-3xl p-8 md:p-10 shadow-xl overflow-hidden">
+              {/* Main card — with subtle hover tilt */}
+              <motion.div
+                className="relative bg-white rounded-3xl p-8 md:p-10 shadow-xl overflow-hidden"
+                whileHover={{ rotateY: 2, rotateX: -1, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
 
                 {/* Giant decorative quote watermark */}
                 <span className="absolute -top-4 right-4 text-[160px] font-serif leading-none text-primary/[0.05] select-none pointer-events-none">
@@ -164,7 +177,7 @@ const TestimonialsSection = () => {
                     />
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </AnimatedSection>
 

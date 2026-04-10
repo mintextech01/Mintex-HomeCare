@@ -1,5 +1,6 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 
 const areas = [
   "Middlesex County", "Monmouth County", "Somerset County", "Union County",
@@ -18,39 +19,28 @@ const ServiceAreasSection = () => (
       
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
         {areas.map((area, i) => (
-          <AnimatedSection key={area} delay={i * 0.06} from="scale">
-            {/* HOVER CHANGES:
-               - Border changes to #102a43
-               - Shadow becomes #102a43 with 15% opacity
-               - Background gets a very light tint of #102a43
-            */}
-            <div 
-              className="group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg transition-all duration-300 cursor-default
-                         hover:-translate-y-0.5"
-              style={{
-                transition: 'all 0.3s ease',
+          <AnimatedSection key={area} delay={i * 0.05} from="scale">
+            <motion.div
+              className="group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg cursor-default"
+              whileHover={{
+                y: -3,
+                scale: 1.04,
+                borderColor: "#102a43",
+                backgroundColor: "rgba(16, 42, 67, 0.03)",
+                boxShadow: "0 10px 20px -3px rgba(16, 42, 67, 0.15)",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#102a43';
-                e.currentTarget.style.backgroundColor = 'rgba(16, 42, 67, 0.03)';
-                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(16, 42, 67, 0.15)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '';
-                e.currentTarget.style.backgroundColor = '';
-                e.currentTarget.style.boxShadow = '';
-              }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
-              <MapPin 
-                className="h-4 w-4 text-accent shrink-0 transition-colors duration-300 group-hover:text-[#102a43]" 
-                style={{ transition: 'color 0.3s' }}
-              />
-              <span 
-                className="text-sm font-medium text-foreground font-sans transition-colors duration-300 group-hover:text-[#102a43]"
+              <motion.div
+                whileHover={{ rotate: [0, -15, 15, 0], scale: 1.2 }}
+                transition={{ duration: 0.5 }}
               >
+                <MapPin className="h-4 w-4 text-accent shrink-0 transition-colors duration-300 group-hover:text-[#102a43]" />
+              </motion.div>
+              <span className="text-sm font-medium text-foreground font-sans transition-colors duration-300 group-hover:text-[#102a43]">
                 {area}
               </span>
-            </div>
+            </motion.div>
           </AnimatedSection>
         ))}
       </div>
