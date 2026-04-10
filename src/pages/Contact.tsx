@@ -60,8 +60,7 @@ const Contact = () => {
   };
 
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
-  const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
-  const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${mapsKey}&q=${encodeURIComponent(contactInfo.address)}`;
+  const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 
   return (
     <div
@@ -361,6 +360,7 @@ const Contact = () => {
                       style={{ border: 0, minHeight: 260, display: "block" }}
                       allowFullScreen
                       loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
                     />
                   </div>
 
@@ -383,7 +383,7 @@ const Contact = () => {
           {/* ════════════════════════════════════════
               FAQ
               ════════════════════════════════════════ */}
-          <section className="py-20">
+          <section className="py-24">
             <div className="container mx-auto px-4 max-w-4xl">
               <AnimatedSection className="text-center mb-14">
                 <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.22em] mb-3">
@@ -392,31 +392,33 @@ const Contact = () => {
                 <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
                   Frequently Asked<br />Questions
                 </h2>
-                <p className="text-muted-foreground font-sans mt-4 max-w-xl mx-auto">
+                <p className="text-muted-foreground font-sans text-base mt-4 max-w-lg mx-auto leading-relaxed">
                   Can't find what you're looking for? Feel free to reach out — we're happy to help.
                 </p>
               </AnimatedSection>
 
               <AnimatedSection delay={0.1}>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {faqs.map((faq, i) => (
                     <Accordion type="single" collapsible key={i}>
                       <AccordionItem
                         value={`faq-${i}`}
-                        className="bg-white border border-border rounded-2xl px-6 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                        className="bg-white border border-border rounded-2xl px-7 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-b-0"
                       >
-                        <AccordionTrigger className="font-sans font-semibold text-foreground py-5 hover:no-underline text-left">
+                        <AccordionTrigger className="font-sans font-semibold text-foreground text-base py-6 hover:no-underline text-left gap-4">
                           <span className="flex items-center gap-4">
                             <span
-                              className="h-8 w-8 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 font-sans text-white"
-                              style={{ background: i % 2 === 0 ? "hsl(214 66% 44%)" : "hsl(180 84% 36%)" }}
+                              className="h-9 w-9 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 font-sans text-white shadow-md"
+                              style={{ background: i % 2 === 0
+                                ? "linear-gradient(135deg, hsl(214 66% 44%), hsl(214 66% 36%))"
+                                : "linear-gradient(135deg, hsl(180 84% 36%), hsl(180 84% 28%))" }}
                             >
                               {String(i + 1).padStart(2, "0")}
                             </span>
                             {faq.q}
                           </span>
                         </AccordionTrigger>
-                        <AccordionContent className="text-muted-foreground font-sans pb-5 pl-12 leading-relaxed">
+                        <AccordionContent className="text-muted-foreground font-sans text-[15px] pb-6 pl-[52px] leading-relaxed">
                           {faq.a}
                         </AccordionContent>
                       </AccordionItem>
