@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
+import { isSupabaseConfigured, uploadImageToStorage } from "@/lib/supabase";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
 
@@ -198,7 +199,7 @@ const GalleryTab = ({ gallery, setGallery, toast }: any) => {
     if (!file) return;
     setUploading(true);
     try {
-      const dataUrl = await fileToDataUrl(file);
+      const dataUrl = await uploadImage(file);
       setGallery((prev: any[]) => [...prev, { id: Date.now().toString(), url: dataUrl, caption }]);
       setCaption(""); toast({ title: "Image uploaded and added" });
     } catch { toast({ title: "Upload failed", variant: "destructive" }); }
@@ -393,6 +394,36 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
           <Button onClick={save} className="font-sans w-full">Save Changes</Button>
         </CardContent></Card>
 
+        <Card className="shadow-sm"><CardContent className="pt-6 space-y-4">
+          <h3 className="font-serif font-semibold text-foreground mb-1">Section Content</h3>
+          <p className="text-xs text-muted-foreground mb-3">Edit the heading, description and social links shown in the "Get In Touch" section.</p>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Eyebrow Text</label>
+            <Input value={form.sectionEyebrow ?? ""} onChange={e => setForm({ ...form, sectionEyebrow: e.target.value })} className="font-sans" placeholder="Get In Touch" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Section Heading</label>
+            <Input value={form.sectionHeading ?? ""} onChange={e => setForm({ ...form, sectionHeading: e.target.value })} className="font-sans" placeholder="Ready to Get Started?" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Section Description</label>
+            <Textarea value={form.sectionDescription ?? ""} onChange={e => setForm({ ...form, sectionDescription: e.target.value })} className="font-sans" rows={3} placeholder="Contact us today for a free, no-obligation consultation..." />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Facebook URL</label>
+            <Input value={form.facebookUrl ?? ""} onChange={e => setForm({ ...form, facebookUrl: e.target.value })} className="font-sans" placeholder="https://facebook.com/mintexcare" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Instagram URL</label>
+            <Input value={form.instagramUrl ?? ""} onChange={e => setForm({ ...form, instagramUrl: e.target.value })} className="font-sans" placeholder="https://instagram.com/mintexcare" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">LinkedIn URL</label>
+            <Input value={form.linkedinUrl ?? ""} onChange={e => setForm({ ...form, linkedinUrl: e.target.value })} className="font-sans" placeholder="https://linkedin.com/company/mintexcare" />
+          </div>
+          <Button onClick={save} className="font-sans w-full">Save Changes</Button>
+        </CardContent></Card>
+
         <Card className="shadow-sm"><CardContent className="pt-6">
           <h3 className="font-serif font-semibold text-foreground mb-3 flex items-center gap-2"><MapPin className="h-4 w-4" /> Map Preview</h3>
           <div className="rounded-lg overflow-hidden border border-border h-[300px]">
@@ -441,17 +472,10 @@ const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
 
 
 /* ── Image upload utility ── */
-const fileToDataUrl = (file: File, maxWidth = 1400, quality = 0.85): Promise<string> =>
+
+/** Compress a raster image on the client, return as a Blob */
+const compressImage = (file: File, maxWidth = 1400, quality = 0.85): Promise<Blob> =>
   new Promise((resolve, reject) => {
-    // SVG: keep as-is
-    if (file.type === "image/svg+xml") {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result as string);
-      r.onerror = reject;
-      r.readAsDataURL(file);
-      return;
-    }
-    // Raster images: resize + compress via canvas
     const img = new window.Image();
     const objectUrl = URL.createObjectURL(file);
     img.onload = () => {
@@ -461,11 +485,54 @@ const fileToDataUrl = (file: File, maxWidth = 1400, quality = 0.85): Promise<str
       if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
       canvas.width = width; canvas.height = height;
       canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL("image/jpeg", quality));
+      canvas.toBlob(
+        (blob) => blob ? resolve(blob) : reject(new Error("Canvas toBlob failed")),
+        "image/jpeg",
+        quality,
+      );
     };
     img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error("Failed to load image")); };
     img.src = objectUrl;
   });
+
+/**
+ * Upload an image file.
+ * - When Supabase is configured: compresses the image, uploads to Supabase Storage,
+ *   and returns a public URL that works everywhere.
+ * - Fallback (local dev): returns a Base64 data URL.
+ */
+const uploadImage = async (file: File): Promise<string> => {
+  // SVG: no compression needed
+  if (file.type === "image/svg+xml") {
+    if (isSupabaseConfigured) {
+      return uploadImageToStorage(file);
+    }
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // Raster images: compress first
+  const compressed = await compressImage(file);
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const compressedFile = new File([compressed], file.name.replace(/\.[^.]+$/, `.${ext}`), {
+    type: "image/jpeg",
+  });
+
+  if (isSupabaseConfigured) {
+    return uploadImageToStorage(compressedFile);
+  }
+
+  // Fallback: Base64 data URL for local dev
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.readAsDataURL(compressed);
+  });
+};
 
 /* ── Site Images ── */
 
@@ -477,6 +544,7 @@ const ImageField = ({
 }) => {
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [fileReady, setFileReady] = useState(false);
   const current = siteImages[imgKey];
   const [draft, setDraft] = useState(current);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -485,19 +553,22 @@ const ImageField = ({
     if (!draft.trim()) return;
     setSiteImages(prev => ({ ...prev, [imgKey]: draft.trim() }));
     setEditing(false);
+    setFileReady(false);
     toast({ title: "Image updated", description: label + " is now live on the website." });
   };
-  const cancel = () => { setDraft(current); setEditing(false); };
+  const cancel = () => { setDraft(current); setEditing(false); setFileReady(false); };
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    setFileReady(false);
     try {
-      const dataUrl = await fileToDataUrl(file);
-      setDraft(dataUrl);
+      const url = await uploadImage(file);
+      setDraft(url);
+      setFileReady(true);
     } catch {
-      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -505,7 +576,7 @@ const ImageField = ({
   };
 
   const previewSrc = editing ? (draft || current) : current;
-  const isUploaded = previewSrc.startsWith("data:");
+  const isUploaded = previewSrc.startsWith("data:") || (previewSrc !== current && previewSrc.includes("supabase"));
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
@@ -524,8 +595,8 @@ const ImageField = ({
           <div className="space-y-2">
             {/* URL input */}
             <Input
-              value={draft.startsWith("data:") ? "" : draft}
-              onChange={e => setDraft(e.target.value)}
+              value={fileReady ? "" : (draft.startsWith("data:") ? "" : draft)}
+              onChange={e => { setDraft(e.target.value); setFileReady(false); }}
               placeholder="Paste image URL here…"
               className="font-sans text-sm"
             />
@@ -539,7 +610,7 @@ const ImageField = ({
             <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
               ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
               <Upload className="h-4 w-4 shrink-0" />
-              {uploading ? "Processing…" : draft.startsWith("data:") ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
+              {uploading ? "Uploading…" : fileReady ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
               <input
                 ref={fileRef}
                 type="file"
@@ -549,8 +620,8 @@ const ImageField = ({
                 onChange={handleFile}
               />
             </label>
-            {draft.startsWith("data:") && (
-              <p className="text-[11px] text-accent font-sans">✓ File loaded — click Save to apply</p>
+            {fileReady && (
+              <p className="text-[11px] text-accent font-sans">✓ Image uploaded — click Save to apply</p>
             )}
             <div className="flex gap-2 pt-1">
               <Button size="sm" onClick={save} disabled={uploading} className="font-sans">Save</Button>
@@ -583,6 +654,7 @@ const TeamMemberPhotoField = ({
 }) => {
   const [editing, setEditing] = React.useState(false);
   const [uploading, setUploading] = React.useState(false);
+  const [fileReady, setFileReady] = React.useState(false);
   const [draft, setDraft] = React.useState(member.photoUrl);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -590,19 +662,22 @@ const TeamMemberPhotoField = ({
     if (!draft.trim()) return;
     setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === member.id ? { ...m, photoUrl: draft.trim() } : m));
     setEditing(false);
+    setFileReady(false);
     toast({ title: "Photo updated", description: member.name + "'s photo is now live." });
   };
-  const cancel = () => { setDraft(member.photoUrl); setEditing(false); };
+  const cancel = () => { setDraft(member.photoUrl); setEditing(false); setFileReady(false); };
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    setFileReady(false);
     try {
-      const dataUrl = await fileToDataUrl(file);
-      setDraft(dataUrl);
+      const url = await uploadImage(file);
+      setDraft(url);
+      setFileReady(true);
     } catch {
-      toast({ title: "Upload failed", description: "Could not read the image file.", variant: "destructive" });
+      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -610,7 +685,7 @@ const TeamMemberPhotoField = ({
   };
 
   const previewSrc = editing ? (draft || member.photoUrl) : member.photoUrl;
-  const isUploaded = previewSrc.startsWith("data:");
+  const isUploaded = previewSrc.startsWith("data:") || (previewSrc !== member.photoUrl && previewSrc.includes("supabase"));
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
@@ -628,8 +703,8 @@ const TeamMemberPhotoField = ({
         {editing ? (
           <div className="space-y-2">
             <Input
-              value={draft.startsWith("data:") ? "" : draft}
-              onChange={e => setDraft(e.target.value)}
+              value={fileReady ? "" : (draft.startsWith("data:") ? "" : draft)}
+              onChange={e => { setDraft(e.target.value); setFileReady(false); }}
               placeholder="Paste photo URL here…"
               className="font-sans text-sm"
             />
@@ -641,7 +716,7 @@ const TeamMemberPhotoField = ({
             <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
               ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
               <Upload className="h-4 w-4 shrink-0" />
-              {uploading ? "Processing…" : draft.startsWith("data:") ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
+              {uploading ? "Uploading…" : fileReady ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
               <input
                 ref={fileRef}
                 type="file"
@@ -651,8 +726,8 @@ const TeamMemberPhotoField = ({
                 onChange={handleFile}
               />
             </label>
-            {draft.startsWith("data:") && (
-              <p className="text-[11px] text-accent font-sans">✓ File loaded — click Save to apply</p>
+            {fileReady && (
+              <p className="text-[11px] text-accent font-sans">✓ Image uploaded — click Save to apply</p>
             )}
             <div className="flex gap-2 pt-1">
               <Button size="sm" onClick={save} disabled={uploading} className="font-sans">Save</Button>

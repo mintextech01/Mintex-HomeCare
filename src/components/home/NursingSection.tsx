@@ -287,6 +287,7 @@ const NursingSection = () => {
               return (
                 <motion.div
                   key={card.title}
+                  className="h-full"
                   whileHover={{
                     y: -8,
                     scale: 1.04,
@@ -299,7 +300,7 @@ const NursingSection = () => {
                 >
                 <Link
                   to="/services"
-                  className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer"
+                  className="group flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer"
                 >
                   {/* Title */}
                   <div className="flex items-start justify-between px-4 pt-5 pb-3 gap-2 flex-shrink-0">

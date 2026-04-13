@@ -205,7 +205,7 @@ const ImageMosaic = ({
     {/* Bottom-right overlap — happy families */}
     <StatBadge
       icon={<Users className="w-5 h-5" />}
-      value="2,000+"
+      value="500+"
       label="Happy Families"
       className="bottom-0 right-[42%]"
       delay={1.05}

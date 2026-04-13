@@ -608,3 +608,16 @@ a, button {
 .svc-deco-float { animation: svc-float-slow 9s ease-in-out infinite; }
 .svc-deco-mid   { animation: svc-float-mid  6s ease-in-out infinite; }
 .svc-deco-pulse { animation: svc-pulse-ring 7s ease-in-out infinite; }
+
+/* Page decorative element animations */
+@keyframes deco-float-up   { 0%,100%{ transform:translateY(0) }       50%{ transform:translateY(-18px) } }
+@keyframes deco-float-down { 0%,100%{ transform:translateY(0) }       50%{ transform:translateY(14px) } }
+@keyframes deco-drift      { 0%,100%{ transform:translate(0,0) rotate(0deg) } 50%{ transform:translate(10px,-12px) rotate(5deg) } }
+@keyframes deco-spin-slow  { 0%{ transform:rotate(0deg) }             100%{ transform:rotate(360deg) } }
+@keyframes deco-pulse       { 0%,100%{ opacity:0.12; transform:scale(1) } 50%{ opacity:0.22; transform:scale(1.08) } }
+
+.deco-float-up   { animation: deco-float-up   7s ease-in-out infinite; }
+.deco-float-down { animation: deco-float-down 8s ease-in-out infinite; }
+.deco-drift      { animation: deco-drift      10s ease-in-out infinite; }
+.deco-spin-slow  { animation: deco-spin-slow  30s linear infinite; }
+.deco-pulse      { animation: deco-pulse      6s ease-in-out infinite; }

@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, CheckCircle, Award, Users, Heart, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { use3DTiltGlow } from "@/hooks/useScrollAnimations";
+import { motion } from "framer-motion";
 
 const features = [
   "Compassionate, certified caregivers",
@@ -22,24 +20,69 @@ const stats = [
 
 const AboutSection = () => {
   const { siteImages } = useAdmin();
-  const sectionRef = useRef<HTMLElement>(null);
-  const tiltRef = use3DTiltGlow<HTMLDivElement>(10, "38, 104, 188");
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
-    <section ref={sectionRef} id="about" className="relative py-20 md:py-28 bg-white overflow-hidden">
+    <section id="about" className="relative py-20 md:py-28 bg-white overflow-hidden">
 
-      {/* Soft background blobs */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute rounded-full opacity-40"
-          style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 500, height: 500, top: "-10%", right: "-8%" }} />
-        <div className="absolute rounded-full opacity-30"
-          style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 300, height: 300, bottom: "0%", left: "-4%" }} />
+      {/* Background decorative elements */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+
+        {/* Large blue tinted block behind image */}
+        <div className="absolute top-12 left-0 w-[42%] h-[80%] rounded-3xl bg-[#2a66b0]/[0.06] hidden lg:block" />
+
+        {/* Top-left dot grid */}
+        <div className="absolute top-6 left-6 hidden lg:grid grid-cols-6 gap-2.5 opacity-50">
+          {Array.from({ length: 36 }).map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]/25" />
+          ))}
+        </div>
+
+        {/* Bottom-right dot grid */}
+        <div className="absolute bottom-10 right-10 hidden lg:grid grid-cols-5 gap-3 opacity-40">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div key={i} className="w-2 h-2 rounded-full bg-[#2a66b0]/20" />
+          ))}
+        </div>
+
+        {/* Top-right large gradient blob */}
+        <div className="absolute rounded-full"
+          style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 500, height: 500, top: "-10%", right: "-6%", opacity: 0.7 }} />
+
+        {/* Bottom-left gradient blob */}
+        <div className="absolute rounded-full"
+          style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 400, height: 400, bottom: "-8%", left: "-4%", opacity: 0.6 }} />
+
+        {/* Mid-right teal accent blob */}
+        <div className="absolute rounded-full"
+          style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 300, height: 300, top: "40%", right: "5%", opacity: 0.45 }} />
+
+        {/* Dashed ring — center bottom */}
+        <div className="absolute bottom-20 left-[38%] w-32 h-32 rounded-full border-[3px] border-dashed border-[#2a66b0]/15 hidden lg:block" />
+
+        {/* Solid ring — top right area */}
+        <div className="absolute top-16 right-[20%] w-20 h-20 rounded-full border-2 border-[#2a66b0]/10 hidden lg:block" />
+
+        {/* Small solid circle accent */}
+        <div className="absolute top-[30%] left-[44%] w-4 h-4 rounded-full bg-[#2a66b0]/15 hidden lg:block" />
+
+        {/* Horizontal line accent */}
+        <div className="absolute top-[25%] right-0 w-24 h-[2px] bg-gradient-to-l from-[#2a66b0]/20 to-transparent hidden lg:block" />
+
+        {/* Vertical line accent */}
+        <div className="absolute bottom-0 left-[46%] w-[2px] h-20 bg-gradient-to-t from-[#2a66b0]/15 to-transparent hidden lg:block" />
+
+        {/* Cross / plus shape accent */}
+        <div className="absolute top-[60%] right-[12%] hidden lg:block opacity-20">
+          <div className="w-6 h-[2px] bg-[#2a66b0] absolute top-1/2 left-0 -translate-y-1/2" />
+          <div className="w-[2px] h-6 bg-[#2a66b0] absolute left-1/2 top-0 -translate-x-1/2" />
+        </div>
+
+        {/* Diamond shape */}
+        <div className="absolute top-[15%] left-[48%] w-5 h-5 border-2 border-[#2a66b0]/12 rotate-45 hidden lg:block" />
+
+        {/* Large faint circle outline */}
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full border border-[#2a66b0]/[0.07] hidden lg:block" />
+
       </div>
 
       <div className="container mx-auto px-6 md:px-10 relative z-10">
@@ -48,11 +91,10 @@ const AboutSection = () => {
           {/* ── LEFT: Image column — 3D tilt + parallax ── */}
           <AnimatedSection from="flip3d" className="relative order-2 lg:order-1">
 
-            {/* Main image — with 3D tilt on hover + parallax */}
-            <motion.div
-              ref={tiltRef}
+            {/* Main image */}
+            <div
               className="relative rounded-3xl overflow-hidden shadow-2xl"
-              style={{ aspectRatio: "4/5", maxHeight: 560, y: imageY }}
+              style={{ aspectRatio: "4/5", maxHeight: 560 }}
             >
               <img
                 src={siteImages.about}
@@ -60,29 +102,8 @@ const AboutSection = () => {
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              {/* Gradient overlay at bottom */}
-              <div className="absolute inset-0"
-                style={{ background: "linear-gradient(to top, rgba(10,30,60,0.55) 0%, transparent 55%)" }} />
-              {/* Bottom text overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-7">
-                <p className="text-white/80 text-xs uppercase tracking-widest mb-1 font-semibold">Our Mission</p>
-                <p className="text-white font-bold text-lg leading-snug">
-                  Dignified, compassionate care<br />in the comfort of home.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Floating experience badge — top-right */}
-            <div className="absolute top-2 right-2 md:-top-4 md:right-0 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-gray-100"
-              style={{ zIndex: 10 }}>
-              <div className="w-11 h-11 rounded-xl bg-[#2a66b0] flex items-center justify-center flex-shrink-0">
-                <Award className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900 leading-none">10+</p>
-                <p className="text-xs text-gray-500 mt-0.5 whitespace-nowrap">Years of Excellence</p>
-              </div>
             </div>
+
 
             {/* Floating family badge — bottom-left */}
             <div className="absolute bottom-2 left-2 md:-bottom-4 md:left-0 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-gray-100"
@@ -106,8 +127,6 @@ const AboutSection = () => {
               </div>
             </div>
 
-            {/* Decorative circle accent */}
-            <div className="absolute -bottom-10 right-8 w-32 h-32 rounded-full border-2 border-dashed border-[#2a66b0]/20 pointer-events-none" />
           </AnimatedSection>
 
           {/* ── RIGHT: Text column — depth push reveal ── */}

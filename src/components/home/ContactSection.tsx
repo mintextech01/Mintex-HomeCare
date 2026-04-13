@@ -42,9 +42,9 @@ const ContactSection = () => {
     <section id="contact" className="py-16 md:py-20">
       <div className="container mx-auto px-4">
         <AnimatedSection className="text-center mb-12">
-          <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">Get In Touch</p>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">Ready to Get Started?</h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare.</p>
+          <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">{contactInfo.sectionEyebrow || "Get In Touch"}</p>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">{contactInfo.sectionHeading || "Ready to Get Started?"}</h2>
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">{contactInfo.sectionDescription || "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare."}</p>
         </AnimatedSection>
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           <AnimatedSection from="flip3d">
@@ -85,9 +85,9 @@ const ContactSection = () => {
               <div>
                 <h3 className="font-serif text-xl font-semibold text-foreground mb-3">Follow Us</h3>
                 <div className="flex gap-3">
-                  <a href="#" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
-                  <a href="#" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>
-                  <a href="#" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="LinkedIn"><Linkedin className="h-5 w-5" /></a>
+                  {(contactInfo.facebookUrl || "#") !== "hidden" && <a href={contactInfo.facebookUrl || "#"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>}
+                  {(contactInfo.instagramUrl || "#") !== "hidden" && <a href={contactInfo.instagramUrl || "#"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>}
+                  {(contactInfo.linkedinUrl || "#") !== "hidden" && <a href={contactInfo.linkedinUrl || "#"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="LinkedIn"><Linkedin className="h-5 w-5" /></a>}
                 </div>
               </div>
             </div>

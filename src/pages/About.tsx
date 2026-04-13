@@ -45,11 +45,86 @@ const About = () => {
             HERO
         ══════════════════════════════════════ */}
         <section className="relative pt-32 pb-20 bg-white overflow-hidden">
-          {/* Soft background blobs */}
-          <div className="pointer-events-none absolute top-0 right-0 w-[560px] h-[560px] rounded-full opacity-30"
-            style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", transform: "translate(30%,-30%)" }} />
-          <div className="pointer-events-none absolute bottom-0 left-0 w-[380px] h-[380px] rounded-full opacity-20"
-            style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", transform: "translate(-30%,30%)" }} />
+          {/* Background decorative elements */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Large gradient blobs */}
+            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 700, height: 700, top: "-15%", right: "-10%", opacity: 0.9 }} />
+            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 500, height: 500, bottom: "-10%", left: "-8%", opacity: 0.8 }} />
+            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 400, height: 400, top: "15%", left: "25%", opacity: 0.6 }} />
+            <div className="absolute rounded-full deco-pulse" style={{ background: "radial-gradient(circle, #fbcfe8 0%, transparent 70%)", width: 300, height: 300, top: "55%", right: "8%", opacity: 0.5 }} />
+            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #bae6fd 0%, transparent 70%)", width: 250, height: 250, top: "5%", left: "52%", opacity: 0.55 }} />
+
+            {/* Colored block behind image */}
+            <div className="absolute top-20 right-0 w-[44%] h-[75%] rounded-3xl bg-[#2a66b0]/[0.04] hidden lg:block" />
+
+            {/* Dot grids — bold */}
+            <div className="absolute top-20 left-6 hidden lg:grid grid-cols-8 gap-3">
+              {Array.from({ length: 48 }).map((_, i) => (
+                <div key={`hd1-${i}`} className="w-2 h-2 rounded-full bg-[#2a66b0]/20" />
+              ))}
+            </div>
+            <div className="absolute bottom-12 right-8 hidden lg:grid grid-cols-7 gap-3">
+              {Array.from({ length: 35 }).map((_, i) => (
+                <div key={`hd2-${i}`} className="w-2.5 h-2.5 rounded-full bg-[#0891b2]/15" />
+              ))}
+            </div>
+            <div className="absolute top-[48%] right-[2%] hidden lg:grid grid-cols-4 gap-2.5">
+              {Array.from({ length: 16 }).map((_, i) => (
+                <div key={`hd3-${i}`} className="w-2 h-2 rounded-full bg-[#14b8a6]/20" />
+              ))}
+            </div>
+
+            {/* Bold circle outlines */}
+            <div className="absolute top-[12%] right-[14%] w-52 h-52 rounded-full border-[3px] border-[#2a66b0]/[0.12] deco-spin-slow hidden lg:block" />
+            <div className="absolute bottom-[8%] left-[6%] w-36 h-36 rounded-full border-[4px] border-dashed border-[#2a66b0]/[0.15] deco-spin-slow hidden lg:block" style={{ animationDirection: "reverse" }} />
+            <div className="absolute top-[55%] left-[38%] w-24 h-24 rounded-full border-[3px] border-[#0891b2]/[0.1] deco-float-up hidden lg:block" />
+            <div className="absolute top-[6%] left-[16%] w-44 h-44 rounded-full border-2 border-[#2a66b0]/[0.08] hidden lg:block" />
+            <div className="absolute bottom-[22%] right-[36%] w-20 h-20 rounded-full border-[3px] border-dashed border-[#14b8a6]/[0.12] deco-drift hidden lg:block" />
+
+            {/* Plus shapes — bigger */}
+            <div className="absolute top-[38%] left-[4%] hidden lg:block deco-float-up">
+              <div className="w-10 h-[3px] bg-[#2a66b0]/25 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-10 bg-[#2a66b0]/25 absolute left-1/2 -translate-x-1/2" />
+            </div>
+            <div className="absolute bottom-[32%] right-[10%] hidden lg:block deco-float-down">
+              <div className="w-8 h-[3px] bg-[#0891b2]/20 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-8 bg-[#0891b2]/20 absolute left-1/2 -translate-x-1/2" />
+            </div>
+            <div className="absolute top-[68%] left-[22%] hidden lg:block">
+              <div className="w-6 h-[2px] bg-[#14b8a6]/20 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[2px] h-6 bg-[#14b8a6]/20 absolute left-1/2 -translate-x-1/2" />
+            </div>
+
+            {/* Diamonds — bolder */}
+            <div className="absolute bottom-[18%] right-[24%] w-8 h-8 border-[3px] border-[#0891b2]/20 rotate-45 deco-drift hidden lg:block" />
+            <div className="absolute top-[24%] left-[46%] w-6 h-6 border-[3px] border-[#2a66b0]/15 rotate-45 deco-float-up hidden lg:block" />
+            <div className="absolute top-[62%] right-[28%] w-5 h-5 bg-[#14b8a6]/10 rotate-45 hidden lg:block" />
+
+            {/* Lines — thicker */}
+            <div className="absolute top-[28%] right-0 w-40 h-[3px] bg-gradient-to-l from-[#2a66b0]/20 to-transparent hidden lg:block" />
+            <div className="absolute bottom-[12%] left-0 w-32 h-[3px] bg-gradient-to-r from-[#0891b2]/18 to-transparent hidden lg:block" />
+            <div className="absolute top-0 left-[60%] w-[3px] h-28 bg-gradient-to-b from-[#2a66b0]/15 to-transparent hidden lg:block" />
+            <div className="absolute bottom-0 right-[16%] w-[3px] h-24 bg-gradient-to-t from-[#14b8a6]/12 to-transparent hidden lg:block" />
+
+            {/* Solid circles — bigger */}
+            <div className="absolute top-[33%] left-[40%] w-6 h-6 rounded-full bg-[#2a66b0]/12 deco-float-down hidden lg:block" />
+            <div className="absolute bottom-[26%] left-[13%] w-5 h-5 rounded-full bg-[#0891b2]/15 deco-float-up hidden lg:block" />
+            <div className="absolute top-[16%] right-[33%] w-4 h-4 rounded-full bg-[#14b8a6]/12 hidden lg:block" />
+            <div className="absolute top-[73%] right-[4%] w-5 h-5 rounded-full bg-[#2a66b0]/10 deco-pulse hidden lg:block" />
+
+            {/* SVG wave */}
+            <svg className="absolute bottom-0 left-0 w-full h-20 opacity-[0.08]" viewBox="0 0 1440 80" preserveAspectRatio="none">
+              <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z" fill="#2a66b0" />
+            </svg>
+
+            {/* Triangles — visible */}
+            <div className="absolute top-[20%] right-[7%] hidden lg:block deco-float-up">
+              <div className="w-0 h-0 border-l-[16px] border-l-transparent border-r-[16px] border-r-transparent border-b-[26px] border-b-[#2a66b0]/15" />
+            </div>
+            <div className="absolute bottom-[38%] left-[33%] hidden lg:block">
+              <div className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[20px] border-b-[#0891b2]/12" />
+            </div>
+          </div>
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="grid lg:grid-cols-2 gap-14 xl:gap-20 items-center">
@@ -174,8 +249,13 @@ const About = () => {
         {/* ══════════════════════════════════════
             STATS STRIP
         ══════════════════════════════════════ */}
-        <section className="py-6 bg-white border-y border-gray-100">
-          <div className="container mx-auto px-6">
+        <section className="py-6 bg-white border-y border-gray-100 relative overflow-hidden">
+          {/* Subtle background accents */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute rounded-full" style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 300, height: 300, top: "-50%", left: "10%", opacity: 0.35 }} />
+            <div className="absolute rounded-full" style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 250, height: 250, bottom: "-50%", right: "15%", opacity: 0.3 }} />
+          </div>
+          <div className="container mx-auto px-6 relative z-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map(({ value, label, icon: Icon }, i) => (
                 <AnimatedSection key={label} delay={i * 0.07}>
@@ -198,9 +278,61 @@ const About = () => {
             OUR STORY
         ══════════════════════════════════════ */}
         <section className="py-24 bg-white relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute rounded-full opacity-30"
-              style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 400, height: 400, bottom: "-8%", right: "-5%" }} />
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Bold gradient blobs */}
+            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 550, height: 550, bottom: "-14%", right: "-10%", opacity: 0.85 }} />
+            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bae6fd 0%, transparent 70%)", width: 450, height: 450, top: "-12%", left: "-6%", opacity: 0.75 }} />
+            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 350, height: 350, top: "40%", right: "15%", opacity: 0.6 }} />
+            <div className="absolute rounded-full deco-pulse" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 280, height: 280, top: "8%", left: "42%", opacity: 0.5 }} />
+
+            {/* Colored block */}
+            <div className="absolute top-10 left-0 w-[42%] h-[80%] rounded-3xl bg-[#2a66b0]/[0.03] hidden lg:block" />
+
+            {/* Dot grids */}
+            <div className="absolute top-10 left-4 hidden lg:grid grid-cols-7 gap-3">
+              {Array.from({ length: 42 }).map((_, i) => (
+                <div key={`sd-${i}`} className="w-2 h-2 rounded-full bg-[#2a66b0]/15" />
+              ))}
+            </div>
+            <div className="absolute bottom-8 right-6 hidden lg:grid grid-cols-6 gap-3">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div key={`sd2-${i}`} className="w-2.5 h-2.5 rounded-full bg-[#0891b2]/12" />
+              ))}
+            </div>
+
+            {/* Bold circles */}
+            <div className="absolute bottom-14 left-[40%] w-40 h-40 rounded-full border-[4px] border-dashed border-[#2a66b0]/[0.15] deco-spin-slow hidden lg:block" />
+            <div className="absolute top-16 right-[10%] w-28 h-28 rounded-full border-[3px] border-[#0891b2]/[0.12] deco-float-up hidden lg:block" />
+            <div className="absolute top-[60%] left-[6%] w-20 h-20 rounded-full border-[3px] border-[#14b8a6]/[0.1] deco-drift hidden lg:block" />
+
+            {/* Plus shapes */}
+            <div className="absolute bottom-[28%] right-[7%] hidden lg:block deco-float-up">
+              <div className="w-10 h-[3px] bg-[#2a66b0]/20 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-10 bg-[#2a66b0]/20 absolute left-1/2 -translate-x-1/2" />
+            </div>
+
+            {/* Diamonds */}
+            <div className="absolute top-[32%] left-[46%] w-7 h-7 border-[3px] border-[#14b8a6]/15 rotate-45 deco-drift hidden lg:block" />
+            <div className="absolute bottom-[16%] right-[20%] w-6 h-6 border-[3px] border-[#2a66b0]/12 rotate-45 deco-float-up hidden lg:block" />
+
+            {/* Lines */}
+            <div className="absolute bottom-[12%] left-0 w-36 h-[3px] bg-gradient-to-r from-[#2a66b0]/18 to-transparent hidden lg:block" />
+            <div className="absolute top-[48%] right-0 w-28 h-[3px] bg-gradient-to-l from-[#0891b2]/15 to-transparent hidden lg:block" />
+            <div className="absolute top-0 left-[53%] w-[3px] h-24 bg-gradient-to-b from-[#2a66b0]/15 to-transparent hidden lg:block" />
+
+            {/* Solid circles */}
+            <div className="absolute top-[22%] left-[36%] w-6 h-6 rounded-full bg-[#2a66b0]/10 deco-float-down hidden lg:block" />
+            <div className="absolute bottom-[20%] right-[13%] w-5 h-5 rounded-full bg-[#0891b2]/12 deco-pulse hidden lg:block" />
+
+            {/* Triangles */}
+            <div className="absolute top-[13%] right-[5%] hidden lg:block deco-float-up">
+              <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[22px] border-b-[#2a66b0]/12" />
+            </div>
+
+            {/* SVG wave */}
+            <svg className="absolute top-0 left-0 w-full h-16 opacity-[0.07]" viewBox="0 0 1440 64" preserveAspectRatio="none">
+              <path d="M0,32 C480,64 960,0 1440,32 L1440,0 L0,0 Z" fill="#0891b2" />
+            </svg>
           </div>
 
           <div className="container mx-auto px-6 relative z-10">
@@ -292,8 +424,68 @@ const About = () => {
         {/* ══════════════════════════════════════
             WHY CHOOSE US
         ══════════════════════════════════════ */}
-        <section className="py-20 bg-gray-50">
-          <div className="container mx-auto px-6">
+        <section className="py-20 bg-gray-50 relative overflow-hidden">
+          {/* Background decorative elements */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Bold gradient blobs */}
+            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 550, height: 550, top: "-16%", left: "-10%", opacity: 0.8 }} />
+            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 420, height: 420, bottom: "-12%", right: "-6%", opacity: 0.7 }} />
+            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 300, height: 300, top: "28%", left: "48%", opacity: 0.5 }} />
+            <div className="absolute rounded-full deco-pulse" style={{ background: "radial-gradient(circle, #fbcfe8 0%, transparent 70%)", width: 240, height: 240, top: "55%", left: "8%", opacity: 0.4 }} />
+
+            {/* Dot grids */}
+            <div className="absolute top-8 right-8 hidden lg:grid grid-cols-8 gap-2.5">
+              {Array.from({ length: 40 }).map((_, i) => (
+                <div key={`wd-${i}`} className="w-2 h-2 rounded-full bg-[#2a66b0]/15" />
+              ))}
+            </div>
+            <div className="absolute bottom-8 left-6 hidden lg:grid grid-cols-6 gap-3">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <div key={`wd2-${i}`} className="w-2.5 h-2.5 rounded-full bg-[#0891b2]/12" />
+              ))}
+            </div>
+
+            {/* Bold circles */}
+            <div className="absolute -top-16 right-[18%] w-64 h-64 rounded-full border-[3px] border-[#2a66b0]/[0.1] deco-spin-slow hidden lg:block" />
+            <div className="absolute bottom-10 left-[13%] w-32 h-32 rounded-full border-[4px] border-dashed border-[#0891b2]/[0.15] deco-spin-slow hidden lg:block" style={{ animationDirection: "reverse" }} />
+            <div className="absolute top-[48%] right-[6%] w-24 h-24 rounded-full border-[3px] border-[#14b8a6]/[0.1] deco-float-up hidden lg:block" />
+
+            {/* Plus shapes */}
+            <div className="absolute top-[42%] left-[5%] hidden lg:block deco-float-up">
+              <div className="w-10 h-[3px] bg-[#2a66b0]/22 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-10 bg-[#2a66b0]/22 absolute left-1/2 -translate-x-1/2" />
+            </div>
+            <div className="absolute bottom-[18%] right-[13%] hidden lg:block deco-float-down">
+              <div className="w-8 h-[3px] bg-[#0891b2]/18 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-8 bg-[#0891b2]/18 absolute left-1/2 -translate-x-1/2" />
+            </div>
+
+            {/* Diamonds */}
+            <div className="absolute top-[18%] right-[9%] w-8 h-8 border-[3px] border-[#2a66b0]/15 rotate-45 deco-drift hidden lg:block" />
+            <div className="absolute bottom-[35%] left-[28%] w-6 h-6 border-[3px] border-[#14b8a6]/12 rotate-45 deco-float-up hidden lg:block" />
+            <div className="absolute top-[65%] right-[38%] w-5 h-5 bg-[#0891b2]/8 rotate-45 hidden lg:block" />
+
+            {/* Lines */}
+            <div className="absolute top-[58%] left-0 w-32 h-[3px] bg-gradient-to-r from-[#2a66b0]/20 to-transparent hidden lg:block" />
+            <div className="absolute top-[28%] right-0 w-28 h-[3px] bg-gradient-to-l from-[#0891b2]/15 to-transparent hidden lg:block" />
+            <div className="absolute top-0 left-[68%] w-[3px] h-24 bg-gradient-to-b from-[#2a66b0]/12 to-transparent hidden lg:block" />
+
+            {/* Solid circles */}
+            <div className="absolute bottom-[28%] right-[33%] w-6 h-6 rounded-full bg-[#0891b2]/12 deco-float-down hidden lg:block" />
+            <div className="absolute top-[13%] left-[23%] w-5 h-5 rounded-full bg-[#2a66b0]/10 deco-pulse hidden lg:block" />
+
+            {/* Triangles */}
+            <div className="absolute bottom-[12%] right-[4%] hidden lg:block deco-float-down">
+              <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[22px] border-b-[#2a66b0]/12" />
+            </div>
+
+            {/* SVG wave */}
+            <svg className="absolute bottom-0 left-0 w-full h-18 opacity-[0.06]" viewBox="0 0 1440 72" preserveAspectRatio="none">
+              <path d="M0,36 C360,72 720,0 1080,36 C1260,54 1380,18 1440,36 L1440,72 L0,72 Z" fill="#2a66b0" />
+            </svg>
+          </div>
+
+          <div className="container mx-auto px-6 relative z-10">
 
             <AnimatedSection className="text-center mb-14">
               <div className="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-4 py-1.5 mb-5">
@@ -328,9 +520,67 @@ const About = () => {
             MISSION · VISION · VALUES
         ══════════════════════════════════════ */}
         <section className="py-24 bg-white relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute rounded-full opacity-20"
-              style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 500, height: 500, top: "-10%", right: "-5%" }} />
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Bold gradient blobs */}
+            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 600, height: 600, top: "-14%", right: "-9%", opacity: 0.85 }} />
+            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 480, height: 480, bottom: "-10%", left: "-6%", opacity: 0.7 }} />
+            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 360, height: 360, top: "28%", left: "45%", opacity: 0.55 }} />
+            <div className="absolute rounded-full deco-pulse" style={{ background: "radial-gradient(circle, #fbcfe8 0%, transparent 70%)", width: 280, height: 280, top: "3%", left: "12%", opacity: 0.45 }} />
+
+            {/* Dot grids */}
+            <div className="absolute bottom-12 right-6 hidden lg:grid grid-cols-7 gap-3">
+              {Array.from({ length: 35 }).map((_, i) => (
+                <div key={`md-${i}`} className="w-2 h-2 rounded-full bg-[#14b8a6]/15" />
+              ))}
+            </div>
+            <div className="absolute top-8 left-8 hidden lg:grid grid-cols-6 gap-2.5">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div key={`md2-${i}`} className="w-2.5 h-2.5 rounded-full bg-[#2a66b0]/12" />
+              ))}
+            </div>
+
+            {/* Bold circles */}
+            <div className="absolute -bottom-20 -right-12 w-80 h-80 rounded-full border-[3px] border-[#2a66b0]/[0.1] deco-spin-slow hidden lg:block" />
+            <div className="absolute top-[22%] left-[7%] w-24 h-24 rounded-full border-[3px] border-[#14b8a6]/[0.12] deco-float-up hidden lg:block" />
+            <div className="absolute top-14 right-[28%] w-36 h-36 rounded-full border-[4px] border-dashed border-[#0891b2]/[0.14] deco-spin-slow hidden lg:block" style={{ animationDirection: "reverse", animationDuration: "25s" }} />
+
+            {/* Plus */}
+            <div className="absolute top-[58%] right-[5%] hidden lg:block deco-float-up">
+              <div className="w-10 h-[3px] bg-[#14b8a6]/20 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-10 bg-[#14b8a6]/20 absolute left-1/2 -translate-x-1/2" />
+            </div>
+            <div className="absolute bottom-[22%] left-[3%] hidden lg:block deco-float-down">
+              <div className="w-8 h-[3px] bg-[#2a66b0]/18 absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[3px] h-8 bg-[#2a66b0]/18 absolute left-1/2 -translate-x-1/2" />
+            </div>
+
+            {/* Diamonds */}
+            <div className="absolute bottom-[13%] right-[16%] w-8 h-8 border-[3px] border-[#2a66b0]/15 rotate-45 deco-drift hidden lg:block" />
+            <div className="absolute top-[10%] left-[43%] w-7 h-7 border-[3px] border-[#0891b2]/12 rotate-45 deco-float-up hidden lg:block" />
+            <div className="absolute top-[42%] right-[43%] w-5 h-5 bg-[#14b8a6]/8 rotate-45 hidden lg:block" />
+
+            {/* Lines */}
+            <div className="absolute top-[43%] right-0 w-36 h-[3px] bg-gradient-to-l from-[#14b8a6]/18 to-transparent hidden lg:block" />
+            <div className="absolute bottom-0 left-[38%] w-[3px] h-28 bg-gradient-to-t from-[#2a66b0]/15 to-transparent hidden lg:block" />
+            <div className="absolute top-[18%] left-0 w-28 h-[3px] bg-gradient-to-r from-[#0891b2]/15 to-transparent hidden lg:block" />
+
+            {/* Solid circles */}
+            <div className="absolute top-[48%] left-[20%] w-6 h-6 rounded-full bg-[#2a66b0]/12 deco-float-down hidden lg:block" />
+            <div className="absolute bottom-[38%] right-[40%] w-5 h-5 rounded-full bg-[#0891b2]/14 deco-pulse hidden lg:block" />
+            <div className="absolute top-[6%] right-[18%] w-5 h-5 rounded-full bg-[#14b8a6]/10 deco-float-up hidden lg:block" />
+
+            {/* Triangles */}
+            <div className="absolute top-[32%] left-[2%] hidden lg:block deco-float-up">
+              <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[22px] border-b-[#14b8a6]/12" />
+            </div>
+
+            {/* SVG waves */}
+            <svg className="absolute top-0 left-0 w-full h-16 opacity-[0.06]" viewBox="0 0 1440 64" preserveAspectRatio="none">
+              <path d="M0,32 C240,0 480,64 720,32 C960,0 1200,64 1440,32 L1440,0 L0,0 Z" fill="#14b8a6" />
+            </svg>
+            <svg className="absolute bottom-0 left-0 w-full h-16 opacity-[0.07]" viewBox="0 0 1440 64" preserveAspectRatio="none">
+              <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,16 1440,32 L1440,64 L0,64 Z" fill="#2a66b0" />
+            </svg>
           </div>
 
           <div className="container mx-auto px-6 relative z-10">
@@ -436,7 +686,67 @@ const About = () => {
         ══════════════════════════════════════ */}
         {teamMembers.length > 0 && (
           <section className="py-24 bg-gray-50 relative overflow-hidden">
-            <div className="container mx-auto px-6">
+            {/* Background decorative elements */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+              {/* Gradient blobs — animated */}
+              <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 480, height: 480, top: "-12%", right: "-7%", opacity: 0.5 }} />
+              <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 350, height: 350, bottom: "-8%", left: "-4%", opacity: 0.45 }} />
+              <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 260, height: 260, top: "40%", left: "35%", opacity: 0.3 }} />
+              <div className="absolute rounded-full deco-pulse" style={{ background: "radial-gradient(circle, #e0e7ff 0%, transparent 70%)", width: 200, height: 200, top: "10%", left: "50%", opacity: 0.2 }} />
+
+              {/* Dot grids */}
+              <div className="absolute bottom-10 right-8 hidden lg:grid grid-cols-6 gap-3 opacity-30">
+                {Array.from({ length: 30 }).map((_, i) => (
+                  <div key={`td-${i}`} className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]/20" />
+                ))}
+              </div>
+              <div className="absolute top-8 left-6 hidden lg:grid grid-cols-4 gap-2.5 opacity-25">
+                {Array.from({ length: 16 }).map((_, i) => (
+                  <div key={`td2-${i}`} className="w-2 h-2 rounded-full bg-[#0891b2]/15" />
+                ))}
+              </div>
+
+              {/* Circles — animated */}
+              <div className="absolute top-14 left-[10%] w-32 h-32 rounded-full border-[3px] border-dashed border-[#2a66b0]/10 deco-spin-slow hidden lg:block" />
+              <div className="absolute bottom-[20%] right-[12%] w-24 h-24 rounded-full border-2 border-[#0891b2]/[0.07] deco-float-up hidden lg:block" />
+              <div className="absolute top-[60%] left-[45%] w-16 h-16 rounded-full border border-[#14b8a6]/[0.06] deco-drift hidden lg:block" />
+              <div className="absolute -top-10 left-[55%] w-44 h-44 rounded-full border border-[#2a66b0]/[0.04] hidden lg:block" />
+
+              {/* Plus shapes */}
+              <div className="absolute top-[55%] right-[5%] hidden lg:block opacity-18 deco-float-up">
+                <div className="w-6 h-[2px] bg-[#2a66b0] absolute top-1/2 -translate-y-1/2" />
+                <div className="w-[2px] h-6 bg-[#2a66b0] absolute left-1/2 -translate-x-1/2" />
+              </div>
+              <div className="absolute bottom-[15%] left-[8%] hidden lg:block opacity-12 deco-float-down">
+                <div className="w-5 h-[2px] bg-[#0891b2] absolute top-1/2 -translate-y-1/2" />
+                <div className="w-[2px] h-5 bg-[#0891b2] absolute left-1/2 -translate-x-1/2" />
+              </div>
+
+              {/* Diamonds */}
+              <div className="absolute top-[30%] left-[5%] w-5 h-5 border-2 border-[#14b8a6]/12 rotate-45 deco-drift hidden lg:block" />
+              <div className="absolute bottom-[35%] right-[30%] w-4 h-4 border-2 border-[#2a66b0]/8 rotate-45 deco-float-up hidden lg:block" />
+
+              {/* Lines */}
+              <div className="absolute top-[40%] left-0 w-24 h-[2px] bg-gradient-to-r from-[#2a66b0]/12 to-transparent hidden lg:block" />
+              <div className="absolute bottom-[25%] right-0 w-20 h-[2px] bg-gradient-to-l from-[#0891b2]/10 to-transparent hidden lg:block" />
+              <div className="absolute top-0 right-[20%] w-[2px] h-16 bg-gradient-to-b from-[#2a66b0]/10 to-transparent hidden lg:block" />
+
+              {/* Small circles */}
+              <div className="absolute top-[20%] right-[25%] w-3 h-3 rounded-full bg-[#2a66b0]/10 deco-pulse hidden lg:block" />
+              <div className="absolute bottom-[45%] left-[20%] w-2.5 h-2.5 rounded-full bg-[#0891b2]/10 deco-float-up hidden lg:block" />
+
+              {/* Triangle */}
+              <div className="absolute top-[70%] right-[4%] hidden lg:block opacity-[0.06] deco-float-up">
+                <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[14px] border-b-[#0891b2]" />
+              </div>
+
+              {/* SVG wave */}
+              <svg className="absolute bottom-0 left-0 w-full h-12 opacity-[0.03] hidden lg:block" viewBox="0 0 1440 48" preserveAspectRatio="none">
+                <path d="M0,24 C480,48 960,0 1440,24 L1440,48 L0,48 Z" fill="#2a66b0" />
+              </svg>
+            </div>
+
+            <div className="container mx-auto px-6 relative z-10">
 
               <AnimatedSection className="mb-14">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
@@ -496,8 +806,49 @@ const About = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-6">
+        <section className="py-20 bg-white relative overflow-hidden">
+          {/* Background decorative elements */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Gradient blobs — animated */}
+            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 400, height: 400, top: "-18%", right: "-5%", opacity: 0.5 }} />
+            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 320, height: 320, bottom: "-12%", left: "-4%", opacity: 0.4 }} />
+            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 200, height: 200, top: "30%", left: "40%", opacity: 0.25 }} />
+
+            {/* Dot grids */}
+            <div className="absolute top-6 left-10 hidden lg:grid grid-cols-5 gap-3 opacity-25">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <div key={`cd-${i}`} className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]/20" />
+              ))}
+            </div>
+            <div className="absolute bottom-6 right-8 hidden lg:grid grid-cols-4 gap-2.5 opacity-20">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={`cd2-${i}`} className="w-2 h-2 rounded-full bg-[#0891b2]/15" />
+              ))}
+            </div>
+
+            {/* Circles */}
+            <div className="absolute top-[30%] left-[5%] w-20 h-20 rounded-full border-2 border-[#2a66b0]/[0.06] deco-float-up hidden lg:block" />
+            <div className="absolute bottom-[15%] right-[10%] w-24 h-24 rounded-full border-[3px] border-dashed border-[#0891b2]/8 deco-spin-slow hidden lg:block" />
+
+            {/* Diamonds */}
+            <div className="absolute bottom-[25%] right-[8%] w-5 h-5 border-2 border-[#0891b2]/10 rotate-45 deco-drift hidden lg:block" />
+            <div className="absolute top-[20%] left-[30%] w-4 h-4 border-2 border-[#2a66b0]/8 rotate-45 deco-float-down hidden lg:block" />
+
+            {/* Plus */}
+            <div className="absolute top-[50%] left-[3%] hidden lg:block opacity-15 deco-float-up">
+              <div className="w-5 h-[2px] bg-[#2a66b0] absolute top-1/2 -translate-y-1/2" />
+              <div className="w-[2px] h-5 bg-[#2a66b0] absolute left-1/2 -translate-x-1/2" />
+            </div>
+
+            {/* Lines */}
+            <div className="absolute top-[40%] right-0 w-20 h-[2px] bg-gradient-to-l from-[#2a66b0]/12 to-transparent hidden lg:block" />
+            <div className="absolute bottom-0 left-[55%] w-[2px] h-14 bg-gradient-to-t from-[#0891b2]/10 to-transparent hidden lg:block" />
+
+            {/* Small circles */}
+            <div className="absolute top-[15%] right-[30%] w-3 h-3 rounded-full bg-[#2a66b0]/8 deco-pulse hidden lg:block" />
+          </div>
+
+          <div className="container mx-auto px-6 relative z-10">
             <AnimatedSection>
               <div className="relative rounded-3xl overflow-hidden px-6 py-12 sm:px-10 sm:py-16 md:px-16"
                 style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)" }}>

@@ -59,6 +59,12 @@ export interface ContactInfo {
   email: string;
   address: string;
   hours: string;
+  sectionEyebrow: string;
+  sectionHeading: string;
+  sectionDescription: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  linkedinUrl: string;
 }
 
 interface AdminContextType {
@@ -114,6 +120,12 @@ const defaultContactInfo: ContactInfo = {
   email: "info@mintexcare.com",
   address: "New Jersey",
   hours: "Monday - Sunday, 24/7",
+  sectionEyebrow: "Get In Touch",
+  sectionHeading: "Ready to Get Started?",
+  sectionDescription: "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare.",
+  facebookUrl: "",
+  instagramUrl: "",
+  linkedinUrl: "",
 };
 
 const defaultServices: ServiceItem[] = [

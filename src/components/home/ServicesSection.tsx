@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Clock, Home, Stethoscope, Activity, Dumbbell, Building2 } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const SERVICE_META = [
   { icon: Clock,       label: "Hourly Care",           title: "Flexible hourly support",       description: "Flexible hourly visits tailored to your schedule — from a few hours a week to daily support.",              btnLabel: "Learn more",    link: "/services", imgKey: "serviceCard1" as const },
@@ -39,69 +39,63 @@ const ServicesSection = () => {
             const Icon = service.icon;
             return (
               <AnimatedSection key={service.label} delay={i * 0.07} from={i % 2 === 0 ? "rotateUp" : "flip3d"}>
-                <motion.div
-                  className="group relative rounded-2xl overflow-hidden cursor-pointer h-[260px] sm:h-[300px] md:h-[360px]"
-                  whileHover={{
-                    scale: 1.03,
-                    rotateY: 2,
-                    rotateX: -2,
-                    boxShadow: "0 25px 50px rgba(0,0,0,0.15), 0 0 30px rgba(38,104,188,0.08)",
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  style={{ transformStyle: "preserve-3d", perspective: 800 }}
+                <div
+                  className="group relative rounded-2xl overflow-hidden cursor-pointer h-[260px] sm:h-[300px] md:h-[360px] transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(38,104,188,0.18),0_0_0_1px_rgba(38,104,188,0.10)]"
                 >
                   {/* Background image */}
                   <img
                     src={service.image}
                     alt={service.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
 
-                  {/* Always-on dark overlay */}
-                  <div className="absolute inset-0 bg-black/30" />
+                  {/* Dark overlay — darkens more on hover */}
+                  <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
 
                   {/* Top gradient for badge readability */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
 
+                  {/* Blue accent border glow on hover */}
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent transition-all duration-500 group-hover:border-[#2a66b0]/40 group-hover:shadow-[inset_0_0_20px_rgba(38,104,188,0.08)]" />
+
                   {/* Badge — top left */}
-                  <div className="absolute top-5 left-5 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-full px-4 py-2">
+                  <div className="absolute top-5 left-5 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 transition-all duration-500 group-hover:bg-[#2a66b0]/70 group-hover:border-[#2a66b0]/40">
                     <Icon className="h-5 w-5 text-white flex-shrink-0" />
                     <span className="text-white text-xs font-semibold tracking-wide font-sans leading-none">
                       {service.label}
                     </span>
                   </div>
 
-                  {/* Title — centered, shifted above midpoint via pb-20 */}
-                  <div className="absolute inset-0 z-10 flex items-center justify-center px-6 pb-20 pointer-events-none">
+                  {/* Title — moves up on hover to make room for description */}
+                  <div className="absolute inset-0 z-10 flex items-center justify-center px-6 pb-20 pointer-events-none transition-all duration-500 group-hover:pb-32">
                     <h3 className="text-white font-bold text-[1.55rem] text-center leading-snug drop-shadow-lg">
                       {service.title}
                     </h3>
                   </div>
 
-                  {/* Slide-up reveal panel */}
-                  <div className="absolute bottom-0 left-0 right-0 z-20 translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0">
+                  {/* Bottom reveal — slides up on hover */}
+                  <div className="absolute bottom-0 left-0 right-0 z-20 translate-y-full opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
                     <div
-                      className="px-6 pb-6 pt-12"
+                      className="px-6 pb-6 pt-14"
                       style={{
                         background:
-                          "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.82) 55%, rgba(0,0,0,0) 100%)",
+                          "linear-gradient(to top, rgba(42,102,176,0.92) 0%, rgba(42,102,176,0.70) 50%, rgba(0,0,0,0) 100%)",
                       }}
                     >
-                      <p className="text-white/85 text-sm leading-relaxed font-sans mb-4">
+                      <p className="text-white/90 text-sm leading-relaxed font-sans mb-4">
                         {service.description}
                       </p>
                       <Link
                         to={service.link}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-sans font-semibold text-sm transition-all duration-200 hover:scale-105"
-                        style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-sans font-semibold text-sm bg-white text-[#2a66b0] transition-all duration-300 hover:scale-105 hover:shadow-lg"
                       >
                         {service.btnLabel}
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                       </Link>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </AnimatedSection>
             );
           })}
