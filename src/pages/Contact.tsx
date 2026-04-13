@@ -480,7 +480,8 @@ const Contact = () => {
                     <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                       <a href={`tel:+1${phoneLink}`}>
                         <Button
-                          className="rounded-full gap-2 w-full sm:w-auto font-medium text-foreground hover:text-primary transition-colors glass-btn"
+                          className="rounded-full gap-2 w-full sm:w-auto font-semibold hover:scale-105 transition-all"
+                          style={{ background: "linear-gradient(135deg, #ffffff 0%, #e8eef5 100%)", border: "1px solid rgba(255,255,255,0.5)", boxShadow: "0 2px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9)", color: "#1d4f8c" }}
                         >
                           <Phone className="h-4 w-4" /> Call Now
                         </Button>

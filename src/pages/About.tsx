@@ -379,14 +379,17 @@ const About = () => {
               {/* Vision */}
               <AnimatedSection delay={0.1}>
                 <div className="svc-card-wrapper h-full" style={{ "--icon-color": "#0891b2" } as React.CSSProperties}>
-                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#0891b2]" />
-                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 leading-none">V</span>
-                    <div className="svc-icon-box mb-7" style={{ "--icon-color": "#0891b2", "--icon-bg": "rgba(8,145,178,0.08)" } as React.CSSProperties}>
-                      <Eye className="icon-svg w-7 h-7" style={{ color: "#0891b2" }} />
+                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden hover:border-transparent hover:shadow-xl transition-all duration-500">
+                    {/* Cyan gradient overlay on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl z-0"
+                      style={{ background: "linear-gradient(135deg, #0891b2 0%, #066a82 100%)" }} />
+                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#0891b2] z-10" />
+                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 group-hover:text-white/5 leading-none transition-colors duration-500 z-[1]">V</span>
+                    <div className="svc-icon-box mb-7 relative z-[1]" style={{ "--icon-color": "#0891b2", "--icon-bg": "rgba(8,145,178,0.08)" } as React.CSSProperties}>
+                      <Eye className="icon-svg w-7 h-7 text-[#0891b2] group-hover:text-white transition-colors duration-500" />
                     </div>
-                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">Vision</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed flex-1">
+                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3 group-hover:text-white transition-colors duration-500 relative z-[1]">Vision</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed flex-1 group-hover:text-white/75 transition-colors duration-500 relative z-[1]">
                       To be the most trusted home care provider in New Jersey, known for compassion,
                       reliability, and excellence in care — transforming lives one family at a time.
                     </p>
@@ -397,22 +400,25 @@ const About = () => {
               {/* Values */}
               <AnimatedSection delay={0.2}>
                 <div className="svc-card-wrapper h-full" style={{ "--icon-color": "#14b8a6" } as React.CSSProperties}>
-                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#14b8a6]" />
-                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 leading-none">V</span>
-                    <div className="svc-icon-box mb-7" style={{ "--icon-color": "#14b8a6", "--icon-bg": "rgba(20,184,166,0.08)" } as React.CSSProperties}>
-                      <Heart className="icon-svg w-7 h-7" style={{ color: "#14b8a6" }} />
+                  <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col bg-[#f4f6f8] overflow-hidden hover:border-transparent hover:shadow-xl transition-all duration-500">
+                    {/* Teal gradient overlay on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl z-0"
+                      style={{ background: "linear-gradient(135deg, #14b8a6 0%, #0d8a7c 100%)" }} />
+                    <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-[#14b8a6] z-10" />
+                    <span className="pointer-events-none select-none absolute -bottom-4 right-4 text-[120px] font-bold text-gray-200/30 group-hover:text-white/5 leading-none transition-colors duration-500 z-[1]">V</span>
+                    <div className="svc-icon-box mb-7 relative z-[1]" style={{ "--icon-color": "#14b8a6", "--icon-bg": "rgba(20,184,166,0.08)" } as React.CSSProperties}>
+                      <Heart className="icon-svg w-7 h-7 text-[#14b8a6] group-hover:text-white transition-colors duration-500" />
                     </div>
-                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-5">Values</h3>
-                    <div className="space-y-3 flex-1">
+                    <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-5 group-hover:text-white transition-colors duration-500 relative z-[1]">Values</h3>
+                    <div className="space-y-3 flex-1 relative z-[1]">
                       {values.map(({ label, desc }) => (
                         <div key={label} className="flex items-start gap-3">
-                          <div className="w-5 h-5 rounded-full bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <CheckCircle className="h-3 w-3 text-[#2a66b0]" />
+                          <div className="w-5 h-5 rounded-full bg-[#14b8a6]/10 group-hover:bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors duration-500">
+                            <CheckCircle className="h-3 w-3 text-[#14b8a6] group-hover:text-white transition-colors duration-500" />
                           </div>
                           <div>
-                            <span className="text-sm font-semibold text-gray-900">{label} </span>
-                            <span className="text-xs text-gray-500">— {desc}</span>
+                            <span className="text-sm font-semibold text-gray-900 group-hover:text-white transition-colors duration-500">{label} </span>
+                            <span className="text-xs text-gray-500 group-hover:text-white/75 transition-colors duration-500">— {desc}</span>
                           </div>
                         </div>
                       ))}
