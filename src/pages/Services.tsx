@@ -244,54 +244,8 @@ const Services = () => {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════
-            VISUAL BANNER
-        ══════════════════════════════════════ */}
-        <section className="py-10 bg-white">
-          <div className="container mx-auto px-6">
-            <div className="relative rounded-3xl overflow-hidden min-h-[340px] md:min-h-[420px]"
-              style={{ background: "linear-gradient(135deg, #2a66b0 0%, #0891b2 100%)" }}>
-              <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full bg-white/10" />
-              <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-white/10" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-white/5" />
-              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 p-10 md:p-14">
-                <div className="text-white max-w-sm">
-                  <span className="inline-block text-xs font-semibold bg-white/20 rounded-full px-3 py-1 mb-4 tracking-wider uppercase">
-                    Why Choose Us
-                  </span>
-                  <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
-                    Very fast and<br />accurate service with us
-                  </h2>
-                  <p className="text-white/75 text-sm leading-relaxed mb-6">
-                    Connect with our professional caregivers who are ready to help you manage your health with dignity and compassion.
-                  </p>
-                  <Link to="/contact"
-                    className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-full transition-all hover:scale-105"
-                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
-                    Make a Schedule <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-                <div className="flex flex-col gap-4 w-full md:w-auto">
-                  {[
-                    { Icon: Users,       val: "500+",        sub: "Happy Families",         cls: "bg-[#2a66b0]/10", icls: "text-[#2a66b0]" },
-                    { Icon: Star,        val: "99%",         sub: "Satisfying Treatment",   cls: "bg-cyan-500/10",  icls: "text-cyan-500"  },
-                    { Icon: ShieldCheck, val: "NJ Licensed", sub: "State Certified Agency", cls: "bg-green-500/10", icls: "text-green-500" },
-                  ].map(({ Icon, val, sub, cls, icls }) => (
-                    <div key={sub} className="flex items-center gap-4 bg-white rounded-2xl px-6 py-4 shadow-xl">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${cls}`}>
-                        <Icon className={`w-5 h-5 ${icls}`} />
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-gray-900 leading-none">{val}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+
+
 
         {/* ══════════════════════════════════════
             HOME CARE SERVICES

@@ -26,12 +26,8 @@ const values = [
   { label: "Accountability", desc: "We take ownership of outcomes."               },
 ];
 
-const whyUs = [
-  { icon: ShieldCheck, title: "NJ Licensed & Insured",   desc: "Fully certified, bonded, and insured by the state of New Jersey." },
-  { icon: Stethoscope, title: "Skilled Care Team",        desc: "Trained caregivers and nurses matched to each client's needs."    },
-  { icon: Heart,        title: "Personalized Plans",      desc: "Every care plan is built around your family's unique situation."  },
-  { icon: Phone,        title: "Always Reachable",        desc: "Our coordinators are available 24/7 — no voicemail runaround."   },
-];
+
+
 
 const About = () => {
   const { teamMembers, siteImages } = useAdmin();
@@ -339,72 +335,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════
-            WHY CHOOSE US
-        ══════════════════════════════════════ */}
-        <section className="py-20 bg-gray-50 relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            {/* Gradient blobs */}
-            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 450, height: 450, top: "-16%", left: "-10%", opacity: 0.55 }} />
-            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 350, height: 350, bottom: "-12%", right: "-6%", opacity: 0.45 }} />
-            <div className="absolute rounded-full deco-pulse" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 200, height: 200, top: "28%", left: "48%", opacity: 0.3 }} />
 
-            {/* Dot grid */}
-            <div className="absolute top-8 right-8 hidden lg:grid grid-cols-6 gap-2.5">
-              {Array.from({ length: 24 }).map((_, i) => (
-                <div key={`wd-${i}`} className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]/12" />
-              ))}
-            </div>
-
-            {/* Circle outline */}
-            <div className="absolute -top-12 right-[18%] w-48 h-48 rounded-full border-2 border-[#2a66b0]/[0.07] deco-spin-slow hidden lg:block" />
-            <div className="absolute bottom-10 left-[13%] w-24 h-24 rounded-full border-[3px] border-dashed border-[#0891b2]/[0.1] deco-spin-slow hidden lg:block" style={{ animationDirection: "reverse" }} />
-
-            {/* Plus shape */}
-            <div className="absolute top-[42%] left-[5%] hidden lg:block deco-float-up">
-              <div className="w-8 h-[2px] bg-[#2a66b0]/18 absolute top-1/2 -translate-y-1/2" />
-              <div className="w-[2px] h-8 bg-[#2a66b0]/18 absolute left-1/2 -translate-x-1/2" />
-            </div>
-
-            {/* Diamond */}
-            <div className="absolute top-[18%] right-[9%] w-6 h-6 border-2 border-[#2a66b0]/12 rotate-45 deco-drift hidden lg:block" />
-
-            {/* SVG wave */}
-            <svg className="absolute bottom-0 left-0 w-full h-14 opacity-[0.04]" viewBox="0 0 1440 56" preserveAspectRatio="none">
-              <path d="M0,28 C360,56 720,0 1080,28 C1260,42 1380,14 1440,28 L1440,56 L0,56 Z" fill="#2a66b0" />
-            </svg>
-          </div>
-
-          <div className="container mx-auto px-6 relative z-10">
-
-            <AnimatedSection className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-4 py-1.5 mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]" />
-                <span className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest">Why MintexCare</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">
-                What Makes Us Different
-              </h2>
-              <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-                We go beyond basic care to provide a complete support system for your family.
-              </p>
-            </AnimatedSection>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {whyUs.map(({ icon: Icon, title, desc }, i) => (
-                <AnimatedSection key={title} delay={i * 0.08}>
-                  <div className="group bg-white rounded-3xl p-7 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
-                    <div className="w-12 h-12 rounded-2xl bg-[#2a66b0]/10 flex items-center justify-center mb-5 group-hover:bg-[#2a66b0] transition-colors duration-300">
-                      <Icon className="w-5 h-5 text-[#2a66b0] group-hover:text-white transition-colors duration-300" />
-                    </div>
-                    <h3 className="font-bold text-gray-900 text-base mb-2">{title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ══════════════════════════════════════
             MISSION · VISION · VALUES
