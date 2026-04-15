@@ -13,6 +13,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const serviceOptions = [
   "Personal Care", "Companion Care", "Skilled Nursing",
@@ -38,6 +39,7 @@ const trustBadges = [
 const Contact = () => {
   const { addSubmission, contactInfo } = useAdmin();
   const { toast } = useToast();
+  const { isDark } = useTheme();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,8 +68,9 @@ const Contact = () => {
     <div
       className="relative"
       style={{
-        background:
-          "linear-gradient(170deg, hsl(200 55% 98.5%) 0%, hsl(180 50% 97%) 20%, hsl(210 50% 97.5%) 45%, hsl(180 45% 97.5%) 70%, hsl(215 45% 98%) 100%)",
+        background: isDark
+          ? "linear-gradient(170deg, hsl(214 40% 10%) 0%, hsl(214 40% 9%) 20%, hsl(214 40% 10%) 45%, hsl(214 40% 9%) 70%, hsl(214 40% 10%) 100%)"
+          : "linear-gradient(170deg, hsl(200 55% 98.5%) 0%, hsl(180 50% 97%) 20%, hsl(210 50% 97.5%) 45%, hsl(180 45% 97.5%) 70%, hsl(215 45% 98%) 100%)",
       }}
     >
       {/* ── Global floating bubbles ── */}
@@ -130,7 +133,7 @@ const Contact = () => {
                     {trustBadges.map(({ icon: Icon, label }) => (
                       <div
                         key={label}
-                        className="flex items-center gap-2 bg-white/70 border border-border rounded-full px-4 py-2 shadow-sm"
+                        className={`flex items-center gap-2 border border-border rounded-full px-4 py-2 shadow-sm ${isDark ? "bg-white/5" : "bg-white/70"}`}
                       >
                         <Icon className="h-4 w-4 text-accent" />
                         <span className="text-sm font-sans font-medium text-foreground">{label}</span>
@@ -243,7 +246,7 @@ const Contact = () => {
 
                 {/* ── Contact Form ── */}
                 <AnimatedSection from="left">
-                  <div className="bg-white rounded-3xl shadow-2xl shadow-primary/8 border border-border overflow-hidden">
+                  <div className={`rounded-3xl shadow-2xl shadow-primary/8 border border-border overflow-hidden ${isDark ? "bg-[hsl(214_40%_13%)]" : "bg-white"}`}>
 
                     {/* Top accent bar */}
                     <div
@@ -342,7 +345,7 @@ const Contact = () => {
                     ].map(stat => (
                       <div
                         key={stat.label}
-                        className="bg-white rounded-2xl border border-border p-4 text-center shadow-sm hover:shadow-md transition-shadow"
+                        className={`rounded-2xl border border-border p-4 text-center shadow-sm hover:shadow-md transition-shadow ${isDark ? "bg-[hsl(214_40%_13%)]" : "bg-white"}`}
                       >
                         <p className={`text-2xl font-serif font-bold ${stat.color} mb-0.5`}>{stat.val}</p>
                         <p className="text-xs text-muted-foreground font-sans leading-tight">{stat.label}</p>
@@ -365,7 +368,7 @@ const Contact = () => {
                   </div>
 
                   {/* Fax info */}
-                  <div className="bg-white rounded-2xl border border-border px-5 py-4 shadow-sm flex items-center gap-3">
+                  <div className={`rounded-2xl border border-border px-5 py-4 shadow-sm flex items-center gap-3 ${isDark ? "bg-[hsl(214_40%_13%)]" : "bg-white"}`}>
                     <div className="h-10 w-10 rounded-xl bg-primary/8 flex items-center justify-center shrink-0">
                       <Phone className="h-5 w-5 text-primary" />
                     </div>
@@ -403,7 +406,7 @@ const Contact = () => {
                     <Accordion type="single" collapsible key={i}>
                       <AccordionItem
                         value={`faq-${i}`}
-                        className="bg-white border border-border rounded-2xl px-7 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-b-0"
+                        className={`border border-border rounded-2xl px-7 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border-b-0 ${isDark ? "bg-[hsl(214_40%_13%)]" : "bg-white"}`}
                       >
                         <AccordionTrigger className="font-sans font-semibold text-foreground text-base py-6 hover:no-underline text-left gap-4">
                           <span className="flex items-center gap-4">

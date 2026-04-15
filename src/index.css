@@ -621,3 +621,142 @@ a, button {
 .deco-drift      { animation: deco-drift      10s ease-in-out infinite; }
 .deco-spin-slow  { animation: deco-spin-slow  30s linear infinite; }
 .deco-pulse      { animation: deco-pulse      6s ease-in-out infinite; }
+
+/* ════════════════════════════════════════
+   DARK MODE OVERRIDES
+   ════════════════════════════════════════ */
+
+/* --- Body ambient gradient --- */
+.dark body {
+  background-image:
+    radial-gradient(ellipse 90% 55% at 5%   0%,  rgba(38, 104, 188, 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 45% at 95% 100%,  rgba(8, 145, 178, 0.03) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 40% at 50%  50%,  rgba(38, 188, 156, 0.02) 0%, transparent 70%);
+}
+
+/* --- Navbar glass (dark) --- */
+.dark .glass-nav {
+  background:
+    linear-gradient(180deg, rgba(16, 28, 52, 0.88) 0%, rgba(16, 28, 52, 0.75) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 1px 0   rgba(0, 0, 0, 0.20),
+    0 4px 24px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* --- Button glass (dark) --- */
+.dark .glass-btn {
+  background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 2px 8px  rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.dark .glass-btn:hover {
+  background: linear-gradient(160deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* --- Base glass (dark) --- */
+.dark .glass {
+  background: rgba(16, 28, 52, 0.58);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* --- Glass card (dark) --- */
+.dark .glass-card {
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.00) 55%),
+    rgba(16, 28, 52, 0.78);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* --- Service card wrappers (dark) --- */
+.dark .svc-card-wrapper::before {
+  background: linear-gradient(160deg, rgba(30, 45, 75, 0.50) 0%, rgba(20, 35, 60, 0.40) 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.20);
+}
+
+.dark .svc-card {
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.00) 55%),
+    hsl(214 40% 14%) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.dark .svc-card-wrapper:hover .svc-card {
+  box-shadow:
+    0 28px 56px rgba(0,0,0,0.35),
+    0 8px  16px rgba(0,0,0,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* --- Service icon box (dark) --- */
+.dark .svc-icon-box {
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* --- Hardcoded bg-white / bg-gray-50 sections → dark --- */
+.dark .bg-white {
+  background-color: hsl(214 40% 10%) !important;
+}
+.dark .bg-gray-50 {
+  background-color: hsl(214 40% 8%) !important;
+}
+.dark .bg-\[\#f7f8f9\] {
+  background-color: hsl(214 40% 8%) !important;
+}
+.dark .bg-\[\#f4f6f8\] {
+  background-color: hsl(214 40% 14%) !important;
+}
+.dark .bg-\[\#e8ebed\] {
+  background-color: hsl(214 30% 18%) !important;
+}
+
+/* --- Text color overrides for hardcoded grays --- */
+.dark .text-gray-900 { color: hsl(180 20% 95%) !important; }
+.dark .text-gray-800 { color: hsl(180 20% 90%) !important; }
+.dark .text-gray-700 { color: hsl(180 20% 80%) !important; }
+.dark .text-gray-600 { color: hsl(180 20% 70%) !important; }
+.dark .text-gray-500 { color: hsl(180 20% 60%) !important; }
+.dark .text-gray-400 { color: hsl(180 20% 50%) !important; }
+.dark .text-gray-300 { color: hsl(180 20% 45%) !important; }
+
+/* --- Border overrides --- */
+.dark .border-gray-100 { border-color: rgba(255,255,255,0.06) !important; }
+.dark .border-gray-200 { border-color: rgba(255,255,255,0.08) !important; }
+.dark .border-gray-300 { border-color: rgba(255,255,255,0.10) !important; }
+
+/* --- Background utility overrides --- */
+.dark .bg-gray-100 { background-color: hsl(214 30% 16%) !important; }
+.dark .bg-blue-50 { background-color: rgba(38,104,188,0.10) !important; }
+.dark .bg-cyan-50 { background-color: rgba(8,145,178,0.10) !important; }
+.dark .border-blue-100 { border-color: rgba(38,104,188,0.15) !important; }
+.dark .border-cyan-100 { border-color: rgba(8,145,178,0.15) !important; }
+
+/* --- bg-white/90 and similar opacity whites --- */
+.dark [class*="bg-white/"] {
+  background-color: rgba(16, 28, 52, 0.85) !important;
+}
+
+
+/* --- Smooth theme transition --- */
+html {
+  transition: background-color 0.3s ease;
+}
+html.dark {
+  color-scheme: dark;
+}

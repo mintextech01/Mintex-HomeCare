@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from "framer-motion";
 
 /**
@@ -264,6 +265,17 @@ const cardKeys = [
 
 const NursingSection = () => {
   const { siteImages } = useAdmin();
+  const { isDark } = useTheme();
+
+  /* Dark-mode pastel equivalents */
+  const darkBgMap: Record<string, string> = {
+    "#ddeeff": "hsl(214 40% 18%)",
+    "#fde8f0": "hsl(340 30% 16%)",
+    "#ede8ff": "hsl(260 30% 16%)",
+    "#d8f5f0": "hsl(170 30% 14%)",
+    "#e8fbff": "hsl(195 30% 15%)",
+    "#fff4de": "hsl(38 30% 15%)",
+  };
 
   return (
     <section className="py-16 md:py-24">
@@ -300,7 +312,7 @@ const NursingSection = () => {
                 >
                 <Link
                   to="/services"
-                  className="group flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer"
+                  className={`group flex flex-col h-full rounded-2xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer ${isDark ? "bg-[hsl(214_40%_13%)] border border-white/6" : "bg-white"}`}
                 >
                   {/* Title */}
                   <div className="flex items-start justify-between px-4 pt-5 pb-3 gap-2 flex-shrink-0">
@@ -313,7 +325,7 @@ const NursingSection = () => {
                   {/* Illustration / hover-description area */}
                   <div
                     className="relative mx-3 mb-3 rounded-xl overflow-hidden flex-1 min-h-[160px] sm:min-h-[200px] lg:min-h-[230px]"
-                    style={{ backgroundColor: card.bg }}
+                    style={{ backgroundColor: isDark ? (darkBgMap[card.bg] || "hsl(214 40% 16%)") : card.bg }}
                   >
                     {/* Illustration */}
                     <div className="absolute inset-0 flex items-end justify-center pb-1 transition-opacity duration-300 group-hover:opacity-0">
@@ -327,7 +339,7 @@ const NursingSection = () => {
                     {/* Description — fades in on hover */}
                     <div
                       className="absolute inset-0 flex items-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ backgroundColor: card.bg }}
+                      style={{ backgroundColor: isDark ? (darkBgMap[card.bg] || "hsl(214 40% 16%)") : card.bg }}
                     >
                       <p className="text-sm text-foreground/80 font-sans leading-relaxed">
                         {card.description}

@@ -6,6 +6,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminProvider } from "@/contexts/AdminContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Preloader from "@/components/Preloader";
 import PageTransition from "@/components/PageTransition";
 import usePageTitle from "@/hooks/usePageTitle";
@@ -46,6 +47,7 @@ const AnimatedRoutes = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ThemeProvider>
     <TooltipProvider>
       <AdminProvider>
         <Preloader />
@@ -56,6 +58,7 @@ const App = () => (
         </BrowserRouter>
       </AdminProvider>
     </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

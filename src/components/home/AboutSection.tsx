@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, CheckCircle, Award, Users, Heart, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from "framer-motion";
 
 const features = [
@@ -20,6 +21,7 @@ const stats = [
 
 const AboutSection = () => {
   const { siteImages } = useAdmin();
+  const { isDark } = useTheme();
 
   return (
     <section id="about" className="relative py-20 md:py-28 bg-white overflow-hidden">
@@ -46,15 +48,15 @@ const AboutSection = () => {
 
         {/* Top-right large gradient blob */}
         <div className="absolute rounded-full"
-          style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 500, height: 500, top: "-10%", right: "-6%", opacity: 0.7 }} />
+          style={{ background: isDark ? "radial-gradient(circle, rgba(38,104,188,0.06) 0%, transparent 70%)" : "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 500, height: 500, top: "-10%", right: "-6%", opacity: 0.7 }} />
 
         {/* Bottom-left gradient blob */}
         <div className="absolute rounded-full"
-          style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 400, height: 400, bottom: "-8%", left: "-4%", opacity: 0.6 }} />
+          style={{ background: isDark ? "radial-gradient(circle, rgba(38,104,188,0.04) 0%, transparent 70%)" : "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 400, height: 400, bottom: "-8%", left: "-4%", opacity: 0.6 }} />
 
         {/* Mid-right teal accent blob */}
         <div className="absolute rounded-full"
-          style={{ background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 300, height: 300, top: "40%", right: "5%", opacity: 0.45 }} />
+          style={{ background: isDark ? "radial-gradient(circle, rgba(8,145,178,0.05) 0%, transparent 70%)" : "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 300, height: 300, top: "40%", right: "5%", opacity: 0.45 }} />
 
         {/* Dashed ring — center bottom */}
         <div className="absolute bottom-20 left-[38%] w-32 h-32 rounded-full border-[3px] border-dashed border-[#2a66b0]/15 hidden lg:block" />

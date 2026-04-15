@@ -77,7 +77,7 @@ const StatsSection = () => {
                 <stat.icon className="h-6 w-6 text-accent" />
               </motion.div>
               <Counter target={stat.value} suffix={stat.suffix} />
-              <p className="text-sm text-black-300 mt-1 font-sans">{stat.label}</p>
+              <p className="text-sm text-muted-foreground mt-1 font-sans">{stat.label}</p>
             </motion.div>
           ))}
         </div>

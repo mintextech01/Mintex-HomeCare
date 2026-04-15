@@ -4,6 +4,8 @@ import { Phone, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/Artboard 133 copy (1).svg";
 import { motion } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const navLinks = [
   { label: "Home",          href: "/" },
@@ -18,6 +20,7 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -88,6 +91,7 @@ const Header = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
             <a
               href="tel:+17322685112"
               className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors glass-btn rounded-full px-4 py-2"
@@ -111,13 +115,16 @@ const Header = () => {
           </div>
 
           {/* Mobile hamburger */}
-          <button
-            className="lg:hidden p-2 rounded-xl glass transition-all duration-200 flex-shrink-0"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu className="h-5 w-5 text-foreground" />
-          </button>
+          <div className="flex lg:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="p-2 rounded-xl glass transition-all duration-200 flex-shrink-0"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5 text-foreground" />
+            </button>
+          </div>
         </div>
       </motion.header>
 
@@ -137,9 +144,15 @@ const Header = () => {
         }`}
         style={{
           width: "min(85vw, 320px)",
-          background: "linear-gradient(160deg, rgba(255,255,255,0.98) 0%, rgba(235,246,255,0.96) 100%)",
-          boxShadow: "-8px 0 40px rgba(0,0,0,0.18)",
-          borderLeft: "1px solid rgba(255,255,255,0.7)",
+          background: isDark
+            ? "linear-gradient(160deg, rgba(16,28,52,0.98) 0%, rgba(12,22,42,0.96) 100%)"
+            : "linear-gradient(160deg, rgba(255,255,255,0.98) 0%, rgba(235,246,255,0.96) 100%)",
+          boxShadow: isDark
+            ? "-8px 0 40px rgba(0,0,0,0.40)"
+            : "-8px 0 40px rgba(0,0,0,0.18)",
+          borderLeft: isDark
+            ? "1px solid rgba(255,255,255,0.06)"
+            : "1px solid rgba(255,255,255,0.7)",
         }}
       >
         {/* Drawer header: logo + close */}
@@ -153,7 +166,7 @@ const Header = () => {
           <button
             onClick={() => setMobileOpen(false)}
             className="p-2 rounded-xl transition-colors"
-            style={{ background: "rgba(38,104,188,0.06)" }}
+            style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(38,104,188,0.06)" }}
             aria-label="Close menu"
           >
             <X className="h-5 w-5 text-foreground" />
@@ -173,11 +186,11 @@ const Header = () => {
                 onClick={() => handleNavClick(link.href)}
                 className="flex items-center text-sm font-medium px-4 py-3.5 rounded-xl mb-1 transition-all duration-200"
                 style={{
-                  color: isActive ? "hsl(214 66% 44%)" : "inherit",
-                  background: isActive ? "rgba(38,104,188,0.08)" : "transparent",
+                  color: isActive ? (isDark ? "hsl(214 66% 65%)" : "hsl(214 66% 44%)") : "inherit",
+                  background: isActive ? (isDark ? "rgba(38,104,188,0.15)" : "rgba(38,104,188,0.08)") : "transparent",
                   fontWeight: isActive ? 600 : 500,
                 }}
-                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(38,104,188,0.05)"; }}
+                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = isDark ? "rgba(255,255,255,0.04)" : "rgba(38,104,188,0.05)"; }}
                 onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
               >
                 {link.label}
@@ -193,8 +206,8 @@ const Header = () => {
             href="tel:+17322685112"
             className="flex items-center justify-center gap-2 w-full text-sm font-semibold px-4 py-3.5 rounded-xl"
             style={{
-              border: "1px solid rgba(38,104,188,0.15)",
-              color: "hsl(214 66% 44%)",
+              border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(38,104,188,0.15)",
+              color: isDark ? "hsl(214 66% 65%)" : "hsl(214 66% 44%)",
             }}
           >
             <Phone className="h-4 w-4 flex-shrink-0" />
