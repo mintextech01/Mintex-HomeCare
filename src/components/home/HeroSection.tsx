@@ -42,16 +42,16 @@ const StatBadge = ({
     initial={{ opacity: 0, scale: 0.85, y: 10 }}
     animate={{ opacity: 1, scale: 1, y: 0 }}
     transition={{ duration: 0.55, delay, type: "spring", stiffness: 200 }}
-    className={`absolute z-20 bg-white rounded-2xl shadow-xl border border-slate-100
-                flex items-center gap-3 px-4 py-3 cursor-default
+    className={`absolute z-20 bg-card rounded-2xl shadow-xl border border-border
+                flex items-center gap-2.5 px-3 py-2.5 cursor-default
                 hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 ${className}`}
   >
-    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
+    <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
       {icon}
     </div>
     <div>
-      <p className="text-base font-bold text-foreground leading-none">{value}</p>
-      <p className="text-[11px] text-muted-foreground mt-0.5 leading-none">{label}</p>
+      <p className="text-sm font-bold text-foreground leading-none">{value}</p>
+      <p className="text-[10px] text-muted-foreground mt-0.5 leading-none">{label}</p>
     </div>
   </motion.div>
 );
@@ -80,16 +80,16 @@ const ImageMosaic = ({
 }: {
   imgs: { topLeft: string; bottomLeft: string; largeCenter: string; bottomRight: string };
 }) => {
-  /* pixel constants that match the container (600 × 580) */
-  const W = 600, H = 580;
-  const leftW   = Math.round(W * 0.41);   // 246
-  const rightX  = Math.round(W * 0.46);   // 276
-  const rightW  = W - rightX;             // 324
-  const gap     = 12;                     // gap between top & bottom-left
-  const topH    = Math.round(H * 0.49);   // 284  — top-left image height
-  const botH    = H - topH - gap;         // 284  — bottom-left image height
-  const brW     = Math.round(W * 0.40);   // 240  — bottom-right image width
-  const brH     = Math.round(H * 0.38);   // 220  — bottom-right image height
+  /* pixel constants that match the container (540 × 520) */
+  const W = 540, H = 520;
+  const leftW   = Math.round(W * 0.41);
+  const rightX  = Math.round(W * 0.46);
+  const rightW  = W - rightX;
+  const gap     = 12;
+  const topH    = Math.round(H * 0.49);
+  const botH    = H - topH - gap;
+  const brW     = Math.round(W * 0.40);
+  const brH     = Math.round(H * 0.38);
 
   return (
   <div className="relative" style={{ width: W, height: H }}>
@@ -98,10 +98,22 @@ const ImageMosaic = ({
     <div
       className="absolute pointer-events-none rounded-full border-[30px] border-accent/8"
       style={{ width: 500, height: 500, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0 }}
-    />
+    >
+      {/* Filled center circle inside ring */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full"
+        style={{ background: "linear-gradient(135deg, rgba(8,145,178,0.15), rgba(42,102,176,0.1))" }}
+      />
+    </div>
     <div
-      className="absolute pointer-events-none rounded-full border-[2px] border-dashed border-accent/15"
-      style={{ width: 560, height: 560, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0 }}
+      className="absolute pointer-events-none rounded-full"
+      style={{
+        width: 560, height: 560,
+        top: "50%", left: "50%",
+        transform: "translate(-50%,-50%)",
+        zIndex: 0,
+        border: "2px solid",
+        borderColor: "rgba(8,145,178,0.12)",
+      }}
     />
 
     {/* ── dot grids ── */}
@@ -122,7 +134,7 @@ const ImageMosaic = ({
 
     {/* TOP-LEFT image */}
     <div
-      className="absolute rounded-[22px] overflow-hidden shadow-xl group cursor-pointer border-4 border-white
+      className="absolute rounded-[22px] overflow-hidden shadow-xl group cursor-pointer border-4 border-background
                  transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-2xl"
       style={{ top: 0, left: 0, width: leftW, height: topH, zIndex: 5 }}
     >
@@ -137,7 +149,7 @@ const ImageMosaic = ({
 
     {/* BOTTOM-LEFT image */}
     <div
-      className="absolute rounded-[22px] overflow-hidden shadow-xl group cursor-pointer border-4 border-white
+      className="absolute rounded-[22px] overflow-hidden shadow-xl group cursor-pointer border-4 border-background
                  transition-all duration-400 ease-out hover:-translate-y-2 hover:shadow-2xl"
       style={{ top: topH + gap, left: 0, width: leftW, height: botH, zIndex: 5 }}
     >
@@ -168,7 +180,7 @@ const ImageMosaic = ({
 
     {/* ══ BOTTOM-RIGHT floating image — overlaps both columns ══════════════ */}
     <div
-      className="absolute rounded-[22px] overflow-hidden shadow-2xl group cursor-pointer border-4 border-white
+      className="absolute rounded-[22px] overflow-hidden shadow-2xl group cursor-pointer border-4 border-background
                  transition-all duration-400 ease-out hover:-translate-y-2
                  hover:shadow-[0_24px_48px_rgba(0,0,0,0.22)]"
       style={{ bottom: 0, right: 0, width: brW, height: brH, zIndex: 10 }}
@@ -189,7 +201,7 @@ const ImageMosaic = ({
       icon={<Award className="w-5 h-5" />}
       value="10+ Years"
       label="Trusted Experience"
-      className="-top-5 right-0"
+      className="top-0 right-0"
       delay={0.7}
     />
 
@@ -335,15 +347,23 @@ const HeroSection = () => {
         />
         {/* ── huge ring outline (far right bottom) ── */}
         <div
-          className="absolute rounded-full border-[2px] border-accent/8"
-          style={{ width: 400, height: 400, bottom: "-12%", right: "20%" }}
-        />
+          className="absolute rounded-full"
+          style={{ width: 400, height: 400, bottom: "-12%", right: "20%", border: "2px solid", borderColor: "rgba(8,145,178,0.08)" }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full"
+            style={{ background: "linear-gradient(135deg, rgba(8,145,178,0.12), rgba(42,102,176,0.08))" }}
+          />
+        </div>
 
-        {/* ── wavy dashed ring ── */}
+        {/* ── solid ring with center dot ── */}
         <div
-          className="absolute rounded-full border-[2px] border-dashed border-primary/10"
-          style={{ width: 280, height: 280, top: "8%", left: "36%" }}
-        />
+          className="absolute rounded-full"
+          style={{ width: 280, height: 280, top: "8%", left: "36%", border: "2px solid", borderColor: "rgba(12,74,110,0.08)" }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full"
+            style={{ background: "linear-gradient(135deg, rgba(12,74,110,0.15), rgba(8,145,178,0.1))" }}
+          />
+        </div>
 
         {/* ── dot grid — top left ── */}
         <div className="absolute" style={{ top: 60, left: 40 }}>
@@ -519,7 +539,8 @@ const HeroSection = () => {
             animate={{ opacity: 1, x: 0, rotateY: 0 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ y: smoothImageY, perspective: 1000 }}
-            className="order-1 lg:order-2 hidden lg:flex justify-center items-center"
+            className="order-1 lg:order-2 hidden lg:flex justify-center items-center
+                       scale-[0.72] xl:scale-[0.85] 2xl:scale-100 origin-center"
           >
             <ImageMosaic imgs={imgs} />
           </motion.div>

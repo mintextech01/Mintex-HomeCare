@@ -58,20 +58,58 @@ const AboutSection = () => {
         <div className="absolute rounded-full"
           style={{ background: isDark ? "radial-gradient(circle, rgba(8,145,178,0.05) 0%, transparent 70%)" : "radial-gradient(circle, #ccfbf1 0%, transparent 70%)", width: 300, height: 300, top: "40%", right: "5%", opacity: 0.45 }} />
 
-        {/* Dashed ring — center bottom */}
-        <div className="absolute bottom-20 left-[38%] w-32 h-32 rounded-full border-[3px] border-dashed border-[#2a66b0]/15 hidden lg:block" />
+        {/* Decorative circle — center bottom: outer ring + filled inner */}
+        <div className="absolute bottom-20 left-[38%] w-32 h-32 rounded-full hidden lg:block"
+          style={{
+            border: "3px solid",
+            borderColor: isDark ? "rgba(8,145,178,0.2)" : "rgba(42,102,176,0.12)",
+          }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full"
+            style={{
+              background: isDark
+                ? "linear-gradient(135deg, rgba(8,145,178,0.35), rgba(42,102,176,0.25))"
+                : "linear-gradient(135deg, rgba(42,102,176,0.18), rgba(8,145,178,0.12))",
+              boxShadow: isDark
+                ? "0 0 20px rgba(8,145,178,0.15)"
+                : "0 0 15px rgba(42,102,176,0.08)",
+            }}
+          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+            style={{
+              background: isDark
+                ? "linear-gradient(135deg, #0891b2, #2a66b0)"
+                : "linear-gradient(135deg, #2a66b0, #0891b2)",
+            }}
+          />
+        </div>
 
-        {/* Solid ring — top right area */}
-        <div className="absolute top-16 right-[20%] w-20 h-20 rounded-full border-2 border-[#2a66b0]/10 hidden lg:block" />
+        {/* Decorative circle — top right: filled dot with ring */}
+        <div className="absolute top-16 right-[20%] w-20 h-20 rounded-full hidden lg:block"
+          style={{
+            border: "2px solid",
+            borderColor: isDark ? "rgba(8,145,178,0.15)" : "rgba(42,102,176,0.1)",
+          }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full"
+            style={{
+              background: isDark
+                ? "linear-gradient(135deg, rgba(42,102,176,0.4), rgba(8,145,178,0.3))"
+                : "linear-gradient(135deg, rgba(42,102,176,0.2), rgba(8,145,178,0.15))",
+            }}
+          />
+        </div>
 
-        {/* Small solid circle accent */}
-        <div className="absolute top-[30%] left-[44%] w-4 h-4 rounded-full bg-[#2a66b0]/15 hidden lg:block" />
-
-        {/* Horizontal line accent */}
-        <div className="absolute top-[25%] right-0 w-24 h-[2px] bg-gradient-to-l from-[#2a66b0]/20 to-transparent hidden lg:block" />
-
-        {/* Vertical line accent */}
-        <div className="absolute bottom-0 left-[46%] w-[2px] h-20 bg-gradient-to-t from-[#2a66b0]/15 to-transparent hidden lg:block" />
+        {/* Small solid filled dot accent */}
+        <div className="absolute top-[30%] left-[44%] w-5 h-5 rounded-full hidden lg:block"
+          style={{
+            background: isDark
+              ? "linear-gradient(135deg, #0891b2, #2a66b0)"
+              : "linear-gradient(135deg, #2a66b0, #0891b2)",
+            opacity: isDark ? 0.4 : 0.25,
+            boxShadow: isDark ? "0 0 12px rgba(8,145,178,0.3)" : "0 0 8px rgba(42,102,176,0.15)",
+          }}
+        />
 
         {/* Cross / plus shape accent */}
         <div className="absolute top-[60%] right-[12%] hidden lg:block opacity-20">
@@ -108,7 +146,7 @@ const AboutSection = () => {
 
 
             {/* Floating family badge — bottom-left */}
-            <div className="absolute bottom-2 left-2 md:-bottom-4 md:left-0 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-gray-100"
+            <div className="absolute bottom-2 left-2 md:-bottom-4 md:left-0 bg-card rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-border"
               style={{ zIndex: 10 }}>
               <div className="flex -space-x-2">
                 {[
@@ -117,15 +155,15 @@ const AboutSection = () => {
                   siteImages.aboutAvatar3,
                 ].map((url, i) => (
                   <img key={i} src={url} alt=""
-                    className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    className="w-8 h-8 rounded-full border-2 border-background object-cover" />
                 ))}
-                <div className="w-8 h-8 rounded-full border-2 border-white bg-[#2a66b0] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border-2 border-background bg-[#2a66b0] flex items-center justify-center">
                   <span className="text-white text-[9px] font-bold">500+</span>
                 </div>
               </div>
               <div>
-                <p className="text-sm font-bold text-gray-900 leading-none">Happy Families</p>
-                <p className="text-xs text-gray-500 mt-0.5">Across New Jersey</p>
+                <p className="text-sm font-bold text-foreground leading-none">Happy Families</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Across New Jersey</p>
               </div>
             </div>
 
@@ -135,7 +173,7 @@ const AboutSection = () => {
           <AnimatedSection from="depth" delay={0.15} className="order-1 lg:order-2">
 
             {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-6">
+            <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]" />
               <span className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest">
                 About MintexCare
@@ -143,14 +181,14 @@ const AboutSection = () => {
             </div>
 
             {/* Heading */}
-            <h2 className="font-bold text-gray-900 leading-[1.1] mb-5"
+            <h2 className="font-bold text-foreground leading-[1.1] mb-5"
               style={{ fontSize: "clamp(2.2rem, 3.8vw, 3.2rem)" }}>
               Trusted Home Care<br />
               <span className="text-[#2a66b0]">Built on Compassion</span>
             </h2>
 
             {/* Description */}
-            <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-6 max-w-[500px]">
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6 max-w-[500px]">
               MintexCare is a New Jersey-based home healthcare agency dedicated to
               providing high-quality, personalized care — so your loved ones can
               thrive in the comfort of their own home.
@@ -161,37 +199,47 @@ const AboutSection = () => {
               {features.map(f => (
                 <li key={f} className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-[#2a66b0] flex-shrink-0" />
-                  <span className="text-sm text-gray-700 font-medium">{f}</span>
+                  <span className="text-sm text-foreground/80 font-medium">{f}</span>
                 </li>
               ))}
             </ul>
 
-            {/* Stats grid — 3D hover lift */}
+            {/* Stats grid — vibrant filled icons */}
             <div className="grid grid-cols-2 gap-3 mb-8">
-              {stats.map(({ value, label, icon: Icon }, i) => (
+              {stats.map(({ value, label, icon: Icon }, i) => {
+                const colors = [
+                  { bg: "linear-gradient(135deg, #2a66b0, #1d4e8a)", shadow: "rgba(42,102,176,0.3)" },
+                  { bg: "linear-gradient(135deg, #0891b2, #0e7490)", shadow: "rgba(8,145,178,0.3)" },
+                  { bg: "linear-gradient(135deg, #e11d48, #be123c)", shadow: "rgba(225,29,72,0.3)" },
+                  { bg: "linear-gradient(135deg, #0891b2, #06b6d4)", shadow: "rgba(8,145,178,0.3)" },
+                ];
+                const c = colors[i % colors.length];
+                return (
                 <motion.div
                   key={label}
                   initial={{ opacity: 0, y: 20, rotateX: 15 }}
                   whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ y: -4, scale: 1.03, boxShadow: "0 12px 30px rgba(38,104,188,0.12)" }}
-                  className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3.5 border border-gray-100 hover-lift-3d"
+                  whileHover={{ y: -4, scale: 1.03, boxShadow: `0 12px 30px ${c.shadow}` }}
+                  className="flex items-center gap-3 bg-card rounded-2xl px-4 py-3.5 border border-border hover-lift-3d"
                   style={{ perspective: 600 }}
                 >
                   <motion.div
-                    className="w-9 h-9 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center flex-shrink-0"
+                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: c.bg, boxShadow: `0 4px 12px ${c.shadow}` }}
                     whileHover={{ rotateY: 180, scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   >
-                    <Icon className="w-4 h-4 text-[#2a66b0]" />
+                    <Icon className="w-4 h-4 text-white" />
                   </motion.div>
                   <div>
-                    <p className="text-xl font-bold text-gray-900 leading-none">{value}</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{label}</p>
+                    <p className="text-xl font-bold text-foreground leading-none">{value}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{label}</p>
                   </div>
                 </motion.div>
-              ))}
+              );
+              })}
             </div>
 
             {/* CTA */}

@@ -132,7 +132,7 @@ const HomeCareSlider = ({
           <button
             onClick={() => goTo(page - 1, "right")}
             disabled={page === 0 || isSliding}
-            className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
+            className="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -155,7 +155,7 @@ const HomeCareSlider = ({
           <button
             onClick={() => goTo(page + 1, "left")}
             disabled={page === totalPages - 1 || isSliding}
-            className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
+            className="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -176,7 +176,7 @@ const Services = () => {
   return (
     <>
       <Header />
-      <main className="bg-white overflow-x-hidden relative">
+      <main className="bg-background overflow-x-hidden relative">
 
         {/* ══════════════════════════════════════
             HERO
@@ -310,7 +310,7 @@ const Services = () => {
         {/* ══════════════════════════════════════
             SKILLED NURSING SERVICES
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-white relative overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden">
           <div className="pointer-events-none select-none absolute inset-0 z-0" aria-hidden="true">
             {/* cross top-right */}
             <svg className="svc-deco-float absolute -top-4 -right-4 w-40 h-40 opacity-[0.15]" viewBox="0 0 100 100" fill="none">
@@ -405,7 +405,7 @@ const Services = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-6">
             <AnimatedSection>
               <div className="relative rounded-3xl overflow-hidden px-10 py-16 md:px-16 text-center"

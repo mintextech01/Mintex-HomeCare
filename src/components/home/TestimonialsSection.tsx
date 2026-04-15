@@ -47,7 +47,7 @@ const TestimonialsSection = () => {
               {stats.map((s) => (
                 <div
                   key={s.label}
-                  className="bg-white rounded-2xl px-5 py-4 shadow-sm border border-border hover:shadow-md transition-shadow duration-200"
+                  className="bg-card rounded-2xl px-5 py-4 shadow-sm border border-border hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <s.icon className="h-4 w-4 text-accent" />
@@ -101,7 +101,7 @@ const TestimonialsSection = () => {
 
               {/* Main card — with subtle hover tilt */}
               <motion.div
-                className="relative bg-white rounded-3xl p-8 md:p-10 shadow-xl overflow-hidden"
+                className="relative bg-card rounded-3xl p-8 md:p-10 shadow-xl overflow-hidden"
                 whileHover={{ rotateY: 2, rotateX: -1, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 style={{ transformStyle: "preserve-3d" }}

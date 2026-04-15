@@ -56,7 +56,7 @@ const StatsSection = () => {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-14 bg-[#e8ebed] border-y border-border" style={{ perspective: 1000 }}>
+    <section ref={ref} className="py-14 bg-muted/50 border-y border-border" style={{ perspective: 1000 }}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
           {stats.map((stat, i) => (

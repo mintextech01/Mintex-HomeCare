@@ -35,12 +35,12 @@ const About = () => {
   return (
     <>
       <Header />
-      <main className="bg-white overflow-x-hidden">
+      <main className="bg-background overflow-x-hidden">
 
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="relative pt-32 pb-20 bg-white overflow-hidden">
+        <section className="relative pt-32 pb-20 bg-background overflow-hidden">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             {/* Gradient blobs */}
             <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 600, height: 600, top: "-15%", right: "-10%", opacity: 0.7 }} />
@@ -151,7 +151,7 @@ const About = () => {
                 </div>
 
                 {/* Floating: experience badge */}
-                <div className="absolute top-2 right-2 md:-top-5 md:-right-6 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-gray-100 z-10">
+                <div className="absolute top-2 right-2 md:-top-5 md:-right-6 bg-card rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-border z-10">
                   <div className="w-11 h-11 rounded-xl bg-[#2a66b0] flex items-center justify-center flex-shrink-0">
                     <Award className="w-5 h-5 text-white" />
                   </div>
@@ -162,7 +162,7 @@ const About = () => {
                 </div>
 
                 {/* Floating: families served */}
-                <div className="absolute bottom-2 left-2 md:-bottom-5 md:-left-6 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-gray-100 z-10">
+                <div className="absolute bottom-2 left-2 md:-bottom-5 md:-left-6 bg-card rounded-2xl shadow-xl px-5 py-4 flex items-center gap-3 border border-border z-10">
                   <div className="flex -space-x-2">
                     {[
                       siteImages.aboutPageAvatar1,
@@ -193,7 +193,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             STATS STRIP
         ══════════════════════════════════════ */}
-        <section className="py-6 bg-white border-y border-gray-100">
+        <section className="py-6 bg-muted/50 border-y border-border">
           <div className="container mx-auto px-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map(({ value, label, icon: Icon }, i) => (
@@ -216,7 +216,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             OUR STORY
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-white relative overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             {/* Gradient blobs */}
             <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 500, height: 500, bottom: "-14%", right: "-10%", opacity: 0.6 }} />
@@ -281,7 +281,7 @@ const About = () => {
                   </div>
                 </div>
 
-                <div className="absolute bottom-2 right-2 md:-bottom-5 md:-right-6 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 flex items-center gap-3 z-10">
+                <div className="absolute bottom-2 right-2 md:-bottom-5 md:-right-6 bg-card border border-border rounded-2xl shadow-xl p-4 flex items-center gap-3 z-10">
                   <div className="w-10 h-10 rounded-full bg-[#2a66b0]/10 flex items-center justify-center">
                     <ShieldCheck className="h-5 w-5 text-[#2a66b0]" />
                   </div>
@@ -340,7 +340,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             MISSION · VISION · VALUES
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-white relative overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             {/* Gradient blobs */}
             <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 500, height: 500, top: "-14%", right: "-9%", opacity: 0.6 }} />
@@ -507,7 +507,7 @@ const About = () => {
               <AnimatedSection className="mb-14">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                   <div>
-                    <div className="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-4 py-1.5 mb-5">
+                    <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-1.5 mb-5">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]" />
                       <span className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest">The People</span>
                     </div>
@@ -525,7 +525,7 @@ const About = () => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 {teamMembers.map((m, i) => (
                   <AnimatedSection key={m.id} delay={i * 0.1} className="h-full">
-                    <div className="group relative rounded-3xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 h-full">
+                    <div className="group relative rounded-3xl overflow-hidden bg-card border border-border shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 h-full">
                       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#2a66b0] to-cyan-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left z-10" />
 
                       <div className="relative overflow-hidden h-60">
@@ -559,7 +559,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="py-20 bg-white relative overflow-hidden">
+        <section className="py-20 bg-background relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #dbeafe 0%, transparent 70%)", width: 300, height: 300, top: "-18%", right: "-5%", opacity: 0.35 }} />
             <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 250, height: 250, bottom: "-12%", left: "-4%", opacity: 0.3 }} />

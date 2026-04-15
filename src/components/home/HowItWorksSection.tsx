@@ -155,31 +155,44 @@ const HowItWorksSection = () => {
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.5 + i * 0.2, type: "spring", stiffness: 200 }}
             >
-              {/* Pulse ring */}
+              {/* Animated pulse glow */}
               <motion.div
                 className="absolute rounded-full"
                 style={{
-                  width: 56, height: 56,
+                  width: 40, height: 40,
                   top: "50%", left: "50%",
-                  marginLeft: -28, marginTop: -28,
+                  marginLeft: -20, marginTop: -20,
                   background: glowColor,
                 }}
-                animate={{ scale: [1, 2], opacity: [0.5, 0] }}
-                transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.5, ease: "easeOut" }}
+                animate={{ scale: [1, 2.2], opacity: [0.45, 0] }}
+                transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.5, ease: "easeOut" }}
               />
 
-              {/* Hexagon icon — 3D hover spin */}
+              {/* Solid filled circle marker */}
               <motion.div
-                className="relative z-10 w-14 h-14 flex items-center justify-center"
+                className="relative z-10 rounded-full flex items-center justify-center"
                 style={{
-                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  width: 36, height: 36,
                   background: hexGrad,
-                  filter: `drop-shadow(0 0 10px ${glowColor})`,
+                  boxShadow: `0 0 18px ${glowColor}, 0 3px 10px rgba(0,0,0,0.2)`,
                 }}
-                whileHover={{ rotateY: 180, scale: 1.15 }}
+                whileHover={{ scale: 1.25 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
               >
-                <Icon className="h-6 w-6 text-white" />
+                {/* White inner ring */}
+                <div
+                  className="rounded-full flex items-center justify-center"
+                  style={{
+                    width: 22, height: 22,
+                    border: "2px solid rgba(255,255,255,0.5)",
+                  }}
+                >
+                  {/* Center white dot */}
+                  <div
+                    className="rounded-full bg-white"
+                    style={{ width: 8, height: 8 }}
+                  />
+                </div>
               </motion.div>
 
               {/* Label card — above or below */}
@@ -190,24 +203,27 @@ const HowItWorksSection = () => {
                     : "top-full mt-5"
                 }`}
               >
-                {/* Connector dot */}
+                {/* Connector line */}
                 {stop.labelSide === "top" ? (
-                  <div className="flex justify-center mb-1.5">
-                    <div className="w-px h-4" style={{ background: stepNumColor, opacity: 0.5 }} />
+                  <div className="flex justify-center mb-1">
+                    <div className="w-px h-6" style={{ background: stepNumColor, opacity: 0.4 }} />
                   </div>
                 ) : (
-                  <div className="flex justify-center mb-1.5">
-                    <div className="w-px h-4" style={{ background: stepNumColor, opacity: 0.5 }} />
+                  <div className="flex justify-center mb-1">
+                    <div className="w-px h-6" style={{ background: stepNumColor, opacity: 0.4 }} />
                   </div>
                 )}
 
                 <div className="glass-card rounded-2xl px-4 py-3.5 text-center">
-                  <p
-                    className="text-[10px] font-bold font-sans tracking-[0.25em] mb-1.5 uppercase"
-                    style={{ color: stepNumColor }}
-                  >
-                    Step {String(i + 1).padStart(2, "0")}
-                  </p>
+                  <div className="flex items-center justify-center gap-1.5 mb-1.5">
+                    <Icon className="h-3.5 w-3.5" style={{ color: stepNumColor }} />
+                    <p
+                      className="text-[10px] font-bold font-sans tracking-[0.25em] uppercase"
+                      style={{ color: stepNumColor }}
+                    >
+                      Step {String(i + 1).padStart(2, "0")}
+                    </p>
+                  </div>
                   <h3 className="font-serif font-bold text-foreground text-[15px] mb-1.5 leading-snug">
                     {step.title}
                   </h3>
@@ -274,28 +290,38 @@ const HowItWorksSection = () => {
                   animate={inView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: i * 0.18 }}
                 >
-                  {/* Icon column — w-10 (40px), centers exactly on the left-5 line */}
-                  <div className="flex-shrink-0 w-10 flex items-center justify-center relative z-10 pt-1">
+                  {/* Dot column — small colored dot on the timeline line */}
+                  <div className="flex-shrink-0 w-10 flex items-center justify-center relative z-10 pt-3">
                     <div
-                      className="w-10 h-10 flex items-center justify-center"
+                      className="rounded-full flex items-center justify-center"
                       style={{
-                        clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                        background: hexGrad,
+                        width: 18, height: 18,
+                        border: `3px solid ${isPrimary ? "hsl(214 66% 50%)" : "hsl(180 84% 42%)"}`,
+                        boxShadow: `0 0 8px ${isPrimary ? "hsl(214 66% 44% / 0.3)" : "hsl(180 84% 39% / 0.3)"}`,
                       }}
                     >
-                      <Icon className="h-5 w-5 text-white" />
+                      <div
+                        className="rounded-full"
+                        style={{
+                          width: 8, height: 8,
+                          background: hexGrad,
+                        }}
+                      />
                     </div>
                   </div>
 
                   {/* Card */}
                   <div className="flex-1 pb-1">
                     <div className="glass-card rounded-2xl px-5 py-4">
-                      <p
-                        className="text-[10px] font-bold font-sans tracking-[0.22em] mb-1 uppercase"
-                        style={{ color: stepNumColor }}
-                      >
-                        Step {String(i + 1).padStart(2, "0")}
-                      </p>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Icon className="h-3.5 w-3.5" style={{ color: stepNumColor }} />
+                        <p
+                          className="text-[10px] font-bold font-sans tracking-[0.22em] uppercase"
+                          style={{ color: stepNumColor }}
+                        >
+                          Step {String(i + 1).padStart(2, "0")}
+                        </p>
+                      </div>
                       <h3 className="font-serif font-bold text-foreground text-lg mb-1.5">
                         {step.title}
                       </h3>

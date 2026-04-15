@@ -124,7 +124,7 @@ const Careers = () => {
                   </div>
 
                   {/* Floating chip */}
-                  <div className="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow-xl px-5 py-3 flex items-center gap-3 border border-gray-100">
+                  <div className="absolute -bottom-5 -left-5 bg-card rounded-2xl shadow-xl px-5 py-3 flex items-center gap-3 border border-border">
                     <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
                       <Briefcase className="h-5 w-5 text-accent" />
                     </div>
@@ -135,7 +135,7 @@ const Careers = () => {
                   </div>
 
                   {/* NJ chip */}
-                  <div className="absolute -top-5 -right-3 bg-white rounded-2xl shadow-xl px-5 py-3 flex items-center gap-2 border border-gray-100">
+                  <div className="absolute -top-5 -right-3 bg-card rounded-2xl shadow-xl px-5 py-3 flex items-center gap-2 border border-border">
                     <MapPin className="h-4 w-4 text-primary" />
                     <p className="text-sm font-sans font-semibold text-gray-700">New Jersey</p>
                   </div>
@@ -182,7 +182,7 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             YOUR LIFE AT MINTEXCARE
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-white overflow-hidden">
+        <section className="py-24 bg-background overflow-hidden">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
 
@@ -273,7 +273,7 @@ const Careers = () => {
                     <div className="relative flex flex-col items-center text-center group">
                       {/* Step number */}
                       <div className="relative mb-5">
-                        <div className="w-20 h-20 rounded-2xl bg-white border border-gray-100 shadow-md flex items-center justify-center group-hover:border-primary/30 group-hover:shadow-lg transition-all duration-300">
+                        <div className="w-20 h-20 rounded-2xl bg-card border border-border shadow-md flex items-center justify-center group-hover:border-primary/30 group-hover:shadow-lg transition-all duration-300">
                           <SIcon className="h-7 w-7 text-primary" />
                         </div>
                         <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold font-sans shadow-md">
@@ -293,7 +293,7 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             APPLY FORM
         ══════════════════════════════════════ */}
-        <section id="apply-section" className="py-24 bg-white overflow-hidden">
+        <section id="apply-section" className="py-24 bg-background overflow-hidden">
           <div className="absolute rounded-full bg-primary/4 pointer-events-none" style={{ width: 420, height: 420, bottom: "-10%", right: "-6%" }} />
 
           <div className="container mx-auto px-4">
@@ -351,7 +351,7 @@ const Careers = () => {
 
               {/* Right: form */}
               <AnimatedSection delay={0.15}>
-                <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-10 shadow-sm">
+                <div className="bg-card border border-border rounded-3xl p-8 md:p-10 shadow-sm">
                   <div className="mb-7">
                     <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.22em] mb-2">Application Form</p>
                     <h3 className="text-2xl font-serif font-bold text-gray-900">Tell Us About Yourself</h3>
