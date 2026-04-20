@@ -54,7 +54,7 @@ const WhyChooseUsSection = () => (
         {features.map((f, i) => (
           <AnimatedSection key={f.title} delay={i * 0.08} from={i % 3 === 0 ? "depth" : i % 3 === 1 ? "rotateUp" : "flip3d"}>
             <motion.div
-              className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card h-full overflow-hidden"
+              className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card h-full overflow-hidden bg-[#e8ebed]"
               whileHover={{
                 y: -6,
                 scale: 1.02,

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ReactNode, useRef } from "react";
+import { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -30,20 +30,16 @@ const AnimatedSection = ({
   once = true,
 }: Props) => {
   const variant = variants[from] || variants.bottom;
-  const hasAnimated = useRef(false);
 
   return (
     <motion.div
-      initial={hasAnimated.current ? variant.visible : variant.hidden}
+      initial={variant.hidden}
       whileInView={variant.visible}
       viewport={{ once, margin: "-60px" }}
       transition={{
-        duration: hasAnimated.current ? 0 : duration,
-        delay: hasAnimated.current ? 0 : delay,
+        duration,
+        delay,
         ease: [0.22, 1, 0.36, 1],
-      }}
-      onAnimationComplete={() => {
-        hasAnimated.current = true;
       }}
       style={
         from === "depth" || from === "flip3d" || from === "rotateUp"
