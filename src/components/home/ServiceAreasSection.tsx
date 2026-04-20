@@ -21,13 +21,10 @@ const ServiceAreasSection = () => (
         {areas.map((area, i) => (
           <AnimatedSection key={area} delay={i * 0.05} from="scale">
             <motion.div
-              className="group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg cursor-default"
+              className="group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg cursor-default transition-all duration-300 hover:bg-primary/5 hover:border-primary/20 hover:shadow-lg dark:hover:bg-primary/10 dark:hover:border-primary/30"
               whileHover={{
                 y: -3,
                 scale: 1.04,
-                borderColor: "#102a43",
-                backgroundColor: "rgba(16, 42, 67, 0.03)",
-                boxShadow: "0 10px 20px -3px rgba(16, 42, 67, 0.15)",
               }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
@@ -35,9 +32,9 @@ const ServiceAreasSection = () => (
                 whileHover={{ rotate: [0, -15, 15, 0], scale: 1.2 }}
                 transition={{ duration: 0.5 }}
               >
-                <MapPin className="h-4 w-4 text-accent shrink-0 transition-colors duration-300 group-hover:text-[#102a43]" />
+                <MapPin className="h-4 w-4 text-accent shrink-0 transition-colors duration-300 group-hover:text-primary dark:group-hover:text-white" />
               </motion.div>
-              <span className="text-sm font-medium text-foreground font-sans transition-colors duration-300 group-hover:text-[#102a43]">
+              <span className="text-sm font-medium text-foreground font-sans transition-colors duration-300 group-hover:text-primary dark:group-hover:text-white">
                 {area}
               </span>
             </motion.div>
