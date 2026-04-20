@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export interface Testimonial {
   id: string;
@@ -173,39 +172,7 @@ const toPositionRow = (p: JobPosition) => ({ id: p.id, title: p.title, type: p.t
 const fromSubmissionRow = (r: any): ContactSubmission => ({ id: r.id, name: r.name, email: r.email, phone: r.phone, service: r.service, message: r.message, date: r.date, read: r.read });
 const toSubmissionRow = (s: ContactSubmission) => ({ id: s.id, name: s.name, email: s.email, phone: s.phone, service: s.service, message: s.message, date: s.date, read: s.read });
 
-// ── Supabase sync helpers ─────────────────────────────────────────────────────
-
-async function syncTable<T extends { id: string }>(
-  table: string,
-  items: T[],
-  toRow: (item: T) => Record<string, unknown>
-) {
-  try {
-    const { data: existing } = await supabase.from(table).select("id");
-    const existingIds = (existing ?? []).map((e: any) => e.id as string);
-    const currentIds = items.map(i => i.id);
-    const toDelete = existingIds.filter(id => !currentIds.includes(id));
-
-    if (items.length > 0) {
-      await supabase.from(table).upsert(items.map(toRow), { onConflict: "id" });
-    }
-    if (toDelete.length > 0) {
-      await supabase.from(table).delete().in("id", toDelete);
-    }
-  } catch (err) {
-    console.error(`Failed to sync ${table}:`, err);
-  }
-}
-
-async function saveSetting(key: string, value: unknown) {
-  try {
-    await supabase.from("site_settings").upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" });
-  } catch (err) {
-    console.error(`Failed to save setting ${key}:`, err);
-  }
-}
-
-// ── Fallback: localStorage (used when Supabase is not configured) ─────────────
+// ── Fallback: localStorage ─────────────
 
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
@@ -236,80 +203,25 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
   const [siteImages, setSiteImagesState] = useState<SiteImages>(defaultSiteImages);
 
-  // Load all data from Supabase (or localStorage fallback) on mount
+  // Load all data from localStorage on mount
   useEffect(() => {
-    if (!isSupabaseConfigured) {
-      // Fallback to localStorage for local dev without Supabase
-      setTestimonialsState(loadFromStorage("mintex_testimonials", defaultTestimonials));
-      setTeamMembersState(loadFromStorage("mintex_team", defaultTeamMembers));
-      setGalleryState(loadFromStorage("mintex_gallery", []));
-      setServicesState(loadFromStorage("mintex_services", defaultServices));
-      setSubmissionsState(loadFromStorage("mintex_submissions", []));
-      setJobPositionsState(loadFromStorage("mintex_positions", defaultJobPositions));
-      setContactInfoState(loadFromStorage("mintex_contact_info", defaultContactInfo));
-      setSiteImagesState(loadFromStorage("mintex_site_images", defaultSiteImages));
-      setIsLoading(false);
-      return;
-    }
-
-    const loadAll = async () => {
-      try {
-        const [
-          { data: tData },
-          { data: tmData },
-          { data: gData },
-          { data: sData },
-          { data: subData },
-          { data: pData },
-          { data: settingsData },
-        ] = await Promise.all([
-          supabase.from("testimonials").select("*").order("created_at"),
-          supabase.from("team_members").select("*").order("created_at"),
-          supabase.from("gallery").select("*").order("created_at"),
-          supabase.from("services").select("*").order("created_at"),
-          supabase.from("contact_submissions").select("*").order("date", { ascending: false }),
-          supabase.from("job_positions").select("*").order("created_at"),
-          supabase.from("site_settings").select("*"),
-        ]);
-
-        setTestimonialsState(tData && tData.length > 0 ? tData.map(fromTestimonialRow) : defaultTestimonials);
-        setTeamMembersState(tmData && tmData.length > 0 ? tmData.map(fromTeamMemberRow) : defaultTeamMembers);
-        setGalleryState(gData ? gData.map(fromGalleryRow) : []);
-        setServicesState(sData && sData.length > 0 ? sData.map(fromServiceRow) : defaultServices);
-        setSubmissionsState(subData ? subData.map(fromSubmissionRow) : []);
-        setJobPositionsState(pData && pData.length > 0 ? pData.map(fromPositionRow) : defaultJobPositions);
-
-        const contactSetting = settingsData?.find((s: any) => s.key === "contact_info");
-        setContactInfoState(contactSetting ? (contactSetting.value as ContactInfo) : defaultContactInfo);
-
-        const imagesSetting = settingsData?.find((s: any) => s.key === "site_images");
-        setSiteImagesState(imagesSetting ? { ...defaultSiteImages, ...(imagesSetting.value as SiteImages) } : defaultSiteImages);
-      } catch (err) {
-        console.error("Failed to load from Supabase, using defaults:", err);
-        setTestimonialsState(defaultTestimonials);
-        setTeamMembersState(defaultTeamMembers);
-        setServicesState(defaultServices);
-        setJobPositionsState(defaultJobPositions);
-        setContactInfoState(defaultContactInfo);
-        setSiteImagesState(defaultSiteImages);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadAll();
+    setTestimonialsState(loadFromStorage("mintex_testimonials", defaultTestimonials));
+    setTeamMembersState(loadFromStorage("mintex_team", defaultTeamMembers));
+    setGalleryState(loadFromStorage("mintex_gallery", []));
+    setServicesState(loadFromStorage("mintex_services", defaultServices));
+    setSubmissionsState(loadFromStorage("mintex_submissions", []));
+    setJobPositionsState(loadFromStorage("mintex_positions", defaultJobPositions));
+    setContactInfoState(loadFromStorage("mintex_contact_info", defaultContactInfo));
+    setSiteImagesState(loadFromStorage("mintex_site_images", defaultSiteImages));
+    setIsLoading(false);
   }, []);
 
-  // ── Wrapped setters: update React state AND sync to Supabase ────────────────
+  // ── Wrapped setters: update React state AND sync to localStorage ────────────────
 
   const setTestimonials = useCallback((action: React.SetStateAction<Testimonial[]>) => {
     setTestimonialsState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        syncTable("testimonials", next, toTestimonialRow);
-      } else {
-        localStorage.setItem("mintex_testimonials", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_testimonials", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -317,11 +229,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setTeamMembers = useCallback((action: React.SetStateAction<TeamMember[]>) => {
     setTeamMembersState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        syncTable("team_members", next, toTeamMemberRow);
-      } else {
-        localStorage.setItem("mintex_team", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_team", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -329,11 +237,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setGallery = useCallback((action: React.SetStateAction<GalleryImage[]>) => {
     setGalleryState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        syncTable("gallery", next, toGalleryRow);
-      } else {
-        localStorage.setItem("mintex_gallery", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_gallery", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -341,11 +245,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setServices = useCallback((action: React.SetStateAction<ServiceItem[]>) => {
     setServicesState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        syncTable("services", next, toServiceRow);
-      } else {
-        localStorage.setItem("mintex_services", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_services", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -353,11 +253,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setSubmissions = useCallback((action: React.SetStateAction<ContactSubmission[]>) => {
     setSubmissionsState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        syncTable("contact_submissions", next, toSubmissionRow);
-      } else {
-        localStorage.setItem("mintex_submissions", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_submissions", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -365,11 +261,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setJobPositions = useCallback((action: React.SetStateAction<JobPosition[]>) => {
     setJobPositionsState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        syncTable("job_positions", next, toPositionRow);
-      } else {
-        localStorage.setItem("mintex_positions", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_positions", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -377,11 +269,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setContactInfo = useCallback((action: React.SetStateAction<ContactInfo>) => {
     setContactInfoState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        saveSetting("contact_info", next);
-      } else {
-        localStorage.setItem("mintex_contact_info", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_contact_info", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -389,11 +277,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setSiteImages = useCallback((action: React.SetStateAction<SiteImages>) => {
     setSiteImagesState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      if (isSupabaseConfigured) {
-        saveSetting("site_images", next);
-      } else {
-        localStorage.setItem("mintex_site_images", JSON.stringify(next));
-      }
+      localStorage.setItem("mintex_site_images", JSON.stringify(next));
       return next;
     });
   }, []);
@@ -416,15 +300,11 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   const addSubmission = (sub: Omit<ContactSubmission, "id" | "date" | "read">) => {
     const newSub: ContactSubmission = { ...sub, id: Date.now().toString(), date: new Date().toISOString(), read: false };
-    setSubmissionsState(prev => [newSub, ...prev]);
-    if (isSupabaseConfigured) {
-      supabase.from("contact_submissions").insert(toSubmissionRow(newSub)).then(({ error }) => { if (error) console.error(error); });
-    } else {
-      setSubmissionsState(prev => {
-        localStorage.setItem("mintex_submissions", JSON.stringify(prev));
-        return prev;
-      });
-    }
+    setSubmissionsState(prev => {
+      const next = [newSub, ...prev];
+      localStorage.setItem("mintex_submissions", JSON.stringify(next));
+      return next;
+    });
   };
 
   return (

@@ -12,7 +12,6 @@ import { Switch } from "@/components/ui/switch";
 import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
-import { isSupabaseConfigured, uploadImageToStorage } from "@/lib/supabase";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
 
@@ -497,16 +496,11 @@ const compressImage = (file: File, maxWidth = 1400, quality = 0.85): Promise<Blo
 
 /**
  * Upload an image file.
- * - When Supabase is configured: compresses the image, uploads to Supabase Storage,
- *   and returns a public URL that works everywhere.
- * - Fallback (local dev): returns a Base64 data URL.
+ * Returns a Base64 data URL.
  */
 const uploadImage = async (file: File): Promise<string> => {
   // SVG: no compression needed
   if (file.type === "image/svg+xml") {
-    if (isSupabaseConfigured) {
-      return uploadImageToStorage(file);
-    }
     return new Promise((resolve, reject) => {
       const r = new FileReader();
       r.onload = () => resolve(r.result as string);
@@ -522,11 +516,7 @@ const uploadImage = async (file: File): Promise<string> => {
     type: "image/jpeg",
   });
 
-  if (isSupabaseConfigured) {
-    return uploadImageToStorage(compressedFile);
-  }
-
-  // Fallback: Base64 data URL for local dev
+  // Base64 data URL
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
