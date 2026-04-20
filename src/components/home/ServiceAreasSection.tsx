@@ -1,6 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { MapPin } from "lucide-react";
-import { motion } from "framer-motion";
 
 const areas = [
   "Middlesex County", "Monmouth County", "Somerset County", "Union County",
@@ -16,38 +15,29 @@ const ServiceAreasSection = () => (
         <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">Proudly Serving Communities Across New Jersey</h2>
         <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">MintexCare provides home care services throughout New Jersey including but not limited to:</p>
       </AnimatedSection>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        {areas.map((area, i) => (
-          <AnimatedSection key={area} delay={i * 0.05} from="scale">
-            <motion.div
-              className="group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg cursor-default transition-all duration-300 hover:bg-primary/5 hover:border-primary/20 hover:shadow-lg dark:hover:bg-primary/10 dark:hover:border-primary/30"
-              whileHover={{
-                y: -3,
-                scale: 1.04,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+
+      <AnimatedSection from="scale">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {areas.map((area) => (
+            <div
+              key={area}
+              className="county-badge group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg cursor-default"
             >
-              <motion.div
-                whileHover={{ rotate: [0, -15, 15, 0], scale: 1.2 }}
-                transition={{ duration: 0.5 }}
-              >
-                <MapPin className="h-4 w-4 text-accent shrink-0 transition-colors duration-300 group-hover:text-primary dark:group-hover:text-white" />
-              </motion.div>
-              <span className="text-sm font-medium text-foreground font-sans transition-colors duration-300 group-hover:text-primary dark:group-hover:text-white">
+              <MapPin className="h-4 w-4 text-accent shrink-0" />
+              <span className="text-sm font-medium text-foreground font-sans">
                 {area}
               </span>
-            </motion.div>
-          </AnimatedSection>
-        ))}
-      </div>
-      
-      <AnimatedSection delay={0.8} className="text-center mt-8">
+            </div>
+          ))}
+        </div>
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.3} className="text-center mt-8">
         <p className="text-sm text-muted-foreground font-sans">
           Don't see your area?{" "}
-          <a 
-            href="/contact" 
-            className="text-primary font-semibold transition-colors hover:text-accent dark:hover:text-white"
+          <a
+            href="/contact"
+            className="text-primary font-semibold transition-colors hover:text-accent"
           >
             Contact us
           </a>
@@ -58,4 +48,4 @@ const ServiceAreasSection = () => (
   </section>
 );
 
-export default ServiceAreasSection; 
+export default ServiceAreasSection;
