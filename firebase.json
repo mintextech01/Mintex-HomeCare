@@ -5,8 +5,6 @@
       "public": "dist",
       "ignore": [
         "admin.html",
-        "assets/admin-*.js",
-        "assets/admin-*.css",
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
@@ -23,8 +21,6 @@
       "public": "dist",
       "ignore": [
         "index.html",
-        "assets/index-*.js",
-        "assets/index-*.css",
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
