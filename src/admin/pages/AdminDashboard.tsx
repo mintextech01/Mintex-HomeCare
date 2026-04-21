@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (!isAuthenticated) return <Navigate to="/admin" replace />;
+  if (!isAuthenticated) return <Navigate to="/" replace />;
   if (isLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-hero-bg">
       <div className="text-center space-y-3">

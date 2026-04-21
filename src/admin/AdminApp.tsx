@@ -22,8 +22,8 @@ const AnimatedAdminRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/" element={<AdminLogin />} />
+        <Route path="/dashboard" element={<AdminDashboard />} />
         {/* Redirect everything else to login */}
         <Route path="*" element={<AdminLogin />} />
       </Routes>
