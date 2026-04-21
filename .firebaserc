@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "mintex-care-b2204"
+  },
+  "targets": {
+    "mintex-care-b2204": {
+      "hosting": {
+        "user": [
+          "mintexcare"
+        ],
+        "admin": [
+          "mintexcare-admin"
+        ]
+      }
+    }
   }
 }

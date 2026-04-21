@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
-
+import { db, auth } from "@/lib/firebase";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 export interface Testimonial {
   id: string;
   name: string;
@@ -68,8 +70,8 @@ export interface ContactInfo {
 
 interface AdminContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
   isLoading: boolean;
   testimonials: Testimonial[];
   setTestimonials: React.Dispatch<React.SetStateAction<Testimonial[]>>;
@@ -172,56 +174,58 @@ const toPositionRow = (p: JobPosition) => ({ id: p.id, title: p.title, type: p.t
 const fromSubmissionRow = (r: any): ContactSubmission => ({ id: r.id, name: r.name, email: r.email, phone: r.phone, service: r.service, message: r.message, date: r.date, read: r.read });
 const toSubmissionRow = (s: ContactSubmission) => ({ id: s.id, name: s.name, email: s.email, phone: s.phone, service: s.service, message: s.message, date: s.date, read: s.read });
 
-// ── Fallback: localStorage ─────────────
-
-function loadFromStorage<T>(key: string, fallback: T): T {
-  try {
-    const stored = localStorage.getItem(key);
-    if (!stored) return fallback;
-    const parsed = JSON.parse(stored);
-    if (typeof fallback === "object" && fallback !== null && !Array.isArray(fallback)) {
-      return { ...(fallback as object), ...parsed } as T;
-    }
-    return parsed;
-  } catch { return fallback; }
-}
-
-// ── Context ───────────────────────────────────────────────────────────────────
+// ── Firestore Sync Helpers ─────────────
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem("mintex_auth") === "true");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [testimonials, setTestimonialsState] = useState<Testimonial[]>([]);
-  const [teamMembers, setTeamMembersState] = useState<TeamMember[]>([]);
+  // Initialize with defaults until Firebase loads
+  const [testimonials, setTestimonialsState] = useState<Testimonial[]>(defaultTestimonials);
+  const [teamMembers, setTeamMembersState] = useState<TeamMember[]>(defaultTeamMembers);
   const [gallery, setGalleryState] = useState<GalleryImage[]>([]);
-  const [services, setServicesState] = useState<ServiceItem[]>([]);
+  const [services, setServicesState] = useState<ServiceItem[]>(defaultServices);
   const [submissions, setSubmissionsState] = useState<ContactSubmission[]>([]);
-  const [jobPositions, setJobPositionsState] = useState<JobPosition[]>([]);
+  const [jobPositions, setJobPositionsState] = useState<JobPosition[]>(defaultJobPositions);
   const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
   const [siteImages, setSiteImagesState] = useState<SiteImages>(defaultSiteImages);
 
-  // Load all data from localStorage on mount
   useEffect(() => {
-    setTestimonialsState(loadFromStorage("mintex_testimonials", defaultTestimonials));
-    setTeamMembersState(loadFromStorage("mintex_team", defaultTeamMembers));
-    setGalleryState(loadFromStorage("mintex_gallery", []));
-    setServicesState(loadFromStorage("mintex_services", defaultServices));
-    setSubmissionsState(loadFromStorage("mintex_submissions", []));
-    setJobPositionsState(loadFromStorage("mintex_positions", defaultJobPositions));
-    setContactInfoState(loadFromStorage("mintex_contact_info", defaultContactInfo));
-    setSiteImagesState(loadFromStorage("mintex_site_images", defaultSiteImages));
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    // Listen to Firebase collections instead of localStorage
+    const unsubTestimonials = onSnapshot(doc(db, "appData", "testimonials"), (d) => { if (d.exists()) setTestimonialsState(d.data().data) });
+    const unsubTeam = onSnapshot(doc(db, "appData", "teamMembers"), (d) => { if (d.exists()) setTeamMembersState(d.data().data) });
+    const unsubGallery = onSnapshot(doc(db, "appData", "gallery"), (d) => { if (d.exists()) setGalleryState(d.data().data) });
+    const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => { if (d.exists()) setServicesState(d.data().data) });
+    const unsubSubmissions = onSnapshot(doc(db, "appData", "submissions"), (d) => { if (d.exists()) setSubmissionsState(d.data().data) });
+    const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => { if (d.exists()) setJobPositionsState(d.data().data) });
+    const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => { if (d.exists()) setContactInfoState(d.data().data) });
+    const unsubImages = onSnapshot(doc(db, "appData", "siteImages"), (d) => { if (d.exists()) setSiteImagesState(d.data().data) });
+
     setIsLoading(false);
+
+    return () => {
+      unsubAuth();
+      unsubTestimonials(); unsubTeam(); unsubGallery(); unsubServices();
+      unsubSubmissions(); unsubPositions(); unsubContact(); unsubImages();
+    };
   }, []);
 
-  // ── Wrapped setters: update React state AND sync to localStorage ────────────────
+  // ── Wrapped setters: update React state AND sync to Firestore ────────────────
+
+  const updateFirebase = (collectionName: string, data: any) => {
+    setDoc(doc(db, "appData", collectionName), { data }).catch(console.error);
+  };
 
   const setTestimonials = useCallback((action: React.SetStateAction<Testimonial[]>) => {
     setTestimonialsState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_testimonials", JSON.stringify(next));
+      updateFirebase("testimonials", next);
       return next;
     });
   }, []);
@@ -229,7 +233,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setTeamMembers = useCallback((action: React.SetStateAction<TeamMember[]>) => {
     setTeamMembersState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_team", JSON.stringify(next));
+      updateFirebase("teamMembers", next);
       return next;
     });
   }, []);
@@ -237,7 +241,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setGallery = useCallback((action: React.SetStateAction<GalleryImage[]>) => {
     setGalleryState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_gallery", JSON.stringify(next));
+      updateFirebase("gallery", next);
       return next;
     });
   }, []);
@@ -245,7 +249,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setServices = useCallback((action: React.SetStateAction<ServiceItem[]>) => {
     setServicesState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_services", JSON.stringify(next));
+      updateFirebase("services", next);
       return next;
     });
   }, []);
@@ -253,7 +257,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setSubmissions = useCallback((action: React.SetStateAction<ContactSubmission[]>) => {
     setSubmissionsState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_submissions", JSON.stringify(next));
+      updateFirebase("submissions", next);
       return next;
     });
   }, []);
@@ -261,7 +265,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setJobPositions = useCallback((action: React.SetStateAction<JobPosition[]>) => {
     setJobPositionsState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_positions", JSON.stringify(next));
+      updateFirebase("jobPositions", next);
       return next;
     });
   }, []);
@@ -269,7 +273,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setContactInfo = useCallback((action: React.SetStateAction<ContactInfo>) => {
     setContactInfoState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_contact_info", JSON.stringify(next));
+      updateFirebase("contactInfo", next);
       return next;
     });
   }, []);
@@ -277,32 +281,30 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const setSiteImages = useCallback((action: React.SetStateAction<SiteImages>) => {
     setSiteImagesState(prev => {
       const next = typeof action === "function" ? action(prev) : action;
-      localStorage.setItem("mintex_site_images", JSON.stringify(next));
+      updateFirebase("siteImages", next);
       return next;
     });
   }, []);
 
-  const login = (username: string, password: string) => {
-    const validUser = import.meta.env.VITE_ADMIN_USERNAME ?? "admin";
-    const validPass = import.meta.env.VITE_ADMIN_PASSWORD ?? "mintex2025";
-    if (username === validUser && password === validPass) {
-      setIsAuthenticated(true);
-      localStorage.setItem("mintex_auth", "true");
+  const login = async (email: string, password: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
       return true;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("mintex_auth");
+  const logout = async () => {
+    await signOut(auth);
   };
 
   const addSubmission = (sub: Omit<ContactSubmission, "id" | "date" | "read">) => {
     const newSub: ContactSubmission = { ...sub, id: Date.now().toString(), date: new Date().toISOString(), read: false };
     setSubmissionsState(prev => {
       const next = [newSub, ...prev];
-      localStorage.setItem("mintex_submissions", JSON.stringify(next));
+      updateFirebase("submissions", next);
       return next;
     });
   };

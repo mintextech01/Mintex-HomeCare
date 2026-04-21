@@ -8,15 +8,16 @@ import { ShieldCheck } from "lucide-react";
 
 const AdminLogin = () => {
   const { isAuthenticated, login } = useAdmin();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   if (isAuthenticated) return <Navigate to="/admin/dashboard" replace />;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!login(username, password)) {
+    const success = await login(email, password);
+    if (!success) {
       setError("Invalid credentials. Please try again.");
     }
   };
@@ -33,7 +34,7 @@ const AdminLogin = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input placeholder="Username" value={username} onChange={e => { setUsername(e.target.value); setError(""); }} className="font-sans" />
+            <Input type="email" placeholder="Admin Email" value={email} onChange={e => { setEmail(e.target.value); setError(""); }} className="font-sans" />
             <Input type="password" placeholder="Password" value={password} onChange={e => { setPassword(e.target.value); setError(""); }} className="font-sans" />
             {error && <p className="text-sm text-destructive font-sans">{error}</p>}
             <Button type="submit" className="w-full font-sans">Sign In</Button>

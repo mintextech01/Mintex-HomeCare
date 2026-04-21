@@ -12,6 +12,8 @@ import { Switch } from "@/components/ui/switch";
 import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
 
@@ -499,29 +501,18 @@ const compressImage = (file: File, maxWidth = 1400, quality = 0.85): Promise<Blo
  * Returns a Base64 data URL.
  */
 const uploadImage = async (file: File): Promise<string> => {
-  // SVG: no compression needed
-  if (file.type === "image/svg+xml") {
-    return new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result as string);
-      r.onerror = reject;
-      r.readAsDataURL(file);
+  let fileToUpload = file;
+  if (file.type !== "image/svg+xml") {
+    const compressed = await compressImage(file);
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    fileToUpload = new File([compressed], file.name.replace(/\.[^.]+$/, `.${ext}`), {
+      type: "image/jpeg",
     });
   }
 
-  // Raster images: compress first
-  const compressed = await compressImage(file);
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const compressedFile = new File([compressed], file.name.replace(/\.[^.]+$/, `.${ext}`), {
-    type: "image/jpeg",
-  });
-
-  // Base64 data URL
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(compressed);
-  });
+  const fileRef = ref(storage, `uploads/${Date.now()}_${fileToUpload.name}`);
+  await uploadBytes(fileRef, fileToUpload);
+  return await getDownloadURL(fileRef);
 };
 
 /* ── Site Images ── */
