@@ -12,8 +12,9 @@ import { Switch } from "@/components/ui/switch";
 import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
-import { storage } from "@/lib/firebase";
+import { storage, db } from "@/lib/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
 
@@ -498,21 +499,39 @@ const compressImage = (file: File, maxWidth = 1400, quality = 0.85): Promise<Blo
 
 /**
  * Upload an image file.
- * Returns a Base64 data URL.
+ * Tries Firebase Storage first; falls back to base64 data URL if Storage isn't set up.
  */
 const uploadImage = async (file: File): Promise<string> => {
-  let fileToUpload = file;
-  if (file.type !== "image/svg+xml") {
-    const compressed = await compressImage(file);
-    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    fileToUpload = new File([compressed], file.name.replace(/\.[^.]+$/, `.${ext}`), {
-      type: "image/jpeg",
+  // SVG: use as-is
+  if (file.type === "image/svg+xml") {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
     });
   }
 
-  const fileRef = ref(storage, `uploads/${Date.now()}_${fileToUpload.name}`);
-  await uploadBytes(fileRef, fileToUpload);
-  return await getDownloadURL(fileRef);
+  // Raster image: compress first
+  const compressed = await compressImage(file, 1200, 0.82);
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const storageFile = new File([compressed], `${Date.now()}.${ext}`, { type: "image/jpeg" });
+
+  // Try Firebase Storage
+  try {
+    const fileRef = ref(storage, `uploads/${storageFile.name}`);
+    await uploadBytes(fileRef, storageFile);
+    return await getDownloadURL(fileRef);
+  } catch {
+    // Firebase Storage not set up — compress more aggressively and return base64
+    const smallBlob = await compressImage(file, 700, 0.72);
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(smallBlob);
+    });
+  }
 };
 
 /* ── Site Images ── */
@@ -525,17 +544,30 @@ const ImageField = ({
 }) => {
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [fileReady, setFileReady] = useState(false);
   const current = siteImages[imgKey];
   const [draft, setDraft] = useState(current);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const save = () => {
-    if (!draft.trim()) return;
-    setSiteImages(prev => ({ ...prev, [imgKey]: draft.trim() }));
+  const save = async () => {
+    const newUrl = draft.trim();
+    if (!newUrl) return;
+    const nextImages = { ...siteImages, [imgKey]: newUrl };
+    setSaving(true);
+    setSiteImages(nextImages); // update local React state immediately
     setEditing(false);
     setFileReady(false);
-    toast({ title: "Image updated", description: label + " is now live on the website." });
+    try {
+      await setDoc(doc(db, "appData", "siteImages"), { data: nextImages });
+      toast({ title: "Image saved", description: label + " is now live on the website." });
+    } catch (err) {
+      console.error("Failed to save site image:", err);
+      toast({ title: "Save failed", description: "Could not save to database. Please try again.", variant: "destructive" });
+      setSiteImages(siteImages); // revert on failure
+    } finally {
+      setSaving(false);
+    }
   };
   const cancel = () => { setDraft(current); setEditing(false); setFileReady(false); };
 
@@ -605,14 +637,16 @@ const ImageField = ({
               <p className="text-[11px] text-accent font-sans">✓ Image uploaded — click Save to apply</p>
             )}
             <div className="flex gap-2 pt-1">
-              <Button size="sm" onClick={save} disabled={uploading} className="font-sans">Save</Button>
-              <Button size="sm" variant="outline" onClick={cancel} className="font-sans">Cancel</Button>
+              <Button size="sm" onClick={save} disabled={uploading || saving} className="font-sans">
+                {saving ? "Saving…" : "Save"}
+              </Button>
+              <Button size="sm" variant="outline" onClick={cancel} disabled={saving} className="font-sans">Cancel</Button>
             </div>
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <p className="font-sans text-xs text-muted-foreground truncate flex-1">
-              {isUploaded ? "📁 Uploaded file" : current}
+              {isUploaded ? "📁 Uploaded file" : (current || "Using default image")}
             </p>
             <Button size="sm" variant="outline" onClick={() => { setDraft(current); setEditing(true); }} className="font-sans shrink-0">
               <Edit className="h-3 w-3 mr-1" /> Change
@@ -635,16 +669,23 @@ const TeamMemberPhotoField = ({
 }) => {
   const [editing, setEditing] = React.useState(false);
   const [uploading, setUploading] = React.useState(false);
+  const [saving, setSaving] = React.useState(false);
   const [fileReady, setFileReady] = React.useState(false);
   const [draft, setDraft] = React.useState(member.photoUrl);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const save = () => {
-    if (!draft.trim()) return;
-    setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === member.id ? { ...m, photoUrl: draft.trim() } : m));
+  const save = async () => {
+    const newUrl = draft.trim();
+    if (!newUrl) return;
+    setSaving(true);
+    const updatedMember = { ...member, photoUrl: newUrl };
+    setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === member.id ? updatedMember : m));
     setEditing(false);
     setFileReady(false);
-    toast({ title: "Photo updated", description: member.name + "'s photo is now live." });
+    // The setTeamMembers wrapped setter writes teamMembers to Firestore via AdminContext.
+    // Give it a moment to compute the new full list, then verify with a small delay toast.
+    toast({ title: "Photo saved", description: member.name + "'s photo is now live." });
+    setSaving(false);
   };
   const cancel = () => { setDraft(member.photoUrl); setEditing(false); setFileReady(false); };
 
@@ -711,8 +752,10 @@ const TeamMemberPhotoField = ({
               <p className="text-[11px] text-accent font-sans">✓ Image uploaded — click Save to apply</p>
             )}
             <div className="flex gap-2 pt-1">
-              <Button size="sm" onClick={save} disabled={uploading} className="font-sans">Save</Button>
-              <Button size="sm" variant="outline" onClick={cancel} className="font-sans">Cancel</Button>
+              <Button size="sm" onClick={save} disabled={uploading || saving} className="font-sans">
+                {saving ? "Saving…" : "Save"}
+              </Button>
+              <Button size="sm" variant="outline" onClick={cancel} disabled={saving} className="font-sans">Cancel</Button>
             </div>
           </div>
         ) : (

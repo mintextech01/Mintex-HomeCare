@@ -193,35 +193,28 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [siteImages, setSiteImagesState] = useState<SiteImages>(defaultSiteImages);
 
   useEffect(() => {
-    // When the admin logs in, seed any Firestore documents that don't exist yet.
-    // This ensures all data is stored in the database on first use.
-    const seedMissingDocs = async () => {
-      const entries: [string, any][] = [
-        ["testimonials", defaultTestimonials],
-        ["teamMembers", defaultTeamMembers],
-        ["gallery", []],
-        ["services", defaultServices],
-        ["submissions", []],
-        ["jobPositions", defaultJobPositions],
-        ["contactInfo", defaultContactInfo],
-        ["siteImages", defaultSiteImages],
-      ];
-      await Promise.all(
-        entries.map(async ([docName, defaultData]) => {
-          const snap = await getDoc(doc(db, "appData", docName));
-          if (!snap.exists()) {
-            await setDoc(doc(db, "appData", docName), { data: defaultData });
-          }
-        })
-      );
+    // Initialize any missing Firestore documents when the admin logs in.
+    // Uses getDoc + setDoc in sequence (no race condition since we await getDoc first).
+    const initMissingDoc = async (docName: string, defaultData: any) => {
+      const snap = await getDoc(doc(db, "appData", docName));
+      if (!snap.exists()) {
+        await setDoc(doc(db, "appData", docName), { data: defaultData });
+      }
     };
 
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       setIsAuthenticated(!!user);
       setIsLoading(false);
-      // Seed missing Firestore documents on admin login
       if (user) {
-        seedMissingDocs().catch(console.error);
+        // Initialize each document separately so a failure on one doesn't block others
+        initMissingDoc("testimonials", defaultTestimonials).catch(console.error);
+        initMissingDoc("teamMembers", defaultTeamMembers).catch(console.error);
+        initMissingDoc("gallery", []).catch(console.error);
+        initMissingDoc("services", defaultServices).catch(console.error);
+        initMissingDoc("submissions", []).catch(console.error);
+        initMissingDoc("jobPositions", defaultJobPositions).catch(console.error);
+        initMissingDoc("contactInfo", defaultContactInfo).catch(console.error);
+        initMissingDoc("siteImages", defaultSiteImages).catch(console.error);
       }
     });
 
