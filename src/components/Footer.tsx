@@ -17,9 +17,9 @@ const Footer = () => {
             <p className="text-sm italic mb-4 text-white/70">Care you can believe in</p>
             <p className="text-sm text-white/80 leading-relaxed">MintexCare is a trusted home healthcare agency based in New Jersey, providing compassionate, high-quality care to individuals in the comfort of their own homes.</p>
             <div className="flex gap-3 mt-5">
-              <a href="#" aria-label="Facebook" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Facebook className="h-4 w-4" /></a>
-              <a href="#" aria-label="Instagram" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Instagram className="h-4 w-4" /></a>
-              <a href="#" aria-label="LinkedIn" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Linkedin className="h-4 w-4" /></a>
+              {contactInfo.facebookUrl && <a href={contactInfo.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Facebook className="h-4 w-4" /></a>}
+              {contactInfo.instagramUrl && <a href={contactInfo.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Instagram className="h-4 w-4" /></a>}
+              {contactInfo.linkedinUrl && <a href={contactInfo.linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Linkedin className="h-4 w-4" /></a>}
             </div>
           </div>
 

@@ -195,6 +195,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       setIsAuthenticated(!!user);
+      setIsLoading(false);
     });
 
     // Listen to Firebase collections instead of localStorage
@@ -206,8 +207,6 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => { if (d.exists()) setJobPositionsState(d.data().data) });
     const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => { if (d.exists()) setContactInfoState(d.data().data) });
     const unsubImages = onSnapshot(doc(db, "appData", "siteImages"), (d) => { if (d.exists()) setSiteImagesState(d.data().data) });
-
-    setIsLoading(false);
 
     return () => {
       unsubAuth();

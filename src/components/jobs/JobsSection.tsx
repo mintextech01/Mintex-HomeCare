@@ -5,10 +5,33 @@ import { JobCard } from "./JobCard";
 import { FeaturedJobCard } from "./FeaturedJobCard";
 import { JobFilters } from "./JobFilters";
 import { JobDetailModal } from "./JobDetailModal";
-import { jobsData } from "@/data/jobs";
-import { Job, FilterOption } from "@/types/job";
+import { Job, FilterOption, EmploymentType } from "@/types/job";
 import { Button } from "@/components/ui/button";
-import { useAdmin } from "@/contexts/AdminContext";
+import { useAdmin, JobPosition } from "@/contexts/AdminContext";
+
+function parseEmploymentType(type: string): EmploymentType {
+  const t = type.toLowerCase();
+  if (t.includes("per diem") || t.includes("per-diem")) return "Per Diem";
+  if (t.includes("part")) return "Part-time";
+  return "Full-time";
+}
+
+function positionToJob(p: JobPosition): Job {
+  const reqs = p.requirements
+    .split(/\n|,\s*(?=[A-Z])/)
+    .map((r) => r.trim())
+    .filter((r) => r.length > 0);
+  return {
+    id: p.id,
+    title: p.title,
+    employmentType: parseEmploymentType(p.type),
+    location: "New Jersey",
+    description: p.description,
+    fullDescription: p.description,
+    requirements: reqs.length > 0 ? reqs : [p.requirements],
+    benefits: [],
+  };
+}
 
 interface JobsSectionProps {
   title?: string;
@@ -19,11 +42,17 @@ export function JobsSection({
   title = "Join Our Team",
   subtitle = "Discover rewarding nursing career opportunities",
 }: JobsSectionProps) {
-  const { contactInfo } = useAdmin();
+  const { contactInfo, jobPositions } = useAdmin();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState<FilterOption>("all");
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+  // Convert active admin job positions to Job format
+  const jobsData: Job[] = useMemo(
+    () => jobPositions.filter((p) => p.active).map(positionToJob),
+    [jobPositions]
+  );
 
   // Filter jobs based on search and employment type
   const filteredJobs = useMemo(() => {

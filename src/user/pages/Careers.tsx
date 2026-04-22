@@ -34,7 +34,7 @@ const stats = [
 
 const Careers = () => {
   const { toast } = useToast();
-  const { jobPositions, siteImages } = useAdmin();
+  const { jobPositions, siteImages, contactInfo } = useAdmin();
   const activePositions = jobPositions.filter((p) => p.active);
   const [form, setForm] = useState({
     name: "", email: "", phone: "", position: "", coverLetter: "",
@@ -343,7 +343,7 @@ const Careers = () => {
                       <p className="text-white/50 text-xs font-sans mb-1 flex items-center gap-1.5">
                         <Phone className="h-3 w-3 text-accent" /> Questions? Call us:
                       </p>
-                      <p className="text-lg font-serif font-bold text-white">(732) 268-5112</p>
+                      <p className="text-lg font-serif font-bold text-white">{contactInfo.phone}</p>
                     </div>
                   </div>
                 </div>

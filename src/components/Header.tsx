@@ -6,6 +6,7 @@ import logo from "@/assets/Artboard 133 copy (1).svg";
 import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAdmin } from "@/contexts/AdminContext";
 
 const navLinks = [
   { label: "Home",          href: "/" },
@@ -21,6 +22,8 @@ const Header = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const { isDark } = useTheme();
+  const { contactInfo } = useAdmin();
+  const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -93,11 +96,11 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-3">
             <ThemeToggle />
             <a
-              href="tel:+17322685112"
+              href={`tel:+1${phoneLink}`}
               className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors glass-btn rounded-full px-4 py-2"
             >
               <Phone className="h-3.5 w-3.5" />
-              (732) 268-5112
+              {contactInfo.phone}
             </a>
             <Link to="/contact">
               <Button
@@ -203,7 +206,7 @@ const Header = () => {
 
           {/* Phone */}
           <a
-            href="tel:+17322685112"
+            href={`tel:+1${phoneLink}`}
             className="flex items-center justify-center gap-2 w-full text-sm font-semibold px-4 py-3.5 rounded-xl"
             style={{
               border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(38,104,188,0.15)",
