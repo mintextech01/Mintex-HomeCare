@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
 import { db, auth } from "@/lib/firebase";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, getDoc } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 export interface Testimonial {
   id: string;
@@ -193,20 +193,63 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [siteImages, setSiteImagesState] = useState<SiteImages>(defaultSiteImages);
 
   useEffect(() => {
+    // When the admin logs in, seed any Firestore documents that don't exist yet.
+    // This ensures all data is stored in the database on first use.
+    const seedMissingDocs = async () => {
+      const entries: [string, any][] = [
+        ["testimonials", defaultTestimonials],
+        ["teamMembers", defaultTeamMembers],
+        ["gallery", []],
+        ["services", defaultServices],
+        ["submissions", []],
+        ["jobPositions", defaultJobPositions],
+        ["contactInfo", defaultContactInfo],
+        ["siteImages", defaultSiteImages],
+      ];
+      await Promise.all(
+        entries.map(async ([docName, defaultData]) => {
+          const snap = await getDoc(doc(db, "appData", docName));
+          if (!snap.exists()) {
+            await setDoc(doc(db, "appData", docName), { data: defaultData });
+          }
+        })
+      );
+    };
+
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       setIsAuthenticated(!!user);
       setIsLoading(false);
+      // Seed missing Firestore documents on admin login
+      if (user) {
+        seedMissingDocs().catch(console.error);
+      }
     });
 
-    // Listen to Firebase collections instead of localStorage
-    const unsubTestimonials = onSnapshot(doc(db, "appData", "testimonials"), (d) => { if (d.exists()) setTestimonialsState(d.data().data) });
-    const unsubTeam = onSnapshot(doc(db, "appData", "teamMembers"), (d) => { if (d.exists()) setTeamMembersState(d.data().data) });
-    const unsubGallery = onSnapshot(doc(db, "appData", "gallery"), (d) => { if (d.exists()) setGalleryState(d.data().data) });
-    const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => { if (d.exists()) setServicesState(d.data().data) });
-    const unsubSubmissions = onSnapshot(doc(db, "appData", "submissions"), (d) => { if (d.exists()) setSubmissionsState(d.data().data) });
-    const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => { if (d.exists()) setJobPositionsState(d.data().data) });
-    const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => { if (d.exists()) setContactInfoState(d.data().data) });
-    const unsubImages = onSnapshot(doc(db, "appData", "siteImages"), (d) => { if (d.exists()) setSiteImagesState(d.data().data) });
+    // Real-time Firestore listeners
+    const unsubTestimonials = onSnapshot(doc(db, "appData", "testimonials"), (d) => {
+      if (d.exists()) setTestimonialsState(d.data().data);
+    });
+    const unsubTeam = onSnapshot(doc(db, "appData", "teamMembers"), (d) => {
+      if (d.exists()) setTeamMembersState(d.data().data);
+    });
+    const unsubGallery = onSnapshot(doc(db, "appData", "gallery"), (d) => {
+      if (d.exists()) setGalleryState(d.data().data);
+    });
+    const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => {
+      if (d.exists()) setServicesState(d.data().data);
+    });
+    const unsubSubmissions = onSnapshot(doc(db, "appData", "submissions"), (d) => {
+      if (d.exists()) setSubmissionsState(d.data().data);
+    });
+    const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => {
+      if (d.exists()) setJobPositionsState(d.data().data);
+    });
+    const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => {
+      if (d.exists()) setContactInfoState(d.data().data);
+    });
+    const unsubImages = onSnapshot(doc(db, "appData", "siteImages"), (d) => {
+      if (d.exists()) setSiteImagesState(d.data().data);
+    });
 
     return () => {
       unsubAuth();
