@@ -12,8 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
-import { storage, db } from "@/lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
@@ -498,11 +497,10 @@ const compressImage = (file: File, maxWidth = 1400, quality = 0.85): Promise<Blo
   });
 
 /**
- * Upload an image file.
- * Tries Firebase Storage first; falls back to base64 data URL if Storage isn't set up.
+ * Compress an image and return it as a base64 data URL.
+ * Stored directly in Firestore — no Firebase Storage required.
  */
 const uploadImage = async (file: File): Promise<string> => {
-  // SVG: use as-is
   if (file.type === "image/svg+xml") {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
@@ -511,27 +509,13 @@ const uploadImage = async (file: File): Promise<string> => {
       reader.readAsDataURL(file);
     });
   }
-
-  // Raster image: compress first
-  const compressed = await compressImage(file, 1200, 0.82);
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const storageFile = new File([compressed], `${Date.now()}.${ext}`, { type: "image/jpeg" });
-
-  // Try Firebase Storage
-  try {
-    const fileRef = ref(storage, `uploads/${storageFile.name}`);
-    await uploadBytes(fileRef, storageFile);
-    return await getDownloadURL(fileRef);
-  } catch {
-    // Firebase Storage not set up — compress more aggressively and return base64
-    const smallBlob = await compressImage(file, 700, 0.72);
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(smallBlob);
-    });
-  }
+  const blob = await compressImage(file, 900, 0.80);
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 };
 
 /* ── Site Images ── */
@@ -553,18 +537,18 @@ const ImageField = ({
   const save = async () => {
     const newUrl = draft.trim();
     if (!newUrl) return;
-    const nextImages = { ...siteImages, [imgKey]: newUrl };
     setSaving(true);
-    setSiteImages(nextImages); // update local React state immediately
+    setSiteImages(prev => ({ ...prev, [imgKey]: newUrl })); // optimistic local update
     setEditing(false);
     setFileReady(false);
     try {
-      await setDoc(doc(db, "appData", "siteImages"), { data: nextImages });
+      // Each image is its own Firestore document — no 1MB size limit issue
+      await setDoc(doc(db, "siteImageData", imgKey), { url: newUrl });
       toast({ title: "Image saved", description: label + " is now live on the website." });
     } catch (err) {
       console.error("Failed to save site image:", err);
       toast({ title: "Save failed", description: "Could not save to database. Please try again.", variant: "destructive" });
-      setSiteImages(siteImages); // revert on failure
+      setSiteImages(prev => ({ ...prev, [imgKey]: current })); // revert on failure
     } finally {
       setSaving(false);
     }

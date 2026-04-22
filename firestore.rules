@@ -10,10 +10,17 @@ service cloud.firestore {
       allow write: if true;
     }
 
-    // All other app data (services, testimonials, team, gallery, jobs, contactInfo, siteImages):
+    // All other app data (services, testimonials, team, gallery, jobs, contactInfo):
     // - Anyone can read (user panel displays this data publicly)
     // - Only authenticated admin can write
     match /appData/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Site images stored per-key to avoid the 1MB single-document limit.
+    // Each document: siteImageData/{imageKey} → { url: "..." }
+    match /siteImageData/{imageKey} {
       allow read: if true;
       allow write: if request.auth != null;
     }

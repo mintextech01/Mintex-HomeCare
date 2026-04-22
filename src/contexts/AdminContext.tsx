@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
 import { db, auth } from "@/lib/firebase";
-import { doc, onSnapshot, setDoc, getDoc } from "firebase/firestore";
+import { doc, collection, onSnapshot, setDoc, getDoc } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 export interface Testimonial {
   id: string;
@@ -214,7 +214,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         initMissingDoc("submissions", []).catch(console.error);
         initMissingDoc("jobPositions", defaultJobPositions).catch(console.error);
         initMissingDoc("contactInfo", defaultContactInfo).catch(console.error);
-        initMissingDoc("siteImages", defaultSiteImages).catch(console.error);
+        // siteImages are stored per-key in the "siteImageData" collection — no bulk init needed
       }
     });
 
@@ -240,8 +240,17 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => {
       if (d.exists()) setContactInfoState(d.data().data);
     });
-    const unsubImages = onSnapshot(doc(db, "appData", "siteImages"), (d) => {
-      if (d.exists()) setSiteImagesState(d.data().data);
+    // Each site image lives in its own document: siteImageData/{key} → { url: "..." }
+    // This avoids Firestore's 1MB per-document limit when images are stored as base64.
+    const unsubImages = onSnapshot(collection(db, "siteImageData"), (snapshot) => {
+      setSiteImagesState(prev => {
+        const next = { ...prev };
+        snapshot.docs.forEach(d => {
+          const url = d.data().url;
+          if (url) next[d.id as keyof SiteImages] = url;
+        });
+        return next;
+      });
     });
 
     return () => {
@@ -315,12 +324,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  // setSiteImages only updates local React state.
+  // The actual Firestore write is done per-key in ImageField.save() → siteImageData/{key}.
   const setSiteImages = useCallback((action: React.SetStateAction<SiteImages>) => {
-    setSiteImagesState(prev => {
-      const next = typeof action === "function" ? action(prev) : action;
-      updateFirebase("siteImages", next);
-      return next;
-    });
+    setSiteImagesState(action);
   }, []);
 
   const login = async (email: string, password: string) => {
