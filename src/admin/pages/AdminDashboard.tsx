@@ -23,7 +23,6 @@ const AdminDashboard = () => {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (!isAuthenticated) return <Navigate to="/" replace />;
   if (isLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-hero-bg">
       <div className="text-center space-y-3">
@@ -32,6 +31,7 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
   const tabs = [
     { key: "dashboard" as Tab, label: "Dashboard", icon: LayoutDashboard },
@@ -557,7 +557,7 @@ const ImageField = ({
   };
 
   const previewSrc = editing ? (draft || current) : current;
-  const isUploaded = previewSrc.startsWith("data:") || (previewSrc !== current && previewSrc.includes("supabase"));
+  const isUploaded = current.includes("firebasestorage") || current.startsWith("data:");
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
@@ -666,7 +666,7 @@ const TeamMemberPhotoField = ({
   };
 
   const previewSrc = editing ? (draft || member.photoUrl) : member.photoUrl;
-  const isUploaded = previewSrc.startsWith("data:") || (previewSrc !== member.photoUrl && previewSrc.includes("supabase"));
+  const isUploaded = member.photoUrl.includes("firebasestorage") || member.photoUrl.startsWith("data:");
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">

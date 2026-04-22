@@ -218,7 +218,9 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   // ── Wrapped setters: update React state AND sync to Firestore ────────────────
 
   const updateFirebase = (collectionName: string, data: any) => {
-    setDoc(doc(db, "appData", collectionName), { data }).catch(console.error);
+    setDoc(doc(db, "appData", collectionName), { data }).catch((err) => {
+      console.error(`[AdminContext] Failed to save "${collectionName}" to Firestore:`, err);
+    });
   };
 
   const setTestimonials = useCallback((action: React.SetStateAction<Testimonial[]>) => {
