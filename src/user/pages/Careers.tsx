@@ -72,11 +72,11 @@ const Careers = () => {
           await uploadBytes(storageRef, resumeFile);
           resumeUrl = await getDownloadURL(storageRef);
           resumeName = resumeFile.name;
-        } catch {
-          resumeName = resumeFile.name;
+        } catch (uploadErr: any) {
+          console.warn("Resume upload skipped:", uploadErr?.message);
           toast({
             title: "Resume upload unavailable",
-            description: "Your application will be saved. Please email your resume to " + contactInfo.email + " separately.",
+            description: "Your application was saved without the attachment. Please email your resume separately.",
           });
         }
       }
