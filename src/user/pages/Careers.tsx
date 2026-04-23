@@ -66,10 +66,19 @@ const Careers = () => {
       let resumeName: string | undefined;
 
       if (resumeFile) {
-        const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
-        await uploadBytes(storageRef, resumeFile);
-        resumeUrl = await getDownloadURL(storageRef);
-        resumeName = resumeFile.name;
+        try {
+          const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
+          await uploadBytes(storageRef, resumeFile);
+          resumeUrl = await getDownloadURL(storageRef);
+          resumeName = resumeFile.name;
+        } catch (uploadErr: any) {
+          // Storage not yet enabled — save application without resume attachment
+          console.warn("Resume upload skipped:", uploadErr?.message);
+          toast({
+            title: "Resume upload unavailable",
+            description: "Your application was saved without the attachment. Please email your resume separately.",
+          });
+        }
       }
 
       await addSubmission({
