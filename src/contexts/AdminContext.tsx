@@ -240,9 +240,17 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => {
       if (d.exists()) setServicesState(d.data().data);
     });
-    const unsubSubmissions = onSnapshot(query(collection(db, "submissions"), orderBy("date", "desc")), (snapshot) => {
-      setSubmissionsState(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ContactSubmission)));
-    });
+    const unsubSubmissions = onSnapshot(
+      query(collection(db, "submissions"), orderBy("date", "desc")),
+      (snapshot) => {
+        setSubmissionsState(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ContactSubmission)));
+      },
+      (error) => {
+        // Unauthenticated users (e.g. career applicants) cannot read submissions — that's expected.
+        // Log quietly so the SDK stays healthy and addDoc can still write.
+        console.debug("[AdminContext] submissions listener:", error.code);
+      }
+    );
     const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => {
       if (d.exists()) setJobPositionsState(d.data().data);
     });

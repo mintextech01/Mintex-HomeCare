@@ -1,6 +1,12 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    // Resume uploads from job applicants — anyone can upload and read
+    match /resumes/{fileName} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Uploaded images (site images, team photos, gallery, etc.)
     // - Anyone can read (user panel displays these images publicly)
     // - Only authenticated admin can upload / delete
