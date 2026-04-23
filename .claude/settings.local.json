@@ -12,7 +12,8 @@
       "Bash(\"/c/Program Files/nodejs/npm\" install)",
       "Bash(PATH=\"/c/Program Files/nodejs:$PATH\" \"/c/Program Files/nodejs/npm\" install)",
       "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(npx tsc *)"
     ]
   }
 }

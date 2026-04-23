@@ -17,8 +17,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
-import { storage } from "@/lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAppStorage } from "@/lib/firebase";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -67,12 +66,13 @@ const Careers = () => {
 
       if (resumeFile) {
         try {
-          const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
+          const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+          const storageInstance = await getAppStorage();
+          const storageRef = ref(storageInstance, `resumes/${Date.now()}_${resumeFile.name}`);
           await uploadBytes(storageRef, resumeFile);
           resumeUrl = await getDownloadURL(storageRef);
           resumeName = resumeFile.name;
         } catch (uploadErr: any) {
-          // Storage not yet enabled — save application without resume attachment
           console.warn("Resume upload skipped:", uploadErr?.message);
           toast({
             title: "Resume upload unavailable",

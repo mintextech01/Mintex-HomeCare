@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -14,7 +13,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 const auth = getAuth(app);
 
-export { db, storage, auth };
+// Storage is initialised lazily so a missing bucket doesn't break the app
+let _storage: ReturnType<typeof import("firebase/storage").getStorage> | null = null;
+export const getAppStorage = async () => {
+  if (_storage) return _storage;
+  const { getStorage } = await import("firebase/storage");
+  _storage = getStorage(app);
+  return _storage;
+};
+
+export { db, auth };
