@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
 import { db, auth } from "@/lib/firebase";
-import { doc, collection, onSnapshot, setDoc, getDoc, addDoc, deleteDoc, query, orderBy, updateDoc } from "firebase/firestore";
+import { doc, collection, onSnapshot, setDoc, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 export interface Testimonial {
   id: string;
@@ -241,13 +241,14 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       if (d.exists()) setServicesState(d.data().data);
     });
     const unsubSubmissions = onSnapshot(
-      query(collection(db, "submissions"), orderBy("date", "desc")),
+      collection(db, "submissions"),
       (snapshot) => {
-        setSubmissionsState(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ContactSubmission)));
+        const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ContactSubmission));
+        // Sort newest first in JS — avoids needing a Firestore composite index
+        docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setSubmissionsState(docs);
       },
       (error) => {
-        // Unauthenticated users (e.g. career applicants) cannot read submissions — that's expected.
-        // Log quietly so the SDK stays healthy and addDoc can still write.
         console.debug("[AdminContext] submissions listener:", error.code);
       }
     );
