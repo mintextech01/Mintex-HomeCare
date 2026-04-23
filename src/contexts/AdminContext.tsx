@@ -36,6 +36,7 @@ export interface ServiceItem {
 
 export interface ContactSubmission {
   id: string;
+  type: "contact" | "career";
   name: string;
   email: string;
   phone: string;
@@ -43,6 +44,11 @@ export interface ContactSubmission {
   message: string;
   date: string;
   read: boolean;
+  // career application fields
+  position?: string;
+  coverLetter?: string;
+  resumeUrl?: string;
+  resumeName?: string;
 }
 
 export interface JobPosition {
@@ -345,7 +351,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addSubmission = (sub: Omit<ContactSubmission, "id" | "date" | "read">) => {
-    const newSub: ContactSubmission = { ...sub, id: Date.now().toString(), date: new Date().toISOString(), read: false };
+    const newSub: ContactSubmission = { type: "contact", ...sub, id: Date.now().toString(), date: new Date().toISOString(), read: false };
     setSubmissionsState(prev => {
       const next = [newSub, ...prev];
       updateFirebase("submissions", next);

@@ -12,11 +12,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Briefcase, Heart, ArrowRight, MapPin, Phone,
-  FileText, PhoneCall, ClipboardCheck, CheckCircle,
+  FileText, PhoneCall, ClipboardCheck, CheckCircle, Loader2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -34,13 +36,16 @@ const stats = [
 
 const Careers = () => {
   const { toast } = useToast();
-  const { jobPositions, siteImages, contactInfo } = useAdmin();
+  const { jobPositions, siteImages, contactInfo, addSubmission } = useAdmin();
   const activePositions = jobPositions.filter((p) => p.active);
   const [form, setForm] = useState({
     name: "", email: "", phone: "", position: "", coverLetter: "",
   });
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.position) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
@@ -54,11 +59,44 @@ const Careers = () => {
       toast({ title: "Please enter a valid phone number", variant: "destructive" });
       return;
     }
-    toast({
-      title: "Application submitted!",
-      description: "We'll review your application and get back to you soon.",
-    });
-    setForm({ name: "", email: "", phone: "", position: "", coverLetter: "" });
+
+    setSubmitting(true);
+    try {
+      let resumeUrl: string | undefined;
+      let resumeName: string | undefined;
+
+      if (resumeFile) {
+        const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
+        await uploadBytes(storageRef, resumeFile);
+        resumeUrl = await getDownloadURL(storageRef);
+        resumeName = resumeFile.name;
+      }
+
+      addSubmission({
+        type: "career",
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        service: form.position,
+        message: form.coverLetter,
+        position: form.position,
+        coverLetter: form.coverLetter,
+        resumeUrl,
+        resumeName,
+      });
+
+      toast({
+        title: "Application submitted!",
+        description: "We'll review your application and get back to you soon.",
+      });
+      setForm({ name: "", email: "", phone: "", position: "", coverLetter: "" });
+      setResumeFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch {
+      toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -426,9 +464,11 @@ const Careers = () => {
                         Resume Upload
                       </label>
                       <Input
+                        ref={fileInputRef}
                         type="file"
                         accept=".pdf,.doc,.docx"
                         className="font-sans rounded-xl border-gray-200"
+                        onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
                       />
                       <p className="text-[11px] text-gray-400 font-sans">Accepted: PDF, DOC, DOCX</p>
                     </div>
@@ -450,10 +490,15 @@ const Careers = () => {
                       <Button
                         type="submit"
                         size="lg"
-                        className="w-full rounded-full font-semibold hover:scale-[1.02] transition-all"
+                        disabled={submitting}
+                        className="w-full rounded-full font-semibold hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                         style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
                       >
-                        Submit Application <ArrowRight className="h-4 w-4 ml-1" />
+                        {submitting ? (
+                          <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Submitting…</>
+                        ) : (
+                          <>Submit Application <ArrowRight className="h-4 w-4 ml-1" /></>
+                        )}
                       </Button>
                       <p className="text-center text-xs text-gray-400 font-sans mt-3">
                         We respond to all applications within 3–5 business days.

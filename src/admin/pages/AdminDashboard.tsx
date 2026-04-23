@@ -445,28 +445,160 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
 
 /* ── Submissions ── */
 const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
-  const toggleRead = (id: string) => { setSubmissions((prev: any[]) => prev.map((s: any) => s.id === id ? { ...s, read: !s.read } : s)); };
+  const [selected, setSelected] = useState<any | null>(null);
+  const [filter, setFilter] = useState<"all" | "contact" | "career">("all");
+
+  const toggleRead = (id: string) => {
+    setSubmissions((prev: any[]) => prev.map((s: any) => s.id === id ? { ...s, read: !s.read } : s));
+    if (selected?.id === id) setSelected((prev: any) => prev ? { ...prev, read: !prev.read } : prev);
+  };
+
+  const filtered = submissions.filter((s: any) =>
+    filter === "all" ? true : (s.type ?? "contact") === filter
+  );
+
   return (
     <div>
-      <h1 className="text-2xl font-serif font-bold text-foreground mb-6">Contact Submissions</h1>
-      <Card className="shadow-sm overflow-hidden"><div className="overflow-x-auto"><Table>
-        <TableHeader><TableRow><TableHead>Status</TableHead><TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead className="hidden sm:table-cell">Phone</TableHead><TableHead className="hidden md:table-cell">Service</TableHead><TableHead className="hidden lg:table-cell">Message</TableHead><TableHead className="hidden sm:table-cell">Date</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
-        <TableBody>
-          {submissions.length === 0 && <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground font-sans py-12">No submissions yet</TableCell></TableRow>}
-          {submissions.map((s: any) => (
-            <TableRow key={s.id} className={s.read ? "opacity-60" : ""}>
-              <TableCell>{s.read ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-accent" />}</TableCell>
-              <TableCell className="font-sans font-medium">{s.name}</TableCell>
-              <TableCell className="font-sans text-sm">{s.email}</TableCell>
-              <TableCell className="font-sans text-sm hidden sm:table-cell">{s.phone}</TableCell>
-              <TableCell className="font-sans text-sm hidden md:table-cell">{s.service || "—"}</TableCell>
-              <TableCell className="font-sans text-sm max-w-xs truncate hidden lg:table-cell">{s.message || "—"}</TableCell>
-              <TableCell className="font-sans text-sm hidden sm:table-cell">{new Date(s.date).toLocaleDateString()}</TableCell>
-              <TableCell><Button size="sm" variant="ghost" onClick={() => toggleRead(s.id)} className="font-sans text-xs">{s.read ? "Unread" : "Read"}</Button></TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table></div></Card>
+      <h1 className="text-2xl font-serif font-bold text-foreground mb-6">Submissions</h1>
+
+      {/* Filter tabs */}
+      <div className="flex gap-2 mb-4">
+        {(["all", "contact", "career"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => { setFilter(f); setSelected(null); }}
+            className={`px-4 py-1.5 rounded-full text-xs font-sans font-semibold capitalize transition-colors ${filter === f ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"}`}
+          >
+            {f === "all" ? `All (${submissions.length})` : f === "career" ? `Applications (${submissions.filter((s: any) => (s.type ?? "contact") === "career").length})` : `Contact (${submissions.filter((s: any) => (s.type ?? "contact") === "contact").length})`}
+          </button>
+        ))}
+      </div>
+
+      <div className={`grid gap-4 ${selected ? "lg:grid-cols-[1fr_380px]" : ""}`}>
+        {/* List */}
+        <Card className="shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead className="hidden sm:table-cell">Email</TableHead>
+                  <TableHead className="hidden md:table-cell">Position / Service</TableHead>
+                  <TableHead className="hidden sm:table-cell">Date</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.length === 0 && (
+                  <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground font-sans py-12">No submissions yet</TableCell></TableRow>
+                )}
+                {filtered.map((s: any) => {
+                  const isCareer = (s.type ?? "contact") === "career";
+                  return (
+                    <TableRow
+                      key={s.id}
+                      className={`cursor-pointer transition-colors ${s.read ? "opacity-60" : ""} ${selected?.id === s.id ? "bg-primary/5" : "hover:bg-muted/40"}`}
+                      onClick={() => setSelected(s)}
+                    >
+                      <TableCell>{s.read ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-accent" />}</TableCell>
+                      <TableCell>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans ${isCareer ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                          {isCareer ? "Application" : "Contact"}
+                        </span>
+                      </TableCell>
+                      <TableCell className="font-sans font-medium">{s.name}</TableCell>
+                      <TableCell className="font-sans text-sm hidden sm:table-cell">{s.email}</TableCell>
+                      <TableCell className="font-sans text-sm hidden md:table-cell">{s.position || s.service || "—"}</TableCell>
+                      <TableCell className="font-sans text-sm hidden sm:table-cell">{new Date(s.date).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleRead(s.id); }} className="font-sans text-xs">
+                          {s.read ? "Unread" : "Read"}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+
+        {/* Detail panel */}
+        {selected && (
+          <Card className="shadow-sm h-fit sticky top-20">
+            <CardHeader className="pb-3 flex flex-row items-start justify-between gap-2">
+              <div>
+                <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans mb-2 ${(selected.type ?? "contact") === "career" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                  {(selected.type ?? "contact") === "career" ? "Job Application" : "Contact Message"}
+                </div>
+                <CardTitle className="text-base font-serif">{selected.name}</CardTitle>
+                <p className="text-xs text-muted-foreground font-sans mt-0.5">{new Date(selected.date).toLocaleString()}</p>
+              </div>
+              <button onClick={() => setSelected(null)} className="text-muted-foreground hover:text-foreground text-lg leading-none shrink-0">✕</button>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm font-sans">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">Email</p>
+                  <a href={`mailto:${selected.email}`} className="text-primary hover:underline break-all">{selected.email}</a>
+                </div>
+                {selected.phone && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">Phone</p>
+                    <a href={`tel:${selected.phone}`} className="text-foreground hover:underline">{selected.phone}</a>
+                  </div>
+                )}
+              </div>
+
+              {(selected.position || selected.service) && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">
+                    {(selected.type ?? "contact") === "career" ? "Position Applied For" : "Service"}
+                  </p>
+                  <p className="text-foreground font-medium">{selected.position || selected.service}</p>
+                </div>
+              )}
+
+              {selected.resumeUrl && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Resume</p>
+                  <a
+                    href={selected.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/8 border border-primary/20 text-primary hover:bg-primary/15 transition-colors text-xs font-semibold"
+                  >
+                    <Upload className="h-3.5 w-3.5" />
+                    {selected.resumeName || "Download Resume"}
+                  </a>
+                </div>
+              )}
+
+              {(selected.coverLetter || selected.message) && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                    {(selected.type ?? "contact") === "career" ? "Cover Letter" : "Message"}
+                  </p>
+                  <p className="text-foreground whitespace-pre-wrap bg-muted/40 rounded-lg p-3 text-xs leading-relaxed">
+                    {selected.coverLetter || selected.message || "—"}
+                  </p>
+                </div>
+              )}
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => toggleRead(selected.id)}
+                className="w-full font-sans text-xs"
+              >
+                {selected.read ? <><Eye className="h-3.5 w-3.5 mr-1.5" /> Mark as Unread</> : <><EyeOff className="h-3.5 w-3.5 mr-1.5" /> Mark as Read</>}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };
