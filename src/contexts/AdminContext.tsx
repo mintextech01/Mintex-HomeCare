@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 export type { SiteImages } from "@/config/siteImageConfig";
 import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
 import { db, auth } from "@/lib/firebase";
-import { doc, collection, onSnapshot, setDoc, getDoc } from "firebase/firestore";
+import { doc, collection, onSnapshot, setDoc, getDoc, addDoc, deleteDoc, query, orderBy, updateDoc } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 export interface Testimonial {
   id: string;
@@ -44,6 +44,7 @@ export interface ContactSubmission {
   message: string;
   date: string;
   read: boolean;
+  status?: "new" | "reviewed" | "interview" | "hired" | "rejected";
   // career application fields
   position?: string;
   coverLetter?: string;
@@ -89,7 +90,9 @@ interface AdminContextType {
   setServices: React.Dispatch<React.SetStateAction<ServiceItem[]>>;
   submissions: ContactSubmission[];
   setSubmissions: React.Dispatch<React.SetStateAction<ContactSubmission[]>>;
-  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read">) => void;
+  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">) => Promise<void>;
+  updateSubmission: (id: string, updates: Partial<ContactSubmission>) => Promise<void>;
+  deleteSubmission: (id: string) => Promise<void>;
   jobPositions: JobPosition[];
   setJobPositions: React.Dispatch<React.SetStateAction<JobPosition[]>>;
   contactInfo: ContactInfo;
@@ -237,8 +240,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => {
       if (d.exists()) setServicesState(d.data().data);
     });
-    const unsubSubmissions = onSnapshot(doc(db, "appData", "submissions"), (d) => {
-      if (d.exists()) setSubmissionsState(d.data().data);
+    const unsubSubmissions = onSnapshot(query(collection(db, "submissions"), orderBy("date", "desc")), (snapshot) => {
+      setSubmissionsState(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ContactSubmission)));
     });
     const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => {
       if (d.exists()) setJobPositionsState(d.data().data);
@@ -307,11 +310,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const setSubmissions = useCallback((action: React.SetStateAction<ContactSubmission[]>) => {
-    setSubmissionsState(prev => {
-      const next = typeof action === "function" ? action(prev) : action;
-      updateFirebase("submissions", next);
-      return next;
-    });
+    setSubmissionsState(action);
   }, []);
 
   const setJobPositions = useCallback((action: React.SetStateAction<JobPosition[]>) => {
@@ -350,13 +349,17 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     await signOut(auth);
   };
 
-  const addSubmission = (sub: Omit<ContactSubmission, "id" | "date" | "read">) => {
-    const newSub: ContactSubmission = { type: "contact", ...sub, id: Date.now().toString(), date: new Date().toISOString(), read: false };
-    setSubmissionsState(prev => {
-      const next = [newSub, ...prev];
-      updateFirebase("submissions", next);
-      return next;
-    });
+  const addSubmission = async (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">) => {
+    const newSub = { type: "contact" as const, ...sub, date: new Date().toISOString(), read: false, status: "new" as const };
+    await addDoc(collection(db, "submissions"), newSub);
+  };
+
+  const updateSubmission = async (id: string, updates: Partial<ContactSubmission>) => {
+    await updateDoc(doc(db, "submissions", id), updates as Record<string, unknown>);
+  };
+
+  const deleteSubmission = async (id: string) => {
+    await deleteDoc(doc(db, "submissions", id));
   };
 
   return (
@@ -366,7 +369,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       teamMembers, setTeamMembers,
       gallery, setGallery,
       services, setServices,
-      submissions, setSubmissions, addSubmission,
+      submissions, setSubmissions, addSubmission, updateSubmission, deleteSubmission,
       jobPositions, setJobPositions,
       contactInfo, setContactInfo,
       siteImages, setSiteImages,

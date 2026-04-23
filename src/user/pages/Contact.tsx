@@ -42,7 +42,7 @@ const Contact = () => {
   const { isDark } = useTheme();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.phone) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
@@ -56,9 +56,13 @@ const Contact = () => {
       toast({ title: "Please enter a valid phone number", variant: "destructive" });
       return;
     }
-    addSubmission(form);
-    toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-    setForm({ name: "", email: "", phone: "", service: "", message: "" });
+    try {
+      await addSubmission(form);
+      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
+      setForm({ name: "", email: "", phone: "", service: "", message: "" });
+    } catch {
+      toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
+    }
   };
 
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");

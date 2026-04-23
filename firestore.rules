@@ -2,12 +2,18 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Contact form submissions:
-    // - Anyone can write (unauthenticated users submitting the contact form)
-    // - Only authenticated admin can read
+    // Submissions collection: one document per submission (contact or career).
+    // - Anyone can create (unauthenticated users submitting forms)
+    // - Only authenticated admin can read, update, or delete
+    match /submissions/{submissionId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Legacy single-document submissions (kept for backward compat — no longer written to)
     match /appData/submissions {
       allow read: if request.auth != null;
-      allow write: if true;
+      allow write: if request.auth != null;
     }
 
     // All other app data (services, testimonials, team, gallery, jobs, contactInfo):

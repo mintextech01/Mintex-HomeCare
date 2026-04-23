@@ -9,16 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "positions" | "contact-info";
+type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info";
 
 const AdminDashboard = () => {
-  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages } = useAdmin();
+  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, updateSubmission, deleteSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages } = useAdmin();
   const { toast } = useToast();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -43,6 +43,7 @@ const AdminDashboard = () => {
     { key: "positions" as Tab, label: "Job Positions", icon: Briefcase },
     { key: "contact-info" as Tab, label: "Contact Info", icon: Phone },
     { key: "submissions" as Tab, label: "Submissions", icon: Mail },
+    { key: "applications" as Tab, label: "Applications", icon: ClipboardList },
   ];
 
   const selectTab = (t: Tab) => { setTab(t); setSidebarOpen(false); };
@@ -85,7 +86,8 @@ const AdminDashboard = () => {
           {tab === "services" && <ServicesTab services={services} setServices={setServices} toast={toast} />}
           {tab === "positions" && <PositionsTab positions={jobPositions} setPositions={setJobPositions} toast={toast} />}
           {tab === "contact-info" && <ContactInfoTab contactInfo={contactInfo} setContactInfo={setContactInfo} toast={toast} />}
-          {tab === "submissions" && <SubmissionsTab submissions={submissions} setSubmissions={setSubmissions} />}
+          {tab === "submissions" && <SubmissionsTab submissions={submissions} setSubmissions={setSubmissions} updateSubmission={updateSubmission} />}
+          {tab === "applications" && <ApplicationsTab submissions={submissions} updateSubmission={updateSubmission} deleteSubmission={deleteSubmission} toast={toast} />}
         </main>
       </div>
     </div>
@@ -444,12 +446,12 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
 };
 
 /* ── Submissions ── */
-const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
+const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) => {
   const [selected, setSelected] = useState<any | null>(null);
   const [filter, setFilter] = useState<"all" | "contact" | "career">("all");
 
-  const toggleRead = (id: string) => {
-    setSubmissions((prev: any[]) => prev.map((s: any) => s.id === id ? { ...s, read: !s.read } : s));
+  const toggleRead = (id: string, currentRead: boolean) => {
+    updateSubmission(id, { read: !currentRead });
     if (selected?.id === id) setSelected((prev: any) => prev ? { ...prev, read: !prev.read } : prev);
   };
 
@@ -513,7 +515,7 @@ const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
                       <TableCell className="font-sans text-sm hidden md:table-cell">{s.position || s.service || "—"}</TableCell>
                       <TableCell className="font-sans text-sm hidden sm:table-cell">{new Date(s.date).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleRead(s.id); }} className="font-sans text-xs">
+                        <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleRead(s.id, s.read); }} className="font-sans text-xs">
                           {s.read ? "Unread" : "Read"}
                         </Button>
                       </TableCell>
@@ -590,7 +592,7 @@ const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => toggleRead(selected.id)}
+                onClick={() => toggleRead(selected.id, selected.read)}
                 className="w-full font-sans text-xs"
               >
                 {selected.read ? <><Eye className="h-3.5 w-3.5 mr-1.5" /> Mark as Unread</> : <><EyeOff className="h-3.5 w-3.5 mr-1.5" /> Mark as Read</>}
@@ -599,6 +601,236 @@ const SubmissionsTab = ({ submissions, setSubmissions }: any) => {
           </Card>
         )}
       </div>
+    </div>
+  );
+};
+
+
+/* ── Applications ── */
+const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toast }: any) => {
+  const [selected, setSelected] = useState<any | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  const applications = submissions.filter((s: any) => s.type === "career");
+
+  const filtered = statusFilter === "all"
+    ? applications
+    : applications.filter((s: any) => (s.status || "new") === statusFilter);
+
+  const statusColors: Record<string, string> = {
+    new: "bg-blue-100 text-blue-700",
+    reviewed: "bg-yellow-100 text-yellow-700",
+    interview: "bg-purple-100 text-purple-700",
+    hired: "bg-green-100 text-green-700",
+    rejected: "bg-red-100 text-red-700",
+  };
+
+  const statusLabels: Record<string, string> = {
+    new: "New",
+    reviewed: "Reviewed",
+    interview: "Interview",
+    hired: "Hired",
+    rejected: "Rejected",
+  };
+
+  const handleStatusChange = async (id: string, status: string) => {
+    await updateSubmission(id, { status, read: true });
+    if (selected?.id === id) setSelected((prev: any) => prev ? { ...prev, status, read: true } : prev);
+    toast({ title: "Status updated" });
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteSubmission(id);
+    if (selected?.id === id) setSelected(null);
+    setConfirmDelete(null);
+    toast({ title: "Application deleted" });
+  };
+
+  const toggleRead = (id: string, currentRead: boolean) => {
+    updateSubmission(id, { read: !currentRead });
+    if (selected?.id === id) setSelected((prev: any) => prev ? { ...prev, read: !prev.read } : prev);
+  };
+
+  return (
+    <div>
+      <h1 className="text-2xl font-serif font-bold text-foreground mb-1">Job Applications</h1>
+      <p className="text-sm text-muted-foreground font-sans mb-6">{applications.length} total application{applications.length !== 1 ? "s" : ""} received</p>
+
+      {/* Status filter */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {(["all", "new", "reviewed", "interview", "hired", "rejected"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => { setStatusFilter(f); setSelected(null); }}
+            className={`px-3 py-1.5 rounded-full text-xs font-sans font-semibold capitalize transition-colors ${statusFilter === f ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"}`}
+          >
+            {f === "all" ? `All (${applications.length})` : `${statusLabels[f]} (${applications.filter((s: any) => (s.status || "new") === f).length})`}
+          </button>
+        ))}
+      </div>
+
+      <div className={`grid gap-4 ${selected ? "lg:grid-cols-[1fr_400px]" : ""}`}>
+        {/* List */}
+        <Card className="shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Applicant</TableHead>
+                  <TableHead className="hidden sm:table-cell">Position</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden md:table-cell">Date</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.length === 0 && (
+                  <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground font-sans py-12">No applications found</TableCell></TableRow>
+                )}
+                {filtered.map((s: any) => (
+                  <TableRow
+                    key={s.id}
+                    className={`cursor-pointer transition-colors ${s.read ? "opacity-70" : "font-medium"} ${selected?.id === s.id ? "bg-primary/5" : "hover:bg-muted/40"}`}
+                    onClick={() => { setSelected(s); if (!s.read) updateSubmission(s.id, { read: true }); }}
+                  >
+                    <TableCell>
+                      <p className="font-sans font-medium text-sm">{s.name}</p>
+                      <p className="font-sans text-xs text-muted-foreground">{s.email}</p>
+                    </TableCell>
+                    <TableCell className="font-sans text-sm hidden sm:table-cell">{s.position || s.service || "—"}</TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans ${statusColors[s.status || "new"]}`}>
+                        {statusLabels[s.status || "new"]}
+                      </span>
+                    </TableCell>
+                    <TableCell className="font-sans text-xs text-muted-foreground hidden md:table-cell">{new Date(s.date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      <Button size="icon" variant="ghost" onClick={(e) => { e.stopPropagation(); setConfirmDelete(s.id); }} title="Delete">
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+
+        {/* Detail panel */}
+        {selected && (
+          <Card className="shadow-sm h-fit sticky top-20">
+            <CardHeader className="pb-3 flex flex-row items-start justify-between gap-2">
+              <div>
+                <CardTitle className="text-base font-serif">{selected.name}</CardTitle>
+                <p className="text-xs text-muted-foreground font-sans mt-0.5">{new Date(selected.date).toLocaleString()}</p>
+              </div>
+              <button onClick={() => setSelected(null)} className="text-muted-foreground hover:text-foreground text-lg leading-none shrink-0">✕</button>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm font-sans">
+
+              {/* Status update */}
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Application Status</p>
+                <Select value={selected.status || "new"} onValueChange={(v) => handleStatusChange(selected.id, v)}>
+                  <SelectTrigger className="font-sans h-9"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="new">New</SelectItem>
+                    <SelectItem value="reviewed">Reviewed</SelectItem>
+                    <SelectItem value="interview">Interview Scheduled</SelectItem>
+                    <SelectItem value="hired">Hired</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Contact */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">Email</p>
+                  <a href={`mailto:${selected.email}`} className="text-primary hover:underline break-all text-xs">{selected.email}</a>
+                </div>
+                {selected.phone && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">Phone</p>
+                    <a href={`tel:${selected.phone}`} className="text-foreground hover:underline text-xs">{selected.phone}</a>
+                  </div>
+                )}
+              </div>
+
+              {/* Position */}
+              {(selected.position || selected.service) && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-0.5">Position Applied For</p>
+                  <p className="text-foreground font-medium text-sm">{selected.position || selected.service}</p>
+                </div>
+              )}
+
+              {/* Resume */}
+              {selected.resumeUrl && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Resume / Document</p>
+                  <a
+                    href={selected.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3 py-2.5 rounded-lg bg-primary/8 border border-primary/20 text-primary hover:bg-primary/15 transition-colors text-xs font-semibold w-full justify-center"
+                  >
+                    <Upload className="h-3.5 w-3.5" />
+                    {selected.resumeName || "View / Download Resume"}
+                  </a>
+                </div>
+              )}
+
+              {/* Cover letter */}
+              {(selected.coverLetter || selected.message) && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Cover Letter</p>
+                  <p className="text-foreground whitespace-pre-wrap bg-muted/40 rounded-lg p-3 text-xs leading-relaxed max-h-44 overflow-y-auto">
+                    {selected.coverLetter || selected.message || "—"}
+                  </p>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-2 pt-1">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => toggleRead(selected.id, selected.read)}
+                  className="flex-1 font-sans text-xs"
+                >
+                  {selected.read ? <><Eye className="h-3.5 w-3.5 mr-1.5" /> Mark Unread</> : <><EyeOff className="h-3.5 w-3.5 mr-1.5" /> Mark Read</>}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => setConfirmDelete(selected.id)}
+                  className="font-sans text-xs"
+                >
+                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Delete confirmation */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-sm shadow-2xl">
+            <CardContent className="pt-6 space-y-4">
+              <h3 className="text-lg font-serif font-bold text-foreground">Delete Application?</h3>
+              <p className="text-sm text-muted-foreground font-sans">This will permanently delete this application. This cannot be undone.</p>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setConfirmDelete(null)} className="flex-1 font-sans">Cancel</Button>
+                <Button variant="destructive" onClick={() => handleDelete(confirmDelete)} className="flex-1 font-sans">Delete</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

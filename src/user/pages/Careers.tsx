@@ -72,7 +72,7 @@ const Careers = () => {
         resumeName = resumeFile.name;
       }
 
-      addSubmission({
+      await addSubmission({
         type: "career",
         name: form.name,
         email: form.email,

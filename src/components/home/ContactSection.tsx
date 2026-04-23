@@ -27,13 +27,17 @@ const ContactSection = () => {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    addSubmission(form);
-    toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-    setForm({ name: "", email: "", phone: "", service: "", message: "" });
-    setErrors({});
+    try {
+      await addSubmission(form);
+      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
+      setForm({ name: "", email: "", phone: "", service: "", message: "" });
+      setErrors({});
+    } catch {
+      toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
+    }
   };
 
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
