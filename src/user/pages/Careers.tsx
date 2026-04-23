@@ -17,7 +17,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
-import { getAppStorage } from "@/lib/firebase";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -40,7 +39,7 @@ const Careers = () => {
   const [form, setForm] = useState({
     name: "", email: "", phone: "", position: "", coverLetter: "",
   });
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeFileName, setResumeFileName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -61,26 +60,6 @@ const Careers = () => {
 
     setSubmitting(true);
     try {
-      let resumeUrl: string | undefined;
-      let resumeName: string | undefined;
-
-      if (resumeFile) {
-        try {
-          const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-          const storageInstance = await getAppStorage();
-          const storageRef = ref(storageInstance, `resumes/${Date.now()}_${resumeFile.name}`);
-          await uploadBytes(storageRef, resumeFile);
-          resumeUrl = await getDownloadURL(storageRef);
-          resumeName = resumeFile.name;
-        } catch (uploadErr: any) {
-          console.warn("Resume upload skipped:", uploadErr?.message);
-          toast({
-            title: "Resume upload unavailable",
-            description: "Your application was saved without the attachment. Please email your resume separately.",
-          });
-        }
-      }
-
       await addSubmission({
         type: "career",
         name: form.name,
@@ -90,8 +69,7 @@ const Careers = () => {
         message: form.coverLetter,
         position: form.position,
         coverLetter: form.coverLetter,
-        resumeUrl,
-        resumeName,
+        resumeName: resumeFileName || undefined,
       });
 
       toast({
@@ -99,10 +77,15 @@ const Careers = () => {
         description: "We'll review your application and get back to you soon.",
       });
       setForm({ name: "", email: "", phone: "", position: "", coverLetter: "" });
-      setResumeFile(null);
+      setResumeFileName("");
       if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch {
-      toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
+    } catch (err: any) {
+      console.error("Career submission error:", err);
+      toast({
+        title: "Submission failed",
+        description: err?.message ?? "Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -477,7 +460,7 @@ const Careers = () => {
                         type="file"
                         accept=".pdf,.doc,.docx"
                         className="font-sans rounded-xl border-gray-200"
-                        onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
+                        onChange={(e) => setResumeFileName(e.target.files?.[0]?.name ?? "")}
                       />
                       <p className="text-[11px] text-gray-400 font-sans">Accepted: PDF, DOC, DOCX</p>
                     </div>

@@ -8,6 +8,7 @@ service cloud.firestore {
     match /submissions/{submissionId} {
       allow create: if true;
       allow read, update, delete: if request.auth != null;
+      // public create allowed for contact/career forms
     }
 
     // Legacy single-document submissions (kept for backward compat — no longer written to)

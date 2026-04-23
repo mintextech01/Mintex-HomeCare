@@ -90,7 +90,7 @@ interface AdminContextType {
   setServices: React.Dispatch<React.SetStateAction<ServiceItem[]>>;
   submissions: ContactSubmission[];
   setSubmissions: React.Dispatch<React.SetStateAction<ContactSubmission[]>>;
-  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">) => Promise<void>;
+  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status"> & { type?: "contact" | "career" }) => Promise<void>;
   updateSubmission: (id: string, updates: Partial<ContactSubmission>) => Promise<void>;
   deleteSubmission: (id: string) => Promise<void>;
   jobPositions: JobPosition[];
@@ -359,8 +359,11 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addSubmission = async (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">) => {
-    const newSub = { type: "contact" as const, ...sub, date: new Date().toISOString(), read: false, status: "new" as const };
-    await addDoc(collection(db, "submissions"), newSub);
+    const newSub = { ...sub, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Firestore timeout — check your connection")), 10000)
+    );
+    await Promise.race([addDoc(collection(db, "submissions"), newSub), timeout]);
   };
 
   const updateSubmission = async (id: string, updates: Partial<ContactSubmission>) => {

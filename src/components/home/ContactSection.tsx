@@ -35,8 +35,9 @@ const ContactSection = () => {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", phone: "", service: "", message: "" });
       setErrors({});
-    } catch {
-      toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
+    } catch (err: any) {
+      console.error("Contact submission error:", err);
+      toast({ title: "Submission failed", description: err?.message ?? "Please try again.", variant: "destructive" });
     }
   };
 
