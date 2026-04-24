@@ -62,27 +62,27 @@ const Careers = () => {
 
     setSubmitting(true);
     try {
-      // Read resume file as base64 — stored in a separate resumeData/{id} document
-      // to keep the submission document well under Firestore's 1 MB limit.
-      let resumeDataUrl: string | undefined;
+      // Read resume as base64, then split into 700 KB chunks so each Firestore
+      // document stays well under the 1 MB limit — no file-size ceiling this way.
+      const CHUNK_SIZE = 700_000; // characters (~525 KB of binary per chunk)
       let resumeName: string | undefined;
+      let resumeChunks: string[] = [];
+
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        if (resumeFile.size > 5 * 1024 * 1024) {
-          toast({ title: "Resume file is too large", description: "Please upload a file smaller than 5 MB.", variant: "destructive" });
-          setSubmitting(false);
-          return;
-        }
-        resumeDataUrl = await new Promise<string>((resolve, reject) => {
+        const dataUrl = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => resolve(reader.result as string);
           reader.onerror = () => reject(new Error("Failed to read file"));
           reader.readAsDataURL(resumeFile);
         });
         resumeName = resumeFile.name;
+        for (let i = 0; i < dataUrl.length; i += CHUNK_SIZE) {
+          resumeChunks.push(dataUrl.slice(i, i + CHUNK_SIZE));
+        }
       }
 
-      // Submit — resumeUrl is intentionally excluded from the submission document
+      // Submit — only lightweight metadata goes in the submission document
       const submissionId = await addSubmission({
         type: "career",
         name: form.name,
@@ -95,12 +95,18 @@ const Careers = () => {
         resumeName,
       });
 
-      // Store resume binary in its own document so the submission doc stays small
-      if (resumeDataUrl && submissionId) {
+      // Write resume chunks to Firestore: resumeData/{id} holds metadata,
+      // resumeChunks/{id}_0, _{1}, … hold the binary slices.
+      if (resumeChunks.length > 0 && submissionId) {
         await setDoc(doc(db, "resumeData", submissionId), {
-          data: resumeDataUrl,
           name: resumeName,
+          totalChunks: resumeChunks.length,
         });
+        await Promise.all(
+          resumeChunks.map((chunk, i) =>
+            setDoc(doc(db, "resumeChunks", `${submissionId}_${i}`), { data: chunk })
+          )
+        );
       }
 
       toast({

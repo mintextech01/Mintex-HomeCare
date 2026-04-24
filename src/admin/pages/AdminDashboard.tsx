@@ -456,10 +456,21 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
     setResumeData(null);
     if (!selected?.resumeName) return;
     setResumeLoading(true);
-    getDoc(doc(db, "resumeData", selected.id))
-      .then(snap => { if (snap.exists()) setResumeData(snap.data() as { data: string; name: string }); })
-      .catch(() => {})
-      .finally(() => setResumeLoading(false));
+    (async () => {
+      try {
+        const metaSnap = await getDoc(doc(db, "resumeData", selected.id));
+        if (!metaSnap.exists()) return;
+        const { name, totalChunks } = metaSnap.data();
+        const chunkSnaps = await Promise.all(
+          Array.from({ length: totalChunks }, (_, i) =>
+            getDoc(doc(db, "resumeChunks", `${selected.id}_${i}`))
+          )
+        );
+        const fullData = chunkSnaps.map(s => s.data()?.data ?? "").join("");
+        setResumeData({ data: fullData, name });
+      } catch { /* show nothing */ }
+      finally { setResumeLoading(false); }
+    })();
   }, [selected?.id]);
 
   const toggleRead = (id: string, currentRead: boolean) => {
@@ -676,15 +687,26 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
   const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
 
-  // Fetch resume from resumeData/{id} whenever selection changes
+  // Fetch resume chunks from Firestore whenever selection changes
   useEffect(() => {
     setResumeData(null);
     if (!selected?.resumeName) return;
     setResumeLoading(true);
-    getDoc(doc(db, "resumeData", selected.id))
-      .then(snap => { if (snap.exists()) setResumeData(snap.data() as { data: string; name: string }); })
-      .catch(() => {})
-      .finally(() => setResumeLoading(false));
+    (async () => {
+      try {
+        const metaSnap = await getDoc(doc(db, "resumeData", selected.id));
+        if (!metaSnap.exists()) return;
+        const { name, totalChunks } = metaSnap.data();
+        const chunkSnaps = await Promise.all(
+          Array.from({ length: totalChunks }, (_, i) =>
+            getDoc(doc(db, "resumeChunks", `${selected.id}_${i}`))
+          )
+        );
+        const fullData = chunkSnaps.map(s => s.data()?.data ?? "").join("");
+        setResumeData({ data: fullData, name });
+      } catch { /* show nothing */ }
+      finally { setResumeLoading(false); }
+    })();
   }, [selected?.id]);
 
   const applications = submissions.filter((s: any) => s.type === "career");
