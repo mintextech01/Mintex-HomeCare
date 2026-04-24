@@ -375,7 +375,7 @@ const HeroSection = () => {
               style={{
                 width: 1200,
                 height: 1200,
-                top: "calc(50% - 600px)",
+                top: "calc(100% - 600px)",
                 left: -600,
                 animationDelay: `${i * 1.4}s`,
                 opacity: 0,
