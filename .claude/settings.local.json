@@ -16,7 +16,8 @@
       "Bash(npx tsc *)",
       "Bash(npx firebase-tools *)",
       "Bash(npx firebase *)",
-      "Bash(node -e \"require\\('sharp'\\)\")"
+      "Bash(node -e \"require\\('sharp'\\)\")",
+      "Bash(firebase deploy *)"
     ]
   }
 }
