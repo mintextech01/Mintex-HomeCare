@@ -445,31 +445,87 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
   );
 };
 
+/* ── Resume display panel (shared by Submissions + Applications tabs) ── */
+const ResumePanel = ({ resumeLoading, resumeData, resumeError, resumeName }: {
+  resumeLoading: boolean;
+  resumeData: { data: string; name: string } | null;
+  resumeError: string | null;
+  resumeName?: string;
+}) => {
+  if (resumeLoading) {
+    return (
+      <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground font-sans">
+        <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" />
+        Loading resume…
+      </div>
+    );
+  }
+  if (resumeError) {
+    return <p className="text-xs text-destructive font-sans italic">{resumeError}</p>;
+  }
+  if (resumeData) {
+    return (
+      <>
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
+          <FileIcon className="h-5 w-5 text-primary shrink-0" />
+          <span className="text-xs font-sans text-foreground truncate flex-1">{resumeData.name || resumeName || "Resume"}</span>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => viewResume(resumeData.data)}
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+          >
+            <Eye className="h-3.5 w-3.5" />
+            View
+          </button>
+          <button
+            onClick={() => downloadFile(resumeData.data, resumeData.name || resumeName || "resume")}
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Download
+          </button>
+        </div>
+      </>
+    );
+  }
+  if (resumeName) {
+    return <p className="text-xs text-destructive font-sans italic">Resume was attached but could not be loaded. Check browser console for details.</p>;
+  }
+  return <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>;
+};
+
 /* ── Submissions ── */
 const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) => {
   const [selected, setSelected] = useState<any | null>(null);
   const [filter, setFilter] = useState<"all" | "contact" | "career">("all");
   const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeError, setResumeError] = useState<string | null>(null);
 
   useEffect(() => {
     setResumeData(null);
-    if (!selected?.resumeName) return;
+    setResumeError(null);
+    const totalChunks: number | undefined = selected?.resumeTotalChunks;
+    if (!selected?.resumeName || !totalChunks) return;
     setResumeLoading(true);
     (async () => {
       try {
-        const metaSnap = await getDoc(doc(db, "resumeData", selected.id));
-        if (!metaSnap.exists()) return;
-        const { name, totalChunks } = metaSnap.data();
         const chunkSnaps = await Promise.all(
           Array.from({ length: totalChunks }, (_, i) =>
             getDoc(doc(db, "resumeChunks", `${selected.id}_${i}`))
           )
         );
-        const fullData = chunkSnaps.map(s => s.data()?.data ?? "").join("");
-        setResumeData({ data: fullData, name });
-      } catch { /* show nothing */ }
-      finally { setResumeLoading(false); }
+        const missing = chunkSnaps.filter(s => !s.exists()).length;
+        if (missing > 0) { setResumeError(`Resume incomplete (${missing} chunk(s) missing).`); return; }
+        const fullData = chunkSnaps.map(s => s.data()!.data as string).join("");
+        setResumeData({ data: fullData, name: selected.resumeName });
+      } catch (err: any) {
+        console.error("[SubmissionsTab] Resume fetch error:", err);
+        setResumeError(err?.message ?? "Failed to load resume.");
+      } finally {
+        setResumeLoading(false);
+      }
     })();
   }, [selected?.id]);
 
@@ -589,37 +645,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
               {(selected.type ?? "contact") === "career" && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                  {resumeLoading ? (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground font-sans">
-                      <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      Loading resume…
-                    </div>
-                  ) : resumeData ? (
-                    <>
-                      <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
-                        <FileIcon className="h-5 w-5 text-primary shrink-0" />
-                        <span className="text-xs font-sans text-foreground truncate flex-1">{resumeData.name || selected.resumeName || "Resume"}</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => viewResume(resumeData.data)}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          View
-                        </button>
-                        <button
-                          onClick={() => downloadFile(resumeData.data, resumeData.name || selected.resumeName || "resume")}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
-                        >
-                          <Download className="h-3.5 w-3.5" />
-                          Download
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>
-                  )}
+                  <ResumePanel resumeLoading={resumeLoading} resumeData={resumeData} resumeError={resumeError} resumeName={selected.resumeName} />
                 </div>
               )}
 
@@ -686,26 +712,31 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeError, setResumeError] = useState<string | null>(null);
 
-  // Fetch resume chunks from Firestore whenever selection changes
   useEffect(() => {
     setResumeData(null);
-    if (!selected?.resumeName) return;
+    setResumeError(null);
+    const totalChunks: number | undefined = selected?.resumeTotalChunks;
+    if (!selected?.resumeName || !totalChunks) return;
     setResumeLoading(true);
     (async () => {
       try {
-        const metaSnap = await getDoc(doc(db, "resumeData", selected.id));
-        if (!metaSnap.exists()) return;
-        const { name, totalChunks } = metaSnap.data();
         const chunkSnaps = await Promise.all(
           Array.from({ length: totalChunks }, (_, i) =>
             getDoc(doc(db, "resumeChunks", `${selected.id}_${i}`))
           )
         );
-        const fullData = chunkSnaps.map(s => s.data()?.data ?? "").join("");
-        setResumeData({ data: fullData, name });
-      } catch { /* show nothing */ }
-      finally { setResumeLoading(false); }
+        const missing = chunkSnaps.filter(s => !s.exists()).length;
+        if (missing > 0) { setResumeError(`Resume incomplete (${missing} chunk(s) missing).`); return; }
+        const fullData = chunkSnaps.map(s => s.data()!.data as string).join("");
+        setResumeData({ data: fullData, name: selected.resumeName });
+      } catch (err: any) {
+        console.error("[ApplicationsTab] Resume fetch error:", err);
+        setResumeError(err?.message ?? "Failed to load resume.");
+      } finally {
+        setResumeLoading(false);
+      }
     })();
   }, [selected?.id]);
 
@@ -873,39 +904,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
               {/* Resume */}
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                {resumeLoading ? (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground font-sans">
-                    <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    Loading resume…
-                  </div>
-                ) : resumeData ? (
-                  <>
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
-                      <FileIcon className="h-5 w-5 text-primary shrink-0" />
-                      <span className="text-xs font-sans text-foreground truncate flex-1">{resumeData.name || selected.resumeName || "Resume"}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => viewResume(resumeData.data)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                        View
-                      </button>
-                      <button
-                        onClick={() => downloadFile(resumeData.data, resumeData.name || selected.resumeName || "resume")}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                        Download
-                      </button>
-                    </div>
-                  </>
-                ) : selected.resumeName ? (
-                  <p className="text-xs text-muted-foreground font-sans italic">Resume attached but could not be loaded.</p>
-                ) : (
-                  <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>
-                )}
+                <ResumePanel resumeLoading={resumeLoading} resumeData={resumeData} resumeError={resumeError} resumeName={selected.resumeName} />
               </div>
 
               {/* Cover letter */}

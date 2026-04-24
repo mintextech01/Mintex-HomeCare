@@ -50,6 +50,7 @@ export interface ContactSubmission {
   coverLetter?: string;
   resumeUrl?: string;
   resumeName?: string;
+  resumeTotalChunks?: number;
 }
 
 export interface JobPosition {
