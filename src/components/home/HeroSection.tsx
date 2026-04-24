@@ -305,7 +305,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen bg-background flex items-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[100svh] bg-background flex items-center overflow-hidden">
 
       {/* ════ BACKGROUND LAYER — parallax ════════════════════════════════════ */}
       <motion.div
@@ -420,7 +420,7 @@ const HeroSection = () => {
       {/* ════════════════════════════════════════════════════════════════════ */}
 
       <motion.div className="container mx-auto px-6 md:px-10 relative z-10" style={{ opacity }}>
-        <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center py-32 lg:py-0 lg:min-h-screen">
+        <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center py-32 lg:pt-28 lg:pb-10 lg:min-h-[100svh]">
 
           {/* ── LEFT: Text — with word stagger + parallax ── */}
           <motion.div className="order-2 lg:order-1" style={{ y: smoothTextY }}>
@@ -540,7 +540,7 @@ const HeroSection = () => {
             transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ y: smoothImageY, perspective: 1000 }}
             className="order-1 lg:order-2 hidden lg:flex justify-center items-center
-                       scale-[0.72] xl:scale-[0.85] 2xl:scale-100 origin-center"
+                       scale-[0.75] xl:scale-[0.90] 2xl:scale-100 origin-center"
           >
             <ImageMosaic imgs={imgs} />
           </motion.div>

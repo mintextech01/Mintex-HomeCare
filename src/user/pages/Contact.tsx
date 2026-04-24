@@ -91,7 +91,7 @@ const Contact = () => {
       <div className="relative" style={{ zIndex: 1 }}>
         <Header />
 
-        <main>
+        <main className="overflow-x-hidden">
 
           {/* ════════════════════════════════════════
               HERO

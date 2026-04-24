@@ -58,7 +58,7 @@ const Index = () => {
       </div>
 
       <Header />
-      <main>
+      <main className="overflow-x-hidden">
         <HeroSection />
         <StatsSection />
         <AboutSection />

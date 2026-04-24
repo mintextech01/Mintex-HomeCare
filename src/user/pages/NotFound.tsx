@@ -15,7 +15,7 @@ const NotFound = () => {
   return (
     <>
       <Header />
-      <div className="flex min-h-screen items-center justify-center bg-hero-bg pt-20">
+      <div className="flex min-h-[100svh] items-center justify-center bg-hero-bg pt-28">
         <div className="text-center px-4">
           <h1 className="text-8xl font-serif font-bold text-primary mb-4">404</h1>
           <p className="text-xl text-foreground font-serif mb-2">Page Not Found</p>

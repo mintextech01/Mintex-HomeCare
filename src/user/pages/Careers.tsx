@@ -124,12 +124,12 @@ const Careers = () => {
   return (
     <>
       <Header />
-      <main>
+      <main className="overflow-x-hidden">
 
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="bg-[#e8ebed] pt-28 pb-20 overflow-hidden">
+        <section className="bg-[#e8ebed] pt-32 pb-20 overflow-hidden">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row lg:items-center gap-12">
 
