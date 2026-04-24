@@ -312,50 +312,77 @@ const HeroSection = () => {
         className="pointer-events-none absolute inset-0 overflow-hidden"
         style={{ y: smoothBgY, scale: bgScale }}
       >
-        {/* large gradient blob — top-right */}
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 700, height: 700,
-            top: "-22%", right: "-18%",
-            background: "radial-gradient(circle, rgba(8,145,178,0.22) 0%, transparent 70%)",
-          }}
-        />
-        {/* large gradient blob — bottom-left */}
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 600, height: 600,
-            bottom: "-18%", left: "-14%",
-            background: "radial-gradient(circle, rgba(12,74,110,0.20) 0%, transparent 70%)",
-          }}
-        />
-        {/* mid accent blob */}
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 320, height: 320,
-            top: "38%", left: "42%",
-            background: "radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)",
-          }}
-        />
+        {/* ── ambient gradient blobs ── */}
+        <div className="absolute rounded-full" style={{ width: 700, height: 700, top: "-22%", right: "-18%", background: "radial-gradient(circle, rgba(8,145,178,0.22) 0%, transparent 70%)" }} />
+        <div className="absolute rounded-full" style={{ width: 600, height: 600, bottom: "-18%", left: "-14%", background: "radial-gradient(circle, rgba(12,74,110,0.20) 0%, transparent 70%)" }} />
+        <div className="absolute rounded-full" style={{ width: 320, height: 320, top: "38%", left: "42%", background: "radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)" }} />
 
-        {/* ── Sonar ripple waves — bottom-left corner (Commerce7 style) ── */}
-        {/* 5 rings × 1.4 s stagger = 7 s cycle — perfectly seamless loop */}
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div
-            key={`cw-${i}`}
-            className="hero-cw"
-            style={{
-              width: 920,
-              height: 920,
-              bottom: -460,
-              left: -460,
-              animationDelay: `${i * 1.4}s`,
-              opacity: 0,
-            }}
-          />
-        ))}
+        {/* ── decorative static ring outlines ── */}
+        <div className="absolute rounded-full" style={{ width: 480, height: 480, top: "50%", left: "-8%", transform: "translateY(-50%)", border: "1.5px solid rgba(8,145,178,0.10)" }} />
+        <div className="absolute rounded-full" style={{ width: 300, height: 300, top: "8%", right: "20%", border: "1.5px solid rgba(12,74,110,0.08)" }} />
+        <div className="absolute rounded-full" style={{ width: 200, height: 200, bottom: "12%", right: "10%", border: "1px solid rgba(8,145,178,0.07)" }} />
+
+        {/* ── dot grids ── */}
+        <div className="absolute opacity-40" style={{ top: 60, right: 60 }}>
+          <DotGrid cols={7} rows={5} color="#0891b2" />
+        </div>
+        <div className="absolute opacity-30" style={{ bottom: 60, right: 80 }}>
+          <DotGrid cols={5} rows={4} color="#0c4a6e" />
+        </div>
+
+        {/* ── small accent dots ── */}
+        <div className="absolute rounded-full bg-accent/20" style={{ width: 14, height: 14, top: "22%", right: "32%" }} />
+        <div className="absolute rounded-full bg-primary/15" style={{ width: 10, height: 10, bottom: "28%", right: "24%" }} />
+        <div className="absolute rounded-full bg-accent/15" style={{ width: 8,  height: 8,  top: "68%", right: "40%" }} />
+
+        {/* ── left-panel extra decorations ─────────────────────────────────── */}
+        {/* plus shapes left side */}
+        <div className="absolute pointer-events-none opacity-30" style={{ top: "18%", left: "6%" }}>
+          <PlusShape size={20} color="#0891b2" />
+        </div>
+        <div className="absolute pointer-events-none opacity-20" style={{ top: "55%", left: "3%" }}>
+          <PlusShape size={14} color="#0c4a6e" />
+        </div>
+        <div className="absolute pointer-events-none opacity-25" style={{ bottom: "22%", left: "18%" }}>
+          <PlusShape size={16} color="#0891b2" />
+        </div>
+        {/* dot grid — left panel */}
+        <div className="absolute pointer-events-none opacity-35" style={{ top: "30%", left: "2%" }}>
+          <DotGrid cols={5} rows={6} color="#0891b2" />
+        </div>
+        {/* small accent circles left side */}
+        <div className="absolute pointer-events-none rounded-full bg-accent/30 animate-bounce" style={{ width: 12, height: 12, top: "14%", left: "24%", animationDuration: "4s" }} />
+        <div className="absolute pointer-events-none rounded-full bg-primary/25" style={{ width: 8, height: 8, top: "72%", left: "12%" }} />
+        <div className="absolute pointer-events-none rounded-full bg-accent/20" style={{ width: 16, height: 16, bottom: "18%", left: "32%" }} />
+        {/* thin decorative arc — left column */}
+        <div className="absolute pointer-events-none rounded-full" style={{ width: 180, height: 180, top: "10%", left: "8%", border: "1.5px solid rgba(8,145,178,0.18)" }} />
+        <div className="absolute pointer-events-none rounded-full" style={{ width: 100, height: 100, bottom: "28%", left: "5%", border: "1px solid rgba(12,74,110,0.15)" }} />
+
+        {/* ── Sonar ripple waves ─────────────────────────────────────────────
+             Clipped wrapper covers only the left column so rings never
+             reach the right-side content. Center is placed at the
+             bottom-left corner of the visible left panel so arcs sweep
+             upward and rightward through the left column.
+        ───────────────────────────────────────────────────────────────────── */}
+        <div
+          className="absolute top-0 bottom-0 left-0 overflow-hidden pointer-events-none"
+          style={{ width: "48%" }}
+        >
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div
+              key={`cw-${i}`}
+              className="hero-cw"
+              style={{
+                width: 1200,
+                height: 1200,
+                top: "calc(50% - 600px)",
+                left: -600,
+                animationDelay: `${i * 1.4}s`,
+                opacity: 0,
+              }}
+            />
+          ))}
+        </div>
       </motion.div>
       {/* ════════════════════════════════════════════════════════════════════ */}
 
