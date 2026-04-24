@@ -363,10 +363,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addSubmission = async (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">): Promise<string> => {
-    // Never store resumeUrl in the submission document — it can exceed Firestore's 1MB limit.
-    // Resume binary data is stored separately in resumeData/{id}.
-    const { resumeUrl: _ignored, ...subWithoutResume } = sub as any;
-    const newSub = { ...subWithoutResume, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
+    const newSub = { ...sub, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
     const timeout = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("Firestore timeout — check your connection")), 10000)
     );

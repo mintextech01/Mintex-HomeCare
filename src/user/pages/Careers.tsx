@@ -17,8 +17,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
-import { db } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { getAppStorage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -62,29 +62,20 @@ const Careers = () => {
 
     setSubmitting(true);
     try {
-      // Split the base64 data URL into 700 KB chunks so every Firestore document
-      // stays well under the 1 MB per-document limit. No upper bound on file size.
-      const CHUNK_SIZE = 700_000;
       let resumeName: string | undefined;
-      let resumeChunks: string[] = [];
+      let resumeUrl: string | undefined;
 
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        const dataUrl = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = () => reject(new Error("Could not read the file."));
-          reader.readAsDataURL(resumeFile);
-        });
+        const storage = await getAppStorage();
+        const uniqueName = `${Date.now()}_${resumeFile.name}`;
+        const storageRef = ref(storage, `resumes/${uniqueName}`);
+        await uploadBytes(storageRef, resumeFile);
+        resumeUrl = await getDownloadURL(storageRef);
         resumeName = resumeFile.name;
-        for (let i = 0; i < dataUrl.length; i += CHUNK_SIZE) {
-          resumeChunks.push(dataUrl.slice(i, i + CHUNK_SIZE));
-        }
       }
 
-      // resumeTotalChunks is stored IN the submission document — no separate
-      // metadata collection needed. The admin panel reads it directly.
-      const submissionId = await addSubmission({
+      await addSubmission({
         type: "career",
         name: form.name,
         email: form.email,
@@ -94,40 +85,8 @@ const Careers = () => {
         position: form.position,
         coverLetter: form.coverLetter,
         resumeName,
-        resumeTotalChunks: resumeChunks.length > 0 ? resumeChunks.length : undefined,
+        resumeUrl,
       } as any);
-
-      // Write each chunk to its own document in the resumeChunks collection.
-      // Wrapped in its own try/catch so a chunk failure never silently kills the
-      // success toast — the submission itself already went through above.
-      if (resumeChunks.length > 0 && submissionId) {
-        try {
-          // Chunks are stored in the same `submissions` collection (which already
-          // allows public writes) so no extra Firestore security rules are needed.
-          // The `_chunkOf` field marks them so the admin listener filters them out.
-          await Promise.all(
-            resumeChunks.map((chunk, i) =>
-              setDoc(doc(db, "submissions", `${submissionId}_chunk_${i}`), {
-                _chunkOf: submissionId,
-                _chunkIndex: i,
-                data: chunk,
-              })
-            )
-          );
-        } catch (chunkErr) {
-          console.error("Resume chunk write failed:", chunkErr);
-          // Application is saved; resume is lost. Inform the user.
-          toast({
-            title: "Application submitted — resume not saved",
-            description: "Your application was received but the resume could not be stored. Please email it separately.",
-          });
-          setForm({ name: "", email: "", phone: "", position: "", coverLetter: "" });
-          setResumeFileName("");
-          if (fileInputRef.current) fileInputRef.current.value = "";
-          setSubmitting(false);
-          return;
-        }
-      }
 
       toast({
         title: "Application submitted!",

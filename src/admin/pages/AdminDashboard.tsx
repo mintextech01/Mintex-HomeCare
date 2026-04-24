@@ -13,7 +13,7 @@ import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, S
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info";
 
@@ -446,51 +446,38 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
 };
 
 /* ── Resume display panel (shared by Submissions + Applications tabs) ── */
-const ResumePanel = ({ resumeLoading, resumeData, resumeError, resumeName }: {
-  resumeLoading: boolean;
-  resumeData: { data: string; name: string } | null;
-  resumeError: string | null;
+const ResumePanel = ({ resumeUrl, resumeName }: {
+  resumeUrl?: string;
   resumeName?: string;
 }) => {
-  if (resumeLoading) {
-    return (
-      <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground font-sans">
-        <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" />
-        Loading resume…
-      </div>
-    );
-  }
-  if (resumeError) {
-    return <p className="text-xs text-destructive font-sans italic">{resumeError}</p>;
-  }
-  if (resumeData) {
+  if (resumeUrl && resumeName) {
     return (
       <>
         <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
           <FileIcon className="h-5 w-5 text-primary shrink-0" />
-          <span className="text-xs font-sans text-foreground truncate flex-1">{resumeData.name || resumeName || "Resume"}</span>
+          <span className="text-xs font-sans text-foreground truncate flex-1">{resumeName}</span>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={() => viewResume(resumeData.data)}
+          <a
+            href={resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
           >
             <Eye className="h-3.5 w-3.5" />
             View
-          </button>
-          <button
-            onClick={() => downloadFile(resumeData.data, resumeData.name || resumeName || "resume")}
+          </a>
+          <a
+            href={resumeUrl}
+            download={resumeName}
             className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
           >
             <Download className="h-3.5 w-3.5" />
             Download
-          </button>
+          </a>
         </div>
       </>
     );
-  }
-  if (resumeName) {
-    return <p className="text-xs text-destructive font-sans italic">Resume was attached but could not be loaded. Check browser console for details.</p>;
   }
   return <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>;
 };
@@ -499,35 +486,6 @@ const ResumePanel = ({ resumeLoading, resumeData, resumeError, resumeName }: {
 const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) => {
   const [selected, setSelected] = useState<any | null>(null);
   const [filter, setFilter] = useState<"all" | "contact" | "career">("all");
-  const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
-  const [resumeLoading, setResumeLoading] = useState(false);
-  const [resumeError, setResumeError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setResumeData(null);
-    setResumeError(null);
-    const totalChunks: number | undefined = selected?.resumeTotalChunks;
-    if (!selected?.resumeName || !totalChunks) return;
-    setResumeLoading(true);
-    (async () => {
-      try {
-        const chunkSnaps = await Promise.all(
-          Array.from({ length: totalChunks }, (_, i) =>
-            getDoc(doc(db, "submissions", `${selected.id}_chunk_${i}`))
-          )
-        );
-        const missing = chunkSnaps.filter(s => !s.exists()).length;
-        if (missing > 0) { setResumeError(`Resume incomplete (${missing} chunk(s) missing).`); return; }
-        const fullData = chunkSnaps.map(s => s.data()!.data as string).join("");
-        setResumeData({ data: fullData, name: selected.resumeName });
-      } catch (err: any) {
-        console.error("[SubmissionsTab] Resume fetch error:", err);
-        setResumeError(err?.message ?? "Failed to load resume.");
-      } finally {
-        setResumeLoading(false);
-      }
-    })();
-  }, [selected?.id]);
 
   const toggleRead = (id: string, currentRead: boolean) => {
     updateSubmission(id, { read: !currentRead });
@@ -645,7 +603,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
               {(selected.type ?? "contact") === "career" && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                  <ResumePanel resumeLoading={resumeLoading} resumeData={resumeData} resumeError={resumeError} resumeName={selected.resumeName} />
+                  <ResumePanel resumeUrl={selected.resumeUrl} resumeName={selected.resumeName} />
                 </div>
               )}
 
@@ -677,68 +635,11 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
 };
 
 
-/* ── Resume helpers (works with base64 data URLs stored in Firestore) ── */
-const dataUrlToBlob = (dataUrl: string): Blob => {
-  const [header, base64] = dataUrl.split(",");
-  const mime = header.match(/:(.*?);/)?.[1] ?? "application/octet-stream";
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return new Blob([bytes], { type: mime });
-};
-
-const viewResume = (url: string) => {
-  const blob = url.startsWith("data:") ? dataUrlToBlob(url) : null;
-  const objectUrl = blob ? URL.createObjectURL(blob) : url;
-  window.open(objectUrl, "_blank");
-};
-
-const downloadFile = (url: string, fileName: string) => {
-  const blob = url.startsWith("data:") ? dataUrlToBlob(url) : null;
-  const objectUrl = blob ? URL.createObjectURL(blob) : url;
-  const a = document.createElement("a");
-  a.href = objectUrl;
-  a.download = fileName || "resume";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  if (blob) URL.revokeObjectURL(objectUrl);
-};
-
 /* ── Applications ── */
 const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toast }: any) => {
   const [selected, setSelected] = useState<any | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
-  const [resumeLoading, setResumeLoading] = useState(false);
-  const [resumeError, setResumeError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setResumeData(null);
-    setResumeError(null);
-    const totalChunks: number | undefined = selected?.resumeTotalChunks;
-    if (!selected?.resumeName || !totalChunks) return;
-    setResumeLoading(true);
-    (async () => {
-      try {
-        const chunkSnaps = await Promise.all(
-          Array.from({ length: totalChunks }, (_, i) =>
-            getDoc(doc(db, "submissions", `${selected.id}_chunk_${i}`))
-          )
-        );
-        const missing = chunkSnaps.filter(s => !s.exists()).length;
-        if (missing > 0) { setResumeError(`Resume incomplete (${missing} chunk(s) missing).`); return; }
-        const fullData = chunkSnaps.map(s => s.data()!.data as string).join("");
-        setResumeData({ data: fullData, name: selected.resumeName });
-      } catch (err: any) {
-        console.error("[ApplicationsTab] Resume fetch error:", err);
-        setResumeError(err?.message ?? "Failed to load resume.");
-      } finally {
-        setResumeLoading(false);
-      }
-    })();
-  }, [selected?.id]);
 
   const applications = submissions.filter((s: any) => s.type === "career");
 
@@ -904,7 +805,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
               {/* Resume */}
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                <ResumePanel resumeLoading={resumeLoading} resumeData={resumeData} resumeError={resumeError} resumeName={selected.resumeName} />
+                <ResumePanel resumeUrl={selected.resumeUrl} resumeName={selected.resumeName} />
               </div>
 
               {/* Cover letter */}
