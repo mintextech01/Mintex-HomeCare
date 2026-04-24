@@ -571,15 +571,13 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
                     <span className="text-xs font-sans text-foreground truncate flex-1">{selected.resumeName || "Resume"}</span>
                   </div>
                   <div className="flex gap-2">
-                    <a
-                      href={selected.resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => viewResume(selected.resumeUrl)}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
                     >
                       <Eye className="h-3.5 w-3.5" />
                       View
-                    </a>
+                    </button>
                     <button
                       onClick={() => downloadFile(selected.resumeUrl, selected.resumeName || "resume")}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
@@ -619,22 +617,32 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
 };
 
 
-/* ── Resume download helper ── */
-const downloadFile = async (url: string, fileName: string) => {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const objectUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = objectUrl;
-    a.download = fileName || "resume";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(objectUrl);
-  } catch {
-    window.open(url, "_blank");
-  }
+/* ── Resume helpers (works with base64 data URLs stored in Firestore) ── */
+const dataUrlToBlob = (dataUrl: string): Blob => {
+  const [header, base64] = dataUrl.split(",");
+  const mime = header.match(/:(.*?);/)?.[1] ?? "application/octet-stream";
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+};
+
+const viewResume = (url: string) => {
+  const blob = url.startsWith("data:") ? dataUrlToBlob(url) : null;
+  const objectUrl = blob ? URL.createObjectURL(blob) : url;
+  window.open(objectUrl, "_blank");
+};
+
+const downloadFile = (url: string, fileName: string) => {
+  const blob = url.startsWith("data:") ? dataUrlToBlob(url) : null;
+  const objectUrl = blob ? URL.createObjectURL(blob) : url;
+  const a = document.createElement("a");
+  a.href = objectUrl;
+  a.download = fileName || "resume";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  if (blob) URL.revokeObjectURL(objectUrl);
 };
 
 /* ── Applications ── */
@@ -813,15 +821,13 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
                     <span className="text-xs font-sans text-foreground truncate flex-1">{selected.resumeName || "Resume"}</span>
                   </div>
                   <div className="flex gap-2">
-                    <a
-                      href={selected.resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => viewResume(selected.resumeUrl)}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
                     >
                       <Eye className="h-3.5 w-3.5" />
                       View
-                    </a>
+                    </button>
                     <button
                       onClick={() => downloadFile(selected.resumeUrl, selected.resumeName || "resume")}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"

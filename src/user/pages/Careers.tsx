@@ -17,7 +17,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
-import { getAppStorage } from "@/lib/firebase";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -61,21 +60,24 @@ const Careers = () => {
 
     setSubmitting(true);
     try {
-      // Upload resume file to Firebase Storage if provided
+      // Read resume as base64 data URL and store in Firestore
       let resumeUrl: string | undefined;
       let resumeName: string | undefined;
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        try {
-          const storage = await getAppStorage();
-          const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-          const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
-          await uploadBytes(storageRef, resumeFile);
-          resumeUrl = await getDownloadURL(storageRef);
-          resumeName = resumeFile.name;
-        } catch (uploadErr) {
-          console.warn("Resume upload failed, submitting without it:", uploadErr);
+        // Warn if file is too large for Firestore (>700 KB)
+        if (resumeFile.size > 700 * 1024) {
+          toast({ title: "Resume file is too large", description: "Please upload a file smaller than 700 KB.", variant: "destructive" });
+          setSubmitting(false);
+          return;
         }
+        resumeUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(new Error("Failed to read file"));
+          reader.readAsDataURL(resumeFile);
+        });
+        resumeName = resumeFile.name;
       }
 
       await addSubmission({
