@@ -244,7 +244,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const unsubSubmissions = onSnapshot(
       collection(db, "submissions"),
       (snapshot) => {
-        const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ContactSubmission));
+        const docs = snapshot.docs
+          // Exclude chunk documents (they live in submissions/ but are not real submissions)
+          .filter(d => !d.data()._chunkOf)
+          .map(d => ({ id: d.id, ...d.data() } as ContactSubmission));
         // Sort newest first in JS — avoids needing a Firestore composite index
         docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         setSubmissionsState(docs);

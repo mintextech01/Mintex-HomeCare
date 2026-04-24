@@ -102,9 +102,16 @@ const Careers = () => {
       // success toast — the submission itself already went through above.
       if (resumeChunks.length > 0 && submissionId) {
         try {
+          // Chunks are stored in the same `submissions` collection (which already
+          // allows public writes) so no extra Firestore security rules are needed.
+          // The `_chunkOf` field marks them so the admin listener filters them out.
           await Promise.all(
             resumeChunks.map((chunk, i) =>
-              setDoc(doc(db, "resumeChunks", `${submissionId}_${i}`), { data: chunk })
+              setDoc(doc(db, "submissions", `${submissionId}_chunk_${i}`), {
+                _chunkOf: submissionId,
+                _chunkIndex: i,
+                data: chunk,
+              })
             )
           );
         } catch (chunkErr) {

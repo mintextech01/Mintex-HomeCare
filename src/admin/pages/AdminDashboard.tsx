@@ -513,7 +513,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
       try {
         const chunkSnaps = await Promise.all(
           Array.from({ length: totalChunks }, (_, i) =>
-            getDoc(doc(db, "resumeChunks", `${selected.id}_${i}`))
+            getDoc(doc(db, "submissions", `${selected.id}_chunk_${i}`))
           )
         );
         const missing = chunkSnaps.filter(s => !s.exists()).length;
@@ -724,7 +724,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
       try {
         const chunkSnaps = await Promise.all(
           Array.from({ length: totalChunks }, (_, i) =>
-            getDoc(doc(db, "resumeChunks", `${selected.id}_${i}`))
+            getDoc(doc(db, "submissions", `${selected.id}_chunk_${i}`))
           )
         );
         const missing = chunkSnaps.filter(s => !s.exists()).length;
