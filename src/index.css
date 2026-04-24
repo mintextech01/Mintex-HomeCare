@@ -622,6 +622,24 @@ a, button {
 .deco-spin-slow  { animation: deco-spin-slow  30s linear infinite; }
 .deco-pulse      { animation: deco-pulse      6s ease-in-out infinite; }
 
+/* ── Hero sonar ripple — Commerce7 style (rings grow from corner & fade) ── */
+@keyframes sonarRipple {
+  0%   { transform: scale(0.05); opacity: 0;    }
+  8%   { opacity: 0.75;                         }
+  70%  { opacity: 0.25;                         }
+  100% { transform: scale(1);    opacity: 0;    }
+}
+.hero-cw {
+  position: absolute;
+  border-radius: 50%;
+  border: 2.5px solid rgba(8, 145, 178, 0.80);
+  animation: sonarRipple 7s cubic-bezier(0.15, 0.5, 0.35, 1) infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+  /* Start hidden so there is no visible ring on page load before animation fires */
+  opacity: 0;
+}
+
 /* ════════════════════════════════════════
    DARK MODE OVERRIDES
    ════════════════════════════════════════ */

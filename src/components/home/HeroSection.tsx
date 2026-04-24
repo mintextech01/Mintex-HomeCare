@@ -96,12 +96,12 @@ const ImageMosaic = ({
 
     {/* ── decorative circle ring (behind everything) ── */}
     <div
-      className="absolute pointer-events-none rounded-full border-[30px] border-accent/8"
+      className="absolute pointer-events-none rounded-full border-[30px] border-accent/20"
       style={{ width: 500, height: 500, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0 }}
     >
       {/* Filled center circle inside ring */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full"
-        style={{ background: "linear-gradient(135deg, rgba(8,145,178,0.15), rgba(42,102,176,0.1))" }}
+        style={{ background: "linear-gradient(135deg, rgba(8,145,178,0.30), rgba(42,102,176,0.20))" }}
       />
     </div>
     <div
@@ -112,7 +112,7 @@ const ImageMosaic = ({
         transform: "translate(-50%,-50%)",
         zIndex: 0,
         border: "2px solid",
-        borderColor: "rgba(8,145,178,0.12)",
+        borderColor: "rgba(8,145,178,0.28)",
       }}
     />
 
@@ -318,7 +318,7 @@ const HeroSection = () => {
           style={{
             width: 700, height: 700,
             top: "-22%", right: "-18%",
-            background: "radial-gradient(circle, rgba(8,145,178,0.10) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(8,145,178,0.22) 0%, transparent 70%)",
           }}
         />
         {/* large gradient blob — bottom-left */}
@@ -327,7 +327,7 @@ const HeroSection = () => {
           style={{
             width: 600, height: 600,
             bottom: "-18%", left: "-14%",
-            background: "radial-gradient(circle, rgba(12,74,110,0.09) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(12,74,110,0.20) 0%, transparent 70%)",
           }}
         />
         {/* mid accent blob */}
@@ -336,86 +336,26 @@ const HeroSection = () => {
           style={{
             width: 320, height: 320,
             top: "38%", left: "42%",
-            background: "radial-gradient(circle, rgba(8,145,178,0.06) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)",
           }}
         />
 
-        {/* ── huge ring outline background (far left) ── */}
-        <div
-          className="absolute rounded-full border-[40px] border-accent/5"
-          style={{ width: 580, height: 580, top: "50%", left: "-16%", transform: "translateY(-50%)" }}
-        />
-        {/* ── huge ring outline (far right bottom) ── */}
-        <div
-          className="absolute rounded-full"
-          style={{ width: 400, height: 400, bottom: "-12%", right: "20%", border: "2px solid", borderColor: "rgba(8,145,178,0.08)" }}
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full"
-            style={{ background: "linear-gradient(135deg, rgba(8,145,178,0.12), rgba(42,102,176,0.08))" }}
+        {/* ── Sonar ripple waves — bottom-left corner (Commerce7 style) ── */}
+        {/* 5 rings × 1.4 s stagger = 7 s cycle — perfectly seamless loop */}
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={`cw-${i}`}
+            className="hero-cw"
+            style={{
+              width: 920,
+              height: 920,
+              bottom: -460,
+              left: -460,
+              animationDelay: `${i * 1.4}s`,
+              opacity: 0,
+            }}
           />
-        </div>
-
-        {/* ── solid ring with center dot ── */}
-        <div
-          className="absolute rounded-full"
-          style={{ width: 280, height: 280, top: "8%", left: "36%", border: "2px solid", borderColor: "rgba(12,74,110,0.08)" }}
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full"
-            style={{ background: "linear-gradient(135deg, rgba(12,74,110,0.15), rgba(8,145,178,0.1))" }}
-          />
-        </div>
-
-        {/* ── dot grid — top left ── */}
-        <div className="absolute" style={{ top: 60, left: 40 }}>
-          <DotGrid cols={8} rows={6} color="#0891b2" />
-        </div>
-        {/* ── dot grid — bottom right ── */}
-        <div className="absolute" style={{ bottom: 60, right: 60 }}>
-          <DotGrid cols={7} rows={5} color="#0c4a6e" />
-        </div>
-        {/* ── dot grid — center-left ── */}
-        <div className="absolute" style={{ top: "40%", left: "28%", transform: "translateY(-50%)" }}>
-          <DotGrid cols={4} rows={4} color="#0891b2" />
-        </div>
-
-        {/* ── background plus shapes ── */}
-        <div className="absolute" style={{ top: 120, left: "22%" }}>
-          <PlusShape size={20} color="#0891b2" className="opacity-20" />
-        </div>
-        <div className="absolute" style={{ top: "60%", left: "18%" }}>
-          <PlusShape size={14} color="#0c4a6e" className="opacity-15" />
-        </div>
-        <div className="absolute" style={{ bottom: 140, right: "28%" }}>
-          <PlusShape size={18} color="#0891b2" className="opacity-18" />
-        </div>
-        <div className="absolute" style={{ top: 80, right: "38%" }}>
-          <PlusShape size={12} color="#0c4a6e" className="opacity-15" />
-        </div>
-
-        {/* ── small floating circles ── */}
-        <div className="absolute rounded-full bg-accent/20 animate-pulse" style={{ width: 18, height: 18, top: 200, left: "30%", animationDuration: "4s" }} />
-        <div className="absolute rounded-full bg-primary/15" style={{ width: 12, height: 12, top: "70%", left: "22%" }} />
-        <div className="absolute rounded-full bg-accent/15 animate-pulse" style={{ width: 22, height: 22, top: "25%", right: "34%", animationDuration: "5s" }} />
-        <div className="absolute rounded-full bg-accent/10" style={{ width: 36, height: 36, bottom: 180, left: "40%" }} />
-        <div className="absolute rounded-full bg-primary/12 animate-bounce" style={{ width: 14, height: 14, top: 340, left: "48%", animationDuration: "6s" }} />
-        <div className="absolute rounded-full bg-accent/20" style={{ width: 10, height: 10, bottom: 220, right: "36%" }} />
-
-        {/* ── horizontal line accent ── */}
-        <div className="absolute h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" style={{ width: "60%", top: "72%", left: "5%" }} />
-        <div className="absolute h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" style={{ width: "40%", top: "30%", right: "5%" }} />
-
-        {/* ── zigzag/wave SVG element ── */}
-        <svg className="absolute opacity-10" style={{ top: "18%", left: "6%", width: 80 }} viewBox="0 0 80 20">
-          <polyline points="0,10 10,2 20,18 30,2 40,18 50,2 60,18 70,2 80,10" fill="none" stroke="#0891b2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <svg className="absolute opacity-10" style={{ bottom: "20%", right: "14%", width: 70 }} viewBox="0 0 80 20">
-          <polyline points="0,10 10,2 20,18 30,2 40,18 50,2 60,18 70,2 80,10" fill="none" stroke="#0c4a6e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-
-        {/* ── heartbeat line SVG ── */}
-        <svg className="absolute opacity-8" style={{ bottom: "38%", left: "8%", width: 100 }} viewBox="0 0 100 30">
-          <polyline points="0,15 15,15 20,4 28,26 36,4 44,26 50,15 100,15" fill="none" stroke="#0891b2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        ))}
       </motion.div>
       {/* ════════════════════════════════════════════════════════════════════ */}
 
