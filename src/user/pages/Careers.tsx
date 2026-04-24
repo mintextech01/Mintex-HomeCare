@@ -64,15 +64,28 @@ const Careers = () => {
     try {
       let resumeName: string | undefined;
       let resumeUrl: string | undefined;
+      let resumeStoragePath: string | undefined;
 
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        const storage = await getAppStorage();
-        const uniqueName = `${Date.now()}_${resumeFile.name}`;
-        const storageRef = ref(storage, `resumes/${uniqueName}`);
-        await uploadBytes(storageRef, resumeFile);
-        resumeUrl = await getDownloadURL(storageRef);
-        resumeName = resumeFile.name;
+        try {
+          const storage = await getAppStorage();
+          const uniqueName = `${Date.now()}_${resumeFile.name}`;
+          resumeStoragePath = `resumes/${uniqueName}`;
+          const storageRef = ref(storage, resumeStoragePath);
+          await uploadBytes(storageRef, resumeFile);
+          resumeUrl = await getDownloadURL(storageRef);
+          resumeName = resumeFile.name;
+        } catch (uploadErr: any) {
+          console.error("Resume upload error:", uploadErr);
+          toast({
+            title: "Resume could not be uploaded",
+            description: "Your application will still be submitted without the resume. Please email your resume separately.",
+          });
+          resumeUrl = undefined;
+          resumeName = undefined;
+          resumeStoragePath = undefined;
+        }
       }
 
       await addSubmission({
@@ -86,6 +99,7 @@ const Careers = () => {
         coverLetter: form.coverLetter,
         resumeName,
         resumeUrl,
+        resumeStoragePath,
       } as any);
 
       toast({

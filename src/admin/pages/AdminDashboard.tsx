@@ -445,36 +445,83 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
   );
 };
 
-/* ── Resume display panel (shared by Submissions + Applications tabs) ── */
-const ResumePanel = ({ resumeUrl, resumeName }: {
+/* ── Resume display panel ── */
+const ResumePanel = ({ resumeUrl, resumeName, resumeStoragePath }: {
   resumeUrl?: string;
   resumeName?: string;
+  resumeStoragePath?: string;
 }) => {
-  if (resumeUrl && resumeName) {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (!resumeUrl && !resumeStoragePath) return;
+    setDownloading(true);
+    try {
+      // Try Firebase Storage SDK first (works for authenticated admin, no CORS issues)
+      if (resumeStoragePath) {
+        const { getAppStorage } = await import("@/lib/firebase");
+        const { ref: storageRef, getBlob } = await import("firebase/storage");
+        const storage = await getAppStorage();
+        const blob = await getBlob(storageRef(storage, resumeStoragePath));
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = resumeName || "resume";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+      // Fallback: fetch the download URL as blob
+      if (resumeUrl) {
+        const response = await fetch(resumeUrl);
+        if (!response.ok) throw new Error("Fetch failed");
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = resumeName || "resume";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+      }
+    } catch (err) {
+      console.error("Download failed, opening in new tab:", err);
+      if (resumeUrl) window.open(resumeUrl, "_blank");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  if (resumeUrl || resumeStoragePath) {
     return (
       <>
         <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
           <FileIcon className="h-5 w-5 text-primary shrink-0" />
-          <span className="text-xs font-sans text-foreground truncate flex-1">{resumeName}</span>
+          <span className="text-xs font-sans text-foreground truncate flex-1">{resumeName || "Resume"}</span>
         </div>
         <div className="flex gap-2">
-          <a
-            href={resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
-          >
-            <Eye className="h-3.5 w-3.5" />
-            View
-          </a>
-          <a
-            href={resumeUrl}
-            download={resumeName}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+          {resumeUrl && (
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+            >
+              <Eye className="h-3.5 w-3.5" />
+              View
+            </a>
+          )}
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold disabled:opacity-50"
           >
             <Download className="h-3.5 w-3.5" />
-            Download
-          </a>
+            {downloading ? "Downloading…" : "Download"}
+          </button>
         </div>
       </>
     );
@@ -603,7 +650,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
               {(selected.type ?? "contact") === "career" && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                  <ResumePanel resumeUrl={selected.resumeUrl} resumeName={selected.resumeName} />
+                  <ResumePanel resumeUrl={selected.resumeUrl} resumeName={selected.resumeName} resumeStoragePath={selected.resumeStoragePath} />
                 </div>
               )}
 
@@ -805,7 +852,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
               {/* Resume */}
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                <ResumePanel resumeUrl={selected.resumeUrl} resumeName={selected.resumeName} />
+                <ResumePanel resumeUrl={selected.resumeUrl} resumeName={selected.resumeName} resumeStoragePath={selected.resumeStoragePath} />
               </div>
 
               {/* Cover letter */}
