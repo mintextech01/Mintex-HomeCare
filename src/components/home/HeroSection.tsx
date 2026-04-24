@@ -305,17 +305,17 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="relative min-h-[100svh] bg-background flex items-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[100svh] flex items-center overflow-hidden">
 
       {/* ════ BACKGROUND LAYER — parallax ════════════════════════════════════ */}
       <motion.div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 overflow-hidden z-[1]"
         style={{ y: smoothBgY, scale: bgScale }}
       >
-        {/* ── ambient gradient blobs ── */}
-        <div className="absolute rounded-full" style={{ width: 700, height: 700, top: "-22%", right: "-18%", background: "radial-gradient(circle, rgba(8,145,178,0.22) 0%, transparent 70%)" }} />
-        <div className="absolute rounded-full" style={{ width: 600, height: 600, bottom: "-18%", left: "-14%", background: "radial-gradient(circle, rgba(12,74,110,0.20) 0%, transparent 70%)" }} />
-        <div className="absolute rounded-full" style={{ width: 320, height: 320, top: "38%", left: "42%", background: "radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)" }} />
+        {/* ── chrome-tinted ambient blobs (sit on top of canvas) ── */}
+        <div className="absolute rounded-full" style={{ width: 700, height: 700, top: "-22%", right: "-18%", background: "radial-gradient(circle, rgba(160,195,255,0.10) 0%, transparent 70%)" }} />
+        <div className="absolute rounded-full" style={{ width: 600, height: 600, bottom: "-18%", left: "-14%", background: "radial-gradient(circle, rgba(100,140,220,0.10) 0%, transparent 70%)" }} />
+        <div className="absolute rounded-full" style={{ width: 320, height: 320, top: "38%", left: "42%", background: "radial-gradient(circle, rgba(160,200,240,0.08) 0%, transparent 70%)" }} />
 
         {/* ── decorative static ring outlines ── */}
         <div className="absolute rounded-full" style={{ width: 480, height: 480, top: "50%", left: "-8%", transform: "translateY(-50%)", border: "1.5px solid rgba(8,145,178,0.10)" }} />
@@ -397,7 +397,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6"
+              className="inline-flex items-center gap-2 bg-accent/10 border border-accent/25 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm"
             >
               <HeartPulse className="w-4 h-4 text-accent" />
               <span className="text-xs font-semibold text-accent tracking-widest uppercase">
@@ -470,7 +470,7 @@ const HeroSection = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full px-7 h-12 text-sm font-sans border-2 border-border text-foreground transition-all duration-200 w-full hover:bg-accent hover:text-white hover:border-accent hover:shadow-md"
+                  className="rounded-full px-7 h-12 text-sm font-sans border-2 border-primary/40 text-foreground transition-all duration-200 w-full hover:bg-accent hover:text-white hover:border-accent hover:shadow-md"
                 >
                   <Phone className="h-4 w-4 mr-2" />
                   Call Us: (732) 268-5112

@@ -28,34 +28,6 @@ const Index = () => {
         style={{ width: `${scrollProgress * 100}%` }}
       />
 
-      {/* ── Liquid Glass ambient background — morphing blobs ── */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-        {/* Primary blue orb — top-left — morphing */}
-        <div
-          className="glass-orb glass-orb-blue animate-morph-blob"
-          style={{ top: "-180px", left: "-180px" }}
-        />
-        {/* Cyan orb — bottom-right — morphing */}
-        <div
-          className="glass-orb glass-orb-cyan animate-morph-blob"
-          style={{ bottom: "5%", right: "-140px", animationDelay: "-5s" }}
-        />
-        {/* Teal orb — center — morphing */}
-        <div
-          className="glass-orb glass-orb-teal animate-morph-blob"
-          style={{ top: "42%", left: "38%", animationDelay: "-10s" }}
-        />
-        {/* Indigo accent — top-right */}
-        <div
-          className="glass-orb glass-orb-indigo animate-morph-blob"
-          style={{ top: "8%", right: "12%", animationDelay: "-3s" }}
-        />
-        {/* Extra subtle blue — bottom-left */}
-        <div
-          className="glass-orb glass-orb-blue animate-morph-blob"
-          style={{ bottom: "18%", left: "5%", opacity: 0.5, width: "380px", height: "380px", animationDelay: "-8s" }}
-        />
-      </div>
 
       <Header />
       <main className="overflow-x-hidden">
