@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList, Download, FileText as FileIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
@@ -563,20 +563,33 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
                 </div>
               )}
 
-              {selected.resumeUrl && (
+              {selected.resumeUrl ? (
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Resume</p>
-                  <a
-                    href={selected.resumeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/8 border border-primary/20 text-primary hover:bg-primary/15 transition-colors text-xs font-semibold"
-                  >
-                    <Upload className="h-3.5 w-3.5" />
-                    {selected.resumeName || "Download Resume"}
-                  </a>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
+                    <FileIcon className="h-5 w-5 text-primary shrink-0" />
+                    <span className="text-xs font-sans text-foreground truncate flex-1">{selected.resumeName || "Resume"}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <a
+                      href={selected.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      View
+                    </a>
+                    <button
+                      onClick={() => downloadFile(selected.resumeUrl, selected.resumeName || "resume")}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      Download
+                    </button>
+                  </div>
                 </div>
-              )}
+              ) : null}
 
               {(selected.coverLetter || selected.message) && (
                 <div>
@@ -605,6 +618,24 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
   );
 };
 
+
+/* ── Resume download helper ── */
+const downloadFile = async (url: string, fileName: string) => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = fileName || "resume";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(objectUrl);
+  } catch {
+    window.open(url, "_blank");
+  }
+};
 
 /* ── Applications ── */
 const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toast }: any) => {
@@ -680,13 +711,14 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
                   <TableHead>Applicant</TableHead>
                   <TableHead className="hidden sm:table-cell">Position</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="hidden md:table-cell">Resume</TableHead>
                   <TableHead className="hidden md:table-cell">Date</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.length === 0 && (
-                  <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground font-sans py-12">No applications found</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground font-sans py-12">No applications found</TableCell></TableRow>
                 )}
                 {filtered.map((s: any) => (
                   <TableRow
@@ -703,6 +735,12 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans ${statusColors[s.status || "new"]}`}>
                         {statusLabels[s.status || "new"]}
                       </span>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {s.resumeUrl
+                        ? <span className="inline-flex items-center gap-1 text-xs text-accent font-sans"><FileIcon className="h-3.5 w-3.5" /> Attached</span>
+                        : <span className="text-xs text-muted-foreground font-sans">—</span>
+                      }
                     </TableCell>
                     <TableCell className="font-sans text-xs text-muted-foreground hidden md:table-cell">{new Date(s.date).toLocaleDateString()}</TableCell>
                     <TableCell>
@@ -767,18 +805,36 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
               )}
 
               {/* Resume */}
-              {selected.resumeUrl && (
+              {selected.resumeUrl ? (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
+                    <FileIcon className="h-5 w-5 text-primary shrink-0" />
+                    <span className="text-xs font-sans text-foreground truncate flex-1">{selected.resumeName || "Resume"}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <a
+                      href={selected.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      View
+                    </a>
+                    <button
+                      onClick={() => downloadFile(selected.resumeUrl, selected.resumeName || "resume")}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      Download
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Resume / Document</p>
-                  <a
-                    href={selected.resumeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3 py-2.5 rounded-lg bg-primary/8 border border-primary/20 text-primary hover:bg-primary/15 transition-colors text-xs font-semibold w-full justify-center"
-                  >
-                    <Upload className="h-3.5 w-3.5" />
-                    {selected.resumeName || "View / Download Resume"}
-                  </a>
+                  <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>
                 </div>
               )}
 

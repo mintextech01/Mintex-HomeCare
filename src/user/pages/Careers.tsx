@@ -17,6 +17,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
+import { getAppStorage } from "@/lib/firebase";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -60,6 +61,23 @@ const Careers = () => {
 
     setSubmitting(true);
     try {
+      // Upload resume file to Firebase Storage if provided
+      let resumeUrl: string | undefined;
+      let resumeName: string | undefined;
+      const resumeFile = fileInputRef.current?.files?.[0];
+      if (resumeFile) {
+        try {
+          const storage = await getAppStorage();
+          const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+          const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
+          await uploadBytes(storageRef, resumeFile);
+          resumeUrl = await getDownloadURL(storageRef);
+          resumeName = resumeFile.name;
+        } catch (uploadErr) {
+          console.warn("Resume upload failed, submitting without it:", uploadErr);
+        }
+      }
+
       await addSubmission({
         type: "career",
         name: form.name,
@@ -69,7 +87,8 @@ const Careers = () => {
         message: form.coverLetter,
         position: form.position,
         coverLetter: form.coverLetter,
-        resumeName: resumeFileName || undefined,
+        resumeUrl,
+        resumeName,
       });
 
       toast({
