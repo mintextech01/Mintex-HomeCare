@@ -17,6 +17,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
+import { db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -60,18 +62,18 @@ const Careers = () => {
 
     setSubmitting(true);
     try {
-      // Read resume as base64 data URL and store in Firestore
-      let resumeUrl: string | undefined;
+      // Read resume file as base64 — stored in a separate resumeData/{id} document
+      // to keep the submission document well under Firestore's 1 MB limit.
+      let resumeDataUrl: string | undefined;
       let resumeName: string | undefined;
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        // Warn if file is too large for Firestore (>700 KB)
-        if (resumeFile.size > 700 * 1024) {
-          toast({ title: "Resume file is too large", description: "Please upload a file smaller than 700 KB.", variant: "destructive" });
+        if (resumeFile.size > 5 * 1024 * 1024) {
+          toast({ title: "Resume file is too large", description: "Please upload a file smaller than 5 MB.", variant: "destructive" });
           setSubmitting(false);
           return;
         }
-        resumeUrl = await new Promise<string>((resolve, reject) => {
+        resumeDataUrl = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => resolve(reader.result as string);
           reader.onerror = () => reject(new Error("Failed to read file"));
@@ -80,7 +82,8 @@ const Careers = () => {
         resumeName = resumeFile.name;
       }
 
-      await addSubmission({
+      // Submit — resumeUrl is intentionally excluded from the submission document
+      const submissionId = await addSubmission({
         type: "career",
         name: form.name,
         email: form.email,
@@ -89,9 +92,16 @@ const Careers = () => {
         message: form.coverLetter,
         position: form.position,
         coverLetter: form.coverLetter,
-        resumeUrl,
         resumeName,
       });
+
+      // Store resume binary in its own document so the submission doc stays small
+      if (resumeDataUrl && submissionId) {
+        await setDoc(doc(db, "resumeData", submissionId), {
+          data: resumeDataUrl,
+          name: resumeName,
+        });
+      }
 
       toast({
         title: "Application submitted!",

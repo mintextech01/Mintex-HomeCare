@@ -90,7 +90,7 @@ interface AdminContextType {
   setServices: React.Dispatch<React.SetStateAction<ServiceItem[]>>;
   submissions: ContactSubmission[];
   setSubmissions: React.Dispatch<React.SetStateAction<ContactSubmission[]>>;
-  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status"> & { type?: "contact" | "career" }) => Promise<void>;
+  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status"> & { type?: "contact" | "career" }) => Promise<string>;
   updateSubmission: (id: string, updates: Partial<ContactSubmission>) => Promise<void>;
   deleteSubmission: (id: string) => Promise<void>;
   jobPositions: JobPosition[];
@@ -358,12 +358,16 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     await signOut(auth);
   };
 
-  const addSubmission = async (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">) => {
-    const newSub = { ...sub, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
+  const addSubmission = async (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">): Promise<string> => {
+    // Never store resumeUrl in the submission document — it can exceed Firestore's 1MB limit.
+    // Resume binary data is stored separately in resumeData/{id}.
+    const { resumeUrl: _ignored, ...subWithoutResume } = sub as any;
+    const newSub = { ...subWithoutResume, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
     const timeout = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("Firestore timeout — check your connection")), 10000)
     );
-    await Promise.race([addDoc(collection(db, "submissions"), newSub), timeout]);
+    const ref = await Promise.race([addDoc(collection(db, "submissions"), newSub), timeout]);
+    return ref.id;
   };
 
   const updateSubmission = async (id: string, updates: Partial<ContactSubmission>) => {

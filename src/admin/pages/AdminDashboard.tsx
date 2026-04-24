@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo } from "@/contexts/AdminContext";
 import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
@@ -13,7 +13,7 @@ import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, S
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info";
 
@@ -449,6 +449,18 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
 const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) => {
   const [selected, setSelected] = useState<any | null>(null);
   const [filter, setFilter] = useState<"all" | "contact" | "career">("all");
+  const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
+  const [resumeLoading, setResumeLoading] = useState(false);
+
+  useEffect(() => {
+    setResumeData(null);
+    if (!selected?.resumeName) return;
+    setResumeLoading(true);
+    getDoc(doc(db, "resumeData", selected.id))
+      .then(snap => { if (snap.exists()) setResumeData(snap.data() as { data: string; name: string }); })
+      .catch(() => {})
+      .finally(() => setResumeLoading(false));
+  }, [selected?.id]);
 
   const toggleRead = (id: string, currentRead: boolean) => {
     updateSubmission(id, { read: !currentRead });
@@ -563,31 +575,42 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
                 </div>
               )}
 
-              {selected.resumeUrl ? (
+              {(selected.type ?? "contact") === "career" && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
-                    <FileIcon className="h-5 w-5 text-primary shrink-0" />
-                    <span className="text-xs font-sans text-foreground truncate flex-1">{selected.resumeName || "Resume"}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => viewResume(selected.resumeUrl)}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                      View
-                    </button>
-                    <button
-                      onClick={() => downloadFile(selected.resumeUrl, selected.resumeName || "resume")}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      Download
-                    </button>
-                  </div>
+                  {resumeLoading ? (
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground font-sans">
+                      <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      Loading resume…
+                    </div>
+                  ) : resumeData ? (
+                    <>
+                      <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
+                        <FileIcon className="h-5 w-5 text-primary shrink-0" />
+                        <span className="text-xs font-sans text-foreground truncate flex-1">{resumeData.name || selected.resumeName || "Resume"}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => viewResume(resumeData.data)}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          View
+                        </button>
+                        <button
+                          onClick={() => downloadFile(resumeData.data, resumeData.name || selected.resumeName || "resume")}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          Download
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>
+                  )}
                 </div>
-              ) : null}
+              )}
 
               {(selected.coverLetter || selected.message) && (
                 <div>
@@ -650,6 +673,19 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
   const [selected, setSelected] = useState<any | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [resumeData, setResumeData] = useState<{ data: string; name: string } | null>(null);
+  const [resumeLoading, setResumeLoading] = useState(false);
+
+  // Fetch resume from resumeData/{id} whenever selection changes
+  useEffect(() => {
+    setResumeData(null);
+    if (!selected?.resumeName) return;
+    setResumeLoading(true);
+    getDoc(doc(db, "resumeData", selected.id))
+      .then(snap => { if (snap.exists()) setResumeData(snap.data() as { data: string; name: string }); })
+      .catch(() => {})
+      .finally(() => setResumeLoading(false));
+  }, [selected?.id]);
 
   const applications = submissions.filter((s: any) => s.type === "career");
 
@@ -813,36 +849,42 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
               )}
 
               {/* Resume */}
-              {selected.resumeUrl ? (
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
-                    <FileIcon className="h-5 w-5 text-primary shrink-0" />
-                    <span className="text-xs font-sans text-foreground truncate flex-1">{selected.resumeName || "Resume"}</span>
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
+                {resumeLoading ? (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground font-sans">
+                    <div className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    Loading resume…
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => viewResume(selected.resumeUrl)}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                      View
-                    </button>
-                    <button
-                      onClick={() => downloadFile(selected.resumeUrl, selected.resumeName || "resume")}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      Download
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Resume / Document</p>
+                ) : resumeData ? (
+                  <>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40 border border-border mb-2">
+                      <FileIcon className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-xs font-sans text-foreground truncate flex-1">{resumeData.name || selected.resumeName || "Resume"}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => viewResume(resumeData.data)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        View
+                      </button>
+                      <button
+                        onClick={() => downloadFile(resumeData.data, resumeData.name || selected.resumeName || "resume")}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        Download
+                      </button>
+                    </div>
+                  </>
+                ) : selected.resumeName ? (
+                  <p className="text-xs text-muted-foreground font-sans italic">Resume attached but could not be loaded.</p>
+                ) : (
                   <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Cover letter */}
               {(selected.coverLetter || selected.message) && (
