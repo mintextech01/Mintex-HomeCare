@@ -473,6 +473,16 @@ const ResumePanel = ({ resumeUrl, resumeName, resumeStoragePath }: {
         URL.revokeObjectURL(objectUrl);
         return;
       }
+      // Handle base64 data URLs (stored directly in Firestore)
+      if (resumeUrl && resumeUrl.startsWith("data:")) {
+        const a = document.createElement("a");
+        a.href = resumeUrl;
+        a.download = resumeName || "resume";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
       // Fallback: fetch the download URL as blob
       if (resumeUrl) {
         const response = await fetch(resumeUrl);
