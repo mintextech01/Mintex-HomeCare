@@ -44,7 +44,69 @@ const ContactSection = () => {
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
 
   return (
-    <section id="contact" className="py-16 md:py-20">
+    <section id="contact" className="relative py-16 md:py-20 overflow-hidden">
+
+      {/* ── Animated orbiting circles background ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+
+        {/* ── Soft ambient glows ── */}
+        <div className="absolute rounded-full" style={{ width: 500, height: 500, top: "-12%", left: "-6%", background: "radial-gradient(circle, rgba(38,104,188,0.08) 0%, transparent 70%)" }} />
+        <div className="absolute rounded-full" style={{ width: 420, height: 420, bottom: "-10%", right: "-5%", background: "radial-gradient(circle, rgba(8,145,178,0.08) 0%, transparent 70%)" }} />
+
+        {/* ════ ORBIT GROUP A — centred top-left ════
+            Approach: the ring div is square, centred on the anchor point
+            via negative margin. transform-origin defaults to 50% 50% (centre).
+            Rotating the ring makes any dot placed at its edge trace a perfect circle.
+        ══════════════════════════════════════════ */}
+
+        {/* A1 — inner orbit, clockwise 10 s */}
+        <div className="contact-orbit absolute rounded-full border border-dashed border-primary/15"
+          style={{ width: 160, height: 160, top: "18%", left: "9%", marginTop: -80, marginLeft: -80, animationDuration: "10s" }}>
+          <div className="absolute rounded-full bg-primary" style={{ width: 12, height: 12, top: -6, left: "50%", marginLeft: -6, opacity: 0.55 }} />
+        </div>
+
+        {/* A2 — outer orbit, counter-clockwise 18 s */}
+        <div className="contact-orbit-rev absolute rounded-full border border-dotted border-accent/20"
+          style={{ width: 280, height: 280, top: "18%", left: "9%", marginTop: -140, marginLeft: -140, animationDuration: "18s" }}>
+          <div className="absolute rounded-full bg-accent" style={{ width: 10, height: 10, top: -5, left: "50%", marginLeft: -5, opacity: 0.50 }} />
+          {/* second dot at bottom for a symmetric feel */}
+          <div className="absolute rounded-full border-2 border-primary/40" style={{ width: 18, height: 18, bottom: -9, left: "50%", marginLeft: -9 }} />
+        </div>
+
+        {/* A3 — large slow orbit, clockwise 28 s */}
+        <div className="contact-orbit absolute rounded-full border border-primary/08"
+          style={{ width: 420, height: 420, top: "18%", left: "9%", marginTop: -210, marginLeft: -210, animationDuration: "28s" }}>
+          <div className="absolute rounded-full bg-primary/30" style={{ width: 8, height: 8, top: -4, left: "50%", marginLeft: -4 }} />
+        </div>
+
+        {/* ════ ORBIT GROUP B — centred bottom-right ════ */}
+
+        {/* B1 — inner orbit, counter-clockwise 8 s */}
+        <div className="contact-orbit-rev absolute rounded-full border border-dashed border-accent/20"
+          style={{ width: 140, height: 140, bottom: "20%", right: "8%", marginBottom: -70, marginRight: -70, animationDuration: "8s" }}>
+          <div className="absolute rounded-full bg-accent" style={{ width: 10, height: 10, top: -5, left: "50%", marginLeft: -5, opacity: 0.55 }} />
+        </div>
+
+        {/* B2 — outer orbit, clockwise 16 s */}
+        <div className="contact-orbit absolute rounded-full border border-dotted border-primary/15"
+          style={{ width: 260, height: 260, bottom: "20%", right: "8%", marginBottom: -130, marginRight: -130, animationDuration: "16s" }}>
+          <div className="absolute rounded-full bg-primary/50" style={{ width: 9, height: 9, top: -4.5, left: "50%", marginLeft: -4.5 }} />
+          <div className="absolute rounded-full border border-accent/50" style={{ width: 16, height: 16, bottom: -8, left: "50%", marginLeft: -8 }} />
+        </div>
+
+        {/* ════ ORBIT GROUP C — centre of section, very slow ════ */}
+
+        {/* C1 — large slow pulse ring */}
+        <div className="contact-pulse-ring absolute rounded-full border border-primary/12"
+          style={{ width: 480, height: 480, top: "50%", left: "50%", marginTop: -240, marginLeft: -240 }} />
+
+        {/* C2 — medium orbit clockwise 22 s */}
+        <div className="contact-orbit absolute rounded-full border border-primary/10"
+          style={{ width: 340, height: 340, top: "50%", left: "50%", marginTop: -170, marginLeft: -170, animationDuration: "22s" }}>
+          <div className="absolute rounded-full bg-primary/25" style={{ width: 10, height: 10, top: -5, left: "50%", marginLeft: -5 }} />
+        </div>
+      </div>
+
       <div className="container mx-auto px-4">
         <AnimatedSection className="text-center mb-12">
           <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">{contactInfo.sectionEyebrow || "Get In Touch"}</p>

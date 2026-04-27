@@ -622,6 +622,23 @@ a, button {
 .deco-spin-slow  { animation: deco-spin-slow  30s linear infinite; }
 .deco-pulse      { animation: deco-pulse      6s ease-in-out infinite; }
 
+/* ── Contact section — orbiting circles ── */
+@keyframes contact-orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes contact-orbit-rev {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+@keyframes contact-pulse-ring {
+  0%, 100% { transform: scale(1);    opacity: 0.10; }
+  50%       { transform: scale(1.16); opacity: 0.20; }
+}
+.contact-orbit       { animation: contact-orbit     12s linear infinite; }
+.contact-orbit-rev   { animation: contact-orbit-rev 16s linear infinite; }
+.contact-pulse-ring  { animation: contact-pulse-ring 5s ease-in-out infinite; }
+
 /* ── Hero sonar ripple — Commerce7 style (rings grow from corner & fade) ── */
 @keyframes sonarRipple {
   0%   { transform: scale(0.04); opacity: 0;    }
