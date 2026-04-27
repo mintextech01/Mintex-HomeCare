@@ -52,14 +52,13 @@ const Header = () => {
 
   return (
     <>
-      {/* ── Sticky Header Bar — smooth entrance ── */}
+      {/* ── Sticky Header Bar ── */}
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerClass}`}
       >
-        {/* Specular top-edge highlight */}
         {(scrolled || !isHome) && (
           <div
             className="absolute inset-x-0 top-0 h-px pointer-events-none"
@@ -131,8 +130,7 @@ const Header = () => {
         </div>
       </motion.header>
 
-      {/* ── Mobile Drawer — rendered OUTSIDE header to avoid z-index conflicts ── */}
-      {/* Backdrop */}
+      {/* ── Mobile Drawer ── */}
       <div
         className={`lg:hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -140,7 +138,6 @@ const Header = () => {
         onClick={() => setMobileOpen(false)}
       />
 
-      {/* Slide-in panel */}
       <div
         className={`lg:hidden fixed top-0 right-0 h-full z-[70] flex flex-col transition-transform duration-300 ease-out ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
@@ -158,7 +155,7 @@ const Header = () => {
             : "1px solid rgba(255,255,255,0.7)",
         }}
       >
-        {/* Drawer header: logo + close */}
+        {/* Drawer header */}
         <div
           className="flex items-center justify-between px-5 py-4 flex-shrink-0"
           style={{ borderBottom: "1px solid rgba(38,104,188,0.10)" }}
@@ -176,7 +173,7 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Nav links — scrollable */}
+        {/* Nav links */}
         <nav className="flex-1 overflow-y-auto px-3 py-3">
           {navLinks.map(link => {
             const isActive =
@@ -201,10 +198,8 @@ const Header = () => {
             );
           })}
 
-          {/* Divider */}
           <div className="my-2 h-px mx-1" style={{ background: "rgba(38,104,188,0.10)" }} />
 
-          {/* Phone */}
           <a
             href={`tel:+1${phoneLink}`}
             className="flex items-center justify-center gap-2 w-full text-sm font-semibold px-4 py-3.5 rounded-xl"

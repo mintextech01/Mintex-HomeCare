@@ -33,7 +33,7 @@ const ServicesSection = () => {
           </p>
         </AnimatedSection>
 
-        {/* Cards grid — 3D tilt on hover */}
+        {/* Cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map((service, i) => {
             const Icon = service.icon;
@@ -50,10 +50,10 @@ const ServicesSection = () => {
                     loading="lazy"
                   />
 
-                  {/* Dark overlay — darkens more on hover */}
+                  {/* Dark overlay */}
                   <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
 
-                  {/* Top gradient for badge readability */}
+                  {/* Top gradient */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
 
                   {/* Blue accent border glow on hover */}
@@ -67,7 +67,7 @@ const ServicesSection = () => {
                     </span>
                   </div>
 
-                  {/* Title — moves up on hover to make room for description */}
+                  {/* Title */}
                   <div className="absolute inset-0 z-10 flex items-center justify-center px-6 pb-20 pointer-events-none transition-all duration-500 group-hover:pb-32">
                     <h3 className="text-white font-bold text-[1.55rem] text-center leading-snug drop-shadow-lg">
                       {service.title}
