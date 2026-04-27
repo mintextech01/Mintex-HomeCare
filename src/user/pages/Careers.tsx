@@ -17,6 +17,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
+import { db } from "@/lib/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -61,17 +63,24 @@ const Careers = () => {
     setSubmitting(true);
     try {
       let resumeName: string | undefined;
-      let resumeBase64: string | undefined;
+      let resumeDataId: string | undefined;
 
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
         resumeName = resumeFile.name;
-        resumeBase64 = await new Promise<string>((resolve, reject) => {
+        const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => resolve((reader.result as string).split(",")[1]);
           reader.onerror = reject;
           reader.readAsDataURL(resumeFile);
         });
+        // Store resume separately to avoid Firestore 1MB document limit
+        const resumeDoc = await addDoc(collection(db, "resumeData"), {
+          fileName: resumeFile.name,
+          base64,
+          uploadedAt: new Date().toISOString(),
+        });
+        resumeDataId = resumeDoc.id;
       }
 
       await addSubmission({
@@ -84,7 +93,7 @@ const Careers = () => {
         position: form.position,
         coverLetter: form.coverLetter,
         resumeName,
-        resumeBase64,
+        resumeDataId,
       } as any);
 
       toast({

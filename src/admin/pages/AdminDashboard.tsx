@@ -13,7 +13,7 @@ import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, S
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info";
 
@@ -446,33 +446,48 @@ const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: C
 };
 
 /* ── Resume display panel ── */
-const ResumePanel = ({ resumeBase64, resumeName }: {
-  resumeBase64?: string;
+const ResumePanel = ({ resumeDataId, resumeName }: {
+  resumeDataId?: string;
   resumeName?: string;
 }) => {
-  if (!resumeBase64) {
+  const [loading, setLoading] = useState(false);
+
+  if (!resumeDataId) {
     return <p className="text-xs text-muted-foreground font-sans italic">No resume uploaded</p>;
   }
 
-  const isPdf = (resumeName ?? "").toLowerCase().endsWith(".pdf");
-  const mimeType = isPdf ? "application/pdf" : "application/octet-stream";
-  const dataUrl = `data:${mimeType};base64,${resumeBase64}`;
+  const getDataUrl = async () => {
+    setLoading(true);
+    try {
+      const snap = await getDoc(doc(db, "resumeData", resumeDataId));
+      if (!snap.exists()) throw new Error("Resume not found");
+      const { base64, fileName } = snap.data();
+      const name = fileName || resumeName || "resume";
+      const isPdf = name.toLowerCase().endsWith(".pdf");
+      const mimeType = isPdf ? "application/pdf" : "application/octet-stream";
+      return { dataUrl: `data:${mimeType};base64,${base64}`, name, isPdf };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleView = () => {
+  const handleView = async () => {
+    const { dataUrl, isPdf } = await getDataUrl();
     const win = window.open();
     if (win) {
       if (isPdf) {
-        win.document.write(`<iframe src="${dataUrl}" style="width:100%;height:100%;border:none;" />`);
+        win.document.write(`<iframe src="${dataUrl}" style="width:100%;height:100%;border:none;margin:0" />`);
       } else {
-        win.document.write(`<p style="font-family:sans-serif;padding:2rem">Preview not available for this file type. Please download it.</p>`);
+        win.document.write(`<p style="font-family:sans-serif;padding:2rem">Preview not available. Please download the file.</p>`);
       }
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    const { dataUrl, name } = await getDataUrl();
     const a = document.createElement("a");
     a.href = dataUrl;
-    a.download = resumeName || "resume";
+    a.download = name;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -487,17 +502,19 @@ const ResumePanel = ({ resumeBase64, resumeName }: {
       <div className="flex gap-2">
         <button
           onClick={handleView}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold"
+          disabled={loading}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-xs font-semibold disabled:opacity-50"
         >
           <Eye className="h-3.5 w-3.5" />
-          View
+          {loading ? "Loading…" : "View"}
         </button>
         <button
           onClick={handleDownload}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold"
+          disabled={loading}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold disabled:opacity-50"
         >
           <Download className="h-3.5 w-3.5" />
-          Download
+          {loading ? "Loading…" : "Download"}
         </button>
       </div>
     </>
@@ -625,7 +642,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
               {(selected.type ?? "contact") === "career" && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                  <ResumePanel resumeBase64={selected.resumeBase64} resumeName={selected.resumeName} />
+                  <ResumePanel resumeDataId={selected.resumeDataId} resumeName={selected.resumeName} />
                 </div>
               )}
 
@@ -757,7 +774,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
                       </span>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {s.resumeBase64
+                      {s.resumeDataId
                         ? <span className="inline-flex items-center gap-1 text-xs text-accent font-sans"><FileIcon className="h-3.5 w-3.5" /> Attached</span>
                         : <span className="text-xs text-muted-foreground font-sans">—</span>
                       }
@@ -827,7 +844,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
               {/* Resume */}
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Resume / Document</p>
-                <ResumePanel resumeBase64={selected.resumeBase64} resumeName={selected.resumeName} />
+                <ResumePanel resumeDataId={selected.resumeDataId} resumeName={selected.resumeName} />
               </div>
 
               {/* Cover letter */}
