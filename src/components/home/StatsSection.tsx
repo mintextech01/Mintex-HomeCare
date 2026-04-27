@@ -1,4 +1,5 @@
 import { Users, Clock, ShieldCheck, Heart } from "lucide-react";
+import AnimatedSection from "@/components/AnimatedSection";
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 

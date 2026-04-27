@@ -795,33 +795,3 @@ html {
 html.dark {
   color-scheme: dark;
 }
-
-/* ── iOS Safari: prevent tap highlight flash ── */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── Prevent iOS font size auto-adjustment ── */
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-/* ── Remove tap delay on interactive elements ── */
-button, a, [role="button"] {
-  touch-action: manipulation;
-}
-
-/* ── backdrop-filter fallback for older iOS Safari ── */
-@supports not (backdrop-filter: blur(1px)) {
-  .glass, .glass-card, .glass-nav, .glass-light, .glass-btn {
-    background-color: rgba(255, 255, 255, 0.92) !important;
-  }
-  .dark .glass,
-  .dark .glass-card,
-  .dark .glass-nav,
-  .dark .glass-light,
-  .dark .glass-btn {
-    background-color: rgba(16, 28, 52, 0.95) !important;
-  }
-}

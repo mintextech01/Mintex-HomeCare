@@ -57,11 +57,30 @@ const StatBadge = ({
 );
 
 /* ─── image mosaic (Carenix-style, clean 2-col layout) ────────────────────── */
+/*
+ * Layout blueprint (600 × 580 px container):
+ *
+ *  ┌──────────┐  ┌──────────────────┐
+ *  │  topLeft │  │                  │
+ *  │  (left   │  │   largeCenter    │
+ *  │   col)   │  │   (right col,    │
+ *  ├──────────┤  │    full height)  │
+ *  │ bottomL  │  │                  │
+ *  │  (left   │  └──────────────────┘
+ *  │   col)   │         ┌──────────┐
+ *  └──────────┘         │bottomRight│ ← floats over corner
+ *
+ * LEFT column  : x=0,   w=42%
+ * RIGHT column : x=46%, w=54%
+ * GAP between  : 4%
+ * bottomRight  : bottom-right, z=10, overlaps both columns
+ */
 const ImageMosaic = ({
   imgs,
 }: {
   imgs: { topLeft: string; bottomLeft: string; largeCenter: string; bottomRight: string };
 }) => {
+  /* pixel constants that match the container (540 × 520) */
   const W = 540, H = 520;
   const leftW   = Math.round(W * 0.41);
   const rightX  = Math.round(W * 0.46);
@@ -80,6 +99,7 @@ const ImageMosaic = ({
       className="absolute pointer-events-none rounded-full border-[30px] border-accent/20"
       style={{ width: 500, height: 500, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0 }}
     >
+      {/* Filled center circle inside ring */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full"
         style={{ background: "linear-gradient(135deg, rgba(8,145,178,0.30), rgba(42,102,176,0.20))" }}
       />
@@ -109,6 +129,8 @@ const ImageMosaic = ({
       className="absolute rounded-[30px] bg-accent/12"
       style={{ top: 28, left: rightX + 14, width: rightW, height: Math.round(H * 0.82), zIndex: 1 }}
     />
+
+    {/* ══ LEFT COLUMN ══════════════════════════════════════════════════════ */}
 
     {/* TOP-LEFT image */}
     <div
@@ -140,7 +162,7 @@ const ImageMosaic = ({
       <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-400" />
     </div>
 
-    {/* RIGHT COLUMN — large main image */}
+    {/* ══ RIGHT COLUMN — large main image ══════════════════════════════════ */}
     <div
       className="absolute rounded-[28px] overflow-hidden shadow-2xl group cursor-pointer
                  transition-all duration-500 ease-out hover:-translate-y-2
@@ -156,7 +178,7 @@ const ImageMosaic = ({
       <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/8 transition-colors duration-500" />
     </div>
 
-    {/* BOTTOM-RIGHT floating image */}
+    {/* ══ BOTTOM-RIGHT floating image — overlaps both columns ══════════════ */}
     <div
       className="absolute rounded-[22px] overflow-hidden shadow-2xl group cursor-pointer border-4 border-background
                  transition-all duration-400 ease-out hover:-translate-y-2
@@ -172,7 +194,9 @@ const ImageMosaic = ({
       <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-400" />
     </div>
 
-    {/* FLOATING STAT BADGES */}
+    {/* ══ FLOATING STAT BADGES ════════════════════════════════════════════ */}
+
+    {/* Top-right — Years of experience */}
     <StatBadge
       icon={<Award className="w-5 h-5" />}
       value="10+ Years"
@@ -180,6 +204,8 @@ const ImageMosaic = ({
       className="top-0 right-0"
       delay={0.7}
     />
+
+    {/* Left-center — satisfaction */}
     <StatBadge
       icon={<Star className="w-5 h-5 fill-amber-400 text-amber-400" />}
       value="5.0 ★★★★★"
@@ -187,6 +213,8 @@ const ImageMosaic = ({
       className="left-[38%] top-[44%] -translate-x-1/2 -translate-y-1/2"
       delay={0.9}
     />
+
+    {/* Bottom-right overlap — happy families */}
     <StatBadge
       icon={<Users className="w-5 h-5" />}
       value="500+"
@@ -195,7 +223,7 @@ const ImageMosaic = ({
       delay={1.05}
     />
 
-    {/* pulse dot accent */}
+    {/* ── pulse dot accent ── */}
     <span className="absolute pointer-events-none" style={{ top: 12, left: leftW + 10, zIndex: 20 }}>
       <span className="relative flex h-4 w-4">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-50" />
@@ -203,7 +231,7 @@ const ImageMosaic = ({
       </span>
     </span>
 
-    {/* decorative plus shapes */}
+    {/* ── decorative plus shapes ── */}
     <div className="absolute pointer-events-none" style={{ top: 8, right: 56, zIndex: 0 }}>
       <PlusShape size={16} color="#0891b2" className="opacity-45" />
     </div>
@@ -214,7 +242,7 @@ const ImageMosaic = ({
       <PlusShape size={18} color="#0891b2" className="opacity-28" />
     </div>
 
-    {/* small floating accent dots */}
+    {/* ── small floating accent dots ── */}
     <div
       className="absolute pointer-events-none rounded-full bg-accent animate-bounce"
       style={{ width: 14, height: 14, top: "28%", right: -10, zIndex: 0, animationDuration: "3s" }}
@@ -284,17 +312,17 @@ const HeroSection = () => {
         className="pointer-events-none absolute inset-0 overflow-hidden z-[1]"
         style={{ y: smoothBgY, scale: bgScale }}
       >
-        {/* ambient blobs */}
+        {/* ── chrome-tinted ambient blobs (sit on top of canvas) ── */}
         <div className="absolute rounded-full" style={{ width: 700, height: 700, top: "-22%", right: "-18%", background: "radial-gradient(circle, rgba(160,195,255,0.10) 0%, transparent 70%)" }} />
         <div className="absolute rounded-full" style={{ width: 600, height: 600, bottom: "-18%", left: "-14%", background: "radial-gradient(circle, rgba(100,140,220,0.10) 0%, transparent 70%)" }} />
         <div className="absolute rounded-full" style={{ width: 320, height: 320, top: "38%", left: "42%", background: "radial-gradient(circle, rgba(160,200,240,0.08) 0%, transparent 70%)" }} />
 
-        {/* decorative ring outlines */}
+        {/* ── decorative static ring outlines ── */}
         <div className="absolute rounded-full" style={{ width: 480, height: 480, top: "50%", left: "-8%", transform: "translateY(-50%)", border: "1.5px solid rgba(8,145,178,0.10)" }} />
         <div className="absolute rounded-full" style={{ width: 300, height: 300, top: "8%", right: "20%", border: "1.5px solid rgba(12,74,110,0.08)" }} />
         <div className="absolute rounded-full" style={{ width: 200, height: 200, bottom: "12%", right: "10%", border: "1px solid rgba(8,145,178,0.07)" }} />
 
-        {/* dot grids */}
+        {/* ── dot grids ── */}
         <div className="absolute opacity-40" style={{ top: 60, right: 60 }}>
           <DotGrid cols={7} rows={5} color="#0891b2" />
         </div>
@@ -302,12 +330,13 @@ const HeroSection = () => {
           <DotGrid cols={5} rows={4} color="#0c4a6e" />
         </div>
 
-        {/* small accent dots */}
+        {/* ── small accent dots ── */}
         <div className="absolute rounded-full bg-accent/20" style={{ width: 14, height: 14, top: "22%", right: "32%" }} />
         <div className="absolute rounded-full bg-primary/15" style={{ width: 10, height: 10, bottom: "28%", right: "24%" }} />
         <div className="absolute rounded-full bg-accent/15" style={{ width: 8,  height: 8,  top: "68%", right: "40%" }} />
 
-        {/* left-panel decorations */}
+        {/* ── left-panel extra decorations ─────────────────────────────────── */}
+        {/* plus shapes left side */}
         <div className="absolute pointer-events-none opacity-30" style={{ top: "18%", left: "6%" }}>
           <PlusShape size={20} color="#0891b2" />
         </div>
@@ -317,16 +346,24 @@ const HeroSection = () => {
         <div className="absolute pointer-events-none opacity-25" style={{ bottom: "22%", left: "18%" }}>
           <PlusShape size={16} color="#0891b2" />
         </div>
+        {/* dot grid — left panel */}
         <div className="absolute pointer-events-none opacity-35" style={{ top: "30%", left: "2%" }}>
           <DotGrid cols={5} rows={6} color="#0891b2" />
         </div>
+        {/* small accent circles left side */}
         <div className="absolute pointer-events-none rounded-full bg-accent/30 animate-bounce" style={{ width: 12, height: 12, top: "14%", left: "24%", animationDuration: "4s" }} />
         <div className="absolute pointer-events-none rounded-full bg-primary/25" style={{ width: 8, height: 8, top: "72%", left: "12%" }} />
         <div className="absolute pointer-events-none rounded-full bg-accent/20" style={{ width: 16, height: 16, bottom: "18%", left: "32%" }} />
+        {/* thin decorative arc — left column */}
         <div className="absolute pointer-events-none rounded-full" style={{ width: 180, height: 180, top: "10%", left: "8%", border: "1.5px solid rgba(8,145,178,0.18)" }} />
         <div className="absolute pointer-events-none rounded-full" style={{ width: 100, height: 100, bottom: "28%", left: "5%", border: "1px solid rgba(12,74,110,0.15)" }} />
 
-        {/* Sonar ripple waves — clipped so rings never escape horizontally */}
+        {/* ── Sonar ripple waves ─────────────────────────────────────────────
+             Clipped wrapper covers only the left column so rings never
+             reach the right-side content. Center is placed at the
+             bottom-left corner of the visible left panel so arcs sweep
+             upward and rightward through the left column.
+        ───────────────────────────────────────────────────────────────────── */}
         <div
           className="absolute top-0 bottom-0 left-0 overflow-hidden pointer-events-none"
           style={{ width: "48%" }}
@@ -347,13 +384,15 @@ const HeroSection = () => {
           ))}
         </div>
       </motion.div>
+      {/* ════════════════════════════════════════════════════════════════════ */}
 
       <motion.div className="container mx-auto px-6 md:px-10 relative z-10" style={{ opacity }}>
         <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center py-32 lg:pt-28 lg:pb-10 lg:min-h-[100svh]">
 
-          {/* LEFT: Text */}
+          {/* ── LEFT: Text — with word stagger + parallax ── */}
           <motion.div className="order-2 lg:order-1" style={{ y: smoothTextY }}>
 
+            {/* pill badge — depth push */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -461,7 +500,7 @@ const HeroSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT: Image mosaic — desktop only (original behaviour) */}
+          {/* ── RIGHT: Image mosaic — 3D perspective + parallax ── */}
           <motion.div
             initial={{ opacity: 0, x: 40, rotateY: -8 }}
             animate={{ opacity: 1, x: 0, rotateY: 0 }}
