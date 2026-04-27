@@ -17,8 +17,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
-import { getAppStorage } from "@/lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -63,29 +61,17 @@ const Careers = () => {
     setSubmitting(true);
     try {
       let resumeName: string | undefined;
-      let resumeUrl: string | undefined;
-      let resumeStoragePath: string | undefined;
+      let resumeBase64: string | undefined;
 
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        try {
-          const storage = await getAppStorage();
-          const uniqueName = `${Date.now()}_${resumeFile.name}`;
-          resumeStoragePath = `resumes/${uniqueName}`;
-          const storageRef = ref(storage, resumeStoragePath);
-          await uploadBytes(storageRef, resumeFile);
-          resumeUrl = await getDownloadURL(storageRef);
-          resumeName = resumeFile.name;
-        } catch (uploadErr: any) {
-          console.error("Resume upload error:", uploadErr);
-          toast({
-            title: "Resume could not be uploaded",
-            description: "Your application will still be submitted without the resume. Please email your resume separately.",
-          });
-          resumeUrl = undefined;
-          resumeName = undefined;
-          resumeStoragePath = undefined;
-        }
+        resumeName = resumeFile.name;
+        resumeBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(resumeFile);
+        });
       }
 
       await addSubmission({
@@ -98,8 +84,7 @@ const Careers = () => {
         position: form.position,
         coverLetter: form.coverLetter,
         resumeName,
-        resumeUrl,
-        resumeStoragePath,
+        resumeBase64,
       } as any);
 
       toast({
