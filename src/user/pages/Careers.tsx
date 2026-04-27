@@ -17,7 +17,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef } from "react";
-import { getAppStorage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -67,11 +68,18 @@ const Careers = () => {
       const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
         resumeName = resumeFile.name;
-        const storage = await getAppStorage();
-        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-        const storageRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
-        await uploadBytes(storageRef, resumeFile);
-        resumeDataId = await getDownloadURL(storageRef);
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(resumeFile);
+        });
+        const resumeDoc = await addDoc(collection(db, "resumeData"), {
+          fileName: resumeFile.name,
+          base64,
+          uploadedAt: new Date().toISOString(),
+        });
+        resumeDataId = resumeDoc.id;
       }
 
       await addSubmission({
