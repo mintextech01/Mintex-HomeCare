@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -152,9 +152,8 @@ const ContactSection = () => {
               <div>
                 <h3 className="font-serif text-xl font-semibold text-foreground mb-3">Follow Us</h3>
                 <div className="flex gap-3">
-                  {(contactInfo.facebookUrl || "#") !== "hidden" && <a href={contactInfo.facebookUrl || "#"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>}
-                  {(contactInfo.instagramUrl || "#") !== "hidden" && <a href={contactInfo.instagramUrl || "#"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>}
-                  {(contactInfo.linkedinUrl || "#") !== "hidden" && <a href={contactInfo.linkedinUrl || "#"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="LinkedIn"><Linkedin className="h-5 w-5" /></a>}
+                  <a href={contactInfo.facebookUrl || "https://www.facebook.com/profile.php?id=61566851474928"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
+                  <a href={contactInfo.instagramUrl || "https://www.instagram.com/mintexhomecare/"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>
                 </div>
               </div>
             </div>

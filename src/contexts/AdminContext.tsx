@@ -134,8 +134,8 @@ const defaultContactInfo: ContactInfo = {
   sectionEyebrow: "Get In Touch",
   sectionHeading: "Ready to Get Started?",
   sectionDescription: "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare.",
-  facebookUrl: "",
-  instagramUrl: "",
+  facebookUrl: "https://www.facebook.com/profile.php?id=61566851474928",
+  instagramUrl: "https://www.instagram.com/mintexhomecare/",
   linkedinUrl: "",
 };
 
