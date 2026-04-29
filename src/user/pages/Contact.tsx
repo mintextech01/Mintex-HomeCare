@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -513,6 +514,7 @@ const Contact = () => {
         <Footer />
         <ScrollToTop />
         <WhatsAppButton />
+        <AccessibilityButton />
       </div>
     </div>
   );

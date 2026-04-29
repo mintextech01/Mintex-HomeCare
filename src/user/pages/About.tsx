@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Link } from "react-router-dom";
@@ -604,6 +605,7 @@ const About = () => {
       <Footer />
       <ScrollToTop />
       <WhatsAppButton />
+      <AccessibilityButton />
     </>
   );
 };

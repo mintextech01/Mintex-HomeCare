@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { BenefitsSection } from "@/components/benefits/BenefitsSection";
 import { JobsSection } from "@/components/jobs/JobsSection";
@@ -531,6 +532,7 @@ const Careers = () => {
       <Footer />
       <ScrollToTop />
       <WhatsAppButton />
+      <AccessibilityButton />
     </>
   );
 };

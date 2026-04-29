@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AccessibilityButton from "@/components/AccessibilityButton";
 import { usePageScrollProgress } from "@/hooks/useScrollAnimations";
 import { motion } from "framer-motion";
 
@@ -47,6 +48,7 @@ const Index = () => {
       <Footer />
       <ScrollToTop />
       <WhatsAppButton />
+      <AccessibilityButton />
     </>
   );
 };
