@@ -170,7 +170,7 @@ const About = () => {
                       siteImages.aboutPageAvatar2,
                       siteImages.aboutPageAvatar3,
                     ].map((url, i) => (
-                      <img key={i} src={url} alt=""
+                      <img key={i} src={url} alt="Happy MintexCare family"
                         className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                     ))}
                     <div className="w-8 h-8 rounded-full border-2 border-white bg-[#2a66b0] flex items-center justify-center">

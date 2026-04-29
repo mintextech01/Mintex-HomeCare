@@ -55,8 +55,8 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center text-xs text-white/60 gap-2">
           <p>© 2026 MintexCare. All Rights Reserved.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-accent transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-accent transition-colors">Terms of Service</a>
+            <Link to="/contact" className="hover:text-accent transition-colors">Privacy Policy</Link>
+            <Link to="/contact" className="hover:text-accent transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/contexts/AdminContext";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
 
@@ -39,6 +39,55 @@ const Careers = () => {
   const { toast } = useToast();
   const { jobPositions, siteImages, contactInfo, addSubmission } = useAdmin();
   const activePositions = jobPositions.filter((p) => p.active);
+
+  useEffect(() => {
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Job Openings at MintexCare",
+      "description": "Caregiver and home health aide job openings at MintexCare in New Jersey",
+      "url": "https://mintexcare.com/careers",
+      "itemListElement": (activePositions.length > 0 ? activePositions : [
+        { title: "Home Health Aide", type: "FULL_TIME" },
+        { title: "Personal Care Attendant", type: "PART_TIME" },
+        { title: "Certified Nursing Assistant (CNA)", type: "FULL_TIME" },
+        { title: "Live-In Caregiver", type: "FULL_TIME" },
+      ]).map((job: { title: string; type?: string }, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "JobPosting",
+          "title": job.title,
+          "description": `MintexCare is hiring a ${job.title} in New Jersey. Join our compassionate home care team serving Middlesex, Monmouth, Somerset, Union, and Mercer counties.`,
+          "hiringOrganization": {
+            "@type": "Organization",
+            "name": "MintexCare",
+            "sameAs": "https://mintexcare.com",
+            "logo": "https://mintexcare.com/favicon-512.png",
+          },
+          "jobLocation": {
+            "@type": "Place",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Edison",
+              "addressRegion": "NJ",
+              "addressCountry": "US",
+            },
+          },
+          "employmentType": job.type || "FULL_TIME",
+          "datePosted": "2026-04-01",
+          "validThrough": "2026-12-31",
+          "applicantLocationRequirements": { "@type": "State", "name": "New Jersey" },
+        },
+      })),
+    };
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "careers-schema";
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
+    return () => { document.getElementById("careers-schema")?.remove(); };
+  }, [activePositions]);
   const [form, setForm] = useState({
     name: "", email: "", phone: "", position: "", coverLetter: "",
   });
