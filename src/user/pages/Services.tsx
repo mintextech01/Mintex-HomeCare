@@ -169,7 +169,37 @@ const HomeCareSlider = ({
 /* ════════════════════════════════════════════
    PAGE
    ════════════════════════════════════════════ */
+const servicesSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Home Healthcare Services by MintexCare",
+  "description": "Comprehensive home healthcare services in New Jersey",
+  "url": "https://mintexcare.com/services",
+  "itemListElement": [
+    "Personal Care", "Companion Care", "Skilled Nursing",
+    "Post-Surgery Care", "Respite Care", "Live-In Care", "Meal Preparation",
+  ].map((name, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "item": {
+      "@type": "Service",
+      "name": name,
+      "provider": { "@type": "Organization", "name": "MintexCare", "url": "https://mintexcare.com" },
+      "areaServed": "New Jersey",
+    },
+  })),
+};
+
 const Services = () => {
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "services-schema";
+    script.textContent = JSON.stringify(servicesSchema);
+    document.head.appendChild(script);
+    return () => { document.getElementById("services-schema")?.remove(); };
+  }, []);
+
   const { services } = useAdmin();
   const homeServices    = services.filter(s => s.category === "home");
   const nursingServices = services.filter(s => s.category === "nursing");

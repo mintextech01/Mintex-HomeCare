@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -12,7 +13,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Phone, Mail, MapPin, Clock, Send, ArrowRight, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -37,7 +37,26 @@ const trustBadges = [
   { icon: MessageCircle, label: "Reply in 24 h" },
 ];
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(({ q, a }) => ({
+    "@type": "Question",
+    "name": q,
+    "acceptedAnswer": { "@type": "Answer", "text": a },
+  })),
+};
+
 const Contact = () => {
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "faq-schema";
+    script.textContent = JSON.stringify(faqSchema);
+    document.head.appendChild(script);
+    return () => { document.getElementById("faq-schema")?.remove(); };
+  }, []);
+
   const { addSubmission, contactInfo } = useAdmin();
   const { toast } = useToast();
   const { isDark } = useTheme();
@@ -58,7 +77,7 @@ const Contact = () => {
       return;
     }
     try {
-      await addSubmission(form);
+      await addSubmission({ ...form, type: "contact" });
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", phone: "", service: "", message: "" });
     } catch {
