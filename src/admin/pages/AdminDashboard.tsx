@@ -162,6 +162,8 @@ const TestimonialsTab = ({ testimonials, setTestimonials, toast }: any) => {
 const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
   const [form, setForm] = useState({ name: "", role: "", photoUrl: "", bio: "" });
   const [editing, setEditing] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const teamFileRef = useRef<HTMLInputElement>(null);
   const save = () => {
     if (!form.name || !form.role) return;
     if (editing) { setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === editing ? { ...m, ...form } : m)); setEditing(null); toast({ title: "Updated" }); }
@@ -170,6 +172,17 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
   };
   const startEdit = (m: any) => { setEditing(m.id); setForm({ name: m.name, role: m.role, photoUrl: m.photoUrl, bio: m.bio }); };
   const remove = (id: string) => { setTeamMembers((prev: any[]) => prev.filter((m: any) => m.id !== id)); toast({ title: "Removed" }); };
+  const handlePhotoFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const dataUrl = await uploadImage(file);
+      setForm(f => ({ ...f, photoUrl: dataUrl }));
+      toast({ title: "Photo uploaded" });
+    } catch { toast({ title: "Upload failed", variant: "destructive" }); }
+    finally { setUploading(false); if (teamFileRef.current) teamFileRef.current.value = ""; }
+  };
 
   return (
     <div>
@@ -177,6 +190,13 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
       <Card className="mb-6 shadow-sm"><CardContent className="pt-6 space-y-3">
         <div className="grid sm:grid-cols-2 gap-3"><Input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="font-sans" /><Input placeholder="Role" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="font-sans" /></div>
         <Input placeholder="Photo URL" value={form.photoUrl} onChange={e => setForm({ ...form, photoUrl: e.target.value })} className="font-sans" />
+        <div className="flex items-center gap-3">
+          <label className={`flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background font-sans text-sm cursor-pointer hover:bg-accent/10 transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+            <Upload className="h-4 w-4" /> {uploading ? "Processing…" : "Upload from PC"}
+            <input ref={teamFileRef} type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handlePhotoFile} />
+          </label>
+          {form.photoUrl && <img src={form.photoUrl} alt="Preview" className="h-10 w-10 rounded-full object-cover border border-border" />}
+        </div>
         <Textarea placeholder="Bio" value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} className="font-sans" />
         <div className="flex flex-wrap gap-3"><Button onClick={save} className="font-sans"><Plus className="h-4 w-4 mr-1" /> {editing ? "Update" : "Add"}</Button>{editing && <Button variant="outline" onClick={() => { setEditing(null); setForm({ name: "", role: "", photoUrl: "", bio: "" }); }} className="font-sans">Cancel</Button>}</div>
       </CardContent></Card>
