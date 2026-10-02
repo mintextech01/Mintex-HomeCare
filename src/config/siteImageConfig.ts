@@ -261,6 +261,19 @@ export const defaultSiteImages: SiteImages = Object.fromEntries(
   SITE_IMAGE_REGISTRY.map((e) => [e.key, e.defaultUrl])
 ) as SiteImages;
 
+/** 1×1 transparent GIF shown on public pages until the real image has been fetched. */
+export const PENDING_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+export const pendingSiteImages: SiteImages = Object.fromEntries(
+  SITE_IMAGE_REGISTRY.map((e) => [e.key, PENDING_IMAGE])
+) as SiteImages;
+
+/** Image keys displayed on a route ("/#about" counts as "/"), derived from the registry. */
+export const siteImageKeysForPage = (path: string): SiteImageKey[] =>
+  SITE_IMAGE_REGISTRY
+    .filter((e) => (e.pageUrl.split("#")[0] || "/") === path)
+    .map((e) => e.key as SiteImageKey);
+
 /** Groups for the admin Site Images tab — auto-generated, always in sync */
 export interface SiteImageGroup {
   page: string;

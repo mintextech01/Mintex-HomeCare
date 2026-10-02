@@ -325,23 +325,60 @@ const ServicesTab = ({ services, setServices, toast }: { services: ServiceItem[]
 };
 
 /* ── Job Positions ── */
+const emptyPositionForm = { title: "", type: "", description: "", requirements: "", payMin: "", payMax: "", payUnit: "HOUR" as "HOUR" | "YEAR" };
+
+const formatAdminPay = (p: JobPosition) =>
+  p.payMin != null && p.payMax != null
+    ? `$${p.payMin.toLocaleString("en-US")} - $${p.payMax.toLocaleString("en-US")}/${p.payUnit === "YEAR" ? "yr" : "hr"}`
+    : "Not set";
+
 const PositionsTab = ({ positions, setPositions, toast }: { positions: JobPosition[]; setPositions: React.Dispatch<React.SetStateAction<JobPosition[]>>; toast: any }) => {
-  const [form, setForm] = useState({ title: "", type: "", description: "", requirements: "" });
+  const [form, setForm] = useState(emptyPositionForm);
   const [editing, setEditing] = useState<string | null>(null);
 
   const save = () => {
     if (!form.title || !form.type) return;
+
+    // Pay is optional, but if entered both amounts are needed and "to" can't be below "from".
+    const hasMin = form.payMin.trim() !== "";
+    const hasMax = form.payMax.trim() !== "";
+    const payMin = Number(form.payMin);
+    const payMax = Number(form.payMax);
+    if (hasMin !== hasMax) {
+      toast({ title: "Enter both Pay From and Pay To, or leave both empty", variant: "destructive" });
+      return;
+    }
+    if (hasMin && (!(payMin > 0) || !(payMax > 0) || payMax < payMin)) {
+      toast({ title: "Pay must be positive numbers, and Pay To must be at least Pay From", variant: "destructive" });
+      return;
+    }
+
+    // Firestore rejects undefined values, so pay fields are removed (not set to undefined) when cleared.
+    const withPay = (base: JobPosition): JobPosition => {
+      const { payMin: _min, payMax: _max, payUnit: _unit, ...rest } = base;
+      return hasMin ? { ...rest, payMin, payMax, payUnit: form.payUnit } : rest;
+    };
+    const fields = { title: form.title, type: form.type, description: form.description, requirements: form.requirements };
+
     if (editing) {
-      setPositions(prev => prev.map(p => p.id === editing ? { ...p, ...form } : p));
+      setPositions(prev => prev.map(p => p.id === editing ? withPay({ ...p, ...fields }) : p));
       setEditing(null); toast({ title: "Position updated" });
     } else {
-      setPositions(prev => [...prev, { id: Date.now().toString(), ...form, active: true, postedAt: new Date().toISOString().slice(0, 10) }]);
+      setPositions(prev => [...prev, withPay({ id: Date.now().toString(), ...fields, active: true, postedAt: new Date().toISOString().slice(0, 10) })]);
       toast({ title: "Position added" });
     }
-    setForm({ title: "", type: "", description: "", requirements: "" });
+    setForm(emptyPositionForm);
   };
 
-  const startEdit = (p: JobPosition) => { setEditing(p.id); setForm({ title: p.title, type: p.type, description: p.description, requirements: p.requirements }); };
+  const startEdit = (p: JobPosition) => {
+    setEditing(p.id);
+    setForm({
+      title: p.title, type: p.type, description: p.description, requirements: p.requirements,
+      payMin: p.payMin != null ? String(p.payMin) : "",
+      payMax: p.payMax != null ? String(p.payMax) : "",
+      payUnit: p.payUnit ?? "HOUR",
+    });
+  };
   const remove = (id: string) => { setPositions(prev => prev.filter(p => p.id !== id)); toast({ title: "Position removed" }); };
   const toggleActive = (id: string) => { setPositions(prev => prev.map(p => p.id === id ? { ...p, active: !p.active } : p)); };
 
@@ -355,17 +392,32 @@ const PositionsTab = ({ positions, setPositions, toast }: { positions: JobPositi
         </div>
         <Textarea placeholder="Full Job Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={4} className="font-sans" />
         <Textarea placeholder="Requirements (one per line or comma-separated)" value={form.requirements} onChange={e => setForm({ ...form, requirements: e.target.value })} rows={3} className="font-sans" />
+        <div>
+          <label className="text-sm font-medium text-foreground font-sans block mb-1">Pay (optional, required by NJ law in job ads; shown on the Careers page)</label>
+          <div className="grid sm:grid-cols-3 gap-3">
+            <Input type="number" min="0" step="0.01" placeholder="Pay From (e.g. 18)" value={form.payMin} onChange={e => setForm({ ...form, payMin: e.target.value })} className="font-sans" />
+            <Input type="number" min="0" step="0.01" placeholder="Pay To (e.g. 22)" value={form.payMax} onChange={e => setForm({ ...form, payMax: e.target.value })} className="font-sans" />
+            <Select value={form.payUnit} onValueChange={v => setForm({ ...form, payUnit: v as "HOUR" | "YEAR" })}>
+              <SelectTrigger className="font-sans"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="HOUR" className="font-sans">Per hour</SelectItem>
+                <SelectItem value="YEAR" className="font-sans">Per year</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         <div className="flex flex-wrap gap-3">
           <Button onClick={save} className="font-sans"><Plus className="h-4 w-4 mr-1" /> {editing ? "Update" : "Add"} Position</Button>
-          {editing && <Button variant="outline" onClick={() => { setEditing(null); setForm({ title: "", type: "", description: "", requirements: "" }); }} className="font-sans">Cancel</Button>}
+          {editing && <Button variant="outline" onClick={() => { setEditing(null); setForm(emptyPositionForm); }} className="font-sans">Cancel</Button>}
         </div>
       </CardContent></Card>
       <Card className="shadow-sm overflow-hidden"><div className="overflow-x-auto"><Table>
-        <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Type</TableHead><TableHead className="hidden md:table-cell">Description</TableHead><TableHead>Active</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
+        <TableHeader><TableRow><TableHead>Title</TableHead><TableHead>Type</TableHead><TableHead>Pay</TableHead><TableHead className="hidden md:table-cell">Description</TableHead><TableHead>Active</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
         <TableBody>{positions.map(p => (
           <TableRow key={p.id} className={!p.active ? "opacity-50" : ""}>
             <TableCell className="font-sans font-medium">{p.title}</TableCell>
             <TableCell className="font-sans text-sm">{p.type}</TableCell>
+            <TableCell className={`font-sans text-sm whitespace-nowrap ${p.payMin == null ? "text-muted-foreground italic" : ""}`}>{formatAdminPay(p)}</TableCell>
             <TableCell className="font-sans text-sm max-w-xs truncate hidden md:table-cell">{p.description}</TableCell>
             <TableCell><Switch checked={p.active} onCheckedChange={() => toggleActive(p.id)} /></TableCell>
             <TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(p)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(p.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell>

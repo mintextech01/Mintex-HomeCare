@@ -30,6 +30,9 @@ function positionToJob(p: JobPosition): Job {
     fullDescription: p.description,
     requirements: reqs.length > 0 ? reqs : [p.requirements],
     benefits: [],
+    salaryRange: p.payMin != null && p.payMax != null
+      ? { min: p.payMin, max: p.payMax, unit: p.payUnit ?? "HOUR" }
+      : undefined,
   };
 }
 

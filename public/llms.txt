@@ -1,0 +1,29 @@
+# MintexCare
+
+> MintexCare is a home healthcare agency based in Edison, New Jersey. It provides in-home personal care, companion care, skilled nursing, post-surgery care, respite care, live-in care and meal preparation for seniors and adults who need support at home, serving Middlesex, Monmouth, Somerset, Union and Mercer counties. Care is available 24 hours a day, 7 days a week.
+
+- Office: 2163 Oak Tree Road, Suite 204, Edison, NJ 08820
+- Phone: (732) 268-5112
+- Fax: (732) 515-9939
+- Email: info@mintexcare.com
+- Free in-home care consultation on request
+
+## Core pages
+
+- [Home](https://mintexcare.com/): Overview of MintexCare's home care services in Edison and Central New Jersey
+- [Services](https://mintexcare.com/services): Home care services (hourly and live-in companion care, personal care, post-surgery care, rehab support, respite care, skilled nursing, meal preparation, medication reminders, errands, appointment scheduling, housekeeping, laundry, facility staffing) and specialized care (custodial care, wound care, post-stroke recovery, physical, occupational and speech therapy)
+- [About](https://mintexcare.com/about): Who MintexCare is and how the agency works with families
+- [Careers](https://mintexcare.com/careers): Open positions for Home Health Aides, CNAs, LPNs, RNs and companion caregivers in New Jersey
+- [Contact](https://mintexcare.com/contact): Request a free consultation, office address and contact details, frequently asked questions
+
+## Service area
+
+- Middlesex County, NJ (office in Edison)
+- Monmouth County, NJ
+- Somerset County, NJ
+- Union County, NJ
+- Mercer County, NJ
+
+## Optional
+
+- [Sitemap](https://mintexcare.com/sitemap.xml)

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { ChevronRight, MapPin, Clock, Star } from "lucide-react";
-import { Job } from "@/types/job";
+import { Job, formatPay } from "@/types/job";
 
 interface FeaturedJobCardProps {
   job: Job;
@@ -52,7 +52,7 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
                 <div className="flex items-center gap-2 text-sm text-foreground/70 font-semibold">
                   <Clock className="h-4 w-4 flex-shrink-0 text-accent" />
                   <span>
-                    ${(job.salaryRange.min / 1000).toFixed(0)}K - ${(job.salaryRange.max / 1000).toFixed(0)}K/yr
+                    {formatPay(job.salaryRange)}
                   </span>
                 </div>
               )}

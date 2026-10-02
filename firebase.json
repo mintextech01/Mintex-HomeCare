@@ -14,6 +14,9 @@
         "**/.*",
         "**/node_modules/**"
       ],
+      "redirects": [
+        { "regex": "^/(?P<page>about|services|careers|contact)/$", "destination": "/:page", "type": 301 }
+      ],
       "rewrites": [
         { "source": "/about", "destination": "/index.html" },
         { "source": "/services", "destination": "/index.html" },
@@ -61,6 +64,10 @@
       "public": "dist",
       "ignore": [
         "index.html",
+        "about.html",
+        "services.html",
+        "careers.html",
+        "contact.html",
         "firebase.json",
         "**/.*",
         "**/node_modules/**"

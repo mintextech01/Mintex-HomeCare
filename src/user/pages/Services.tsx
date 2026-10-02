@@ -7,7 +7,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { getIcon } from "@/lib/iconMap";
-import { ArrowRight, ChevronLeft, ChevronRight, CheckCircle, Star, Users, Clock, ShieldCheck } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, CheckCircle, Star, Users, Clock, ShieldCheck, Phone } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 
 const stats = [
@@ -204,6 +204,8 @@ const servicesSchema = {
 
 const Services = () => {
   useEffect(() => {
+    // Replace (not duplicate) the copy already present in the prerendered HTML.
+    document.getElementById("services-schema")?.remove();
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.id = "services-schema";
@@ -254,8 +256,8 @@ const Services = () => {
             </div>
             <div className="text-center max-w-3xl mx-auto mb-6">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
-                Trusted Home Care<br />
-                <span className="text-[#2a66b0]">Built Around You</span>
+                Home Care Services<br />
+                <span className="text-[#2a66b0]">in Edison &amp; Central&nbsp;NJ</span>
               </h1>
             </div>
             <p className="text-center text-gray-500 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
@@ -270,7 +272,7 @@ const Services = () => {
               </Link>
               <a href="tel:+17322685112"
                 className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn">
-                Contact Us
+                <Phone className="h-4 w-4" /> Call (732) 268-5112
               </a>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">

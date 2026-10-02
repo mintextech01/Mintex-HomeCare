@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Clock, DollarSign, CheckCircle2 } from "lucide-react";
-import { Job } from "@/types/job";
+import { Job, formatPay } from "@/types/job";
 
 interface JobDetailModalProps {
   job: Job | null;
@@ -51,9 +51,9 @@ export function JobDetailModal({ job, isOpen, onOpenChange, onApplyClick }: JobD
               <div className="flex items-start gap-3">
                 <DollarSign className="h-5 w-5 text-accent mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Salary</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pay</p>
                   <p className="text-sm text-foreground font-medium">
-                    ${(job.salaryRange.min / 1000).toFixed(0)}K - ${(job.salaryRange.max / 1000).toFixed(0)}K
+                    {formatPay(job.salaryRange)}
                   </p>
                 </div>
               </div>

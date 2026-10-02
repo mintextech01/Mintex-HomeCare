@@ -16,10 +16,14 @@ import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import AccessibilityButton from "@/components/AccessibilityButton";
 import { usePageScrollProgress } from "@/hooks/useScrollAnimations";
+import { usePageImages } from "@/hooks/usePageImages";
 import { motion } from "framer-motion";
+
+const HERO_IMAGE_KEYS = ["heroLargeCenter", "heroTopLeft", "heroBottomLeft", "heroBottomRight"] as const;
 
 const Index = () => {
   const scrollProgress = usePageScrollProgress();
+  usePageImages("/", HERO_IMAGE_KEYS);
 
   return (
     <>

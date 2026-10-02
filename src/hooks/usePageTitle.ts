@@ -11,36 +11,36 @@ interface PageMeta {
 
 const pageMeta: Record<string, PageMeta> = {
   "/": {
-    title: "MintexCare | Compassionate Home Care Services in New Jersey",
+    title: "Home Care in Edison, NJ | 24/7 In-Home Care | MintexCare",
     description:
-      "Trusted home healthcare agency in New Jersey providing personal care, skilled nursing, companion care, and post-surgery care. Serving Middlesex, Monmouth, Somerset, Union & Mercer counties. Available 24/7. Call (732) 268-5112.",
+      "Home care agency in Edison, NJ: personal care, companion care, skilled nursing and live-in care across Central New Jersey, 24/7. Call (732) 268-5112.",
     canonical: "https://mintexcare.com/",
   },
   "/about": {
-    title: "About MintexCare | Our Mission & Compassionate Care Team in NJ",
+    title: "About MintexCare | Home Care Agency in Edison, NJ",
     description:
-      "Learn about MintexCare's mission to deliver compassionate, personalized home healthcare across New Jersey. Meet our experienced care team dedicated to improving lives.",
+      "Meet MintexCare, a home healthcare agency in Edison, NJ caring for families across Middlesex, Monmouth, Somerset, Union and Mercer counties.",
     canonical: "https://mintexcare.com/about",
     crumb: "About",
   },
   "/services": {
-    title: "Home Care Services in New Jersey | MintexCare",
+    title: "Home Care Services in Edison & Central NJ | MintexCare",
     description:
-      "Explore MintexCare's full range of home healthcare services in NJ: personal care, companion care, skilled nursing, post-surgery care, respite care, live-in care, and meal preparation.",
+      "Personal care, companion care, skilled nursing, post-surgery, respite and live-in care at home in Edison and Central NJ. Free consultation: (732) 268-5112.",
     canonical: "https://mintexcare.com/services",
     crumb: "Services",
   },
   "/careers": {
-    title: "Careers at MintexCare | Join Our Home Care Team in New Jersey",
+    title: "Caregiver & Nursing Jobs in Edison, NJ | MintexCare",
     description:
-      "Looking for a rewarding healthcare career in New Jersey? Join the MintexCare team as a caregiver, nurse, or support staff. Apply today and make a real difference.",
+      "Join MintexCare in Edison, NJ. Openings for Home Health Aides, CNAs, LPNs, RNs and companion caregivers across Central New Jersey. Apply online today.",
     canonical: "https://mintexcare.com/careers",
     crumb: "Careers",
   },
   "/contact": {
-    title: "Contact MintexCare | Get Home Care in New Jersey Today",
+    title: "Contact MintexCare | Home Care in Edison, NJ",
     description:
-      "Contact MintexCare to discuss home healthcare options for your loved one in New Jersey. Call (732) 268-5112 or fill out our form for a free consultation. Available 24/7.",
+      "Visit MintexCare at 2163 Oak Tree Road, Edison, NJ, call (732) 268-5112, or send a message for a free home care consultation. Available 24/7.",
     canonical: "https://mintexcare.com/contact",
     crumb: "Contact",
   },

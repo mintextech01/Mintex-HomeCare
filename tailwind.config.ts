@@ -12,10 +12,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Montserrat", "sans-serif"],
-        serif: ["Poppins", "sans-serif"],
-        heading: ["Poppins", "sans-serif"],
-        body: ["Montserrat", "sans-serif"],
+        sans: ["Montserrat", "Montserrat Fallback", "sans-serif"],
+        serif: ["Poppins", "Poppins Fallback", "sans-serif"],
+        heading: ["Poppins", "Poppins Fallback", "sans-serif"],
+        body: ["Montserrat", "Montserrat Fallback", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

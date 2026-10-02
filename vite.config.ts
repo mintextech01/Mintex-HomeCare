@@ -24,6 +24,16 @@ export default defineConfig(({ mode }) => ({
         user: path.resolve(__dirname, "index.html"),
         admin: path.resolve(__dirname, "admin.html"),
       },
+      output: {
+        // Large libraries change rarely, so keep them in their own long-cached chunks.
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("/firebase/auth") || id.includes("/@firebase/auth")) return "firebase-auth";
+          if (id.includes("firebase")) return "firebase";
+          if (id.includes("framer-motion") || id.includes("motion-dom") || id.includes("motion-utils")) return "motion";
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return "react";
+        },
+      },
     },
   },
 }));

@@ -117,13 +117,22 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile: tap-to-call + theme + hamburger (all ≥ 44px tap targets) */}
           <div className="flex lg:hidden items-center gap-2">
+            <a
+              href={`tel:+1${phoneLink}`}
+              className="h-11 w-11 rounded-full flex items-center justify-center flex-shrink-0 text-white"
+              style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", boxShadow: "0 2px 10px rgba(38,104,188,0.30)" }}
+              aria-label={`Call MintexCare at ${contactInfo.phone}`}
+            >
+              <Phone className="h-5 w-5" />
+            </a>
             <ThemeToggle />
             <button
-              className="p-2 rounded-xl glass transition-all duration-200 flex-shrink-0"
+              className="h-11 w-11 flex items-center justify-center rounded-xl glass transition-all duration-200 flex-shrink-0"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
+              aria-expanded={mobileOpen}
             >
               <Menu className="h-5 w-5 text-foreground" />
             </button>
@@ -140,19 +149,25 @@ const Header = () => {
         onClick={() => setMobileOpen(false)}
       />
 
-      {/* Slide-in panel */}
+      {/* Slide-in panel. When closed it is hidden (after the slide-out) and has no shadow,
+          otherwise the off-screen panel's shadow shows as a grey strip on the right edge. */}
       <div
-        className={`lg:hidden fixed top-0 right-0 h-full z-[70] flex flex-col transition-transform duration-300 ease-out ${
+        className={`lg:hidden fixed top-0 right-0 h-full z-[70] flex flex-col ease-out ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        aria-hidden={!mobileOpen}
         style={{
           width: "min(85vw, 320px)",
+          visibility: mobileOpen ? "visible" : "hidden",
+          transition: `transform 300ms ease-out, box-shadow 300ms ease-out, visibility 0s linear ${mobileOpen ? "0s" : "300ms"}`,
           background: isDark
             ? "linear-gradient(160deg, rgba(16,28,52,0.98) 0%, rgba(12,22,42,0.96) 100%)"
             : "linear-gradient(160deg, rgba(255,255,255,0.98) 0%, rgba(235,246,255,0.96) 100%)",
-          boxShadow: isDark
-            ? "-8px 0 40px rgba(0,0,0,0.40)"
-            : "-8px 0 40px rgba(0,0,0,0.18)",
+          boxShadow: !mobileOpen
+            ? "none"
+            : isDark
+              ? "-8px 0 40px rgba(0,0,0,0.40)"
+              : "-8px 0 40px rgba(0,0,0,0.18)",
           borderLeft: isDark
             ? "1px solid rgba(255,255,255,0.06)"
             : "1px solid rgba(255,255,255,0.7)",
@@ -214,7 +229,7 @@ const Header = () => {
             }}
           >
             <Phone className="h-4 w-4 flex-shrink-0" />
-            (732) 268-5112
+            {contactInfo.phone}
           </a>
         </nav>
 

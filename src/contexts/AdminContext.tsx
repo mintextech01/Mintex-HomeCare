@@ -1,9 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
 export type { SiteImages } from "@/config/siteImageConfig";
-import { SiteImages, defaultSiteImages } from "@/config/siteImageConfig";
-import { db, auth } from "@/lib/firebase";
+import { SiteImages, SiteImageKey, defaultSiteImages, pendingSiteImages } from "@/config/siteImageConfig";
+import { db, getAppAuth } from "@/lib/firebase";
 import { doc, collection, onSnapshot, setDoc, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 export interface Testimonial {
   id: string;
   name: string;
@@ -65,6 +64,10 @@ export interface JobPosition {
   active: boolean;
   /** YYYY-MM-DD the position was created in the Admin Dashboard (used for JobPosting.datePosted). */
   postedAt?: string;
+  /** Pay range in USD, set in the Admin Dashboard. Shown on the site and in JobPosting.baseSalary. */
+  payMin?: number;
+  payMax?: number;
+  payUnit?: "HOUR" | "YEAR";
 }
 
 export interface ContactInfo {
@@ -105,6 +108,10 @@ interface AdminContextType {
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
   siteImages: SiteImages;
   setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>;
+  /** Public site: fetch these site images (no-op in admin mode, where all images are live). */
+  requestSiteImages: (keys: readonly SiteImageKey[]) => Promise<void>;
+  /** Public site: fetch team members (no-op in admin mode). */
+  requestTeamMembers: () => Promise<void>;
 }
 
 // ── Default data ──────────────────────────────────────────────────────────────
@@ -186,9 +193,18 @@ const toSubmissionRow = (s: ContactSubmission) => ({ id: s.id, name: s.name, ema
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-export const AdminProvider = ({ children }: { children: ReactNode }) => {
+/**
+ * "admin": the Admin Dashboard — real-time listeners on everything, auth, submissions.
+ * "public": the public website — one-time reads of the small documents; the heavy
+ *   site images and team photos are fetched only when a page asks for them
+ *   (requestSiteImages / requestTeamMembers), so visitors don't download data they never see.
+ */
+export type AdminProviderMode = "admin" | "public";
+
+export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNode; mode?: AdminProviderMode }) => {
+  const isPublic = mode === "public";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!isPublic);
 
   // Initialize with defaults until Firebase loads
   const [testimonials, setTestimonialsState] = useState<Testimonial[]>(defaultTestimonials);
@@ -198,9 +214,60 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [submissions, setSubmissionsState] = useState<ContactSubmission[]>([]);
   const [jobPositions, setJobPositionsState] = useState<JobPosition[]>(defaultJobPositions);
   const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
-  const [siteImages, setSiteImagesState] = useState<SiteImages>(defaultSiteImages);
+  // Public pages start with a blank placeholder (not the stock defaults) so the stock photo
+  // isn't downloaded and then swapped for the uploaded one.
+  const [siteImages, setSiteImagesState] = useState<SiteImages>(isPublic ? pendingSiteImages : defaultSiteImages);
+  const requestedImageKeys = useRef(new Set<SiteImageKey>());
+  const teamRequested = useRef(false);
 
+  // ── Public site: read each small document once (no live listeners, no auth) ──
   useEffect(() => {
+    if (!isPublic) return;
+    const readOnce = <T,>(name: string, set: (v: T) => void) =>
+      getDoc(doc(db, "appData", name))
+        .then(d => { if (d.exists()) set(d.data().data as T); })
+        .catch(err => console.debug(`[AdminContext] ${name}:`, err?.code ?? err));
+    readOnce<Testimonial[]>("testimonials", setTestimonialsState);
+    readOnce<GalleryImage[]>("gallery", setGalleryState);
+    readOnce<ServiceItem[]>("services", setServicesState);
+    readOnce<JobPosition[]>("jobPositions", setJobPositionsState);
+    readOnce<ContactInfo>("contactInfo", setContactInfoState);
+  }, [isPublic]);
+
+  const requestSiteImages = useCallback(async (keys: readonly SiteImageKey[]) => {
+    if (!isPublic) return;
+    const missing = keys.filter(k => !requestedImageKeys.current.has(k));
+    if (missing.length === 0) return;
+    missing.forEach(k => requestedImageKeys.current.add(k));
+    const entries = await Promise.all(missing.map(async (key) => {
+      try {
+        const snap = await getDoc(doc(db, "siteImageData", key));
+        const url = snap.exists() ? (snap.data().url as string | undefined) : undefined;
+        return [key, url || defaultSiteImages[key]] as const;
+      } catch {
+        return [key, defaultSiteImages[key]] as const;
+      }
+    }));
+    setSiteImagesState(prev => ({ ...prev, ...Object.fromEntries(entries) }));
+  }, [isPublic]);
+
+  const requestTeamMembers = useCallback(async () => {
+    if (!isPublic || teamRequested.current) return;
+    teamRequested.current = true;
+    try {
+      const snap = await getDoc(doc(db, "appData", "teamMembers"));
+      if (snap.exists()) setTeamMembersState(snap.data().data);
+    } catch (err: any) {
+      console.debug("[AdminContext] teamMembers:", err?.code ?? err);
+    }
+  }, [isPublic]);
+
+  // ── Admin Dashboard: auth + real-time listeners ──
+  useEffect(() => {
+    if (isPublic) return;
+    let cancelled = false;
+    let unsubAuth = () => {};
+
     // Initialize any missing Firestore documents when the admin logs in.
     // Uses getDoc + setDoc in sequence (no race condition since we await getDoc first).
     const initMissingDoc = async (docName: string, defaultData: any) => {
@@ -218,7 +285,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       unsubSubmissions = null;
     };
 
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
+    const onUser = (user: unknown) => {
       setIsAuthenticated(!!user);
       setIsLoading(false);
       stopSubmissions();
@@ -251,7 +318,13 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         initMissingDoc("contactInfo", defaultContactInfo).catch(console.error);
         // siteImages are stored per-key in the "siteImageData" collection — no bulk init needed
       }
-    });
+    };
+
+    (async () => {
+      const auth = await getAppAuth();
+      const { onAuthStateChanged } = await import("firebase/auth");
+      if (!cancelled) unsubAuth = onAuthStateChanged(auth, onUser);
+    })().catch(console.error);
 
     // Real-time Firestore listeners
     const unsubTestimonials = onSnapshot(doc(db, "appData", "testimonials"), (d) => {
@@ -286,11 +359,12 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      cancelled = true;
       unsubAuth();
       unsubTestimonials(); unsubTeam(); unsubGallery(); unsubServices();
       stopSubmissions(); unsubPositions(); unsubContact(); unsubImages();
     };
-  }, []);
+  }, [isPublic]);
 
   // ── Wrapped setters: update React state AND sync to Firestore ────────────────
 
@@ -360,7 +434,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { signInWithEmailAndPassword } = await import("firebase/auth");
+      await signInWithEmailAndPassword(await getAppAuth(), email, password);
       return true;
     } catch (e) {
       console.error(e);
@@ -369,7 +444,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    await signOut(auth);
+    const { signOut } = await import("firebase/auth");
+    await signOut(await getAppAuth());
   };
 
   const addSubmission = async (sub: NewSubmission): Promise<string> => {
@@ -402,6 +478,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       jobPositions, setJobPositions,
       contactInfo, setContactInfo,
       siteImages, setSiteImages,
+      requestSiteImages, requestTeamMembers,
     }}>
       {children}
     </AdminContext.Provider>

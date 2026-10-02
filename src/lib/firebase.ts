@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import type { Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,7 +13,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
+
+// Auth is loaded lazily: only the admin panel needs it, so public visitors never
+// download the Auth SDK (or its hidden iframe).
+let _auth: Auth | null = null;
+export const getAppAuth = async (): Promise<Auth> => {
+  if (_auth) return _auth;
+  const { getAuth } = await import("firebase/auth");
+  _auth = getAuth(app);
+  return _auth;
+};
 
 // Storage is initialised lazily so a missing bucket doesn't break the app
 let _storage: ReturnType<typeof import("firebase/storage").getStorage> | null = null;
@@ -24,4 +33,4 @@ export const getAppStorage = async () => {
   return _storage;
 };
 
-export { db, auth };
+export { db };

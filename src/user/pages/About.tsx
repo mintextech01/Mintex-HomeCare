@@ -5,8 +5,9 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
+import { usePageImages } from "@/hooks/usePageImages";
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Target, Eye, Heart, CheckCircle, Users, MapPin, Award,
   ArrowRight, ShieldCheck, Clock, Star, Stethoscope, Phone,
@@ -31,7 +32,9 @@ const values = [
 
 
 const About = () => {
-  const { teamMembers, siteImages } = useAdmin();
+  const { teamMembers, siteImages, requestTeamMembers } = useAdmin();
+  usePageImages("/about", ["aboutPageHero"]);
+  useEffect(() => { requestTeamMembers(); }, [requestTeamMembers]);
 
   return (
     <>
@@ -82,7 +85,7 @@ const About = () => {
 
               {/* LEFT: Text */}
               <AnimatedSection from="left">
-                <p className="text-sm text-gray-400 mb-8 flex items-center gap-2">
+                <p className="text-sm text-gray-500 mb-8 flex items-center gap-2">
                   <Link to="/" className="hover:text-[#2a66b0] transition-colors">Home</Link>
                   <span className="text-gray-300">/</span>
                   <span className="text-[#2a66b0] font-medium">About Us</span>
@@ -100,7 +103,7 @@ const About = () => {
                 </h1>
 
                 <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-[500px]">
-                  MintexCare is a trusted home healthcare agency based in New Jersey,
+                  MintexCare is a trusted home healthcare agency based in Edison, New Jersey,
                   dedicated to providing compassionate, high-quality care to individuals
                   in the comfort of their own homes.
                 </p>

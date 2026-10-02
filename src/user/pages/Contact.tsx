@@ -50,6 +50,8 @@ const faqSchema = {
 
 const Contact = () => {
   useEffect(() => {
+    // Replace (not duplicate) the copy already present in the prerendered HTML.
+    document.getElementById("faq-schema")?.remove();
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.id = "faq-schema";
@@ -148,9 +150,9 @@ const Contact = () => {
                   </span>
 
                   <h1 className="text-5xl md:text-6xl xl:text-[4rem] font-serif font-bold text-foreground leading-[1.08] mb-5">
-                    Let's Start a<br />
+                    Contact Our<br />
                     <span className="relative inline-block text-primary">
-                      Conversation
+                      Edison Team
                       <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 320 10" fill="none">
                         <path d="M0 7 Q80 1 160 5 Q240 9 320 3" stroke="hsl(180 91% 47%)" strokeWidth="2.5" strokeLinecap="round" />
                       </svg>

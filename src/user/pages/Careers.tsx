@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSpamGuard } from "@/hooks/useSpamGuard";
+import { usePageImages } from "@/hooks/usePageImages";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { db } from "@/lib/firebase";
@@ -60,6 +61,7 @@ const stats = [
 const Careers = () => {
   const { toast } = useToast();
   const { jobPositions, siteImages, contactInfo, addSubmission } = useAdmin();
+  usePageImages("/careers");
   const activePositions = useMemo(() => jobPositions.filter((p) => p.active), [jobPositions]);
 
   // One top-level JobPosting per ACTIVE admin position (Google ignores postings nested in an ItemList,
@@ -80,6 +82,19 @@ const Careers = () => {
         "employmentType": toEmploymentTypes(p.type),
         "directApply": true,
         "url": "https://mintexcare.com/careers",
+        // Only published when the admin has entered a real pay range (never placeholder zeros).
+        ...(p.payMin != null && p.payMax != null && {
+          "baseSalary": {
+            "@type": "MonetaryAmount",
+            "currency": "USD",
+            "value": {
+              "@type": "QuantitativeValue",
+              "minValue": p.payMin,
+              "maxValue": p.payMax,
+              "unitText": p.payUnit ?? "HOUR",
+            },
+          },
+        }),
         "hiringOrganization": {
           "@type": "Organization",
           "@id": "https://mintexcare.com/#organization",
@@ -223,19 +238,20 @@ const Careers = () => {
 
               {/* Left */}
               <AnimatedSection className="flex-1 max-w-xl">
-                <p className="text-sm text-gray-400 font-sans mb-6 flex items-center gap-2">
+                <p className="text-sm text-gray-500 font-sans mb-6 flex items-center gap-2">
                   <Link to="/" className="hover:text-primary transition-colors">Home</Link>
                   <span>/</span>
                   <span className="text-gray-600">Careers</span>
                 </p>
 
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-gray-900 leading-[1.1] mb-5">
-                  Join Our<br />Team At<br />
-                  <span className="text-primary">MintexCare</span>
+                  Home Care<br />Jobs in<br />
+                  <span className="text-primary">Edison, NJ</span>
                 </h1>
 
                 <p className="text-gray-500 font-sans leading-relaxed mb-8 max-w-sm">
-                  Work at the most compassionate and dedicated home care agency in New Jersey.
+                  Join the MintexCare team in Edison and help families across Central New Jersey
+                  get compassionate care at home.
                 </p>
 
                 <div className="flex flex-wrap gap-3">
@@ -278,7 +294,7 @@ const Careers = () => {
                     </div>
                     <div>
                       <p className="text-xl font-serif font-bold text-gray-900 leading-none">{activePositions.length}</p>
-                      <p className="text-xs text-gray-400 font-sans mt-0.5">Open Positions</p>
+                      <p className="text-xs text-gray-500 font-sans mt-0.5">Open Positions</p>
                     </div>
                   </div>
 
@@ -352,7 +368,7 @@ const Careers = () => {
                     <p className="text-sm font-serif font-semibold text-gray-800 leading-snug">
                       "A place where caregivers are celebrated, not just employed."
                     </p>
-                    <p className="text-xs text-gray-400 font-sans mt-1">— MintexCare Culture</p>
+                    <p className="text-xs text-gray-500 font-sans mt-1">— MintexCare Culture</p>
                   </div>
                 </div>
               </AnimatedSection>
@@ -441,7 +457,7 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             APPLY FORM
         ══════════════════════════════════════ */}
-        <section id="apply-section" className="py-24 bg-background overflow-hidden">
+        <section id="apply-section" className="relative py-24 bg-background overflow-hidden">
           <div className="absolute rounded-full bg-primary/4 pointer-events-none" style={{ width: 420, height: 420, bottom: "-10%", right: "-6%" }} />
 
           <div className="container mx-auto px-4">
@@ -582,7 +598,7 @@ const Careers = () => {
                         className="font-sans rounded-xl border-gray-200"
                         onChange={(e) => setResumeFileName(e.target.files?.[0]?.name ?? "")}
                       />
-                      <p className="text-[11px] text-gray-400 font-sans">PDF, DOC or DOCX, up to 700 KB</p>
+                      <p className="text-[11px] text-gray-500 font-sans">PDF, DOC or DOCX, up to 700 KB</p>
                     </div>
 
                     <div className="space-y-1.5">
@@ -612,7 +628,7 @@ const Careers = () => {
                           <>Submit Application <ArrowRight className="h-4 w-4 ml-1" /></>
                         )}
                       </Button>
-                      <p className="text-center text-xs text-gray-400 font-sans mt-3">
+                      <p className="text-center text-xs text-gray-500 font-sans mt-3">
                         We respond to all applications within 3–5 business days.
                       </p>
                     </div>

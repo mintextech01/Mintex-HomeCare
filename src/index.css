@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Metric-matched fallbacks: while Poppins / Montserrat download, text is drawn in a local
+   font scaled to the same size, so headings don't re-wrap and push the page down (CLS)
+   when the web fonts swap in. */
+@font-face {
+  font-family: "Poppins Fallback";
+  src: local("Arial");
+  size-adjust: 112.16%;
+  ascent-override: 93.62%;
+  descent-override: 31.21%;
+  line-gap-override: 8.92%;
+}
+@font-face {
+  font-family: "Montserrat Fallback";
+  src: local("Arial");
+  size-adjust: 113.95%;
+  ascent-override: 84.95%;
+  descent-override: 22.03%;
+  line-gap-override: 0%;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -21,7 +41,9 @@
     --secondary-foreground: 0 0% 100%;
 
     --muted: 180 30% 96%;
-    --muted-foreground: 214 20% 46%;
+    /* 40% lightness: ~5.8:1 on the near-white background (WCAG AA needs 4.5:1; the light
+       300-weight body font reads lighter than its colour, so keep a margin above the minimum). */
+    --muted-foreground: 214 20% 40%;
 
     /* #0891b2 — brand cyan */
     --accent: 192 91% 37%;
@@ -111,7 +133,9 @@
 @layer base {
   * { @apply border-border; }
 
-  html { scroll-behavior: smooth; overflow-x: hidden; }
+  /* scrollbar-gutter: reserve the scrollbar's space from the first paint, so the page doesn't get
+     narrower (and shift right-anchored elements) when content grows tall enough to scroll. */
+  html { scroll-behavior: smooth; overflow-x: hidden; scrollbar-gutter: stable; }
 
   body {
     overflow-x: hidden;
@@ -127,7 +151,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', 'Poppins Fallback', sans-serif;
     font-weight: 600;
     letter-spacing: -0.01em;
     line-height: 1.1;
@@ -137,14 +161,14 @@
   h3 { font-size: clamp(1.4rem,  2.5vw, 2rem);   }
 
   p, li {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', 'Montserrat Fallback', sans-serif;
     font-weight: 500;
     letter-spacing: 0.04em;
     line-height: 1.8;
   }
 
   strong, b, .font-semibold, .font-bold {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', 'Montserrat Fallback', sans-serif;
     font-weight: 700;
   }
 }

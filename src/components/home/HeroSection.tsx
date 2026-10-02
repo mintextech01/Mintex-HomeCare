@@ -395,7 +395,7 @@ const HeroSection = () => {
             >
               <HeartPulse className="w-4 h-4 text-accent" />
               <span className="text-xs font-semibold text-accent tracking-widest uppercase">
-                Trusted Home Care · New Jersey
+                Trusted Home Care · Edison, NJ
               </span>
             </motion.div>
 
@@ -432,9 +432,11 @@ const HeroSection = () => {
               </motion.span>
             </motion.h1>
 
+            {/* Visible from the first frame (slide only, no fade from 0): this paragraph is the
+                page's Largest Contentful Paint, and an opacity-0 start delays LCP until the fade ends. */}
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ y: 12 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.6, delay: 0.33 }}
               className="text-muted-foreground text-base md:text-lg font-sans leading-relaxed mb-8 max-w-[420px]"
             >
