@@ -16,10 +16,32 @@ import {
   FileText, PhoneCall, ClipboardCheck, CheckCircle, Loader2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useSpamGuard } from "@/hooks/useSpamGuard";
 import { useAdmin } from "@/contexts/AdminContext";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
+
+const MAX_RESUME_BYTES = 700 * 1024;
+
+// Positions created before the Admin Dashboard recorded postedAt were first published on this date.
+const ORIGINAL_POSTING_DATE = "2026-04-01";
+
+// Admin "type" is free text like "Full-time / Part-time" or "Part-time / Per Diem";
+// Google expects its fixed employmentType values.
+const toEmploymentTypes = (type: string): string[] => {
+  const t = type.toLowerCase();
+  const types: string[] = [];
+  if (t.includes("full")) types.push("FULL_TIME");
+  if (t.includes("part")) types.push("PART_TIME");
+  if (t.includes("per diem") || t.includes("per-diem")) types.push("PER_DIEM");
+  if (t.includes("contract")) types.push("CONTRACTOR");
+  if (t.includes("temp")) types.push("TEMPORARY");
+  return types.length > 0 ? types : ["FULL_TIME"];
+};
+
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const processSteps = [
   { label: "Submit Your Application", icon: FileText },
@@ -38,48 +60,43 @@ const stats = [
 const Careers = () => {
   const { toast } = useToast();
   const { jobPositions, siteImages, contactInfo, addSubmission } = useAdmin();
-  const activePositions = jobPositions.filter((p) => p.active);
+  const activePositions = useMemo(() => jobPositions.filter((p) => p.active), [jobPositions]);
 
+  // One top-level JobPosting per ACTIVE admin position (Google ignores postings nested in an ItemList,
+  // and advertising roles that aren't open violates its job-posting policy, so there is no fallback list).
   useEffect(() => {
+    document.getElementById("careers-schema")?.remove();
+    if (activePositions.length === 0) return;
+
     const schema = {
       "@context": "https://schema.org",
-      "@type": "ItemList",
-      "name": "Job Openings at MintexCare",
-      "description": "Caregiver and home health aide job openings at MintexCare in New Jersey",
-      "url": "https://mintexcare.com/careers",
-      "itemListElement": (activePositions.length > 0 ? activePositions : [
-        { title: "Home Health Aide", type: "FULL_TIME" },
-        { title: "Personal Care Attendant", type: "PART_TIME" },
-        { title: "Certified Nursing Assistant (CNA)", type: "FULL_TIME" },
-        { title: "Live-In Caregiver", type: "FULL_TIME" },
-      ]).map((job: { title: string; type?: string }, i: number) => ({
-        "@type": "ListItem",
-        "position": i + 1,
-        "item": {
-          "@type": "JobPosting",
-          "title": job.title,
-          "description": `MintexCare is hiring a ${job.title} in New Jersey. Join our compassionate home care team serving Middlesex, Monmouth, Somerset, Union, and Mercer counties.`,
-          "hiringOrganization": {
-            "@type": "Organization",
-            "name": "MintexCare",
-            "sameAs": "https://mintexcare.com",
-            "logo": "https://mintexcare.com/favicon-512.png",
+      "@graph": activePositions.map(p => ({
+        "@type": "JobPosting",
+        "@id": `https://mintexcare.com/careers#job-${p.id}`,
+        "title": p.title,
+        "description": `<p>${escapeHtml(p.description)}</p><p><strong>Requirements:</strong> ${escapeHtml(p.requirements)}</p>`,
+        "identifier": { "@type": "PropertyValue", "name": "MintexCare", "value": p.id },
+        "datePosted": p.postedAt ?? ORIGINAL_POSTING_DATE,
+        "employmentType": toEmploymentTypes(p.type),
+        "directApply": true,
+        "url": "https://mintexcare.com/careers",
+        "hiringOrganization": {
+          "@type": "Organization",
+          "@id": "https://mintexcare.com/#organization",
+          "name": "MintexCare",
+          "sameAs": "https://mintexcare.com/",
+          "logo": "https://mintexcare.com/favicon-512.png",
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "2163 Oak Tree Road, Suite 204",
+            "addressLocality": "Edison",
+            "addressRegion": "NJ",
+            "postalCode": "08820",
+            "addressCountry": "US",
           },
-          "jobLocation": {
-            "@type": "Place",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "2163 Oak Tree Road, Suite 204",
-              "addressLocality": "Edison",
-              "addressRegion": "NJ",
-              "postalCode": "08820",
-              "addressCountry": "US",
-            },
-          },
-          "employmentType": job.type || "FULL_TIME",
-          "datePosted": "2026-04-01",
-          "validThrough": "2026-12-31",
-          "applicantLocationRequirements": { "@type": "State", "name": "New Jersey" },
         },
       })),
     };
@@ -96,10 +113,27 @@ const Careers = () => {
   const [resumeFileName, setResumeFileName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const spamGuard = useSpamGuard();
+
+  const resetForm = () => {
+    setForm({ name: "", email: "", phone: "", position: "", coverLetter: "" });
+    setResumeFileName("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    spamGuard.reset();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.position) {
+    if (spamGuard.isSpam()) {
+      toast({
+        title: "Application submitted!",
+        description: "We'll review your application and get back to you soon.",
+      });
+      resetForm();
+      return;
+    }
+    // Phone is required: it is how the hiring team actually reaches caregivers.
+    if (!form.name || !form.email || !form.phone || !form.position) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
       return;
     }
@@ -107,8 +141,20 @@ const Careers = () => {
       toast({ title: "Please enter a valid email address", variant: "destructive" });
       return;
     }
-    if (form.phone && !/^[\d\s\-\+\(\)]{7,}$/.test(form.phone)) {
+    if (!/^[\d\s\-\+\(\)]{7,}$/.test(form.phone)) {
       toast({ title: "Please enter a valid phone number", variant: "destructive" });
+      return;
+    }
+
+    // Resume is optional (many caregivers apply from their phone), but if attached it must be valid.
+    const resumeFile = fileInputRef.current?.files?.[0];
+    if (resumeFile && !/\.(pdf|docx?)$/i.test(resumeFile.name)) {
+      toast({ title: "Unsupported file type", description: "Please upload a PDF, DOC or DOCX file.", variant: "destructive" });
+      return;
+    }
+    // Resumes are stored as base64 inside one Firestore document (1 MB limit), so cap the file size.
+    if (resumeFile && resumeFile.size > MAX_RESUME_BYTES) {
+      toast({ title: "Resume is too large", description: "Please upload a file under 700 KB, or apply without it.", variant: "destructive" });
       return;
     }
 
@@ -117,9 +163,7 @@ const Careers = () => {
       let resumeName: string | undefined;
       let resumeDataId: string | undefined;
 
-      const resumeFile = fileInputRef.current?.files?.[0];
       if (resumeFile) {
-        resumeName = resumeFile.name;
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => resolve((reader.result as string).split(",")[1]);
@@ -131,6 +175,7 @@ const Careers = () => {
           base64,
           uploadedAt: new Date().toISOString(),
         });
+        resumeName = resumeFile.name;
         resumeDataId = resumeDoc.id;
       }
 
@@ -145,15 +190,13 @@ const Careers = () => {
         coverLetter: form.coverLetter,
         resumeName,
         resumeDataId,
-      } as any);
+      });
 
       toast({
         title: "Application submitted!",
         description: "We'll review your application and get back to you soon.",
       });
-      setForm({ name: "", email: "", phone: "", position: "", coverLetter: "" });
-      setResumeFileName("");
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      resetForm();
     } catch (err: any) {
       console.error("Career submission error:", err);
       toast({
@@ -462,7 +505,8 @@ const Careers = () => {
                     <h3 className="text-2xl font-serif font-bold text-gray-900">Tell Us About Yourself</h3>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form onSubmit={handleSubmit} className="relative space-y-5">
+                    {spamGuard.honeypotField}
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div className="space-y-1.5">
                         <label className="text-xs font-semibold text-gray-500 font-sans uppercase tracking-wider">
@@ -494,11 +538,12 @@ const Careers = () => {
                     <div className="grid sm:grid-cols-2 gap-5">
                       <div className="space-y-1.5">
                         <label className="text-xs font-semibold text-gray-500 font-sans uppercase tracking-wider">
-                          Phone Number
+                          Phone Number *
                         </label>
                         <Input
                           type="tel"
                           placeholder="(732) 000-0000"
+                          required
                           value={form.phone}
                           onChange={(e) => setForm({ ...form, phone: e.target.value })}
                           className="font-sans rounded-xl border-gray-200 focus:border-primary"
@@ -528,7 +573,7 @@ const Careers = () => {
 
                     <div className="space-y-1.5">
                       <label className="text-xs font-semibold text-gray-500 font-sans uppercase tracking-wider">
-                        Resume Upload
+                        Resume <span className="normal-case font-normal">(optional, speeds up your application)</span>
                       </label>
                       <Input
                         ref={fileInputRef}
@@ -537,7 +582,7 @@ const Careers = () => {
                         className="font-sans rounded-xl border-gray-200"
                         onChange={(e) => setResumeFileName(e.target.files?.[0]?.name ?? "")}
                       />
-                      <p className="text-[11px] text-gray-400 font-sans">Accepted: PDF, DOC, DOCX</p>
+                      <p className="text-[11px] text-gray-400 font-sans">PDF, DOC or DOCX, up to 700 KB</p>
                     </div>
 
                     <div className="space-y-1.5">

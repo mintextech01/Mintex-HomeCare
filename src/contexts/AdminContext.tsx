@@ -51,7 +51,10 @@ export interface ContactSubmission {
   resumeUrl?: string;
   resumeName?: string;
   resumeStoragePath?: string;
+  resumeDataId?: string;
 }
+
+export type NewSubmission = Omit<ContactSubmission, "id" | "date" | "read" | "status" | "type"> & { type?: "contact" | "career" };
 
 export interface JobPosition {
   id: string;
@@ -60,6 +63,8 @@ export interface JobPosition {
   description: string;
   requirements: string;
   active: boolean;
+  /** YYYY-MM-DD the position was created in the Admin Dashboard (used for JobPosting.datePosted). */
+  postedAt?: string;
 }
 
 export interface ContactInfo {
@@ -91,7 +96,7 @@ interface AdminContextType {
   setServices: React.Dispatch<React.SetStateAction<ServiceItem[]>>;
   submissions: ContactSubmission[];
   setSubmissions: React.Dispatch<React.SetStateAction<ContactSubmission[]>>;
-  addSubmission: (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status"> & { type?: "contact" | "career" }) => Promise<string>;
+  addSubmission: (sub: NewSubmission) => Promise<string>;
   updateSubmission: (id: string, updates: Partial<ContactSubmission>) => Promise<void>;
   deleteSubmission: (id: string) => Promise<void>;
   jobPositions: JobPosition[];
@@ -174,7 +179,7 @@ const toServiceRow = (s: ServiceItem) => ({ id: s.id, title: s.title, descriptio
 const fromPositionRow = (r: any): JobPosition => ({ id: r.id, title: r.title, type: r.type, description: r.description, requirements: r.requirements, active: r.active });
 const toPositionRow = (p: JobPosition) => ({ id: p.id, title: p.title, type: p.type, description: p.description, requirements: p.requirements, active: p.active });
 
-const fromSubmissionRow = (r: any): ContactSubmission => ({ id: r.id, name: r.name, email: r.email, phone: r.phone, service: r.service, message: r.message, date: r.date, read: r.read });
+const fromSubmissionRow = (r: any): ContactSubmission => ({ id: r.id, type: r.type ?? "contact", name: r.name, email: r.email, phone: r.phone, service: r.service, message: r.message, date: r.date, read: r.read });
 const toSubmissionRow = (s: ContactSubmission) => ({ id: s.id, name: s.name, email: s.email, phone: s.phone, service: s.service, message: s.message, date: s.date, read: s.read });
 
 // ── Firestore Sync Helpers ─────────────
@@ -367,8 +372,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     await signOut(auth);
   };
 
-  const addSubmission = async (sub: Omit<ContactSubmission, "id" | "date" | "read" | "status">): Promise<string> => {
-    const newSub = { ...sub, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
+  const addSubmission = async (sub: NewSubmission): Promise<string> => {
+    // Firestore rejects undefined values (e.g. resumeName when no resume is attached), so drop them.
+    const fields = Object.fromEntries(Object.entries(sub).filter(([, v]) => v !== undefined));
+    const newSub = { ...fields, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
     const timeout = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("Firestore timeout — check your connection")), 10000)
     );

@@ -169,24 +169,36 @@ const HomeCareSlider = ({
 /* ════════════════════════════════════════════
    PAGE
    ════════════════════════════════════════════ */
+// Service entities referenced by the OfferCatalog in index.html (same @id values).
+// provider points at the single business entity instead of declaring a second one.
+const schemaServices = [
+  { id: "personal-care", name: "Personal Care", serviceType: "Personal care and activities of daily living assistance",
+    description: "Help with bathing, grooming, dressing, toileting, mobility and other daily living activities in the client's home." },
+  { id: "companion-care", name: "Companion Care", serviceType: "Companion care for seniors",
+    description: "Companionship, conversation, light housekeeping, errands and emotional support for seniors at home." },
+  { id: "skilled-nursing", name: "Skilled Nursing", serviceType: "Skilled nursing care at home",
+    description: "Licensed nurse visits for wound care, medication management and medical monitoring at home." },
+  { id: "post-surgery-care", name: "Post-Surgery Care", serviceType: "Post-surgical recovery care at home",
+    description: "In-home recovery support after surgery, including mobility assistance and medication reminders." },
+  { id: "respite-care", name: "Respite Care", serviceType: "Respite care",
+    description: "Temporary relief for family caregivers while a professional caregiver looks after their loved one." },
+  { id: "live-in-care", name: "Live-In Care", serviceType: "Live-in caregiver services",
+    description: "Round-the-clock live-in caregiver support for clients who need continuous supervision." },
+  { id: "meal-preparation", name: "Meal Preparation", serviceType: "Meal planning and preparation",
+    description: "Nutritious meals planned and prepared to fit the client's dietary needs and preferences." },
+];
+
 const servicesSchema = {
   "@context": "https://schema.org",
-  "@type": "ItemList",
-  "name": "Home Healthcare Services by MintexCare",
-  "description": "Comprehensive home healthcare services in New Jersey",
-  "url": "https://mintexcare.com/services",
-  "itemListElement": [
-    "Personal Care", "Companion Care", "Skilled Nursing",
-    "Post-Surgery Care", "Respite Care", "Live-In Care", "Meal Preparation",
-  ].map((name, i) => ({
-    "@type": "ListItem",
-    "position": i + 1,
-    "item": {
-      "@type": "Service",
-      "name": name,
-      "provider": { "@type": "Organization", "name": "MintexCare", "url": "https://mintexcare.com" },
-      "areaServed": "New Jersey",
-    },
+  "@graph": schemaServices.map(s => ({
+    "@type": "Service",
+    "@id": `https://mintexcare.com/services#${s.id}`,
+    "name": s.name,
+    "serviceType": s.serviceType,
+    "description": s.description,
+    "provider": { "@id": "https://mintexcare.com/#organization" },
+    "areaServed": { "@type": "State", "name": "New Jersey" },
+    "url": "https://mintexcare.com/services",
   })),
 };
 

@@ -9,11 +9,41 @@ service cloud.firestore {
         && request.auth.token.email == 'admin@mintexcare.com';
     }
 
+    function isText(value, maxLen) {
+      return value is string && value.size() <= maxLen;
+    }
+
+    function optionalText(data, field, maxLen) {
+      return !(field in data) || isText(data[field], maxLen);
+    }
+
+    // A new contact / career submission must look exactly like what the site's forms send.
+    // Rejects bots that post directly to Firestore with extra fields, huge payloads or junk.
+    function isValidSubmission(data) {
+      return data.keys().hasOnly(['type', 'name', 'email', 'phone', 'service', 'message', 'date', 'read', 'status',
+                                  'position', 'coverLetter', 'resumeName', 'resumeDataId'])
+        && data.type in ['contact', 'career']
+        && isText(data.name, 100) && data.name.size() > 0
+        && isText(data.email, 200) && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && isText(data.phone, 40)
+        && isText(data['service'], 100)
+        && isText(data.message, 5000)
+        && isText(data.date, 40)
+        && data.read == false
+        && data.status == 'new'
+        && optionalText(data, 'position', 100)
+        && optionalText(data, 'coverLetter', 5000)
+        && optionalText(data, 'resumeName', 255)
+        && optionalText(data, 'resumeDataId', 100)
+        // Every submission needs a phone number (resume is optional for job applications).
+        && data.phone.size() >= 7;
+    }
+
     // Submissions collection: one document per submission (contact or career).
-    // - Anyone can create (unauthenticated users submitting forms)
+    // - Anyone can create a valid submission (unauthenticated users submitting forms)
     // - Only the admin can read, update, or delete
     match /submissions/{submissionId} {
-      allow create: if true;
+      allow create: if isValidSubmission(request.resource.data);
       allow read, update, delete: if isAdmin();
     }
 
@@ -32,13 +62,16 @@ service cloud.firestore {
 
     // Resume metadata: written by unauthenticated users (career form), read by admin only.
     match /resumeData/{submissionId} {
-      allow create: if true;
+      allow create: if request.resource.data.keys().hasOnly(['fileName', 'base64', 'uploadedAt'])
+        && isText(request.resource.data.fileName, 255)
+        && isText(request.resource.data.base64, 1000000)
+        && isText(request.resource.data.uploadedAt, 40);
       allow read, update, delete: if isAdmin();
     }
 
-    // Resume binary chunks: same policy as resumeData.
+    // Legacy resume binary chunks: nothing writes here any more; admin can still read/clean up.
     match /resumeChunks/{chunkId} {
-      allow create: if true;
+      allow create: if false;
       allow read, update, delete: if isAdmin();
     }
 

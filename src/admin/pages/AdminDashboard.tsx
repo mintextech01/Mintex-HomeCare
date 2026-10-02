@@ -335,7 +335,7 @@ const PositionsTab = ({ positions, setPositions, toast }: { positions: JobPositi
       setPositions(prev => prev.map(p => p.id === editing ? { ...p, ...form } : p));
       setEditing(null); toast({ title: "Position updated" });
     } else {
-      setPositions(prev => [...prev, { id: Date.now().toString(), ...form, active: true }]);
+      setPositions(prev => [...prev, { id: Date.now().toString(), ...form, active: true, postedAt: new Date().toISOString().slice(0, 10) }]);
       toast({ title: "Position added" });
     }
     setForm({ title: "", type: "", description: "", requirements: "" });

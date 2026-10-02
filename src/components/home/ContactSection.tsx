@@ -7,6 +7,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
+import { useSpamGuard } from "@/hooks/useSpamGuard";
 
 const serviceOptions = ["Personal Care", "Companion Care", "Skilled Nursing", "Post-Surgery Care", "Respite Care", "Live-in Care", "Other"];
 
@@ -15,6 +16,7 @@ const ContactSection = () => {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const spamGuard = useSpamGuard();
 
   const validate = () => {
     const errs: Record<string, string> = {};
@@ -29,12 +31,19 @@ const ContactSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (spamGuard.isSpam()) {
+      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
+      setForm({ name: "", email: "", phone: "", service: "", message: "" });
+      spamGuard.reset();
+      return;
+    }
     if (!validate()) return;
     try {
-      await addSubmission(form);
+      await addSubmission({ ...form, type: "contact" });
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", phone: "", service: "", message: "" });
       setErrors({});
+      spamGuard.reset();
     } catch (err: any) {
       console.error("Contact submission error:", err);
       toast({ title: "Submission failed", description: err?.message ?? "Please try again.", variant: "destructive" });
@@ -115,7 +124,8 @@ const ContactSection = () => {
         </AnimatedSection>
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           <AnimatedSection from="flip3d">
-            <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm glow-pulse">
+            <form onSubmit={handleSubmit} className="relative space-y-4 bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm glow-pulse">
+              {spamGuard.honeypotField}
               <div>
                 <Input placeholder="Full Name *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className={`font-sans ${errors.name ? "border-destructive" : ""}`} />
                 {errors.name && <p className="text-xs text-destructive mt-1 font-sans">{errors.name}</p>}

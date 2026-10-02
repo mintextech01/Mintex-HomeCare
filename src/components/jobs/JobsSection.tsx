@@ -68,7 +68,7 @@ export function JobsSection({
 
       return matchesSearch && matchesFilter;
     });
-  }, [searchQuery, selectedFilter]);
+  }, [jobsData, searchQuery, selectedFilter]);
 
   // Separate featured and regular jobs
   const featuredJobs = filteredJobs.filter((job) => job.featured);

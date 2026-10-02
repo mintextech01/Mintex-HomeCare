@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Phone, Mail, MapPin, Clock, Send, ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
+import { useSpamGuard } from "@/hooks/useSpamGuard";
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -61,9 +62,16 @@ const Contact = () => {
   const { toast } = useToast();
   const { isDark } = useTheme();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
+  const spamGuard = useSpamGuard();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (spamGuard.isSpam()) {
+      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
+      setForm({ name: "", email: "", phone: "", service: "", message: "" });
+      spamGuard.reset();
+      return;
+    }
     if (!form.name || !form.email || !form.phone) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
       return;
@@ -80,6 +88,7 @@ const Contact = () => {
       await addSubmission({ ...form, type: "contact" });
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", phone: "", service: "", message: "" });
+      spamGuard.reset();
     } catch {
       toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
     }
@@ -291,7 +300,8 @@ const Contact = () => {
                         </p>
                       </div>
 
-                      <form onSubmit={handleSubmit} className="space-y-5">
+                      <form onSubmit={handleSubmit} className="relative space-y-5">
+                        {spamGuard.honeypotField}
                         <div className="grid sm:grid-cols-2 gap-4">
                           <Input
                             placeholder="Full Name *"
