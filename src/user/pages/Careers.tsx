@@ -69,8 +69,10 @@ const Careers = () => {
             "@type": "Place",
             "address": {
               "@type": "PostalAddress",
+              "streetAddress": "2163 Oak Tree Road, Suite 204",
               "addressLocality": "Edison",
               "addressRegion": "NJ",
+              "postalCode": "08820",
               "addressCountry": "US",
             },
           },

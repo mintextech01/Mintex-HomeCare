@@ -129,7 +129,7 @@ const defaultContactInfo: ContactInfo = {
   phone: "(732) 268-5112",
   fax: "(732) 515-9939",
   email: "info@mintexcare.com",
-  address: "New Jersey",
+  address: "2163 Oak Tree Road, Suite 204, Edison, NJ 08820",
   hours: "Monday - Sunday, 24/7",
   sectionEyebrow: "Get In Touch",
   sectionHeading: "Ready to Get Started?",
