@@ -104,18 +104,11 @@ interface AdminContextType {
 
 // ── Default data ──────────────────────────────────────────────────────────────
 
-const defaultTestimonials: Testimonial[] = [
-  { id: "1", name: "Sarah M.", text: "MintexCare has been a blessing for our family. Their caregivers are incredibly professional and genuinely caring. Mom looks forward to their visits every day.", rating: 5, location: "Edison, NJ" },
-  { id: "2", name: "James R.", text: "After my father's surgery, we needed reliable post-operative care. MintexCare provided exceptional support that helped him recover faster than expected.", rating: 5, location: "New Brunswick, NJ" },
-  { id: "3", name: "Maria L.", text: "The companionship services have made such a difference for my grandmother. She's happier, more active, and we have peace of mind knowing she's in good hands.", rating: 5, location: "Woodbridge, NJ" },
-  { id: "4", name: "David K.", text: "Professional, punctual, and compassionate — everything you want in a home care provider. Highly recommend MintexCare to any family in need.", rating: 5, location: "Princeton, NJ" },
-];
+// Testimonials and team members are added only through the Admin Dashboard,
+// so no placeholder people or reviews ever appear on the public site.
+const defaultTestimonials: Testimonial[] = [];
 
-const defaultTeamMembers: TeamMember[] = [
-  { id: "1", name: "Dr. Adeline Carter", role: "Founder & CEO", photoUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop", bio: "With over 20 years in healthcare, Dr. Carter founded MintexCare to bring compassionate home care to New Jersey families." },
-  { id: "2", name: "Michael Torres", role: "Director of Nursing", photoUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop", bio: "Michael oversees all nursing operations and ensures the highest standards of clinical care across our services." },
-  { id: "3", name: "Jennifer Okafor", role: "Care Coordinator", photoUrl: "https://images.unsplash.com/photo-1594824476967-48c8b964ac31?w=300&h=300&fit=crop", bio: "Jennifer works directly with families to create personalized care plans that meet each client's unique needs." },
-];
+const defaultTeamMembers: TeamMember[] = [];
 
 const defaultJobPositions: JobPosition[] = [
   { id: "1", title: "Home Health Aide (HHA)", type: "Full-time / Part-time", description: "Provide daily living assistance including bathing, dressing, meal preparation, and companionship to clients in their homes. Work closely with care coordinators to follow individualized care plans.", requirements: "Valid HHA certification in NJ, CPR/First Aid certified, reliable transportation, compassionate attitude, minimum 1 year experience preferred.", active: true },
@@ -212,10 +205,37 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
+    // Submissions are private: only listen while an admin is signed in,
+    // so public visitors never open a listener on this collection.
+    let unsubSubmissions: (() => void) | null = null;
+    const stopSubmissions = () => {
+      unsubSubmissions?.();
+      unsubSubmissions = null;
+    };
+
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       setIsAuthenticated(!!user);
       setIsLoading(false);
-      if (user) {
+      stopSubmissions();
+      if (!user) {
+        setSubmissionsState([]);
+      } else {
+        unsubSubmissions = onSnapshot(
+          collection(db, "submissions"),
+          (snapshot) => {
+            const docs = snapshot.docs
+              // Exclude chunk documents (they live in submissions/ but are not real submissions)
+              .filter(d => !d.data()._chunkOf)
+              .map(d => ({ id: d.id, ...d.data() } as ContactSubmission));
+            // Sort newest first in JS — avoids needing a Firestore composite index
+            docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            setSubmissionsState(docs);
+          },
+          (error) => {
+            console.debug("[AdminContext] submissions listener:", error.code);
+          }
+        );
+
         // Initialize each document separately so a failure on one doesn't block others
         initMissingDoc("testimonials", defaultTestimonials).catch(console.error);
         initMissingDoc("teamMembers", defaultTeamMembers).catch(console.error);
@@ -241,21 +261,6 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => {
       if (d.exists()) setServicesState(d.data().data);
     });
-    const unsubSubmissions = onSnapshot(
-      collection(db, "submissions"),
-      (snapshot) => {
-        const docs = snapshot.docs
-          // Exclude chunk documents (they live in submissions/ but are not real submissions)
-          .filter(d => !d.data()._chunkOf)
-          .map(d => ({ id: d.id, ...d.data() } as ContactSubmission));
-        // Sort newest first in JS — avoids needing a Firestore composite index
-        docs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        setSubmissionsState(docs);
-      },
-      (error) => {
-        console.debug("[AdminContext] submissions listener:", error.code);
-      }
-    );
     const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => {
       if (d.exists()) setJobPositionsState(d.data().data);
     });
@@ -278,7 +283,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       unsubAuth();
       unsubTestimonials(); unsubTeam(); unsubGallery(); unsubServices();
-      unsubSubmissions(); unsubPositions(); unsubContact(); unsubImages();
+      stopSubmissions(); unsubPositions(); unsubContact(); unsubImages();
     };
   }, []);
 

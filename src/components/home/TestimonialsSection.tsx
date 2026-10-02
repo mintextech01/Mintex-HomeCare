@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Star, ChevronLeft, ChevronRight, Users, Award, ThumbsUp } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Users, Award, ThumbsUp, Clock } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const stats = [
-  { icon: Star,     value: "4.9",  unit: "★", label: "Average Rating"   },
-  { icon: Users,    value: "200",  unit: "+", label: "Families Served"   },
+  { icon: Clock,    value: "24",   unit: "/7", label: "Care Available"   },
+  { icon: Users,    value: "500",  unit: "+", label: "Families Served"   },
   { icon: Award,    value: "10",   unit: "+", label: "Years of Care"     },
-  { icon: ThumbsUp, value: "98",   unit: "%", label: "Satisfaction Rate" },
+  { icon: ThumbsUp, value: "99",   unit: "%", label: "Client Satisfaction" },
 ];
 
 const TestimonialsSection = () => {

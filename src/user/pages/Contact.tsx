@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Phone, Mail, MapPin, Clock, Send, ArrowRight, MessageCircle, ShieldCheck, Star } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
@@ -32,7 +32,7 @@ const faqs = [
 
 const trustBadges = [
   { icon: ShieldCheck, label: "Licensed & Insured" },
-  { icon: Star,        label: "4.9★ Rated" },
+  { icon: MapPin,      label: "Edison, NJ Office" },
   { icon: Clock,       label: "24/7 Available" },
   { icon: MessageCircle, label: "Reply in 24 h" },
 ];
@@ -363,7 +363,7 @@ const Contact = () => {
                   <div className="grid grid-cols-2 gap-4">
                     {[
                       { val: "24h", label: "Response Time", color: "text-primary" },
-                      { val: "4.9★", label: "Average Rating", color: "text-accent" },
+                      { val: "24/7", label: "Care Available", color: "text-accent" },
                       { val: "500+", label: "Families Served", color: "text-primary" },
                       { val: "100%", label: "Licensed Staff", color: "text-accent" },
                     ].map(stat => (

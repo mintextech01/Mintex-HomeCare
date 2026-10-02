@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Phone, ShieldCheck, ArrowRight, Star, Users, Award, HeartPulse } from "lucide-react";
+import { Phone, ShieldCheck, ArrowRight, Clock, MapPin, Users, Award, HeartPulse } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useRef } from "react";
@@ -205,11 +205,11 @@ const ImageMosaic = ({
       delay={0.7}
     />
 
-    {/* Left-center — satisfaction */}
+    {/* Left-center — availability */}
     <StatBadge
-      icon={<Star className="w-5 h-5 fill-amber-400 text-amber-400" />}
-      value="5.0 ★★★★★"
-      label="Client Satisfaction"
+      icon={<Clock className="w-5 h-5" />}
+      value="24/7"
+      label="Care Available"
       className="left-[38%] top-[44%] -translate-x-1/2 -translate-y-1/2"
       delay={0.9}
     />
@@ -484,8 +484,8 @@ const HeroSection = () => {
               </div>
               <div className="hidden sm:block w-px h-4 bg-border" />
               <div className="flex items-center gap-2 text-sm font-sans font-medium text-muted-foreground">
-                <Star className="h-4 w-4 text-amber-400 fill-amber-400 shrink-0" />
-                5-Star Rated Care
+                <MapPin className="h-4 w-4 text-accent shrink-0" />
+                Based in Edison, NJ
               </div>
               <div className="hidden sm:block w-px h-4 bg-border" />
               <div className="text-sm font-sans font-medium text-muted-foreground">
