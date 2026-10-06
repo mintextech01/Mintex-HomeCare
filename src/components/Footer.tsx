@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import logo from "@/assets/Artboard 133 copy (1).svg";
 import AnimatedSection from "@/components/AnimatedSection";
+import { serviceBySlug } from "@/data/serviceIndex";
 
 const Footer = () => {
   const { contactInfo } = useAdmin();
@@ -25,7 +26,7 @@ const Footer = () => {
           <div>
             <h3 className="font-serif text-lg font-semibold mb-5">Quick Links</h3>
             <ul className="space-y-2.5 text-sm text-white/80">
-              {[["Home", "/"], ["About Us", "/about"], ["Services", "/services"], ["Careers", "/careers"], ["Contact", "/contact"]].map(([label, href]) => (
+              {[["Home", "/"], ["About Us", "/about"], ["Services", "/services"], ["Facility Staffing", "/facility-staffing"], ["Areas We Serve", "/areas-we-serve"], ["How It Works", "/how-it-works"], ["FAQ", "/faq"], ["Careers", "/careers"], ["Contact", "/contact"]].map(([label, href]) => (
                 <li key={label}><Link to={href} className="hover:text-accent transition-colors">{label}</Link></li>
               ))}
             </ul>
@@ -34,9 +35,10 @@ const Footer = () => {
           <div>
             <h3 className="font-serif text-lg font-semibold mb-5">Our Services</h3>
             <ul className="space-y-2.5 text-sm text-white/80">
-              {["Personal Care", "Companion Care", "Skilled Nursing", "Post-Surgery Care", "Respite Care", "Meal Preparation"].map(s => (
-                <li key={s}><Link to="/services" className="hover:text-accent transition-colors">{s}</Link></li>
+              {["personal-care", "companion-care", "live-in-24-hour-care", "skilled-nursing", "post-surgery-care", "respite-care"].map(slug => (
+                <li key={slug}><Link to={`/services/${slug}`} className="hover:text-accent transition-colors">{serviceBySlug(slug)?.name}</Link></li>
               ))}
+              <li><Link to="/services" className="text-accent hover:underline">All services →</Link></li>
             </ul>
           </div>
 
@@ -52,11 +54,13 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center text-xs text-white/60 gap-2">
+        {/* Extra bottom/right padding keeps the links clear of the mobile sticky bar and the floating buttons. */}
+        <div className="container mx-auto px-4 pt-5 pb-28 lg:pb-5 lg:pr-24 flex flex-col md:flex-row justify-between items-center text-xs text-white/60 gap-2">
           <p>© 2026 MintexCare. All Rights Reserved.</p>
-          <div className="flex gap-4">
-            <Link to="/contact" className="hover:text-accent transition-colors">Privacy Policy</Link>
-            <Link to="/contact" className="hover:text-accent transition-colors">Terms of Service</Link>
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
+            {[["Privacy Policy", "/privacy-policy"], ["Terms of Service", "/terms"], ["HIPAA Notice", "/hipaa-notice"], ["Accessibility", "/accessibility"], ["Non-Discrimination", "/non-discrimination"]].map(([label, href]) => (
+              <Link key={href} to={href} className="hover:text-accent transition-colors">{label}</Link>
+            ))}
           </div>
         </div>
       </div>

@@ -10,6 +10,11 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import PageTransition from "@/components/PageTransition";
 import usePageTitle from "@/hooks/usePageTitle";
 import { isPrerendered } from "./prerender";
+import { SERVICE_PATHS } from "@/data/serviceIndex";
+import { STAFFING_PATHS } from "@/data/staffing";
+import { AREA_PATHS } from "@/data/areas";
+import { CAREERS_PATHS, JOB_PATH_PREFIX } from "@/data/careers";
+import { BLOG_PATHS } from "@/data/blog";
 import Index from "./pages/Index";
 
 // Inner pages are split into their own chunks and only downloaded when visited.
@@ -28,17 +33,45 @@ const About = lazyPage(() => import("./pages/About"));
 const Careers = lazyPage(() => import("./pages/Careers"));
 const Contact = lazyPage(() => import("./pages/Contact"));
 const NotFound = lazyPage(() => import("./pages/NotFound"));
+const Legal = lazyPage(() => import("./pages/Legal"));
+const ServiceDetail = lazyPage(() => import("./pages/ServiceDetail"));
+const FacilityStaffing = lazyPage(() => import("./pages/FacilityStaffing"));
+const Areas = lazyPage(() => import("./pages/Areas"));
+const Consultation = lazyPage(() => import("./pages/Consultation"));
+const CareersFlow = lazyPage(() => import("./pages/CareersFlow"));
+const Resources = lazyPage(() => import("./pages/Resources"));
+const Blog = lazyPage(() => import("./pages/Blog"));
+const Payment = lazyPage(() => import("./pages/Payment"));
+
+const PAYMENT_PATHS = ["/paying-for-care", "/paying-for-care/cost", "/paying-for-care/private-pay"];
+
+const LEAD_PATHS = ["/free-consultation", "/thank-you"];
+const RESOURCE_PATHS = ["/resources", "/how-it-works", "/faq", "/resources/guides"];
+
+const LEGAL_PATHS = ["/privacy-policy", "/terms", "/hipaa-notice", "/accessibility", "/non-discrimination"];
 
 const pagesByPath: Record<string, { preload: () => Promise<void> }> = {
   "/services": Services,
   "/about": About,
   "/careers": Careers,
   "/contact": Contact,
+  ...Object.fromEntries(LEGAL_PATHS.map(p => [p, Legal])),
+  ...Object.fromEntries(SERVICE_PATHS.map(p => [p, ServiceDetail])),
+  ...Object.fromEntries(STAFFING_PATHS.map(p => [p, FacilityStaffing])),
+  ...Object.fromEntries(AREA_PATHS.map(p => [p, Areas])),
+  ...Object.fromEntries(LEAD_PATHS.map(p => [p, Consultation])),
+  ...Object.fromEntries(CAREERS_PATHS.map(p => [p, CareersFlow])),
+  ...Object.fromEntries(RESOURCE_PATHS.map(p => [p, Resources])),
+  ...Object.fromEntries(BLOG_PATHS.map(p => [p, Blog])),
+  ...Object.fromEntries(PAYMENT_PATHS.map(p => [p, Payment])),
 };
+
+const pageForPath = (path: string) =>
+  pagesByPath[path] ?? (path.startsWith(JOB_PATH_PREFIX) ? CareersFlow : NotFound);
 
 /** Loads the chunk for `path` (the homepage is already in the main bundle). */
 export const preloadPage = (path: string) =>
-  path === "/" ? Promise.resolve() : (pagesByPath[path] ?? NotFound).preload();
+  path === "/" ? Promise.resolve() : pageForPath(path).preload();
 
 const queryClient = new QueryClient();
 
@@ -61,6 +94,34 @@ const AnimatedRoutes = () => {
           <Route path="/about" element={<PageTransition><About /></PageTransition>} />
           <Route path="/careers" element={<PageTransition><Careers /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+          {LEGAL_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Legal /></PageTransition>} />
+          ))}
+          {SERVICE_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><ServiceDetail /></PageTransition>} />
+          ))}
+          {STAFFING_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><FacilityStaffing /></PageTransition>} />
+          ))}
+          {AREA_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Areas /></PageTransition>} />
+          ))}
+          {LEAD_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Consultation /></PageTransition>} />
+          ))}
+          {CAREERS_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><CareersFlow /></PageTransition>} />
+          ))}
+          <Route path={`${JOB_PATH_PREFIX}:slug`} element={<PageTransition><CareersFlow /></PageTransition>} />
+          {RESOURCE_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Resources /></PageTransition>} />
+          ))}
+          {BLOG_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Blog /></PageTransition>} />
+          ))}
+          {PAYMENT_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Payment /></PageTransition>} />
+          ))}
 
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>

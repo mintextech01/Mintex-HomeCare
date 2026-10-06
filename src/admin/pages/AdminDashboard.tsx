@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo } from "@/contexts/AdminContext";
+import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo, type Pricing, type PriceItem } from "@/contexts/AdminContext";
 import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,16 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList, Download, FileText as FileIcon } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList, Download, FileText as FileIcon, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info";
+type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info" | "pricing";
 
 const AdminDashboard = () => {
-  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, updateSubmission, deleteSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages } = useAdmin();
+  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, updateSubmission, deleteSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages, pricing, setPricing } = useAdmin();
   const { toast } = useToast();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -42,6 +42,7 @@ const AdminDashboard = () => {
     { key: "services" as Tab, label: "Services", icon: Settings },
     { key: "positions" as Tab, label: "Job Positions", icon: Briefcase },
     { key: "contact-info" as Tab, label: "Contact Info", icon: Phone },
+    { key: "pricing" as Tab, label: "Pricing", icon: DollarSign },
     { key: "submissions" as Tab, label: "Submissions", icon: Mail },
     { key: "applications" as Tab, label: "Applications", icon: ClipboardList },
   ];
@@ -86,6 +87,7 @@ const AdminDashboard = () => {
           {tab === "services" && <ServicesTab services={services} setServices={setServices} toast={toast} />}
           {tab === "positions" && <PositionsTab positions={jobPositions} setPositions={setJobPositions} toast={toast} />}
           {tab === "contact-info" && <ContactInfoTab contactInfo={contactInfo} setContactInfo={setContactInfo} toast={toast} />}
+          {tab === "pricing" && <PricingTab pricing={pricing} setPricing={setPricing} toast={toast} />}
           {tab === "submissions" && <SubmissionsTab submissions={submissions} setSubmissions={setSubmissions} updateSubmission={updateSubmission} />}
           {tab === "applications" && <ApplicationsTab submissions={submissions} updateSubmission={updateSubmission} deleteSubmission={deleteSubmission} toast={toast} />}
         </main>
@@ -429,6 +431,100 @@ const PositionsTab = ({ positions, setPositions, toast }: { positions: JobPositi
 };
 
 /* ── Contact Info ── */
+// ─── Pricing (shown on /paying-for-care/cost) ────────────────────────────────
+const PricingTab = ({ pricing, setPricing, toast }: { pricing: Pricing; setPricing: React.Dispatch<React.SetStateAction<Pricing>>; toast: any }) => {
+  const [form, setForm] = useState<Pricing>(pricing);
+  useEffect(() => { setForm(pricing); }, [pricing]);
+
+  const setItem = (id: string, field: keyof PriceItem, value: string) =>
+    setForm(f => ({ ...f, items: f.items.map(it => (it.id === id ? { ...it, [field]: value } : it)) }));
+  const addItem = () =>
+    setForm(f => ({ ...f, items: [...f.items, { id: `item-${Date.now()}`, label: "", amount: "", unit: "per hour", note: "" }] }));
+  const removeItem = (id: string) => setForm(f => ({ ...f, items: f.items.filter(it => it.id !== id) }));
+
+  const save = () => {
+    // Store amounts as typed, without a leading "$" (the website adds it).
+    setPricing({ ...form, items: form.items.filter(it => it.label.trim()).map(it => ({ ...it, amount: it.amount.replace(/^\$\s*/, "").trim() })) });
+    toast({ title: "Pricing saved", description: form.showPrices ? "Prices are visible on the website." : "Prices are hidden; the website shows \"Call for a free quote\"." });
+  };
+
+  const shown = form.showPrices ? form.items.filter(it => it.label.trim() && it.amount.trim()).length : 0;
+
+  return (
+    <div>
+      <h1 className="text-2xl font-serif font-bold text-foreground mb-2">Pricing</h1>
+      <p className="text-sm text-muted-foreground mb-6 max-w-2xl">
+        These prices appear on the <strong>Cost of Home Care</strong> page (/paying-for-care/cost). A price is shown only when
+        "Show prices" is on <em>and</em> the line has an amount; otherwise the website says "Call for a free quote".
+      </p>
+      <div className="grid lg:grid-cols-[1fr_340px] gap-6 items-start">
+        <Card className="shadow-sm"><CardContent className="pt-6 space-y-5">
+          <div className="flex items-center justify-between gap-4 rounded-lg border border-border p-4">
+            <div>
+              <p className="font-medium text-foreground font-sans">Show prices on the website</p>
+              <p className="text-xs text-muted-foreground">Turn off to hide all prices at once.</p>
+            </div>
+            <Switch checked={form.showPrices} onCheckedChange={v => setForm({ ...form, showPrices: v })} />
+          </div>
+
+          <div className="space-y-3">
+            {form.items.map(it => (
+              <div key={it.id} className="grid sm:grid-cols-[1.6fr_0.8fr_0.8fr_auto] gap-2 items-start rounded-lg border border-border p-3">
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1">Service</label>
+                  <Input value={it.label} onChange={e => setItem(it.id, "label", e.target.value)} className="font-sans" placeholder="e.g. Hourly care" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1">Amount ($)</label>
+                  <Input value={it.amount} onChange={e => setItem(it.id, "amount", e.target.value)} className="font-sans" placeholder="e.g. 32 or 30–35" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1">Unit</label>
+                  <Select value={it.unit} onValueChange={v => setItem(it.id, "unit", v)}>
+                    <SelectTrigger className="font-sans"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {["per hour", "per day", "per visit", "per week"].map(u => <SelectItem key={u} value={u} className="font-sans">{u}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button variant="ghost" size="icon" className="sm:mt-5 text-destructive" onClick={() => removeItem(it.id)} aria-label="Remove line"><Trash2 className="h-4 w-4" /></Button>
+                <div className="sm:col-span-4">
+                  <Input value={it.note} onChange={e => setItem(it.id, "note", e.target.value)} className="font-sans text-sm" placeholder="Optional small note, e.g. Weekend rates may differ" />
+                </div>
+              </div>
+            ))}
+            <Button variant="outline" onClick={addItem} className="font-sans"><Plus className="h-4 w-4 mr-1" /> Add price line</Button>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Minimum hours (optional)</label>
+            <Input value={form.minimumHours} onChange={e => setForm({ ...form, minimumHours: e.target.value })} className="font-sans" placeholder="e.g. 4 hours per visit" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground font-sans block mb-1">Note under the price table</label>
+            <Textarea value={form.note} onChange={e => setForm({ ...form, note: e.target.value })} className="font-sans" rows={2} />
+          </div>
+          <Button onClick={save} className="font-sans w-full">Save Pricing</Button>
+        </CardContent></Card>
+
+        <Card className="shadow-sm"><CardHeader><CardTitle className="text-base font-serif">Website preview</CardTitle></CardHeader>
+          <CardContent className="space-y-2 text-sm font-sans">
+            {form.items.filter(it => it.label.trim()).map(it => (
+              <div key={it.id} className="flex items-center justify-between gap-3 border-b border-border pb-2">
+                <span className="text-foreground">{it.label}</span>
+                <span className="font-semibold text-primary whitespace-nowrap">
+                  {form.showPrices && it.amount.trim() ? `$${it.amount.replace(/^\$\s*/, "")} ${it.unit}` : "Call for a free quote"}
+                </span>
+              </div>
+            ))}
+            <p className="text-xs text-muted-foreground pt-2">{shown} of {form.items.length} prices will be shown.</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
 const ContactInfoTab = ({ contactInfo, setContactInfo, toast }: { contactInfo: ContactInfo; setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>; toast: any }) => {
   const [form, setForm] = useState<ContactInfo>(contactInfo);
 

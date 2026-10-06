@@ -135,10 +135,13 @@
 
   /* scrollbar-gutter: reserve the scrollbar's space from the first paint, so the page doesn't get
      narrower (and shift right-anchored elements) when content grows tall enough to scroll. */
-  html { scroll-behavior: smooth; overflow-x: hidden; scrollbar-gutter: stable; }
+  /* overflow-x: clip (with hidden as the fallback for old browsers) stops sideways scrolling
+     without turning html/body into scroll containers, which would break position: sticky. */
+  html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; scrollbar-gutter: stable; }
 
   body {
     overflow-x: hidden;
+    overflow-x: clip;
     @apply text-foreground font-sans;
     font-weight: 300;
     letter-spacing: 0.035em;
@@ -867,4 +870,23 @@ html {
 }
 html.dark {
   color-scheme: dark;
+}
+
+/* Printing one checklist (/resources/guides): only the element marked data-print-area="active" is printed.
+   Everything that is not that element, inside it, or one of its ancestors is removed from the layout,
+   so no blank pages follow the checklist. */
+@media print {
+  body[data-printing] *:not([data-print-area="active"]):not([data-print-area="active"] *):not(:has([data-print-area="active"])) {
+    display: none !important;
+  }
+  body[data-printing] :has([data-print-area="active"]) {
+    padding: 0 !important; margin: 0 !important; min-height: 0 !important;
+    transform: none !important; opacity: 1 !important;
+    box-shadow: none !important; border: 0 !important; background: none !important;
+  }
+  body[data-printing] [data-print-area="active"] {
+    box-shadow: none !important; border: 0 !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  body[data-printing] [data-print-area="active"] [data-print-hide] { display: none !important; }
 }

@@ -16,14 +16,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useSpamGuard } from "@/hooks/useSpamGuard";
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { CONTACT_SERVICE_OPTIONS } from "@/data/serviceIndex";
+import { trackLead, type LeadSource } from "@/lib/leads";
+import { useNavigate } from "react-router-dom";
 
-const serviceOptions = [
-  "Personal Care", "Companion Care", "Skilled Nursing",
-  "Post-Surgery Care", "Respite Care", "Live-in Care", "Other",
-];
+const serviceOptions = CONTACT_SERVICE_OPTIONS;
 
 const faqs = [
-  { q: "What areas do you serve?",               a: "We serve communities throughout New Jersey including Middlesex, Monmouth, Somerset, Union, Mercer, and surrounding counties." },
+  { q: "What areas do you serve?",               a: "We serve 12 New Jersey counties: Middlesex, Monmouth, Somerset, Union, Mercer, Essex, Bergen, Hudson, Passaic, Morris, Ocean and Burlington. See our Areas We Serve page to find your town." },
   { q: "How do I get started with home care?",   a: "Simply call us or fill out our contact form. We'll schedule a free in-home consultation within 24 hours." },
   { q: "Are your caregivers licensed and insured?", a: "Yes, all our caregivers are fully licensed, bonded, insured, and undergo thorough background checks." },
   { q: "Do you accept insurance?",               a: "We work with various insurance providers and can discuss payment options during your consultation." },
@@ -62,6 +62,7 @@ const Contact = () => {
 
   const { addSubmission, contactInfo } = useAdmin();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { isDark } = useTheme();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
   const spamGuard = useSpamGuard();
@@ -69,9 +70,7 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (spamGuard.isSpam()) {
-      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-      setForm({ name: "", email: "", phone: "", service: "", message: "" });
-      spamGuard.reset();
+      navigate("/thank-you", { state: { source: "contact" satisfies LeadSource } });
       return;
     }
     if (!form.name || !form.email || !form.phone) {
@@ -88,9 +87,9 @@ const Contact = () => {
     }
     try {
       await addSubmission({ ...form, type: "contact" });
-      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-      setForm({ name: "", email: "", phone: "", service: "", message: "" });
+      trackLead("contact", { care_type: form.service });
       spamGuard.reset();
+      navigate("/thank-you", { state: { source: "contact" satisfies LeadSource, name: form.name.trim().split(" ")[0] } });
     } catch {
       toast({ title: "Submission failed", description: "Please try again.", variant: "destructive" });
     }
@@ -127,7 +126,7 @@ const Contact = () => {
           {/* ════════════════════════════════════════
               HERO
               ════════════════════════════════════════ */}
-          <section className="relative pt-36 pb-24 overflow-hidden">
+          <section className="relative pt-36 lg:pt-44 pb-24 overflow-hidden">
 
             {/* Large decorative ring behind heading */}
             <div

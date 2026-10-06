@@ -5,10 +5,9 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Link } from "react-router-dom";
-import { useAdmin } from "@/contexts/AdminContext";
-import { getIcon } from "@/lib/iconMap";
-import { ArrowRight, ChevronLeft, ChevronRight, CheckCircle, Star, Users, Clock, ShieldCheck, Phone } from "lucide-react";
-import React, { useState, useRef, useEffect } from "react";
+import { ArrowRight, CheckCircle, Star, Users, Clock, ShieldCheck, Phone } from "lucide-react";
+import React, { useEffect } from "react";
+import { SERVICE_INDEX, SERVICE_GROUP_LABEL, type ServiceGroup, type ServiceIndexEntry } from "@/data/serviceIndex";
 
 const stats = [
   { value: "500+", label: "Families Served",  icon: Users       },
@@ -31,19 +30,20 @@ const nursingPalettes = [
   { solid: "#14b8a6", bg: "rgba(20,184,166,0.08)"  },
 ];
 
-/* ── Reusable service card ── */
+/* ── Service card (links to the service's own page) ── */
 const ServiceCard = ({
   s, i, palette,
 }: {
-  s: { id: string; title: string; description: string; icon: string };
+  s: ServiceIndexEntry;
   i: number;
   palette: { solid: string; bg: string };
 }) => {
-  const Icon = getIcon(s.icon);
+  const Icon = s.icon;
   return (
-    <AnimatedSection delay={i * 0.07} className="h-full">
-      <div
-        className="svc-card-wrapper h-full"
+    <AnimatedSection delay={Math.min(i, 4) * 0.07} className="h-full">
+      <Link
+        to={`/services/${s.slug}`}
+        className="svc-card-wrapper h-full block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2a66b0] focus-visible:ring-offset-4"
         style={{ "--icon-color": palette.solid } as React.CSSProperties}
       >
         <div
@@ -59,146 +59,43 @@ const ServiceCard = ({
           >
             <Icon className="icon-svg w-7 h-7" style={{ color: palette.solid }} />
           </div>
-          <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">{s.title}</h3>
-          <p className="text-sm text-gray-500 leading-relaxed flex-1">{s.description}</p>
+          <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">{s.name}</h3>
+          <p className="text-sm text-gray-500 leading-relaxed flex-1">{s.short}</p>
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold mt-5 transition-all group-hover:gap-2.5" style={{ color: palette.solid }}>
+            Learn more <ArrowRight className="h-4 w-4" />
+          </span>
         </div>
-      </div>
+      </Link>
     </AnimatedSection>
   );
 };
 
-/* ── Paginated home-care slider (8 cards per page) ── */
-const CARDS_PER_PAGE = 8;
-
-const HomeCareSlider = ({
-  services,
-}: {
-  services: { id: string; title: string; description: string; icon: string }[];
-}) => {
-  const totalPages = Math.max(1, Math.ceil(services.length / CARDS_PER_PAGE));
-  const [page, setPage] = useState(0);
-  const [isSliding, setIsSliding] = useState(false);
-  const [slideDir, setSlideDir] = useState<"left" | "right">("left");
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  const goTo = (next: number, dir: "left" | "right") => {
-    if (isSliding || next === page) return;
-    setSlideDir(dir);
-    setIsSliding(true);
-    timeoutRef.current = setTimeout(() => {
-      setPage(next);
-      setIsSliding(false);
-    }, 400);
-  };
-
-  const pageServices = services.slice(
-    page * CARDS_PER_PAGE,
-    page * CARDS_PER_PAGE + CARDS_PER_PAGE
-  );
-
-  return (
-    <div>
-      {/* slider viewport */}
-      <div className="overflow-hidden">
-        <div
-          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-all duration-400"
-          style={{
-            opacity: isSliding ? 0 : 1,
-            transform: isSliding
-              ? `translateX(${slideDir === "left" ? "-60px" : "60px"})`
-              : "translateX(0)",
-            transition: "opacity 0.4s ease, transform 0.4s ease",
-          }}
-        >
-          {pageServices.map((s, i) => (
-            <ServiceCard
-              key={s.id}
-              s={s}
-              i={i}
-              palette={palettes[i % palettes.length]}
-            />
-          ))}
-        </div>
+/* ── 5 cards: 5 across on wide screens, 3 + 2 (centered) on laptops, 2 or 1 per row below ── */
+const ServiceCardRow = ({ group, colors }: { group: ServiceGroup; colors: { solid: string; bg: string }[] }) => (
+  <div className="flex flex-wrap justify-center gap-6">
+    {SERVICE_INDEX.filter(s => s.group === group).map((s, i) => (
+      <div key={s.slug} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(20%-19.2px)]">
+        <ServiceCard s={s} i={i} palette={colors[i % colors.length]} />
       </div>
-
-      {/* pagination controls */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4 mt-10">
-          <button
-            onClick={() => goTo(page - 1, "right")}
-            disabled={page === 0 || isSliding}
-            className="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i, i > page ? "left" : "right")}
-                disabled={isSliding}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  i === page
-                    ? "bg-[#2a66b0] scale-125"
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={() => goTo(page + 1, "left")}
-            disabled={page === totalPages - 1 || isSliding}
-            className="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-[#2a66b0] hover:text-white hover:border-[#2a66b0] transition-all disabled:opacity-30 disabled:pointer-events-none"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
+    ))}
+  </div>
+);
 
 /* ════════════════════════════════════════════
    PAGE
    ════════════════════════════════════════════ */
-// Service entities referenced by the OfferCatalog in index.html (same @id values).
-// provider points at the single business entity instead of declaring a second one.
-const schemaServices = [
-  { id: "personal-care", name: "Personal Care", serviceType: "Personal care and activities of daily living assistance",
-    description: "Help with bathing, grooming, dressing, toileting, mobility and other daily living activities in the client's home." },
-  { id: "companion-care", name: "Companion Care", serviceType: "Companion care for seniors",
-    description: "Companionship, conversation, light housekeeping, errands and emotional support for seniors at home." },
-  { id: "skilled-nursing", name: "Skilled Nursing", serviceType: "Skilled nursing care at home",
-    description: "Licensed nurse visits for wound care, medication management and medical monitoring at home." },
-  { id: "post-surgery-care", name: "Post-Surgery Care", serviceType: "Post-surgical recovery care at home",
-    description: "In-home recovery support after surgery, including mobility assistance and medication reminders." },
-  { id: "respite-care", name: "Respite Care", serviceType: "Respite care",
-    description: "Temporary relief for family caregivers while a professional caregiver looks after their loved one." },
-  { id: "live-in-care", name: "Live-In Care", serviceType: "Live-in caregiver services",
-    description: "Round-the-clock live-in caregiver support for clients who need continuous supervision." },
-  { id: "meal-preparation", name: "Meal Preparation", serviceType: "Meal planning and preparation",
-    description: "Nutritious meals planned and prepared to fit the client's dietary needs and preferences." },
-];
-
+// Service entities referenced by the OfferCatalog in index.html (same @id values as each
+// service page). provider points at the single business entity instead of declaring a second one.
 const servicesSchema = {
   "@context": "https://schema.org",
-  "@graph": schemaServices.map(s => ({
+  "@graph": SERVICE_INDEX.map(s => ({
     "@type": "Service",
-    "@id": `https://mintexcare.com/services#${s.id}`,
+    "@id": `https://mintexcare.com/services/${s.slug}#service`,
     "name": s.name,
-    "serviceType": s.serviceType,
-    "description": s.description,
+    "description": s.short,
     "provider": { "@id": "https://mintexcare.com/#organization" },
     "areaServed": { "@type": "State", "name": "New Jersey" },
-    "url": "https://mintexcare.com/services",
+    "url": `https://mintexcare.com/services/${s.slug}`,
   })),
 };
 
@@ -214,9 +111,6 @@ const Services = () => {
     return () => { document.getElementById("services-schema")?.remove(); };
   }, []);
 
-  const { services } = useAdmin();
-  const homeServices    = services.filter(s => s.category === "home");
-  const nursingServices = services.filter(s => s.category === "nursing");
 
   return (
     <>
@@ -226,7 +120,7 @@ const Services = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="relative pt-32 pb-20 overflow-hidden">
+        <section className="relative pt-32 lg:pt-40 pb-20 overflow-hidden">
           {/* hero soft blobs */}
           <div className="pointer-events-none absolute top-0 right-0 w-[520px] h-[520px] rounded-full opacity-30"
             style={{ background: "radial-gradient(circle, #e0eeff 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
@@ -265,7 +159,7 @@ const Services = () => {
               patient-centered approach — every step of the way.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
-              <Link to="/contact"
+              <Link to="/free-consultation"
                 className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105"
                 style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
                 Get Started <ArrowRight className="h-4 w-4" />
@@ -289,13 +183,10 @@ const Services = () => {
           </div>
         </section>
 
-
-
-
         {/* ══════════════════════════════════════
-            HOME CARE SERVICES
+            IN-HOME CARE SERVICES
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-[#f7f8f9] relative overflow-hidden">
+        <section id="in-home-care" className="py-24 bg-[#f7f8f9] relative overflow-hidden">
           <div className="pointer-events-none select-none absolute inset-0 z-0" aria-hidden="true">
             {/* cross top-left */}
             <svg className="svc-deco-float absolute -top-4 -left-4 w-44 h-44 opacity-[0.15]" viewBox="0 0 100 100" fill="none">
@@ -338,24 +229,24 @@ const Services = () => {
             <AnimatedSection className="text-center mb-16">
               <div className="inline-flex items-center gap-3 mb-5">
                 <span className="h-px w-10 bg-[#2a66b0] inline-block" />
-                <span className="text-xs font-extrabold text-[#2a66b0] uppercase tracking-[0.25em]">Home Care</span>
+                <span className="text-xs font-extrabold text-[#2a66b0] uppercase tracking-[0.25em]">{SERVICE_GROUP_LABEL["in-home"]}</span>
                 <span className="h-px w-10 bg-[#2a66b0] inline-block" />
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                 Home Care <span className="text-[#2a66b0]">Services</span>
               </h2>
               <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
-                Comprehensive care solutions tailored to your unique needs and lifestyle
+                Everyday support at home, from a few hours a week to around-the-clock care
               </p>
             </AnimatedSection>
-            <HomeCareSlider services={homeServices} />
+            <ServiceCardRow group="in-home" colors={palettes} />
           </div>
         </section>
 
         {/* ══════════════════════════════════════
-            SKILLED NURSING SERVICES
+            SPECIALIZED & CLINICAL SERVICES
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-background relative overflow-hidden">
+        <section id="specialized-care" className="py-24 bg-background relative overflow-hidden">
           <div className="pointer-events-none select-none absolute inset-0 z-0" aria-hidden="true">
             {/* cross top-right */}
             <svg className="svc-deco-float absolute -top-4 -right-4 w-40 h-40 opacity-[0.15]" viewBox="0 0 100 100" fill="none">
@@ -400,27 +291,17 @@ const Services = () => {
                 <span className="h-px w-10 bg-[#0891b2] inline-block" />
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Skilled Nursing <span className="text-[#0891b2]">Facility Services</span>
+                Specialized &amp; <span className="text-[#0891b2]">Clinical Services</span>
               </h2>
               <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
-                Specialized clinical care for maximum independence and quality of life
+                Nursing and recovery care at home from licensed RNs and LPNs, following your physician's orders
               </p>
-              {nursingServices.length > 0 && (
-                <span className="inline-flex items-center gap-2 mt-4 bg-cyan-50 border border-cyan-100 rounded-full px-4 py-1.5 text-xs font-medium text-cyan-700">
-                  <span className="w-2 h-2 rounded-full bg-[#0891b2]" />
-                  {nursingServices.length} Specialized Services
-                </span>
-              )}
             </AnimatedSection>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {nursingServices.map((s, i) => (
-                <ServiceCard key={s.id} s={s} i={i} palette={nursingPalettes[i % nursingPalettes.length]} />
-              ))}
-            </div>
+            <ServiceCardRow group="clinical" colors={nursingPalettes} />
           </div>
         </section>
 
-        {/* ══════════════════════════════════════
+{/* ══════════════════════════════════════
             TRUST STRIP
         ══════════════════════════════════════ */}
         <section className="py-14 bg-[#5c8aa6] border-y border-gray-100">
@@ -467,10 +348,10 @@ const Services = () => {
                   <p className="text-white/75 text-sm mb-8 max-w-md mx-auto leading-relaxed">
                     Our care coordinators are ready to help you find the right service for your loved one — at no obligation.
                   </p>
-                  <Link to="/contact"
+                  <Link to="/free-consultation"
                     className="inline-flex items-center gap-2 font-bold text-sm px-8 py-3.5 rounded-full transition-all hover:scale-105"
                     style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>
-                    Contact Us Today <ArrowRight className="h-4 w-4" />
+                    Book a Free Consultation <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>

@@ -381,7 +381,7 @@ const HeroSection = () => {
       {/* ════════════════════════════════════════════════════════════════════ */}
 
       <motion.div className="container mx-auto px-6 md:px-10 relative z-10" style={{ opacity }}>
-        <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center py-32 lg:pt-28 lg:pb-10 lg:min-h-[100svh]">
+        <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center py-32 lg:pt-36 lg:pb-10 lg:min-h-[100svh]">
 
           {/* ── LEFT: Text — with word stagger + parallax ── */}
           <motion.div className="order-2 lg:order-1" style={{ y: smoothTextY }}>
@@ -452,7 +452,7 @@ const HeroSection = () => {
               className="flex flex-col sm:flex-row gap-3 mb-7"
               style={{ perspective: 600 }}
             >
-              <Link to="/contact">
+              <Link to="/free-consultation">
                 <Button
                   ref={magneticRef}
                   size="lg"

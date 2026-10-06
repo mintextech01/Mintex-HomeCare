@@ -16,13 +16,84 @@
       ],
       "redirects": [
         { "source": "/index.html", "destination": "/", "type": 301 },
-        { "regex": "^/(?P<page>about|services|careers|contact)/$", "destination": "/:page", "type": 301 }
+        { "regex": "^/(?P<page>about|services|careers|contact)(?:/|\\.html)$", "destination": "/:page", "type": 301 },
+        { "regex": "^/(?P<page>privacy-policy|terms|hipaa-notice|accessibility|non-discrimination)(?:/|\\.html)$", "destination": "/:page", "type": 301 },
+        { "regex": "^/services/(?P<slug>[a-z0-9-]+)(?:/|\\.html)$", "destination": "/services/:slug", "type": 301 },
+        { "regex": "^/facility-staffing(?:/|\\.html)$", "destination": "/facility-staffing", "type": 301 },
+        { "regex": "^/facility-staffing/(?P<page>roles|request-staff)(?:/|\\.html)$", "destination": "/facility-staffing/:page", "type": 301 },
+        { "regex": "^/areas-we-serve(?:/|\\.html)$", "destination": "/areas-we-serve", "type": 301 },
+        { "regex": "^/areas-we-serve/(?P<slug>[a-z0-9-]+)(?:/|\\.html)$", "destination": "/areas-we-serve/:slug", "type": 301 },
+        { "regex": "^/(?P<page>free-consultation|thank-you)(?:/|\\.html)$", "destination": "/:page", "type": 301 },
+        { "regex": "^/(?P<page>resources|how-it-works|faq)(?:/|\\.html)$", "destination": "/:page", "type": 301 },
+        { "regex": "^/resources/guides(?:/|\\.html)$", "destination": "/resources/guides", "type": 301 },
+        { "regex": "^/paying-for-care(?:/|\\.html)$", "destination": "/paying-for-care", "type": 301 },
+        { "regex": "^/paying-for-care/(?P<page>cost|private-pay)(?:/|\\.html)$", "destination": "/paying-for-care/:page", "type": 301 },
+        { "regex": "^/blog(?:/|\\.html)$", "destination": "/blog", "type": 301 },
+        { "regex": "^/blog/(?P<slug>[a-z0-9-]+)(?:/|\\.html)$", "destination": "/blog/:slug", "type": 301 },
+        { "regex": "^/careers/(?P<page>jobs|apply|thank-you)(?:/|\\.html)$", "destination": "/careers/:page", "type": 301 },
+        { "regex": "^/careers/jobs/(?P<slug>[a-z0-9-]+)/$", "destination": "/careers/jobs/:slug", "type": 301 },
+        { "source": "/spa.html", "destination": "/careers/jobs", "type": 301 }
       ],
       "rewrites": [
-        { "source": "/about", "destination": "/index.html" },
-        { "source": "/services", "destination": "/index.html" },
-        { "source": "/careers", "destination": "/index.html" },
-        { "source": "/contact", "destination": "/index.html" }
+        { "source": "/about", "destination": "/about.html" },
+        { "source": "/services", "destination": "/services.html" },
+        { "source": "/careers", "destination": "/careers.html" },
+        { "source": "/contact", "destination": "/contact.html" },
+        { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
+        { "source": "/terms", "destination": "/terms.html" },
+        { "source": "/hipaa-notice", "destination": "/hipaa-notice.html" },
+        { "source": "/accessibility", "destination": "/accessibility.html" },
+        { "source": "/non-discrimination", "destination": "/non-discrimination.html" },
+        { "source": "/services/personal-care", "destination": "/services/personal-care.html" },
+        { "source": "/services/companion-care", "destination": "/services/companion-care.html" },
+        { "source": "/services/hourly-care", "destination": "/services/hourly-care.html" },
+        { "source": "/services/live-in-24-hour-care", "destination": "/services/live-in-24-hour-care.html" },
+        { "source": "/services/respite-care", "destination": "/services/respite-care.html" },
+        { "source": "/services/post-surgery-care", "destination": "/services/post-surgery-care.html" },
+        { "source": "/services/skilled-nursing", "destination": "/services/skilled-nursing.html" },
+        { "source": "/services/therapy-support", "destination": "/services/therapy-support.html" },
+        { "source": "/services/wound-care-iv-therapy", "destination": "/services/wound-care-iv-therapy.html" },
+        { "source": "/services/medication-management", "destination": "/services/medication-management.html" },
+        { "source": "/facility-staffing", "destination": "/facility-staffing.html" },
+        { "source": "/facility-staffing/roles", "destination": "/facility-staffing/roles.html" },
+        { "source": "/facility-staffing/request-staff", "destination": "/facility-staffing/request-staff.html" },
+        { "source": "/areas-we-serve", "destination": "/areas-we-serve.html" },
+        { "source": "/areas-we-serve/middlesex-county", "destination": "/areas-we-serve/middlesex-county.html" },
+        { "source": "/areas-we-serve/monmouth-county", "destination": "/areas-we-serve/monmouth-county.html" },
+        { "source": "/areas-we-serve/somerset-county", "destination": "/areas-we-serve/somerset-county.html" },
+        { "source": "/areas-we-serve/union-county", "destination": "/areas-we-serve/union-county.html" },
+        { "source": "/areas-we-serve/mercer-county", "destination": "/areas-we-serve/mercer-county.html" },
+        { "source": "/areas-we-serve/essex-county", "destination": "/areas-we-serve/essex-county.html" },
+        { "source": "/areas-we-serve/bergen-county", "destination": "/areas-we-serve/bergen-county.html" },
+        { "source": "/areas-we-serve/hudson-county", "destination": "/areas-we-serve/hudson-county.html" },
+        { "source": "/areas-we-serve/passaic-county", "destination": "/areas-we-serve/passaic-county.html" },
+        { "source": "/areas-we-serve/morris-county", "destination": "/areas-we-serve/morris-county.html" },
+        { "source": "/areas-we-serve/ocean-county", "destination": "/areas-we-serve/ocean-county.html" },
+        { "source": "/areas-we-serve/burlington-county", "destination": "/areas-we-serve/burlington-county.html" },
+        { "source": "/areas-we-serve/edison-nj", "destination": "/areas-we-serve/edison-nj.html" },
+        { "source": "/areas-we-serve/metuchen-nj", "destination": "/areas-we-serve/metuchen-nj.html" },
+        { "source": "/areas-we-serve/woodbridge-nj", "destination": "/areas-we-serve/woodbridge-nj.html" },
+        { "source": "/areas-we-serve/new-brunswick-nj", "destination": "/areas-we-serve/new-brunswick-nj.html" },
+        { "source": "/areas-we-serve/piscataway-nj", "destination": "/areas-we-serve/piscataway-nj.html" },
+        { "source": "/areas-we-serve/east-brunswick-nj", "destination": "/areas-we-serve/east-brunswick-nj.html" },
+        { "source": "/areas-we-serve/south-plainfield-nj", "destination": "/areas-we-serve/south-plainfield-nj.html" },
+        { "source": "/free-consultation", "destination": "/free-consultation.html" },
+        { "source": "/thank-you", "destination": "/thank-you.html" },
+        { "source": "/careers/jobs", "destination": "/careers/jobs.html" },
+        { "source": "/careers/apply", "destination": "/careers/apply.html" },
+        { "source": "/careers/thank-you", "destination": "/careers/thank-you.html" },
+        { "source": "/resources", "destination": "/resources.html" },
+        { "source": "/how-it-works", "destination": "/how-it-works.html" },
+        { "source": "/faq", "destination": "/faq.html" },
+        { "source": "/paying-for-care", "destination": "/paying-for-care.html" },
+        { "source": "/paying-for-care/cost", "destination": "/paying-for-care/cost.html" },
+        { "source": "/paying-for-care/private-pay", "destination": "/paying-for-care/private-pay.html" },
+        { "source": "/resources/guides", "destination": "/resources/guides.html" },
+        { "source": "/blog", "destination": "/blog.html" },
+        { "source": "/blog/signs-aging-parent-needs-help-at-home", "destination": "/blog/signs-aging-parent-needs-help-at-home.html" },
+        { "source": "/blog/hospital-to-home-family-checklist", "destination": "/blog/hospital-to-home-family-checklist.html" },
+        { "source": "/blog/home-care-or-assisted-living", "destination": "/blog/home-care-or-assisted-living.html" },
+        { "source": "/careers/jobs/**", "destination": "/spa.html" }
       ],
       "headers": [
         {
@@ -53,7 +124,61 @@
           ]
         },
         {
-          "source": "/@(about|services|careers|contact)",
+          "source": "/@(about|services|careers|contact|privacy-policy|terms|hipaa-notice|accessibility|non-discrimination|free-consultation|thank-you|resources|how-it-works|faq|blog|paying-for-care)",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/services/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/facility-staffing",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/facility-staffing/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/areas-we-serve",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/areas-we-serve/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/careers/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/blog/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/paying-for-care/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
+          "source": "/resources/**",
           "headers": [
             { "key": "Cache-Control", "value": "no-cache" }
           ]
@@ -69,6 +194,29 @@
         "services.html",
         "careers.html",
         "contact.html",
+        "privacy-policy.html",
+        "terms.html",
+        "hipaa-notice.html",
+        "accessibility.html",
+        "non-discrimination.html",
+        "services/**",
+        "facility-staffing.html",
+        "facility-staffing/**",
+        "areas-we-serve.html",
+        "areas-we-serve/**",
+        "free-consultation.html",
+        "thank-you.html",
+        "404.html",
+        "careers/**",
+        "spa.html",
+        "resources.html",
+        "how-it-works.html",
+        "faq.html",
+        "blog.html",
+        "paying-for-care.html",
+        "paying-for-care/**",
+        "blog/**",
+        "resources/**",
         "firebase.json",
         "**/.*",
         "**/node_modules/**"

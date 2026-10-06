@@ -8,12 +8,14 @@ import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
 import { useSpamGuard } from "@/hooks/useSpamGuard";
-
-const serviceOptions = ["Personal Care", "Companion Care", "Skilled Nursing", "Post-Surgery Care", "Respite Care", "Live-in Care", "Other"];
+import { CONTACT_SERVICE_OPTIONS as serviceOptions } from "@/data/serviceIndex";
+import { trackLead, type LeadSource } from "@/lib/leads";
+import { useNavigate } from "react-router-dom";
 
 const ContactSection = () => {
   const { addSubmission, contactInfo } = useAdmin();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const spamGuard = useSpamGuard();
@@ -32,18 +34,15 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (spamGuard.isSpam()) {
-      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-      setForm({ name: "", email: "", phone: "", service: "", message: "" });
-      spamGuard.reset();
+      navigate("/thank-you", { state: { source: "contact" satisfies LeadSource } });
       return;
     }
     if (!validate()) return;
     try {
       await addSubmission({ ...form, type: "contact" });
-      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-      setForm({ name: "", email: "", phone: "", service: "", message: "" });
-      setErrors({});
+      trackLead("contact", { care_type: form.service });
       spamGuard.reset();
+      navigate("/thank-you", { state: { source: "contact" satisfies LeadSource, name: form.name.trim().split(" ")[0] } });
     } catch (err: any) {
       console.error("Contact submission error:", err);
       toast({ title: "Submission failed", description: err?.message ?? "Please try again.", variant: "destructive" });

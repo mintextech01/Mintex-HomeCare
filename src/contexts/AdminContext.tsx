@@ -11,6 +11,23 @@ export interface Testimonial {
   location: string;
 }
 
+/** One line of the price table on /paying-for-care/cost (amount is free text such as "32" or "30–35"). */
+export interface PriceItem {
+  id: string;
+  label: string;
+  amount: string;
+  unit: string;
+  note: string;
+}
+
+/** Admin → Pricing. Prices appear on the website only when showPrices is on AND the line has an amount. */
+export interface Pricing {
+  showPrices: boolean;
+  items: PriceItem[];
+  minimumHours: string;
+  note: string;
+}
+
 export interface TeamMember {
   id: string;
   name: string;
@@ -104,6 +121,10 @@ interface AdminContextType {
   deleteSubmission: (id: string) => Promise<void>;
   jobPositions: JobPosition[];
   setJobPositions: React.Dispatch<React.SetStateAction<JobPosition[]>>;
+  /** True once the live job list has been read (or failed); until then jobPositions holds the defaults. */
+  jobsLoaded: boolean;
+  pricing: Pricing;
+  setPricing: React.Dispatch<React.SetStateAction<Pricing>>;
   contactInfo: ContactInfo;
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
   siteImages: SiteImages;
@@ -118,6 +139,18 @@ interface AdminContextType {
 
 // Testimonials and team members are added only through the Admin Dashboard,
 // so no placeholder people or reviews ever appear on the public site.
+const defaultPricing: Pricing = {
+  showPrices: false,
+  minimumHours: "",
+  note: "Prices are a guide. Your exact rate depends on the care plan agreed after your free assessment.",
+  items: [
+    { id: "hourly",   label: "Hourly care (companion & personal care)", amount: "", unit: "per hour",  note: "" },
+    { id: "live-in",  label: "Live-in care",                            amount: "", unit: "per day",   note: "" },
+    { id: "24-hour",  label: "24-hour care (caregivers in shifts)",     amount: "", unit: "per hour",  note: "" },
+    { id: "nursing",  label: "Skilled nursing visit (RN / LPN)",        amount: "", unit: "per visit", note: "" },
+  ],
+};
+
 const defaultTestimonials: Testimonial[] = [];
 
 const defaultTeamMembers: TeamMember[] = [];
@@ -213,6 +246,8 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
   const [services, setServicesState] = useState<ServiceItem[]>(defaultServices);
   const [submissions, setSubmissionsState] = useState<ContactSubmission[]>([]);
   const [jobPositions, setJobPositionsState] = useState<JobPosition[]>(defaultJobPositions);
+  const [jobsLoaded, setJobsLoaded] = useState(!isPublic);
+  const [pricing, setPricingState] = useState<Pricing>(defaultPricing);
   const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
   // Public pages start with a blank placeholder (not the stock defaults) so the stock photo
   // isn't downloaded and then swapped for the uploaded one.
@@ -230,8 +265,9 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     readOnce<Testimonial[]>("testimonials", setTestimonialsState);
     readOnce<GalleryImage[]>("gallery", setGalleryState);
     readOnce<ServiceItem[]>("services", setServicesState);
-    readOnce<JobPosition[]>("jobPositions", setJobPositionsState);
+    readOnce<JobPosition[]>("jobPositions", setJobPositionsState).finally(() => setJobsLoaded(true));
     readOnce<ContactInfo>("contactInfo", setContactInfoState);
+    readOnce<Pricing>("pricing", setPricingState);
   }, [isPublic]);
 
   const requestSiteImages = useCallback(async (keys: readonly SiteImageKey[]) => {
@@ -316,6 +352,7 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
         initMissingDoc("submissions", []).catch(console.error);
         initMissingDoc("jobPositions", defaultJobPositions).catch(console.error);
         initMissingDoc("contactInfo", defaultContactInfo).catch(console.error);
+        initMissingDoc("pricing", defaultPricing).catch(console.error);
         // siteImages are stored per-key in the "siteImageData" collection — no bulk init needed
       }
     };
@@ -345,6 +382,9 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => {
       if (d.exists()) setContactInfoState(d.data().data);
     });
+    const unsubPricing = onSnapshot(doc(db, "appData", "pricing"), (d) => {
+      if (d.exists()) setPricingState(d.data().data);
+    });
     // Each site image lives in its own document: siteImageData/{key} → { url: "..." }
     // This avoids Firestore's 1MB per-document limit when images are stored as base64.
     const unsubImages = onSnapshot(collection(db, "siteImageData"), (snapshot) => {
@@ -362,7 +402,7 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
       cancelled = true;
       unsubAuth();
       unsubTestimonials(); unsubTeam(); unsubGallery(); unsubServices();
-      stopSubmissions(); unsubPositions(); unsubContact(); unsubImages();
+      stopSubmissions(); unsubPositions(); unsubContact(); unsubPricing(); unsubImages();
     };
   }, [isPublic]);
 
@@ -426,6 +466,14 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     });
   }, []);
 
+  const setPricing = useCallback((action: React.SetStateAction<Pricing>) => {
+    setPricingState(prev => {
+      const next = typeof action === "function" ? action(prev) : action;
+      updateFirebase("pricing", next);
+      return next;
+    });
+  }, []);
+
   // setSiteImages only updates local React state.
   // The actual Firestore write is done per-key in ImageField.save() → siteImageData/{key}.
   const setSiteImages = useCallback((action: React.SetStateAction<SiteImages>) => {
@@ -475,7 +523,8 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
       gallery, setGallery,
       services, setServices,
       submissions, setSubmissions, addSubmission, updateSubmission, deleteSubmission,
-      jobPositions, setJobPositions,
+      jobPositions, setJobPositions, jobsLoaded,
+      pricing, setPricing,
       contactInfo, setContactInfo,
       siteImages, setSiteImages,
       requestSiteImages, requestTeamMembers,

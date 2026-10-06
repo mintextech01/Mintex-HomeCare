@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import { jobUrl } from "@/data/careers";
 import { ChevronRight, MapPin, Clock, Star } from "lucide-react";
 import { Job, formatPay } from "@/types/job";
 
@@ -35,7 +37,9 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
                 </Badge>
               </div>
               <CardTitle className="text-2xl md:text-3xl leading-tight mb-3 text-foreground">
-                {job.title}
+                {job.slug
+                  ? <Link to={jobUrl(job.slug)} onClick={e => e.stopPropagation()} className="hover:text-primary transition-colors">{job.title}</Link>
+                  : job.title}
               </CardTitle>
               <CardDescription className="text-base text-foreground/70 line-clamp-4 mb-4">
                 {job.fullDescription || job.description}

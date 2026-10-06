@@ -237,6 +237,38 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     pageUrl: "/#specialized-care",
   },
 
+  // ── Individual Service Pages ──────────────────────────────────────────────
+  // Blank by default: the page shows a designed illustration until a real photo is uploaded.
+  ...([
+    ["svcPersonalCare",         "personal-care",         "Personal Care"],
+    ["svcCompanionCare",        "companion-care",        "Companion & Homemaking"],
+    ["svcHourlyCare",           "hourly-care",           "Hourly Care"],
+    ["svcLiveInCare",           "live-in-24-hour-care",  "Live-In & 24-Hour Care"],
+    ["svcRespiteCare",          "respite-care",          "Respite Care"],
+    ["svcPostSurgeryCare",      "post-surgery-care",     "Post-Surgery & Hospital-to-Home"],
+    ["svcSkilledNursing",       "skilled-nursing",       "Skilled Nursing"],
+    ["svcTherapySupport",       "therapy-support",       "Rehab & Therapy Support"],
+    ["svcWoundCareIv",          "wound-care-iv-therapy", "Wound Care & IV Therapy"],
+    ["svcMedicationManagement", "medication-management", "Medication Management"],
+  ] as const).map(([key, slug, name]) => ({
+    key,
+    defaultUrl: "",
+    label: `${name} — Hero Photo`,
+    description: `Photo at the top of the ${name} page. Leave blank to use the designed illustration.`,
+    page: "Service Pages",
+    pageUrl: `/services/${slug}`,
+  })),
+
+  // ── Facility Staffing ─────────────────────────────────────────────────────
+  {
+    key: "staffingHero",
+    defaultUrl: "",
+    label: "Facility Staffing — Hero Photo",
+    description: "Photo at the top of the Facility Staffing page. Leave blank to use the designed illustration.",
+    page: "Facility Staffing Page",
+    pageUrl: "/facility-staffing",
+  },
+
   // ── Careers Page ──────────────────────────────────────────────────────────
   {
     key: "careersPageBanner",

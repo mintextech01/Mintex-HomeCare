@@ -4,6 +4,8 @@ export type FilterOption = "all" | "full-time" | "part-time" | "per-diem";
 
 export interface Job {
   id: string;
+  /** URL slug of the job's page (/careers/jobs/{slug}). */
+  slug?: string;
   title: string;
   employmentType: EmploymentType;
   location: string;

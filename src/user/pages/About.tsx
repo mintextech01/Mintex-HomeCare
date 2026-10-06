@@ -44,7 +44,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="relative pt-32 pb-20 bg-background overflow-hidden">
+        <section className="relative pt-32 lg:pt-40 pb-20 bg-background overflow-hidden">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             {/* Gradient blobs */}
             <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 600, height: 600, top: "-15%", right: "-10%", opacity: 0.7 }} />
@@ -124,7 +124,7 @@ const About = () => {
                   {[
                     { icon: ShieldCheck, label: "NJ State Licensed" },
                     { icon: Award,       label: "Bonded & Insured"  },
-                    { icon: MapPin,      label: "Serving All of NJ" },
+                    { icon: MapPin,      label: "Serving 12 NJ Counties" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="flex items-center gap-2 text-sm text-gray-500">
                       <Icon className="w-4 h-4 text-[#2a66b0]" />

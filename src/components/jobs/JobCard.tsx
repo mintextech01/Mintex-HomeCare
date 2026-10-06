@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, MapPin, Clock } from "lucide-react";
 import { Job, formatPay } from "@/types/job";
+import { Link } from "react-router-dom";
+import { jobUrl } from "@/data/careers";
 
 interface JobCardProps {
   job: Job;
@@ -42,7 +44,10 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
             )}
           </div>
           <CardTitle className="text-lg leading-tight line-clamp-2 text-foreground hover:text-primary transition-colors">
-            {job.title}
+            {/* A real link so the job page is crawlable; the whole card is clickable too. */}
+            {job.slug
+              ? <Link to={jobUrl(job.slug)} onClick={e => e.stopPropagation()}>{job.title}</Link>
+              : job.title}
           </CardTitle>
         </CardHeader>
 

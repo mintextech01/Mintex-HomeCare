@@ -1,40 +1,14 @@
 import { useState, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import AnimatedSection from "@/components/AnimatedSection";
 import { JobCard } from "./JobCard";
 import { FeaturedJobCard } from "./FeaturedJobCard";
 import { JobFilters } from "./JobFilters";
-import { JobDetailModal } from "./JobDetailModal";
-import { Job, FilterOption, EmploymentType } from "@/types/job";
+import { Job, FilterOption } from "@/types/job";
 import { Button } from "@/components/ui/button";
-import { useAdmin, JobPosition } from "@/contexts/AdminContext";
-
-function parseEmploymentType(type: string): EmploymentType {
-  const t = type.toLowerCase();
-  if (t.includes("per diem") || t.includes("per-diem")) return "Per Diem";
-  if (t.includes("part")) return "Part-time";
-  return "Full-time";
-}
-
-function positionToJob(p: JobPosition): Job {
-  const reqs = p.requirements
-    .split(/\n|,\s*(?=[A-Z])/)
-    .map((r) => r.trim())
-    .filter((r) => r.length > 0);
-  return {
-    id: p.id,
-    title: p.title,
-    employmentType: parseEmploymentType(p.type),
-    location: "New Jersey",
-    description: p.description,
-    fullDescription: p.description,
-    requirements: reqs.length > 0 ? reqs : [p.requirements],
-    benefits: [],
-    salaryRange: p.payMin != null && p.payMax != null
-      ? { min: p.payMin, max: p.payMax, unit: p.payUnit ?? "HOUR" }
-      : undefined,
-  };
-}
+import { useAdmin } from "@/contexts/AdminContext";
+import { activeJobsWithSlugs, applyUrl, jobUrl, positionToJob } from "@/data/careers";
 
 interface JobsSectionProps {
   title?: string;
@@ -45,15 +19,14 @@ export function JobsSection({
   title = "Join Our Team",
   subtitle = "Discover rewarding nursing career opportunities",
 }: JobsSectionProps) {
-  const { contactInfo, jobPositions } = useAdmin();
+  const { jobPositions } = useAdmin();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState<FilterOption>("all");
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  // Convert active admin job positions to Job format
+  // Convert active admin job positions to Job format (each with its page slug)
   const jobsData: Job[] = useMemo(
-    () => jobPositions.filter((p) => p.active).map(positionToJob),
+    () => activeJobsWithSlugs(jobPositions).map(({ position, slug }) => ({ ...positionToJob(position), slug })),
     [jobPositions]
   );
 
@@ -77,23 +50,9 @@ export function JobsSection({
   const featuredJobs = filteredJobs.filter((job) => job.featured);
   const regularJobs = filteredJobs.filter((job) => !job.featured);
 
-  const handleJobSelect = (job: Job) => {
-    setSelectedJob(job);
-    setIsDetailModalOpen(true);
-  };
-
-  const handleApply = (_job: Job) => {
-    setIsDetailModalOpen(false);
-    // Wait for dialog to fully close and release body scroll lock before scrolling
-    setTimeout(() => {
-      document.body.style.overflow = "";
-      document.body.style.pointerEvents = "";
-      const applySection = document.getElementById("apply-section");
-      if (applySection) {
-        applySection.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 400);
-  };
+  // Each job has its own page; "Apply Now" opens the application form with that job selected.
+  const handleJobSelect = (job: Job) => navigate(jobUrl(job.slug!));
+  const handleApply = (job: Job) => navigate(applyUrl(job.slug));
 
   return (
     <section className="py-16 md:py-24 bg-background relative overflow-hidden">
@@ -197,22 +156,14 @@ export function JobsSection({
           <p className="text-foreground/70 mb-4">
             Don't see a position that fits? We're always looking for talented healthcare professionals.
           </p>
-          <a
-            href={`mailto:${contactInfo.email}`}
+          <Link
+            to={applyUrl()}
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-105 shadow-lg shadow-primary/20"
           >
-            Send Your Resume
-          </a>
+            Send a General Application
+          </Link>
         </AnimatedSection>
       </div>
-
-      {/* Job Detail Modal */}
-      <JobDetailModal
-        job={selectedJob}
-        isOpen={isDetailModalOpen}
-        onOpenChange={setIsDetailModalOpen}
-        onApplyClick={handleApply}
-      />
     </section>
   );
 }

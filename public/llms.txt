@@ -1,6 +1,6 @@
 # MintexCare
 
-> MintexCare is a home healthcare agency based in Edison, New Jersey. It provides in-home personal care, companion care, skilled nursing, post-surgery care, respite care, live-in care and meal preparation for seniors and adults who need support at home, serving Middlesex, Monmouth, Somerset, Union and Mercer counties. Care is available 24 hours a day, 7 days a week.
+> MintexCare is a home healthcare agency based in Edison, New Jersey. It provides in-home personal care, companion care and homemaking, hourly and live-in care, respite care, post-surgery care, skilled nursing (RN / LPN), rehab and therapy support, wound care and IV therapy, and medication management, and staffs HHAs, CNAs, LPNs and RNs for care facilities. It serves 12 New Jersey counties. Care is available 24 hours a day, 7 days a week.
 
 - Office: 2163 Oak Tree Road, Suite 204, Edison, NJ 08820
 - Phone: (732) 268-5112
@@ -10,20 +10,54 @@
 
 ## Core pages
 
-- [Home](https://mintexcare.com/): Overview of MintexCare's home care services in Edison and Central New Jersey
-- [Services](https://mintexcare.com/services): Home care services (hourly and live-in companion care, personal care, post-surgery care, rehab support, respite care, skilled nursing, meal preparation, medication reminders, errands, appointment scheduling, housekeeping, laundry, facility staffing) and specialized care (custodial care, wound care, post-stroke recovery, physical, occupational and speech therapy)
+- [Home](https://mintexcare.com/): Overview of MintexCare's home care services in New Jersey
+- [Services](https://mintexcare.com/services): All in-home and specialized & clinical services
+- [Facility Staffing](https://mintexcare.com/facility-staffing): HHA, CNA, LPN and RN staffing for nursing homes, assisted living, rehab and long-term care facilities, with a partner FAQ
+- [Areas We Serve](https://mintexcare.com/areas-we-serve): The 12 counties and the towns MintexCare serves
 - [About](https://mintexcare.com/about): Who MintexCare is and how the agency works with families
 - [Careers](https://mintexcare.com/careers): Open positions for Home Health Aides, CNAs, LPNs, RNs and companion caregivers in New Jersey
 - [Contact](https://mintexcare.com/contact): Request a free consultation, office address and contact details, frequently asked questions
 
+## Services
+
+- [Personal Care](https://mintexcare.com/services/personal-care)
+- [Companion & Homemaking](https://mintexcare.com/services/companion-care)
+- [Hourly Care](https://mintexcare.com/services/hourly-care)
+- [Live-In & 24-Hour Care](https://mintexcare.com/services/live-in-24-hour-care)
+- [Respite Care](https://mintexcare.com/services/respite-care)
+- [Post-Surgery & Hospital-to-Home](https://mintexcare.com/services/post-surgery-care)
+- [Skilled Nursing (RN / LPN)](https://mintexcare.com/services/skilled-nursing)
+- [Rehab & Therapy Support](https://mintexcare.com/services/therapy-support)
+- [Wound Care & IV Therapy](https://mintexcare.com/services/wound-care-iv-therapy)
+- [Medication Management](https://mintexcare.com/services/medication-management)
+
 ## Service area
 
-- Middlesex County, NJ (office in Edison)
-- Monmouth County, NJ
-- Somerset County, NJ
-- Union County, NJ
-- Mercer County, NJ
+- [Middlesex County, NJ](https://mintexcare.com/areas-we-serve/middlesex-county) (office in Edison)
+- [Monmouth County, NJ](https://mintexcare.com/areas-we-serve/monmouth-county)
+- [Somerset County, NJ](https://mintexcare.com/areas-we-serve/somerset-county)
+- [Union County, NJ](https://mintexcare.com/areas-we-serve/union-county)
+- [Mercer County, NJ](https://mintexcare.com/areas-we-serve/mercer-county)
+- [Essex County, NJ](https://mintexcare.com/areas-we-serve/essex-county)
+- [Bergen County, NJ](https://mintexcare.com/areas-we-serve/bergen-county)
+- [Hudson County, NJ](https://mintexcare.com/areas-we-serve/hudson-county)
+- [Passaic County, NJ](https://mintexcare.com/areas-we-serve/passaic-county)
+- [Morris County, NJ](https://mintexcare.com/areas-we-serve/morris-county)
+- [Ocean County, NJ](https://mintexcare.com/areas-we-serve/ocean-county)
+- [Burlington County, NJ](https://mintexcare.com/areas-we-serve/burlington-county)
+
+## Town pages (Middlesex County)
+
+- [Home care in Edison, NJ](https://mintexcare.com/areas-we-serve/edison-nj)
+- [Home care in Metuchen, NJ](https://mintexcare.com/areas-we-serve/metuchen-nj)
+- [Home care in Woodbridge, NJ](https://mintexcare.com/areas-we-serve/woodbridge-nj)
+- [Home care in New Brunswick, NJ](https://mintexcare.com/areas-we-serve/new-brunswick-nj)
+- [Home care in Piscataway, NJ](https://mintexcare.com/areas-we-serve/piscataway-nj)
+- [Home care in East Brunswick, NJ](https://mintexcare.com/areas-we-serve/east-brunswick-nj)
+- [Home care in South Plainfield, NJ](https://mintexcare.com/areas-we-serve/south-plainfield-nj)
 
 ## Optional
 
 - [Sitemap](https://mintexcare.com/sitemap.xml)
+- [Privacy Policy](https://mintexcare.com/privacy-policy)
+- [HIPAA Notice of Privacy Practices](https://mintexcare.com/hipaa-notice)
