@@ -4,6 +4,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 import logo from "@/assets/Artboard 133 copy (1).svg";
 import AnimatedSection from "@/components/AnimatedSection";
 import { serviceBySlug } from "@/data/serviceIndex";
+import { COUNTIES } from "@/data/areas";
 
 const Footer = () => {
   const { contactInfo } = useAdmin();
@@ -52,6 +53,24 @@ const Footer = () => {
               <li className="flex items-center gap-3"><Mail className="h-4 w-4 shrink-0" /><a href={`mailto:${contactInfo.email}`} className="hover:text-accent">{contactInfo.email}</a></li>
               <li className="flex items-center gap-3"><MapPin className="h-4 w-4 shrink-0" />{contactInfo.address}</li>
               <li className="flex items-center gap-3"><Clock className="h-4 w-4 shrink-0" />{contactInfo.hours}</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Service area: every county page, one click from any page. */}
+        <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
+            <Link to="/areas-we-serve" className="inline-flex items-center gap-2 font-serif text-base font-semibold shrink-0 hover:text-accent transition-colors">
+              <MapPin className="h-4 w-4 text-accent" /> Serving 12 NJ Counties
+            </Link>
+            <ul className="flex flex-wrap gap-2">
+              {COUNTIES.map(c => (
+                <li key={c.slug}>
+                  <Link to={`/areas-we-serve/${c.slug}`} className="inline-block rounded-full px-3 py-1 text-xs text-white/80 hover:text-white hover:border-accent transition-colors" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

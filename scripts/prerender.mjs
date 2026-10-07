@@ -23,7 +23,7 @@ const DIST = path.join(ROOT, "dist");
 const ROUTES = [
   { path: "/", file: "index.html", title: "Home Care in Edison, NJ" },
   { path: "/about", file: "about.html", title: "About MintexCare" },
-  { path: "/services", file: "services.html", title: "Home Care Services in Edison" },
+  { path: "/services", file: "services.html", title: "Home Care Services in New Jersey" },
   { path: "/careers", file: "careers.html", title: "Caregiver & Nursing Jobs" },
   { path: "/contact", file: "contact.html", title: "Contact MintexCare" },
   { path: "/privacy-policy", file: "privacy-policy.html", title: "Privacy Policy" },

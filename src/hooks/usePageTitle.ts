@@ -31,9 +31,9 @@ const pageMeta: Record<string, PageMeta> = {
     crumb: "About",
   },
   "/services": {
-    title: "Home Care Services in Edison & Central NJ | MintexCare",
+    title: "Home Care Services in New Jersey | MintexCare",
     description:
-      "Personal care, companion care, skilled nursing, post-surgery, respite and live-in care at home in Edison and Central NJ. Free consultation: (732) 268-5112.",
+      "Personal care, companion care, skilled nursing, dementia care, post-surgery, respite and live-in care at home across 12 New Jersey counties. Free consultation: (732) 268-5112.",
     canonical: "https://mintexcare.com/services",
     crumb: "Services",
   },
