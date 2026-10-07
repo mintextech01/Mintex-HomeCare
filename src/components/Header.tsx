@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Phone, Menu, X, ChevronDown, MessageCircle, Briefcase, MapPin, ArrowRight, Clock, Building2, Search, ListChecks, HelpCircle, Mail, ClipboardList, Newspaper, Calculator, Wallet, Receipt } from "lucide-react";
+import { Phone, Menu, X, ChevronDown, MessageCircle, Briefcase, MapPin, ArrowRight, Clock, Building2, Search, ListChecks, HelpCircle, Mail, ClipboardList, Newspaper, Calculator, Wallet, Receipt, Heart, ShieldCheck, Quote } from "lucide-react";
 import logo from "@/assets/Artboard 133 copy (1).svg";
 import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -10,7 +10,7 @@ import { SERVICE_INDEX, SERVICE_GROUP_LABEL, type ServiceGroup } from "@/data/se
 import { COUNTIES, AREA_REGION_LABEL, type AreaRegion } from "@/data/areas";
 
 // Main navigation from the sitemap.
-type MenuId = "services" | "areas" | "costs" | "resources";
+type MenuId = "services" | "areas" | "costs" | "resources" | "about";
 type NavItem =
   // drawerOnly: mobile menu only; on desktop it lives in the utility bar (the sitemap's main bar has no Contact).
   // short: label used on the desktop bar below 1400px, for the same reason.
@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
   { label: "Areas We Serve",    href: "/areas-we-serve",    menu: "areas" },
   { label: "Costs & Payment",   href: "/paying-for-care",   menu: "costs", short: "Costs" },
   { label: "Resources",         href: "/resources",         menu: "resources" },
-  { label: "About",             href: "/about" },
+  { label: "About",             href: "/about",             menu: "about" },
   { label: "Careers",           href: "/careers" },
   { label: "Contact",           href: "/contact",           drawerOnly: true },
 ];
@@ -46,7 +46,8 @@ const GRADIENT_BTN = {
 };
 const BRAND_GRADIENT = "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)";
 
-const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
+const isActive = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`) || (href === "/about" && pathname === "/reviews");
 
 /* ── Mega-menu panels (always in the HTML so the links are crawlable; hidden when closed) ── */
 
@@ -147,6 +148,32 @@ const CostsPanel = () => (
       <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 shadow-md" style={{ background: "#fff", color: "#1d4f8c" }}>
         Get a Free Quote <ArrowRight className="h-4 w-4" />
       </Link>
+    </div>
+  </div>
+);
+
+const ABOUT_LINKS = [
+  { to: "/about",                icon: Heart,       title: "Our Story",      text: "Who we are and why we care" },
+  { to: "/about/why-mintexcare", icon: ShieldCheck, title: "Why MintexCare", text: "Licensing, RN oversight and caregiver screening" },
+  { to: "/reviews",              icon: Quote,       title: "Reviews",        text: "What families say about us" },
+];
+
+const AboutPanel = () => (
+  <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
+    {ABOUT_LINKS.map(({ to, icon: I, title, text }) => (
+      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-[#2a66b0]/30 hover:bg-[#2a66b0]/[0.04] transition-colors">
+        <span className="w-11 h-11 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center mb-4 group-hover:bg-[#2a66b0] transition-colors">
+          <I className="w-5 h-5 text-[#2a66b0] group-hover:text-white transition-colors" />
+        </span>
+        <span className="font-semibold text-foreground group-hover:text-[#2a66b0] transition-colors">{title}</span>
+        <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
+      </Link>
+    ))}
+    <div className="relative rounded-2xl p-6 overflow-hidden text-white flex flex-col" style={{ background: BRAND_GRADIENT }}>
+      <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
+      <ShieldCheck className="relative w-8 h-8 mb-3" />
+      <p className="relative text-lg font-bold leading-snug">Licensed by the State of New Jersey</p>
+      <p className="relative text-xs text-white/80 mt-1">Bonded, insured and RN-supervised</p>
     </div>
   </div>
 );
@@ -305,7 +332,7 @@ const Header = () => {
             <nav aria-label="Main" className="hidden lg:flex items-center xl:gap-2">
               {navItems.map(item => {
                 const active = isActive(location.pathname, item.href);
-                const cls = `relative flex items-center gap-1 whitespace-nowrap text-[13px] xl:text-sm font-medium px-1.5 xl:px-3 py-2 rounded-full transition-colors duration-200 ${
+                const cls = `relative flex items-center gap-1 whitespace-nowrap text-[13px] min-[1400px]:text-sm font-medium px-1.5 min-[1400px]:px-3 py-2 rounded-full transition-colors duration-200 ${
                   active ? "text-[#2a66b0] dark:text-[hsl(214_66%_68%)]" : "text-foreground hover:text-[#2a66b0] dark:hover:text-[hsl(214_66%_68%)]"
                 }`;
                 if (!item.menu) {
@@ -322,14 +349,14 @@ const Header = () => {
                 const open = menu === item.menu;
                 return (
                   <div key={item.label} className="flex items-center" onMouseEnter={() => openMenu(item.menu)}>
-                    <Link to={item.href} className={`${cls} pr-1 xl:pr-1`} aria-current={location.pathname === item.href ? "page" : undefined}>
+                    <Link to={item.href} className={`${cls} pr-1 min-[1400px]:pr-1`} aria-current={location.pathname === item.href ? "page" : undefined}>
                       {item.short
                         ? <><span className="min-[1400px]:hidden" aria-hidden="true">{item.short}</span><span className="hidden min-[1400px]:inline">{item.label}</span><span className="sr-only min-[1400px]:hidden">{item.label}</span></>
                         : item.label}
                       {active && <span className="absolute left-3 right-1 -bottom-0.5 h-0.5 rounded-full bg-[#2a66b0]" />}
                     </Link>
                     <button type="button"
-                      className={`h-7 w-6 -ml-0.5 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#2a66b0]/40 ${
+                      className={`h-7 w-5 min-[1400px]:w-6 -ml-0.5 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#2a66b0]/40 ${
                         open || active ? "text-[#2a66b0] dark:text-[hsl(214_66%_68%)]" : "text-foreground hover:text-[#2a66b0]"
                       }`}
                       aria-label={`${open ? "Hide" : "Show"} ${item.label} menu`}
@@ -378,7 +405,7 @@ const Header = () => {
           </div>
 
           {/* Mega menus (desktop) */}
-          {(["services", "areas", "costs", "resources"] as const).map(id => {
+          {(["services", "areas", "costs", "resources", "about"] as const).map(id => {
             const open = menu === id;
             return (
               <div key={id} id={`mega-${id}`}
@@ -389,6 +416,7 @@ const Header = () => {
                     {id === "services" ? <ServicesPanel tel={phoneLink} phone={contactInfo.phone} />
                       : id === "areas" ? <AreasPanel />
                       : id === "costs" ? <CostsPanel />
+                      : id === "about" ? <AboutPanel />
                       : <ResourcesPanel tel={phoneLink} phone={contactInfo.phone} />}
                   </div>
                 </div>
@@ -507,6 +535,18 @@ const Header = () => {
                   <Link to="/areas-we-serve" className="flex items-center gap-2 text-sm font-semibold text-[#2a66b0] px-3 py-2.5">
                     Find your town <ArrowRight className="h-4 w-4" />
                   </Link>
+                </DrawerSection>
+              );
+            }
+            if (item.menu === "about") {
+              return (
+                <DrawerSection key={item.label} label={item.label} isDark={isDark}
+                  open={drawerSection === "about"} onToggle={() => setDrawerSection(s => (s === "about" ? null : "about"))}>
+                  {ABOUT_LINKS.map(({ to, icon: I, title }) => (
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-[#2a66b0]/[0.06]">
+                      <I className="h-4 w-4 text-[#2a66b0] shrink-0" /> {title}
+                    </Link>
+                  ))}
                 </DrawerSection>
               );
             }

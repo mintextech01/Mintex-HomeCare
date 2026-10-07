@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Clock, ShieldCheck } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import logo from "@/assets/Artboard 133 copy (1).svg";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -17,6 +17,9 @@ const Footer = () => {
             <img src={logo} alt="MintexCare" className="h-20 md:h-28 w-auto object-contain transform scale-110 origin-left mb-4" />
             <p className="text-sm italic mb-4 text-white/70">Care you can believe in</p>
             <p className="text-sm text-white/80 leading-relaxed">MintexCare is a trusted home healthcare agency based in New Jersey, providing compassionate, high-quality care to individuals in the comfort of their own homes.</p>
+            <Link to="/about/why-mintexcare" className="mt-4 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-white hover:text-accent transition-colors" style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
+              <ShieldCheck className="h-4 w-4 shrink-0" /> Licensed by the State of New Jersey
+            </Link>
             <div className="flex gap-3 mt-5">
               <a href={contactInfo.facebookUrl || "https://www.facebook.com/profile.php?id=61566851474928"} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Facebook className="h-4 w-4" /></a>
               <a href={contactInfo.instagramUrl || "https://www.instagram.com/mintexhomecare/"} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors"><Instagram className="h-4 w-4" /></a>

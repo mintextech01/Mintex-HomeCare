@@ -264,7 +264,6 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
         .catch(err => console.debug(`[AdminContext] ${name}:`, err?.code ?? err));
     readOnce<Testimonial[]>("testimonials", setTestimonialsState);
     readOnce<GalleryImage[]>("gallery", setGalleryState);
-    readOnce<ServiceItem[]>("services", setServicesState);
     readOnce<JobPosition[]>("jobPositions", setJobPositionsState).finally(() => setJobsLoaded(true));
     readOnce<ContactInfo>("contactInfo", setContactInfoState);
     readOnce<Pricing>("pricing", setPricingState);

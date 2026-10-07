@@ -145,6 +145,8 @@ const SEARCH_INDEX: SearchEntry[] = [
   { title: "Request Facility Staff", text: "Staffing request form for facilities", to: "/facility-staffing/request-staff", kind: "Page", icon: Building2 },
   { title: "Open Positions", text: "Caregiver and nursing jobs, apply online", to: "/careers/jobs", kind: "Careers", icon: Briefcase },
   { title: "About MintexCare", text: "Our story, mission and team in Edison NJ", to: "/about", kind: "Page", icon: Heart },
+  { title: "Why MintexCare", text: "Licensed by the State of New Jersey, bonded, insured, RN supervision, caregiver screening, background check, drug test, TB test, trust, safety", to: "/about/why-mintexcare", kind: "Page", icon: ShieldCheck },
+  { title: "Reviews & Testimonials", text: "What families say, testimonials, reviews, experience", to: "/reviews", kind: "Page", icon: Heart },
   { title: "Contact", text: "Phone, email, office address, directions", to: "/contact", kind: "Page", icon: Phone },
   { title: "Privacy Policy", text: "How we protect your information", to: "/privacy-policy", kind: "Legal", icon: ShieldCheck },
   { title: "HIPAA Notice of Privacy Practices", text: "Health information privacy rights", to: "/hipaa-notice", kind: "Legal", icon: ShieldCheck },

@@ -1,6 +1,6 @@
 # MintexCare
 
-> MintexCare is a home healthcare agency based in Edison, New Jersey. It provides in-home personal care, companion care and homemaking, hourly and live-in care, respite care, post-surgery care, skilled nursing (RN / LPN), rehab and therapy support, wound care and IV therapy, and medication management, and staffs HHAs, CNAs, LPNs and RNs for care facilities. It serves 12 New Jersey counties. Care is available 24 hours a day, 7 days a week.
+> MintexCare is a home healthcare agency based in Edison, New Jersey. It provides in-home personal care, companion care and homemaking, hourly and live-in care, respite care, post-surgery care, skilled nursing (RN / LPN), rehab and therapy support, wound care and IV therapy, medication management, and Alzheimer's and dementia care, and staffs HHAs, CNAs, LPNs and RNs for care facilities. It serves 12 New Jersey counties. Care is available 24 hours a day, 7 days a week.
 
 - Office: 2163 Oak Tree Road, Suite 204, Edison, NJ 08820
 - Phone: (732) 268-5112
@@ -15,6 +15,9 @@
 - [Facility Staffing](https://mintexcare.com/facility-staffing): HHA, CNA, LPN and RN staffing for nursing homes, assisted living, rehab and long-term care facilities, with a partner FAQ
 - [Areas We Serve](https://mintexcare.com/areas-we-serve): The 12 counties and the towns MintexCare serves
 - [About](https://mintexcare.com/about): Who MintexCare is and how the agency works with families
+- [Why MintexCare](https://mintexcare.com/about/why-mintexcare): Licensed by the State of New Jersey, RN-supervised care plans, 7-step caregiver screening
+- [Reviews](https://mintexcare.com/reviews): Testimonials from families
+- [Costs & Payment](https://mintexcare.com/paying-for-care): Cost of home care and private pay (check, card, ACH, Zelle, cash)
 - [Careers](https://mintexcare.com/careers): Open positions for Home Health Aides, CNAs, LPNs, RNs and companion caregivers in New Jersey
 - [Contact](https://mintexcare.com/contact): Request a free consultation, office address and contact details, frequently asked questions
 
@@ -30,6 +33,7 @@
 - [Rehab & Therapy Support](https://mintexcare.com/services/therapy-support)
 - [Wound Care & IV Therapy](https://mintexcare.com/services/wound-care-iv-therapy)
 - [Medication Management](https://mintexcare.com/services/medication-management)
+- [Alzheimer's & Dementia Care](https://mintexcare.com/services/dementia-care)
 
 ## Service area
 

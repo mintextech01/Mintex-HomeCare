@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { useAdmin, type JobPosition, type ServiceItem, type ContactInfo, type Pricing, type PriceItem } from "@/contexts/AdminContext";
+import { useAdmin, type JobPosition, type ContactInfo, type Pricing, type PriceItem } from "@/contexts/AdminContext";
 import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,16 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { LayoutDashboard, MessageSquare, Users, Image, Settings, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList, Download, FileText as FileIcon, DollarSign } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Users, Image, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList, Download, FileText as FileIcon, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { iconNames } from "@/lib/iconMap";
 import { db } from "@/lib/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "services" | "submissions" | "applications" | "positions" | "contact-info" | "pricing";
+type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "submissions" | "applications" | "positions" | "contact-info" | "pricing";
 
 const AdminDashboard = () => {
-  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, services, setServices, submissions, setSubmissions, updateSubmission, deleteSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages, pricing, setPricing } = useAdmin();
+  const { isAuthenticated, logout, isLoading, testimonials, setTestimonials, teamMembers, setTeamMembers, gallery, setGallery, submissions, setSubmissions, updateSubmission, deleteSubmission, jobPositions, setJobPositions, contactInfo, setContactInfo, siteImages, setSiteImages, pricing, setPricing } = useAdmin();
   const { toast } = useToast();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -39,7 +38,6 @@ const AdminDashboard = () => {
     { key: "team" as Tab, label: "Team Members", icon: Users },
     { key: "gallery" as Tab, label: "Gallery", icon: Image },
     { key: "site-images" as Tab, label: "Site Images", icon: Layers },
-    { key: "services" as Tab, label: "Services", icon: Settings },
     { key: "positions" as Tab, label: "Job Positions", icon: Briefcase },
     { key: "contact-info" as Tab, label: "Contact Info", icon: Phone },
     { key: "pricing" as Tab, label: "Pricing", icon: DollarSign },
@@ -84,7 +82,6 @@ const AdminDashboard = () => {
           {tab === "team" && <TeamTab teamMembers={teamMembers} setTeamMembers={setTeamMembers} toast={toast} />}
           {tab === "gallery" && <GalleryTab gallery={gallery} setGallery={setGallery} toast={toast} />}
           {tab === "site-images" && <SiteImagesTab siteImages={siteImages} setSiteImages={setSiteImages} teamMembers={teamMembers} setTeamMembers={setTeamMembers} toast={toast} />}
-          {tab === "services" && <ServicesTab services={services} setServices={setServices} toast={toast} />}
           {tab === "positions" && <PositionsTab positions={jobPositions} setPositions={setJobPositions} toast={toast} />}
           {tab === "contact-info" && <ContactInfoTab contactInfo={contactInfo} setContactInfo={setContactInfo} toast={toast} />}
           {tab === "pricing" && <PricingTab pricing={pricing} setPricing={setPricing} toast={toast} />}
@@ -255,73 +252,6 @@ const GalleryTab = ({ gallery, setGallery, toast }: any) => {
         ))}
         {gallery.length === 0 && <p className="text-muted-foreground font-sans col-span-full text-center py-12">No images yet.</p>}
       </div>
-    </div>
-  );
-};
-
-/* ── Services (full CRUD) ── */
-const ServicesTab = ({ services, setServices, toast }: { services: ServiceItem[]; setServices: React.Dispatch<React.SetStateAction<ServiceItem[]>>; toast: any }) => {
-  const [form, setForm] = useState({ title: "", description: "", icon: "Heart", category: "home" as "home" | "nursing" });
-  const [editing, setEditing] = useState<string | null>(null);
-
-  const save = () => {
-    if (!form.title || !form.description) return;
-    if (editing) {
-      setServices(prev => prev.map(s => s.id === editing ? { ...s, ...form } : s));
-      setEditing(null); toast({ title: "Service updated" });
-    } else {
-      setServices(prev => [...prev, { id: Date.now().toString(), ...form }]);
-      toast({ title: "Service added" });
-    }
-    setForm({ title: "", description: "", icon: "Heart", category: "home" });
-  };
-
-  const startEdit = (s: ServiceItem) => { setEditing(s.id); setForm({ title: s.title, description: s.description, icon: s.icon, category: s.category }); };
-  const remove = (id: string) => { setServices(prev => prev.filter(s => s.id !== id)); toast({ title: "Service removed" }); };
-
-  const homeServices = services.filter(s => s.category === "home");
-  const nursingServices = services.filter(s => s.category === "nursing");
-
-  return (
-    <div>
-      <h1 className="text-2xl font-serif font-bold text-foreground mb-6">Services Management</h1>
-      <Card className="mb-6 shadow-sm"><CardContent className="pt-6 space-y-3">
-        <div className="grid sm:grid-cols-2 gap-3">
-          <Input placeholder="Service Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="font-sans" />
-          <Select value={form.category} onValueChange={v => setForm({ ...form, category: v as "home" | "nursing" })}>
-            <SelectTrigger className="font-sans"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="home">Home Care</SelectItem>
-              <SelectItem value="nursing">Nursing Facility</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <Textarea placeholder="Service Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="font-sans" />
-        <Select value={form.icon} onValueChange={v => setForm({ ...form, icon: v })}>
-          <SelectTrigger className="font-sans w-48"><SelectValue /></SelectTrigger>
-          <SelectContent>{iconNames.map(name => <SelectItem key={name} value={name} className="font-sans">{name}</SelectItem>)}</SelectContent>
-        </Select>
-        <div className="flex flex-wrap gap-3">
-          <Button onClick={save} className="font-sans"><Plus className="h-4 w-4 mr-1" /> {editing ? "Update" : "Add"} Service</Button>
-          {editing && <Button variant="outline" onClick={() => { setEditing(null); setForm({ title: "", description: "", icon: "Heart", category: "home" }); }} className="font-sans">Cancel</Button>}
-        </div>
-      </CardContent></Card>
-
-      <h2 className="text-lg font-serif font-semibold text-foreground mb-3">Home Care Services ({homeServices.length})</h2>
-      <Card className="shadow-sm overflow-hidden mb-6"><div className="overflow-x-auto"><Table>
-        <TableHeader><TableRow><TableHead>Icon</TableHead><TableHead>Title</TableHead><TableHead className="hidden md:table-cell">Description</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
-        <TableBody>{homeServices.map(s => (
-          <TableRow key={s.id}><TableCell className="font-sans text-xs text-muted-foreground">{s.icon}</TableCell><TableCell className="font-sans font-medium">{s.title}</TableCell><TableCell className="font-sans text-sm max-w-xs truncate hidden md:table-cell">{s.description}</TableCell><TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(s)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(s.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell></TableRow>
-        ))}</TableBody>
-      </Table></div></Card>
-
-      <h2 className="text-lg font-serif font-semibold text-foreground mb-3">Nursing Facility Services ({nursingServices.length})</h2>
-      <Card className="shadow-sm overflow-hidden"><div className="overflow-x-auto"><Table>
-        <TableHeader><TableRow><TableHead>Icon</TableHead><TableHead>Title</TableHead><TableHead className="hidden md:table-cell">Description</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
-        <TableBody>{nursingServices.map(s => (
-          <TableRow key={s.id}><TableCell className="font-sans text-xs text-muted-foreground">{s.icon}</TableCell><TableCell className="font-sans font-medium">{s.title}</TableCell><TableCell className="font-sans text-sm max-w-xs truncate hidden md:table-cell">{s.description}</TableCell><TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(s)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(s.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell></TableRow>
-        ))}</TableBody>
-      </Table></div></Card>
     </div>
   );
 };

@@ -26,6 +26,8 @@
         { "regex": "^/(?P<page>free-consultation|thank-you)(?:/|\\.html)$", "destination": "/:page", "type": 301 },
         { "regex": "^/(?P<page>resources|how-it-works|faq)(?:/|\\.html)$", "destination": "/:page", "type": 301 },
         { "regex": "^/resources/guides(?:/|\\.html)$", "destination": "/resources/guides", "type": 301 },
+        { "regex": "^/about/why-mintexcare(?:/|\\.html)$", "destination": "/about/why-mintexcare", "type": 301 },
+        { "regex": "^/reviews(?:/|\\.html)$", "destination": "/reviews", "type": 301 },
         { "regex": "^/paying-for-care(?:/|\\.html)$", "destination": "/paying-for-care", "type": 301 },
         { "regex": "^/paying-for-care/(?P<page>cost|private-pay)(?:/|\\.html)$", "destination": "/paying-for-care/:page", "type": 301 },
         { "regex": "^/blog(?:/|\\.html)$", "destination": "/blog", "type": 301 },
@@ -54,6 +56,7 @@
         { "source": "/services/therapy-support", "destination": "/services/therapy-support.html" },
         { "source": "/services/wound-care-iv-therapy", "destination": "/services/wound-care-iv-therapy.html" },
         { "source": "/services/medication-management", "destination": "/services/medication-management.html" },
+        { "source": "/services/dementia-care", "destination": "/services/dementia-care.html" },
         { "source": "/facility-staffing", "destination": "/facility-staffing.html" },
         { "source": "/facility-staffing/roles", "destination": "/facility-staffing/roles.html" },
         { "source": "/facility-staffing/request-staff", "destination": "/facility-staffing/request-staff.html" },
@@ -85,6 +88,8 @@
         { "source": "/resources", "destination": "/resources.html" },
         { "source": "/how-it-works", "destination": "/how-it-works.html" },
         { "source": "/faq", "destination": "/faq.html" },
+        { "source": "/about/why-mintexcare", "destination": "/about/why-mintexcare.html" },
+        { "source": "/reviews", "destination": "/reviews.html" },
         { "source": "/paying-for-care", "destination": "/paying-for-care.html" },
         { "source": "/paying-for-care/cost", "destination": "/paying-for-care/cost.html" },
         { "source": "/paying-for-care/private-pay", "destination": "/paying-for-care/private-pay.html" },
@@ -124,7 +129,7 @@
           ]
         },
         {
-          "source": "/@(about|services|careers|contact|privacy-policy|terms|hipaa-notice|accessibility|non-discrimination|free-consultation|thank-you|resources|how-it-works|faq|blog|paying-for-care)",
+          "source": "/@(about|services|careers|contact|privacy-policy|terms|hipaa-notice|accessibility|non-discrimination|free-consultation|thank-you|resources|how-it-works|faq|blog|paying-for-care|reviews)",
           "headers": [
             { "key": "Cache-Control", "value": "no-cache" }
           ]
@@ -178,6 +183,12 @@
           ]
         },
         {
+          "source": "/about/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-cache" }
+          ]
+        },
+        {
           "source": "/resources/**",
           "headers": [
             { "key": "Cache-Control", "value": "no-cache" }
@@ -215,6 +226,8 @@
         "blog.html",
         "paying-for-care.html",
         "paying-for-care/**",
+        "about/**",
+        "reviews.html",
         "blog/**",
         "resources/**",
         "firebase.json",

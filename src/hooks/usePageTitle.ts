@@ -131,6 +131,22 @@ const pageMeta: Record<string, PageMeta> = {
     crumb: "FAQ",
     parent: { name: "Resources", url: "https://mintexcare.com/resources" },
   },
+  "/about/why-mintexcare": {
+    title: "Why MintexCare | Licensed, Nurse-Supervised Home Care in NJ",
+    description:
+      "Why families trust MintexCare: licensed by the State of New Jersey, bonded and insured, RN-supervised care plans, a 7-step caregiver screening and support 24/7.",
+    canonical: "https://mintexcare.com/about/why-mintexcare",
+    crumb: "Why MintexCare",
+    parent: { name: "About", url: "https://mintexcare.com/about" },
+  },
+  "/reviews": {
+    title: "Reviews & Testimonials | What Families Say | MintexCare",
+    description:
+      "Read what New Jersey families say about MintexCare's home care, caregivers and nurses. 500+ families served, available 24/7.",
+    canonical: "https://mintexcare.com/reviews",
+    crumb: "Reviews",
+    parent: { name: "About", url: "https://mintexcare.com/about" },
+  },
   "/paying-for-care": {
     title: "Paying for Home Care in NJ | Costs & Payment | MintexCare",
     description:

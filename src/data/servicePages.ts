@@ -341,6 +341,43 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     related: ["skilled-nursing", "post-surgery-care", "medication-management"],
   },
 
+  "dementia-care": {
+    heading: ["Alzheimer's & Dementia", "Care at Home"],
+    intro:
+      "Memory loss changes daily life for the whole family. Our specially trained caregivers help your loved one stay safe, calm and as independent as possible at home, with familiar routines, patient support and supervision, while giving family caregivers the break they need.",
+    imageKey: "svcDementiaCare",
+    highlights: [
+      { title: "Specially trained", text: "Caregivers trained in dementia care and communication." },
+      { title: "Familiar routines", text: "Consistent caregivers and calm, predictable days." },
+      { title: "Safety first", text: "Supervision and home safety to prevent falls and wandering." },
+    ],
+    included: [
+      "Supervision and companionship during the day or night",
+      "Keeping a consistent, familiar daily routine",
+      "Gentle reminders and calm redirection when confused or anxious",
+      "Patient help with bathing, dressing, grooming and toileting",
+      "Meals, snacks and making sure enough fluids are taken",
+      "Medication reminders",
+      "Activities that engage memory, such as music, photos and simple tasks",
+      "Home safety checks and help preventing wandering",
+      "Updates for family and coordination with doctors",
+    ],
+    rightFor: [
+      "Memory loss is making everyday tasks hard or unsafe",
+      "Your loved one has gotten lost or tried to leave home",
+      "Confusion or agitation gets worse in the late afternoon or evening",
+      "Safety worries, such as the stove left on or doors left open",
+      "A family caregiver is exhausted and needs regular support",
+    ],
+    faqs: [
+      { q: "Are your caregivers trained in dementia care?", a: "Yes. Caregivers who support clients with Alzheimer's and dementia receive dementia care training, including communication, calm redirection and safety. Their care plans are overseen by our registered nurses." },
+      { q: "Can you help at night or around the clock?", a: "Yes. Many people with dementia need more help in the evening or overnight. We offer evening and overnight shifts, live-in care and 24-hour care." },
+      { q: "Will my loved one have the same caregiver?", a: "Consistency matters with memory loss, so we aim to keep the same caregiver or a small team, and we introduce any new caregiver carefully." },
+      { q: "What if needs change as the condition progresses?", a: "Our nurses review the care plan regularly and adjust hours and support as needs change. We'll always talk honestly with you about the level of care your loved one needs." },
+    ],
+    related: ["live-in-24-hour-care", "respite-care", "personal-care"],
+  },
+
   "medication-management": {
     heading: ["Medication", "Management at Home"],
     intro:

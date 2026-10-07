@@ -44,6 +44,8 @@ const Blog = lazyPage(() => import("./pages/Blog"));
 const Payment = lazyPage(() => import("./pages/Payment"));
 
 const PAYMENT_PATHS = ["/paying-for-care", "/paying-for-care/cost", "/paying-for-care/private-pay"];
+const Trust = lazyPage(() => import("./pages/Trust"));
+const TRUST_PATHS = ["/about/why-mintexcare", "/reviews"];
 
 const LEAD_PATHS = ["/free-consultation", "/thank-you"];
 const RESOURCE_PATHS = ["/resources", "/how-it-works", "/faq", "/resources/guides"];
@@ -64,6 +66,7 @@ const pagesByPath: Record<string, { preload: () => Promise<void> }> = {
   ...Object.fromEntries(RESOURCE_PATHS.map(p => [p, Resources])),
   ...Object.fromEntries(BLOG_PATHS.map(p => [p, Blog])),
   ...Object.fromEntries(PAYMENT_PATHS.map(p => [p, Payment])),
+  ...Object.fromEntries(TRUST_PATHS.map(p => [p, Trust])),
 };
 
 const pageForPath = (path: string) =>
@@ -121,6 +124,9 @@ const AnimatedRoutes = () => {
           ))}
           {PAYMENT_PATHS.map(p => (
             <Route key={p} path={p} element={<PageTransition><Payment /></PageTransition>} />
+          ))}
+          {TRUST_PATHS.map(p => (
+            <Route key={p} path={p} element={<PageTransition><Trust /></PageTransition>} />
           ))}
 
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />

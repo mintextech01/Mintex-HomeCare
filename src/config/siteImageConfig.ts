@@ -250,6 +250,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     ["svcTherapySupport",       "therapy-support",       "Rehab & Therapy Support"],
     ["svcWoundCareIv",          "wound-care-iv-therapy", "Wound Care & IV Therapy"],
     ["svcMedicationManagement", "medication-management", "Medication Management"],
+    ["svcDementiaCare",         "dementia-care",         "Alzheimer's & Dementia Care"],
   ] as const).map(([key, slug, name]) => ({
     key,
     defaultUrl: "",

@@ -1,5 +1,5 @@
 import {
-  Bath, HeartHandshake, Clock, Home, Coffee, Activity, Stethoscope, Dumbbell, Bandage, Pill,
+  Bath, HeartHandshake, Clock, Home, Coffee, Activity, Stethoscope, Dumbbell, Bandage, Pill, Brain,
   type LucideIcon,
 } from "lucide-react";
 
@@ -107,6 +107,15 @@ export const SERVICE_INDEX: ServiceIndexEntry[] = [
     icon: Bandage,
     metaTitle: "Wound Care & IV Therapy at Home in NJ | MintexCare",
     metaDescription: "In-home wound care and IV therapy in New Jersey by licensed nurses: dressing changes, surgical and pressure wound care, IV antibiotics and hydration, as ordered by your doctor.",
+  },
+  {
+    slug: "dementia-care",
+    name: "Alzheimer's & Dementia Care",
+    short: "Patient, specially trained caregivers who keep loved ones with memory loss safe, calm and engaged at home.",
+    group: "clinical",
+    icon: Brain,
+    metaTitle: "Alzheimer's & Dementia Care at Home in NJ | MintexCare",
+    metaDescription: "In-home Alzheimer's and dementia care in New Jersey from specially trained caregivers: supervision, safe routines, personal care, wandering prevention and respite for families.",
   },
   {
     slug: "medication-management",

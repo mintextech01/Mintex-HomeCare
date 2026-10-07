@@ -70,16 +70,20 @@ const ServiceCard = ({
   );
 };
 
-/* ── 5 cards: 5 across on wide screens, 3 + 2 (centered) on laptops, 2 or 1 per row below ── */
-const ServiceCardRow = ({ group, colors }: { group: ServiceGroup; colors: { solid: string; bg: string }[] }) => (
-  <div className="flex flex-wrap justify-center gap-6">
-    {SERVICE_INDEX.filter(s => s.group === group).map((s, i) => (
-      <div key={s.slug} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(20%-19.2px)]">
-        <ServiceCard s={s} i={i} palette={colors[i % colors.length]} />
-      </div>
-    ))}
-  </div>
-);
+/* ── Card rows: 5 cards → 5 across on wide screens; 6 cards → 3 + 3. Rows stay centered below. ── */
+const ServiceCardRow = ({ group, colors }: { group: ServiceGroup; colors: { solid: string; bg: string }[] }) => {
+  const list = SERVICE_INDEX.filter(s => s.group === group);
+  const xl = list.length === 5 ? "xl:w-[calc(20%-19.2px)]" : "";
+  return (
+    <div className="flex flex-wrap justify-center gap-6">
+      {list.map((s, i) => (
+        <div key={s.slug} className={`w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] ${xl}`}>
+          <ServiceCard s={s} i={i} palette={colors[i % colors.length]} />
+        </div>
+      ))}
+    </div>
+  );
+};
 
 /* ════════════════════════════════════════════
    PAGE

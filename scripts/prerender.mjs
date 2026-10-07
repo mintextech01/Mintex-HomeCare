@@ -43,6 +43,7 @@ const ROUTES = [
     ["therapy-support", "Rehab & Therapy"],
     ["wound-care-iv-therapy", "Wound Care & IV"],
     ["medication-management", "Medication Management"],
+    ["dementia-care", "Alzheimer's & Dementia Care"],
   ].map(([slug, title]) => ({ path: `/services/${slug}`, file: `services/${slug}.html`, title })),
   { path: "/facility-staffing", file: "facility-staffing.html", title: "Healthcare Facility Staffing" },
   { path: "/facility-staffing/roles", file: "facility-staffing/roles.html", title: "HHA, CNA, LPN & RN" },
@@ -72,6 +73,9 @@ const ROUTES = [
   { path: "/how-it-works", file: "how-it-works.html", title: "How Home Care Works" },
   { path: "/faq", file: "faq.html", title: "Home Care FAQ" },
   { path: "/resources/guides", file: "resources/guides.html", title: "Family Guides & Checklists" },
+  // About: trust & reviews
+  { path: "/about/why-mintexcare", file: "about/why-mintexcare.html", title: "Why MintexCare" },
+  { path: "/reviews", file: "reviews.html", title: "Reviews & Testimonials" },
   // Costs & Payment
   { path: "/paying-for-care", file: "paying-for-care.html", title: "Paying for Home Care" },
   { path: "/paying-for-care/cost", file: "paying-for-care/cost.html", title: "Cost of Home Care" },
