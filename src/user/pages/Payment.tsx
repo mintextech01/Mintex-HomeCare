@@ -9,24 +9,14 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin, type Pricing } from "@/contexts/AdminContext";
 import {
   ArrowRight, Phone, MessageCircle, DollarSign, Calculator, Wallet, Clock, Moon, CalendarDays, Home, Stethoscope,
-  HeartHandshake, ClipboardList, FileText, CheckCircle2, ChevronRight, CreditCard, Landmark, Banknote, Smartphone,
-  Receipt, PiggyBank, Users, RefreshCw, ShieldCheck, Info, Sparkles,
+  HeartHandshake, ClipboardList, FileText, Check, ChevronDown, CreditCard, Landmark, Banknote, Smartphone,
+  Receipt, PiggyBank, Users, RefreshCw, Info, Sparkles,
 } from "lucide-react";
 import React from "react";
 
 // /paying-for-care (hub), /paying-for-care/cost and /paying-for-care/private-pay share this chunk.
 // Only payment types MintexCare has confirmed are described (private pay). Insurance, Medicaid and
 // VA pages are intentionally not built until those payers are confirmed.
-
-const GRADIENT_BTN = {
-  background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)",
-  color: "#fff",
-};
-const BRAND_GRADIENT = "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)";
-// White tints are inline styles: the dark theme overrides bg-white/* classes.
-const WHITE_TINT = "rgba(255,255,255,0.15)";
 
 const PAYMENT_METHODS = [
   { icon: FileText,   label: "Check" },
@@ -45,58 +35,41 @@ const money = (amount: string) => `$${amount.replace(/^\$\s*/, "")}`;
    ════════════════════════════════════════════ */
 
 const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
-  <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-8 flex flex-wrap items-center gap-2">
+  <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground mb-8 flex flex-wrap items-center gap-2">
     {trail.map((c, i) => (
       <React.Fragment key={c.label}>
-        {i > 0 && <span className="text-gray-300">/</span>}
+        {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-[#2a66b0] transition-colors">{c.label}</Link>
-          : <span className="text-[#2a66b0] font-medium" aria-current="page">{c.label}</span>}
+          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
   </nav>
 );
 
-const Pill = ({ icon: Icon, children }: { icon: typeof DollarSign; children: ReactNode }) => (
-  <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-6">
-    <Icon className="w-3.5 h-3.5 text-[#2a66b0]" />
-    <span className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest">{children}</span>
+const Pill = ({ icon: Icon, children, onSurface = false }: { icon: typeof DollarSign; children: ReactNode; onSurface?: boolean }) => (
+  <div className={`el-eyebrow mb-6 ${onSurface ? "bg-background" : ""}`}>
+    <Icon className="w-3.5 h-3.5 text-primary" />
+    {children}
   </div>
 );
 
-const Eyebrow = ({ children, color = "#2a66b0" }: { children: ReactNode; color?: string }) => (
-  <div className="inline-flex items-center gap-3 mb-5">
-    <span className="h-px w-10 inline-block" style={{ background: color }} />
-    <span className="text-xs font-extrabold uppercase tracking-[0.25em]" style={{ color }}>{children}</span>
-    <span className="h-px w-10 inline-block" style={{ background: color }} />
-  </div>
-);
-
-const HeroDeco = () => (
-  <div className="pointer-events-none absolute inset-0 overflow-hidden">
-    <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 620, height: 620, top: "-18%", right: "-10%", opacity: 0.7 }} />
-    <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 400, height: 400, bottom: "-20%", left: "-8%", opacity: 0.5 }} />
-    <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 300, height: 300, top: "12%", left: "28%", opacity: 0.35 }} />
-    <div className="absolute top-[24%] right-[40%] w-28 h-28 rounded-full border-[3px] border-dashed border-[#0891b2]/[0.1] deco-spin-slow hidden lg:block" />
-    <svg className="absolute bottom-0 left-0 w-full h-16 opacity-[0.06]" viewBox="0 0 1440 64" preserveAspectRatio="none">
-      <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,16 1440,32 L1440,64 L0,64 Z" fill="#2a66b0" />
-    </svg>
-  </div>
+const Eyebrow = ({ children, onSurface = false }: { children: ReactNode; onSurface?: boolean }) => (
+  <div className={`el-eyebrow mb-5 ${onSurface ? "bg-background" : ""}`}>{children}</div>
 );
 
 const Hero = ({ trail, pill, pillIcon, title, highlight, intro, children }: {
   trail: { label: string; to?: string }[]; pill: string; pillIcon: typeof DollarSign; title: string; highlight: string; intro: string; children?: ReactNode;
 }) => (
-  <section className="relative pt-32 md:pt-40 pb-16 md:pb-20 overflow-hidden">
-    <HeroDeco />
-    <div className="container mx-auto px-4 md:px-6 relative z-10">
+  <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+    <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection className="max-w-3xl">
         <Breadcrumb trail={trail} />
         <Pill icon={pillIcon}>{pill}</Pill>
-        <h1 className="font-bold text-gray-900 leading-[1.07] mb-5" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-          {title}<br /><span className="text-[#2a66b0]">{highlight}</span>
+        <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
+          {title}<br /><span className="text-primary">{highlight}</span>
         </h1>
-        <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-[620px]">{intro}</p>
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[620px]">{intro}</p>
         {children}
       </AnimatedSection>
     </div>
@@ -105,10 +78,10 @@ const Hero = ({ trail, pill, pillIcon, title, highlight, intro, children }: {
 
 const HeroButtons = ({ tel, phone, primary = "Get a Free Quote" }: { tel: string; phone: string; primary?: string }) => (
   <div className="flex flex-wrap gap-3">
-    <Link to="/free-consultation" className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105" style={GRADIENT_BTN}>
-      {primary} <ArrowRight className="h-4 w-4" />
+    <Link to="/free-consultation" className="el-btn-primary group">
+      {primary} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
     </Link>
-    <a href={`tel:+1${tel}`} className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn">
+    <a href={`tel:+1${tel}`} className="el-btn-soft">
       <Phone className="h-4 w-4" /> Call {phone}
     </a>
   </div>
@@ -117,23 +90,22 @@ const HeroButtons = ({ tel, phone, primary = "Get a Free Quote" }: { tel: string
 const FaqList = ({ faqs }: { faqs: { q: string; a: string }[] }) => {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {faqs.map((f, i) => {
         const isOpen = open === i;
         return (
-          <div key={f.q} className={`bg-card border rounded-2xl shadow-sm transition-all duration-300 ${isOpen ? "border-[#2a66b0]/30 shadow-lg" : "border-border hover:shadow-md"}`}>
+          <div key={f.q} className="bg-background rounded-2xl">
             <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} aria-controls={`pfaq-${i}`}
               className="w-full flex items-center gap-4 text-left px-5 md:px-6 py-5">
-              <span className="h-9 w-9 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 text-white shadow-md" style={{ background: BRAND_GRADIENT }}>
-                {String(i + 1).padStart(2, "0")}
+              <span className="flex-1 font-semibold text-foreground leading-snug">{f.q}</span>
+              <span className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 transition-colors ${isOpen ? "bg-foreground text-background" : "bg-surface text-foreground"}`}>
+                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
               </span>
-              <span className="flex-1 font-semibold text-gray-900 leading-snug">{f.q}</span>
-              <ChevronRight className={`h-5 w-5 text-[#2a66b0] shrink-0 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`} />
             </button>
             {/* Answer stays in the HTML when closed so search engines can read it. */}
             <div id={`pfaq-${i}`} className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}>
               <div className="overflow-hidden">
-                <p className="text-gray-600 leading-relaxed px-5 md:px-6 pb-6 md:pl-[76px]">{f.a}</p>
+                <p className="text-muted-foreground leading-relaxed px-5 md:px-6 pb-6">{f.a}</p>
               </div>
             </div>
           </div>
@@ -144,11 +116,11 @@ const FaqList = ({ faqs }: { faqs: { q: string; a: string }[] }) => {
 };
 
 const FaqSection = ({ title, faqs }: { title: string; faqs: { q: string; a: string }[] }) => (
-  <section className="py-20 md:py-24 bg-[#f7f8f9] border-t border-border">
-    <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+  <section className="py-20 md:py-24 bg-surface">
+    <div className="container mx-auto px-6 md:px-10 max-w-4xl">
       <AnimatedSection className="text-center mb-12">
-        <Eyebrow>FAQ</Eyebrow>
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h2>
+        <Eyebrow onSurface>FAQ</Eyebrow>
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground">{title}</h2>
       </AnimatedSection>
       <AnimatedSection><FaqList faqs={faqs} /></AnimatedSection>
     </div>
@@ -156,29 +128,25 @@ const FaqSection = ({ title, faqs }: { title: string; faqs: { q: string; a: stri
 );
 
 const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-20 bg-background">
-    <div className="container mx-auto px-4 md:px-6">
+  <section className="py-16 md:py-20">
+    <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
-        <div className="relative rounded-3xl overflow-hidden px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center" style={{ background: BRAND_GRADIENT }}>
-          <div className="pointer-events-none absolute top-0 right-0 w-72 h-72 rounded-full -translate-y-1/2 translate-x-1/4" style={{ background: "rgba(255,255,255,0.10)" }} />
-          <div className="pointer-events-none absolute bottom-0 left-0 w-52 h-52 rounded-full translate-y-1/2 -translate-x-1/4" style={{ background: "rgba(255,255,255,0.08)" }} />
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-5" style={{ background: WHITE_TINT }}>
-              <Receipt className="w-3.5 h-3.5 text-white" />
-              <span className="text-xs font-semibold text-white uppercase tracking-widest">Free, no-obligation quote</span>
+        <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
+          <div className="max-w-2xl mx-auto">
+            <div className="el-eyebrow bg-background border-transparent mb-5">
+              <Receipt className="w-3.5 h-3.5 text-primary" />
+              Free, no-obligation quote
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-white leading-snug mb-4">{title}</h2>
-            <p className="text-white/80 text-sm md:text-base leading-relaxed mb-9">{text}</p>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3">
-              <Link to="/free-consultation" className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold text-sm px-7 py-4 rounded-full shadow-lg transition-all hover:scale-105" style={{ background: "#fff", color: "#1d4f8c" }}>
+              <Link to="/free-consultation" className="el-btn-primary whitespace-nowrap">
                 Get a Free Quote <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href={`tel:+1${tel}`} className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold text-sm px-7 py-4 rounded-full text-white transition-all hover:scale-105"
-                style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.35)" }}>
+              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold text-sm px-7 py-4 rounded-full text-white transition-all hover:scale-105"
-                style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.35)" }}>
+              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
@@ -187,6 +155,18 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
       </AnimatedSection>
     </div>
   </section>
+);
+
+/** Ink panel with a link that sends readers to a related page. */
+const LinkBanner = ({ to, icon: I, title, text }: { to: string; icon: typeof DollarSign; title: string; text: string }) => (
+  <Link to={to} className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
+    <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent"><I className="w-6 h-6 text-accent-foreground" /></span>
+    <span className="flex-1">
+      <span className="block font-bold">{title}</span>
+      <span className="block text-sm text-background/70">{text}</span>
+    </span>
+    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+  </Link>
 );
 
 const QUOTE_STEPS = [
@@ -215,39 +195,38 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
       <HeroButtons tel={tel} phone={phone} />
     </Hero>
 
-    <section className="py-20 md:py-24 bg-[#f7f8f9] border-t border-border">
-      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-        <div className="grid md:grid-cols-2 gap-6">
+    <section className="py-20 md:py-24 bg-surface">
+      <div className="container mx-auto px-6 md:px-10 max-w-5xl">
+        <div className="grid md:grid-cols-2 gap-5">
           {[
             { to: "/paying-for-care/cost", icon: Calculator, title: "Cost of Home Care in NJ", text: "What affects the price, example care plans, and how to get a clear quote." },
             { to: "/paying-for-care/private-pay", icon: Wallet, title: "Private Pay", text: "How paying directly works, the payment methods we accept, and what to expect." },
           ].map(({ to, icon: I, title, text }, i) => (
-            <AnimatedSection key={to} delay={i * 0.07} className="h-full">
-              <Link to={to} className="group relative h-full flex flex-col bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-[#2a66b0]/25 transition-all duration-300 overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-[3px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" style={{ background: BRAND_GRADIENT }} />
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform" style={{ background: BRAND_GRADIENT }}>
-                  <I className="w-7 h-7 text-white" />
+            <AnimatedSection key={to} delay={i * 0.06} className="h-full">
+              <Link to={to} className="group h-full flex flex-col bg-background rounded-[28px] p-8 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 bg-accent transition-colors duration-300 group-hover:bg-foreground">
+                  <I className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
-                <p className="text-gray-500 leading-relaxed flex-1">{text}</p>
-                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2a66b0] mt-6 group-hover:gap-2.5 transition-all">
-                  Read more <ArrowRight className="h-4 w-4" />
+                <h2 className="text-2xl font-bold text-foreground mb-2">{title}</h2>
+                <p className="text-muted-foreground leading-relaxed flex-1">{text}</p>
+                <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-6">
+                  Read more <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </Link>
             </AnimatedSection>
           ))}
         </div>
 
-        <AnimatedSection className="mt-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-6">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-md" style={{ background: BRAND_GRADIENT }}>
-              <Info className="w-6 h-6 text-white" />
+        <AnimatedSection className="mt-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
+              <Info className="w-6 h-6 text-accent-foreground" />
             </div>
             <div className="flex-1">
-              <p className="font-bold text-gray-900">Have insurance or other benefits?</p>
-              <p className="text-sm text-gray-600">Tell us about any coverage during your free consultation and we'll talk through your situation honestly.</p>
+              <p className="font-bold">Have insurance or other benefits?</p>
+              <p className="text-sm text-background/70">Tell us about any coverage during your free consultation and we'll talk through your situation honestly.</p>
             </div>
-            <a href={`tel:+1${tel}`} className="inline-flex items-center gap-2 text-sm font-semibold text-[#2a66b0] whitespace-nowrap">
+            <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 h-11 whitespace-nowrap">
               <Phone className="h-4 w-4" /> {phone}
             </a>
           </div>
@@ -256,21 +235,23 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
     </section>
 
     <section className="py-20 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="text-center mb-14">
-          <Eyebrow color="#0891b2">How Pricing Works</Eyebrow>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">From first call to <span className="text-[#0891b2]">a clear quote</span></h2>
+          <Eyebrow>How Pricing Works</Eyebrow>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">From first call to <span className="text-primary">a clear quote</span></h2>
         </AnimatedSection>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           {QUOTE_STEPS.map(({ icon: I, title, text }, i) => (
             <AnimatedSection key={title} delay={i * 0.06} className="h-full">
-              <div className="relative h-full bg-card border border-border rounded-3xl p-6 shadow-sm">
-                <span className="absolute top-5 right-6 text-4xl font-extrabold text-[#2a66b0]/[0.08]">{String(i + 1).padStart(2, "0")}</span>
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-md" style={{ background: BRAND_GRADIENT }}>
-                  <I className="w-6 h-6 text-white" />
+              <div className="h-full el-card p-6 md:p-7">
+                <div className="flex items-start justify-between mb-8">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent">
+                    <I className="w-5 h-5 text-accent-foreground" />
+                  </div>
+                  <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">{String(i + 1).padStart(2, "0")}</span>
                 </div>
-                <p className="font-bold text-gray-900 mb-1">{title}</p>
-                <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                <p className="font-bold text-foreground mb-1">{title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
               </div>
             </AnimatedSection>
           ))}
@@ -325,37 +306,36 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       </Hero>
 
       {/* PRICES */}
-      <section className="py-16 md:py-20 bg-[#f7f8f9] border-t border-border">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+      <section className="py-16 md:py-20 bg-surface">
+        <div className="container mx-auto px-6 md:px-10 max-w-5xl">
           <AnimatedSection>
-            <div className="bg-card border border-border rounded-3xl shadow-lg overflow-hidden">
-              <div className="relative px-6 md:px-9 py-7 text-white overflow-hidden" style={{ background: BRAND_GRADIENT }}>
-                <div className="absolute top-0 right-0 w-48 h-48 rounded-full -translate-y-1/2 translate-x-1/4" style={{ background: "rgba(255,255,255,0.10)" }} />
-                <div className="relative flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.3)" }}>
-                    <DollarSign className="w-6 h-6 text-white" />
+            <div className="bg-background rounded-[28px] p-2">
+              <div className="rounded-[22px] px-6 md:px-9 py-7 bg-foreground text-background">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
+                    <DollarSign className="w-6 h-6 text-accent-foreground" />
                   </div>
                   <div>
                     <h2 className="text-xl md:text-2xl font-bold">{showTable ? "Our rates" : "Get your price"}</h2>
-                    <p className="text-white/80 text-sm">{showTable ? "Starting rates. Your exact rate is confirmed in writing after your free assessment." : "Prices depend on your care plan. Call or request a free quote and we'll give you clear pricing."}</p>
+                    <p className="text-background/70 text-sm">{showTable ? "Starting rates. Your exact rate is confirmed in writing after your free assessment." : "Prices depend on your care plan. Call or request a free quote and we'll give you clear pricing."}</p>
                   </div>
                 </div>
               </div>
-              <ul className="divide-y divide-border">
+              <ul className="divide-y divide-border px-2">
                 {lines.map(item => {
                   const shown = showTable && item.amount.trim();
                   return (
-                    <li key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-6 md:px-9 py-5">
+                    <li key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-5 md:px-7 py-5">
                       <div>
-                        <p className="font-bold text-gray-900">{item.label}</p>
-                        {item.note && <p className="text-sm text-gray-500">{item.note}</p>}
+                        <p className="font-bold text-foreground">{item.label}</p>
+                        {item.note && <p className="text-sm text-muted-foreground">{item.note}</p>}
                       </div>
                       {shown ? (
-                        <p className="text-2xl font-extrabold text-[#2a66b0] whitespace-nowrap">
-                          {money(item.amount)} <span className="text-sm font-semibold text-gray-500">{item.unit}</span>
+                        <p className="text-2xl font-extrabold text-foreground whitespace-nowrap">
+                          {money(item.amount)} <span className="text-sm font-semibold text-muted-foreground">{item.unit}</span>
                         </p>
                       ) : (
-                        <Link to="/free-consultation" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2a66b0] whitespace-nowrap hover:gap-2.5 transition-all">
+                        <Link to="/free-consultation" className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary whitespace-nowrap hover:gap-2.5 transition-all">
                           Call for a free quote <ArrowRight className="h-4 w-4" />
                         </Link>
                       )}
@@ -364,9 +344,9 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
                 })}
               </ul>
               {(showTable && (pricing.minimumHours || pricing.note)) && (
-                <div className="px-6 md:px-9 py-5 bg-muted/40 border-t border-border text-sm text-gray-600 space-y-1">
-                  {pricing.minimumHours && <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-[#2a66b0]" /> Minimum: {pricing.minimumHours}</p>}
-                  {pricing.note && <p className="flex items-start gap-2"><Info className="h-4 w-4 text-[#2a66b0] shrink-0 mt-0.5" /> {pricing.note}</p>}
+                <div className="rounded-[22px] px-6 md:px-9 py-5 bg-surface text-sm text-muted-foreground space-y-1">
+                  {pricing.minimumHours && <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Minimum: {pricing.minimumHours}</p>}
+                  {pricing.note && <p className="flex items-start gap-2"><Info className="h-4 w-4 text-primary shrink-0 mt-0.5" /> {pricing.note}</p>}
                 </div>
               )}
             </div>
@@ -376,21 +356,21 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
 
       {/* FACTORS */}
       <section className="py-20 md:py-24">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-14">
-            <Eyebrow color="#0891b2">What Affects the Cost</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Six things that <span className="text-[#0891b2]">shape your price</span></h2>
+            <Eyebrow>What Affects the Cost</Eyebrow>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Six things that <span className="text-primary">shape your price</span></h2>
           </AnimatedSection>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {COST_FACTORS.map(({ icon: I, title, text }, i) => (
               <AnimatedSection key={title} delay={Math.min(i, 4) * 0.05} className="h-full">
-                <div className="h-full flex gap-4 bg-card border border-border rounded-3xl p-6 shadow-sm">
-                  <div className="w-12 h-12 rounded-2xl bg-[#2a66b0]/10 flex items-center justify-center shrink-0">
-                    <I className="w-6 h-6 text-[#2a66b0]" />
+                <div className="h-full flex gap-4 el-card p-6">
+                  <div className="w-12 h-12 rounded-2xl bg-background flex items-center justify-center shrink-0">
+                    <I className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 mb-1">{title}</p>
-                    <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                    <p className="font-bold text-foreground mb-1">{title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                   </div>
                 </div>
               </AnimatedSection>
@@ -400,21 +380,20 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* EXAMPLE PLANS */}
-      <section className="py-20 md:py-24 bg-[#f7f8f9] border-y border-border">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="py-20 md:py-24 bg-surface">
+        <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-14">
-            <Eyebrow>Typical Care Plans</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Examples of <span className="text-[#2a66b0]">how families use care</span></h2>
+            <Eyebrow onSurface>Typical Care Plans</Eyebrow>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Examples of <span className="text-primary">how families use care</span></h2>
           </AnimatedSection>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {EXAMPLE_PLANS.map((p, i) => (
               <AnimatedSection key={p.title} delay={i * 0.06} className="h-full">
-                <div className="group relative h-full flex flex-col bg-card border border-border rounded-3xl p-6 shadow-sm hover:shadow-lg hover:border-[#2a66b0]/25 transition-all">
-                  <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-3xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" style={{ background: BRAND_GRADIENT }} />
-                  <span className="text-xs font-bold text-[#2a66b0] mb-2">PLAN {i + 1}</span>
-                  <p className="font-bold text-gray-900 mb-2 leading-snug">{p.title}</p>
-                  <p className="text-sm text-gray-500 leading-relaxed flex-1">{p.text}</p>
-                  <p className="text-xs text-[#0891b2] font-semibold mt-4 flex items-start gap-1.5"><Users className="h-3.5 w-3.5 mt-0.5 shrink-0" /> {p.for}</p>
+                <div className="h-full flex flex-col bg-background rounded-[24px] p-6">
+                  <span className="self-start text-[11px] font-bold tracking-[0.15em] bg-accent text-accent-foreground rounded-full px-3 py-1 mb-5">PLAN {i + 1}</span>
+                  <p className="font-bold text-foreground mb-2 leading-snug">{p.title}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{p.text}</p>
+                  <p className="text-xs text-foreground font-semibold mt-5 pt-4 border-t border-border flex items-start gap-1.5"><Users className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" /> {p.for}</p>
                 </div>
               </AnimatedSection>
             ))}
@@ -424,45 +403,48 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
 
       {/* QUOTE STEPS + TIPS */}
       <section className="py-20 md:py-24">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 items-start">
-            <AnimatedSection from="left">
+            <AnimatedSection>
               <Pill icon={Receipt}>Your Quote</Pill>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-8">How you get <span className="text-[#2a66b0]">a clear price</span></h2>
-              <ol className="space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-8">How you get <span className="text-primary">a clear price</span></h2>
+              <ol className="space-y-3">
                 {QUOTE_STEPS.map(({ icon: I, title, text }, i) => (
-                  <li key={title} className="flex gap-4 bg-card border border-border rounded-2xl p-5 shadow-sm">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-md" style={{ background: BRAND_GRADIENT }}>
-                      <I className="w-5 h-5 text-white" />
+                  <li key={title} className="flex gap-4 el-card p-5">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
+                      <I className="w-5 h-5 text-accent-foreground" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[#2a66b0]">STEP {i + 1}</p>
-                      <p className="font-bold text-gray-900">{title}</p>
-                      <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                      <p className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</p>
+                      <p className="font-bold text-foreground">{title}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                     </div>
                   </li>
                 ))}
               </ol>
             </AnimatedSection>
-            <AnimatedSection from="right" delay={0.1}>
-              <div className="relative rounded-3xl p-8 overflow-hidden text-white" style={{ background: BRAND_GRADIENT }}>
-                <div className="absolute top-0 right-0 w-40 h-40 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: WHITE_TINT }}>
-                    <PiggyBank className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Tips for planning your budget</h3>
-                  <div className="w-10 h-[3px] rounded-full mb-5" style={{ background: "rgba(255,255,255,0.5)" }} />
-                  <ul className="space-y-3.5">
-                    {[
-                      "Start with the hours that matter most, such as mornings or bedtime",
-                      "Combine professional care with help from family",
-                      "Use respite care so family caregivers can keep going",
-                      "Review the plan every few months as needs change",
-                      "Ask what's included so you can compare fairly",
-                    ].map(t => <li key={t} className="flex items-start gap-3 text-sm text-white/90"><CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" /> {t}</li>)}
-                  </ul>
+            <AnimatedSection delay={0.1}>
+              <div className="rounded-[28px] p-8 bg-foreground text-background">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
+                  <PiggyBank className="w-6 h-6 text-accent-foreground" />
                 </div>
+                <h3 className="text-xl font-bold mb-6">Tips for planning your budget</h3>
+                <ul className="space-y-3.5">
+                  {[
+                    "Start with the hours that matter most, such as mornings or bedtime",
+                    "Combine professional care with help from family",
+                    "Use respite care so family caregivers can keep going",
+                    "Review the plan every few months as needs change",
+                    "Ask what's included so you can compare fairly",
+                  ].map(t => (
+                    <li key={t} className="flex items-start gap-3 text-sm text-background/85">
+                      <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0 mt-0.5">
+                        <Check className="w-3 h-3 text-accent-foreground" strokeWidth={3} />
+                      </span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </AnimatedSection>
           </div>
@@ -500,17 +482,17 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
       <HeroButtons tel={tel} phone={phone} />
     </Hero>
 
-    <section className="py-16 md:py-20 bg-[#f7f8f9] border-t border-border">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid md:grid-cols-3 gap-5">
+    <section className="pb-16 md:pb-20">
+      <div className="container mx-auto px-6 md:px-10">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-5">
           {PRIVATE_BENEFITS.map(({ icon: I, title, text }, i) => (
             <AnimatedSection key={title} delay={i * 0.06} className="h-full">
-              <div className="h-full bg-card border border-border rounded-3xl p-7 shadow-sm">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-md" style={{ background: BRAND_GRADIENT }}>
-                  <I className="w-6 h-6 text-white" />
+              <div className="h-full el-card p-7">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8 bg-accent">
+                  <I className="w-5 h-5 text-accent-foreground" />
                 </div>
-                <p className="font-bold text-gray-900 text-lg mb-1">{title}</p>
-                <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                <p className="font-bold text-foreground text-lg mb-1">{title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
               </div>
             </AnimatedSection>
           ))}
@@ -518,41 +500,41 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     </section>
 
-    <section className="py-20 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
+    <section className="pt-4 pb-20 md:pb-24">
+      <div className="container mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
-          <AnimatedSection from="left">
+          <AnimatedSection>
             <Pill icon={CreditCard}>Payment Methods</Pill>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">Ways you <span className="text-[#2a66b0]">can pay</span></h2>
-            <p className="text-gray-500 leading-relaxed mb-8">Pay the way that's easiest for your family.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">Ways you <span className="text-primary">can pay</span></h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">Pay the way that's easiest for your family.</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {PAYMENT_METHODS.map(({ icon: I, label }) => (
-                <div key={label} className="flex items-center gap-3 bg-card border border-border rounded-2xl px-5 py-4 shadow-sm">
-                  <span className="w-10 h-10 rounded-xl bg-[#0891b2]/10 flex items-center justify-center shrink-0"><I className="w-5 h-5 text-[#0891b2]" /></span>
-                  <span className="font-semibold text-gray-800">{label}</span>
+                <div key={label} className="flex items-center gap-3 el-card rounded-2xl px-5 py-4">
+                  <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shrink-0"><I className="w-5 h-5 text-accent-foreground" /></span>
+                  <span className="font-semibold text-foreground">{label}</span>
                 </div>
               ))}
             </div>
           </AnimatedSection>
-          <AnimatedSection from="right" delay={0.1}>
-            <div className="bg-card border border-border rounded-3xl p-7 md:p-9 shadow-sm">
-              <p className="text-xs font-semibold text-[#0891b2] uppercase tracking-widest mb-2">How It Works</p>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Simple from the start</h2>
-              <ol className="space-y-6">
+          <AnimatedSection delay={0.1}>
+            <div className="el-card rounded-[28px] p-7 md:p-9">
+              <div className="el-eyebrow bg-background mb-4">How It Works</div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">Simple from the start</h2>
+              <ol className="space-y-3">
                 {[
                   { icon: Phone, title: "Free consultation", text: "Talk to a care coordinator about what your loved one needs." },
                   { icon: ClipboardList, title: "Free assessment & quote", text: "We visit, then give you the care plan and rate in writing." },
                   { icon: FileText, title: "Service agreement", text: "You review and sign the written agreement before care starts." },
                   { icon: Receipt, title: "Care & invoices", text: "Care begins on the agreed day, and you receive clear invoices for the care provided." },
                 ].map(({ icon: I, title, text }, i) => (
-                  <li key={title} className="flex gap-4">
-                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-md" style={{ background: BRAND_GRADIENT }}>
-                      <I className="w-5 h-5 text-white" />
+                  <li key={title} className="flex gap-4 bg-background rounded-2xl p-4">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
+                      <I className="w-5 h-5 text-accent-foreground" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[#2a66b0]">STEP {i + 1}</p>
-                      <p className="font-bold text-gray-900">{title}</p>
-                      <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                      <p className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</p>
+                      <p className="font-bold text-foreground">{title}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                     </div>
                   </li>
                 ))}
@@ -562,14 +544,7 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
         </div>
 
         <AnimatedSection className="mt-10">
-          <Link to="/paying-for-care/cost" className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-6 hover:shadow-md transition-all">
-            <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-md" style={{ background: BRAND_GRADIENT }}><Calculator className="w-6 h-6 text-white" /></span>
-            <span className="flex-1">
-              <span className="block font-bold text-gray-900">What will care cost?</span>
-              <span className="block text-sm text-gray-600">See what affects the price and typical care plans.</span>
-            </span>
-            <ArrowRight className="h-5 w-5 text-[#2a66b0] group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <LinkBanner to="/paying-for-care/cost" icon={Calculator} title="What will care cost?" text="See what affects the price and typical care plans." />
         </AnimatedSection>
       </div>
     </section>
@@ -617,7 +592,7 @@ const Payment = () => {
   return (
     <>
       <Header />
-      <main className="bg-background overflow-x-clip">
+      <main className="theme-el overflow-x-clip">
         {pathname === "/paying-for-care/cost" ? <Cost tel={tel} phone={phone} />
           : pathname === "/paying-for-care/private-pay" ? <PrivatePay tel={tel} phone={phone} />
           : <Hub tel={tel} phone={phone} />}

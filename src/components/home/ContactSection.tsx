@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -52,117 +51,67 @@ const ContactSection = () => {
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
 
   return (
-    <section id="contact" className="relative py-16 md:py-20 overflow-hidden">
-
-      {/* ── Animated orbiting circles background ── */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-
-        {/* ── Soft ambient glows ── */}
-        <div className="absolute rounded-full" style={{ width: 500, height: 500, top: "-12%", left: "-6%", background: "radial-gradient(circle, rgba(38,104,188,0.08) 0%, transparent 70%)" }} />
-        <div className="absolute rounded-full" style={{ width: 420, height: 420, bottom: "-10%", right: "-5%", background: "radial-gradient(circle, rgba(8,145,178,0.08) 0%, transparent 70%)" }} />
-
-        {/* ════ ORBIT GROUP A — centred top-left ════
-            Approach: the ring div is square, centred on the anchor point
-            via negative margin. transform-origin defaults to 50% 50% (centre).
-            Rotating the ring makes any dot placed at its edge trace a perfect circle.
-        ══════════════════════════════════════════ */}
-
-        {/* A1 — inner orbit, clockwise 10 s */}
-        <div className="contact-orbit absolute rounded-full border border-dashed border-primary/15"
-          style={{ width: 160, height: 160, top: "18%", left: "9%", marginTop: -80, marginLeft: -80, animationDuration: "10s" }}>
-          <div className="absolute rounded-full bg-primary" style={{ width: 12, height: 12, top: -6, left: "50%", marginLeft: -6, opacity: 0.55 }} />
-        </div>
-
-        {/* A2 — outer orbit, counter-clockwise 18 s */}
-        <div className="contact-orbit-rev absolute rounded-full border border-dotted border-accent/20"
-          style={{ width: 280, height: 280, top: "18%", left: "9%", marginTop: -140, marginLeft: -140, animationDuration: "18s" }}>
-          <div className="absolute rounded-full bg-accent" style={{ width: 10, height: 10, top: -5, left: "50%", marginLeft: -5, opacity: 0.50 }} />
-          {/* second dot at bottom for a symmetric feel */}
-          <div className="absolute rounded-full border-2 border-primary/40" style={{ width: 18, height: 18, bottom: -9, left: "50%", marginLeft: -9 }} />
-        </div>
-
-        {/* A3 — large slow orbit, clockwise 28 s */}
-        <div className="contact-orbit absolute rounded-full border border-primary/08"
-          style={{ width: 420, height: 420, top: "18%", left: "9%", marginTop: -210, marginLeft: -210, animationDuration: "28s" }}>
-          <div className="absolute rounded-full bg-primary/30" style={{ width: 8, height: 8, top: -4, left: "50%", marginLeft: -4 }} />
-        </div>
-
-        {/* ════ ORBIT GROUP B — centred bottom-right ════ */}
-
-        {/* B1 — inner orbit, counter-clockwise 8 s */}
-        <div className="contact-orbit-rev absolute rounded-full border border-dashed border-accent/20"
-          style={{ width: 140, height: 140, bottom: "20%", right: "8%", marginBottom: -70, marginRight: -70, animationDuration: "8s" }}>
-          <div className="absolute rounded-full bg-accent" style={{ width: 10, height: 10, top: -5, left: "50%", marginLeft: -5, opacity: 0.55 }} />
-        </div>
-
-        {/* B2 — outer orbit, clockwise 16 s */}
-        <div className="contact-orbit absolute rounded-full border border-dotted border-primary/15"
-          style={{ width: 260, height: 260, bottom: "20%", right: "8%", marginBottom: -130, marginRight: -130, animationDuration: "16s" }}>
-          <div className="absolute rounded-full bg-primary/50" style={{ width: 9, height: 9, top: -4.5, left: "50%", marginLeft: -4.5 }} />
-          <div className="absolute rounded-full border border-accent/50" style={{ width: 16, height: 16, bottom: -8, left: "50%", marginLeft: -8 }} />
-        </div>
-
-        {/* ════ ORBIT GROUP C — centre of section, very slow ════ */}
-
-        {/* C1 — large slow pulse ring */}
-        <div className="contact-pulse-ring absolute rounded-full border border-primary/12"
-          style={{ width: 480, height: 480, top: "50%", left: "50%", marginTop: -240, marginLeft: -240 }} />
-
-        {/* C2 — medium orbit clockwise 22 s */}
-        <div className="contact-orbit absolute rounded-full border border-primary/10"
-          style={{ width: 340, height: 340, top: "50%", left: "50%", marginTop: -170, marginLeft: -170, animationDuration: "22s" }}>
-          <div className="absolute rounded-full bg-primary/25" style={{ width: 10, height: 10, top: -5, left: "50%", marginLeft: -5 }} />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4">
-        <AnimatedSection className="text-center mb-12">
-          <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">{contactInfo.sectionEyebrow || "Get In Touch"}</p>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">{contactInfo.sectionHeading || "Ready to Get Started?"}</h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">{contactInfo.sectionDescription || "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare."}</p>
+    <section id="contact" className="py-20 md:py-28">
+      <div className="container mx-auto px-6 md:px-10">
+        <AnimatedSection className="text-center mb-12 max-w-2xl mx-auto">
+          <div className="el-eyebrow mb-5">{contactInfo.sectionEyebrow || "Get In Touch"}</div>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">{contactInfo.sectionHeading || "Ready to Get Started?"}</h2>
+          <p className="text-base text-muted-foreground font-sans">{contactInfo.sectionDescription || "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare."}</p>
         </AnimatedSection>
-        <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          <AnimatedSection from="flip3d">
-            <form onSubmit={handleSubmit} className="relative space-y-4 bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm glow-pulse">
+        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 max-w-6xl mx-auto">
+          <AnimatedSection>
+            <form onSubmit={handleSubmit} className="relative h-full space-y-4 el-card rounded-[28px] p-6 md:p-10">
               {spamGuard.honeypotField}
               <div>
-                <Input placeholder="Full Name *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className={`font-sans ${errors.name ? "border-destructive" : ""}`} />
+                <Input placeholder="Full Name *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className={`h-12 rounded-xl bg-background font-sans ${errors.name ? "border-destructive" : ""}`} />
                 {errors.name && <p className="text-xs text-destructive mt-1 font-sans">{errors.name}</p>}
               </div>
-              <div>
-                <Input type="email" placeholder="Email Address *" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className={`font-sans ${errors.email ? "border-destructive" : ""}`} />
-                {errors.email && <p className="text-xs text-destructive mt-1 font-sans">{errors.email}</p>}
-              </div>
-              <div>
-                <Input type="tel" placeholder="Phone Number *" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className={`font-sans ${errors.phone ? "border-destructive" : ""}`} />
-                {errors.phone && <p className="text-xs text-destructive mt-1 font-sans">{errors.phone}</p>}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Input type="email" placeholder="Email Address *" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className={`h-12 rounded-xl bg-background font-sans ${errors.email ? "border-destructive" : ""}`} />
+                  {errors.email && <p className="text-xs text-destructive mt-1 font-sans">{errors.email}</p>}
+                </div>
+                <div>
+                  <Input type="tel" placeholder="Phone Number *" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className={`h-12 rounded-xl bg-background font-sans ${errors.phone ? "border-destructive" : ""}`} />
+                  {errors.phone && <p className="text-xs text-destructive mt-1 font-sans">{errors.phone}</p>}
+                </div>
               </div>
               <Select value={form.service} onValueChange={v => setForm({ ...form, service: v })}>
-                <SelectTrigger className="font-sans"><SelectValue placeholder="Service Needed" /></SelectTrigger>
+                <SelectTrigger className="h-12 rounded-xl bg-background font-sans"><SelectValue placeholder="Service Needed" /></SelectTrigger>
                 <SelectContent>
                   {serviceOptions.map(s => <SelectItem key={s} value={s} className="font-sans">{s}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <Textarea placeholder="Your Message" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} rows={4} className="font-sans" />
-              <Button type="submit" size="lg" className="w-full rounded-full font-semibold" style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}>Send Message</Button>
+              <Textarea placeholder="Your Message" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} rows={5} className="rounded-xl bg-background font-sans" />
+              <button type="submit" className="el-btn-primary w-full">Send Message</button>
             </form>
           </AnimatedSection>
-          <AnimatedSection delay={0.2} from="depth">
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-serif text-2xl font-semibold text-foreground mb-5">Contact Information</h3>
-                <ul className="space-y-4 text-muted-foreground font-sans">
-                  <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5 shrink-0" /><div><a href={`tel:+1${phoneLink}`} className="text-foreground font-medium hover:text-accent transition-colors">{contactInfo.phone}</a><br /><span className="text-sm">Fax: {contactInfo.fax}</span></div></li>
-                  <li className="flex items-center gap-3"><Mail className="h-5 w-5 text-primary shrink-0" /><a href={`mailto:${contactInfo.email}`} className="hover:text-accent transition-colors">{contactInfo.email}</a></li>
-                  <li className="flex items-center gap-3"><MapPin className="h-5 w-5 text-primary shrink-0" />{contactInfo.address}</li>
-                  <li className="flex items-center gap-3"><Clock className="h-5 w-5 text-primary shrink-0" />{contactInfo.hours}</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-serif text-xl font-semibold text-foreground mb-3">Follow Us</h3>
+          <AnimatedSection delay={0.1}>
+            <div className="h-full rounded-[28px] bg-foreground text-background p-6 md:p-10 flex flex-col">
+              <h3 className="font-serif text-2xl font-semibold mb-8">Contact Information</h3>
+              <ul className="space-y-6 font-sans text-background/75">
+                <li className="flex items-start gap-4">
+                  <span className="h-11 w-11 rounded-full bg-accent flex items-center justify-center shrink-0"><Phone className="h-5 w-5 text-accent-foreground" /></span>
+                  <div className="pt-0.5"><a href={`tel:+1${phoneLink}`} className="text-background font-semibold hover:underline underline-offset-4">{contactInfo.phone}</a><br /><span className="text-sm">Fax: {contactInfo.fax}</span></div>
+                </li>
+                <li className="flex items-center gap-4">
+                  <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><Mail className="h-5 w-5 text-background" /></span>
+                  <a href={`mailto:${contactInfo.email}`} className="break-all hover:text-background hover:underline underline-offset-4 transition-colors">{contactInfo.email}</a>
+                </li>
+                <li className="flex items-center gap-4">
+                  <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><MapPin className="h-5 w-5 text-background" /></span>
+                  {contactInfo.address}
+                </li>
+                <li className="flex items-center gap-4">
+                  <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><Clock className="h-5 w-5 text-background" /></span>
+                  {contactInfo.hours}
+                </li>
+              </ul>
+              <div className="mt-auto pt-10">
+                <h3 className="font-serif text-xl font-semibold mb-4">Follow Us</h3>
                 <div className="flex gap-3">
-                  <a href={contactInfo.facebookUrl || "https://www.facebook.com/profile.php?id=61566851474928"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
-                  <a href={contactInfo.instagramUrl || "https://www.instagram.com/mintexhomecare/"} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>
+                  <a href={contactInfo.facebookUrl || "https://www.facebook.com/profile.php?id=61566851474928"} target="_blank" rel="noopener noreferrer" className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
+                  <a href={contactInfo.instagramUrl || "https://www.instagram.com/mintexhomecare/"} target="_blank" rel="noopener noreferrer" className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>
                 </div>
               </div>
             </div>

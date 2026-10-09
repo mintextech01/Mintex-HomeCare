@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
-import { useTheme } from "@/contexts/ThemeContext";
-import { motion } from "framer-motion";
 
 /**
  * Inline SVG flat-character illustrations — Care.com style.
@@ -265,102 +263,62 @@ const cardKeys = [
 
 const NursingSection = () => {
   const { siteImages } = useAdmin();
-  const { isDark } = useTheme();
-
-  /* Dark-mode pastel equivalents */
-  const darkBgMap: Record<string, string> = {
-    "#ddeeff": "hsl(214 40% 18%)",
-    "#fde8f0": "hsl(340 30% 16%)",
-    "#ede8ff": "hsl(260 30% 16%)",
-    "#d8f5f0": "hsl(170 30% 14%)",
-    "#e8fbff": "hsl(195 30% 15%)",
-    "#fff4de": "hsl(38 30% 15%)",
-  };
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container mx-auto px-4">
+    <section className="py-20 md:py-28">
+      <div className="container mx-auto px-6 md:px-10">
 
         {/* Heading */}
-        <AnimatedSection className="text-center mb-12">
-          <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.22em] mb-3">
-            Specialized Care
-          </p>
+        <AnimatedSection className="text-center mb-12 max-w-2xl mx-auto">
+          <div className="el-eyebrow mb-5">Specialized Care</div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground leading-tight">
             Skilled nursing for every stage of life
           </h2>
         </AnimatedSection>
 
         {/* Cards */}
-        <AnimatedSection delay={0.1}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-            {cards.map((card, idx) => {
-              const customImg = siteImages[cardKeys[idx]];
-              return (
-                <motion.div
-                  key={card.title}
-                  className="h-full"
-                  whileHover={{
-                    y: -8,
-                    scale: 1.04,
-                    rotateY: 3,
-                    rotateX: -2,
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.12), 0 0 20px rgba(38,104,188,0.06)",
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  style={{ transformStyle: "preserve-3d", perspective: 600 }}
-                >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          {cards.map((card, idx) => {
+            const customImg = siteImages[cardKeys[idx]];
+            return (
+              <AnimatedSection key={card.title} delay={idx * 0.05} className="h-full">
                 <Link
                   to="/services"
-                  className={`group flex flex-col h-full rounded-2xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer ${isDark ? "bg-[hsl(214_40%_13%)] border border-white/6" : "bg-white"}`}
+                  className="group el-card flex items-stretch gap-4 h-full p-3 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]"
                 >
-                  {/* Title */}
-                  <div className="flex items-start justify-between px-4 pt-5 pb-3 gap-2 flex-shrink-0">
-                    <span className="font-sans font-semibold text-sm text-foreground leading-snug">
-                      {card.title}
-                    </span>
-                    <ArrowRight className="h-[18px] w-[18px] text-foreground/40 flex-shrink-0 mt-0.5 group-hover:translate-x-1 group-hover:text-primary transition-all duration-200" />
-                  </div>
-
-                  {/* Illustration / hover-description area */}
-                  <div
-                    className="relative mx-3 mb-3 rounded-xl overflow-hidden flex-1 min-h-[160px] sm:min-h-[200px] lg:min-h-[230px]"
-                    style={{ backgroundColor: isDark ? (darkBgMap[card.bg] || "hsl(214 40% 16%)") : card.bg }}
-                  >
-                    {/* Illustration */}
-                    <div className="absolute inset-0 flex items-end justify-center pb-1 transition-opacity duration-300 group-hover:opacity-0">
+                  {/* Illustration tile */}
+                  <div className="relative w-28 sm:w-32 shrink-0 rounded-2xl overflow-hidden bg-background min-h-[128px]">
+                    <div className="absolute inset-0 flex items-end justify-center p-2 pb-1">
                       {customImg ? (
-                        <img src={customImg} alt={card.title} className="w-full h-full object-cover" />
+                        <img src={customImg} alt={card.title} className="absolute inset-0 w-full h-full object-cover" />
                       ) : (
                         card.illustration
                       )}
                     </div>
+                  </div>
 
-                    {/* Description — fades in on hover */}
-                    <div
-                      className="absolute inset-0 flex items-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ backgroundColor: isDark ? (darkBgMap[card.bg] || "hsl(214 40% 16%)") : card.bg }}
-                    >
-                      <p className="text-sm text-foreground/80 font-sans leading-relaxed">
-                        {card.description}
-                      </p>
+                  {/* Text */}
+                  <div className="flex flex-col py-2 pr-2 min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <span className="font-sans font-bold text-base text-foreground leading-snug">
+                        {card.title}
+                      </span>
+                      <ArrowRight className="h-[18px] w-[18px] text-foreground/40 flex-shrink-0 mt-0.5 group-hover:translate-x-1 group-hover:text-primary transition-all duration-200" />
                     </div>
+                    <p className="text-sm text-muted-foreground font-sans leading-relaxed">
+                      {card.description}
+                    </p>
                   </div>
                 </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        </AnimatedSection>
+              </AnimatedSection>
+            );
+          })}
+        </div>
 
         {/* CTA */}
-        <AnimatedSection className="text-center mt-10" delay={0.15}>
-          <Link
-            to="/services"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-sans font-semibold text-sm transition-all duration-200 hover:scale-105"
-            style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
-          >
-            View All Services <ArrowRight className="h-4 w-4 flex-shrink-0" />
+        <AnimatedSection className="text-center mt-12" delay={0.1}>
+          <Link to="/services" className="el-btn-soft group">
+            View All Services <ArrowRight className="h-4 w-4 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
           </Link>
         </AnimatedSection>
       </div>

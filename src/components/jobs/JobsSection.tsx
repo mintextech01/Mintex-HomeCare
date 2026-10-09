@@ -55,19 +55,15 @@ export function JobsSection({
   const handleApply = (job: Job) => navigate(applyUrl(job.slug));
 
   return (
-    <section className="py-16 md:py-24 bg-background relative overflow-hidden">
-      {/* Decorative theme-color blobs */}
-      <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-primary/6 pointer-events-none blur-3xl" />
-      <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-accent/6 pointer-events-none blur-3xl" />
-
-      <div className="container mx-auto px-4 relative z-10">
+    <section className="py-16 md:py-20">
+      <div className="container mx-auto px-6 md:px-10">
         {/* Header */}
         <AnimatedSection className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <p className="section-label mb-3">Career Opportunities</p>
+          <div className="el-eyebrow mb-5">Career Opportunities</div>
           <h2 className="heading-h2 mb-4 text-balance">
             {title}
           </h2>
-          <p className="body-text text-foreground/70">{subtitle}</p>
+          <p className="body-text text-muted-foreground">{subtitle}</p>
         </AnimatedSection>
 
         {/* Filters */}
@@ -100,7 +96,7 @@ export function JobsSection({
                   setSearchQuery("");
                   setSelectedFilter("all");
                 }}
-                className="rounded-full font-medium text-foreground hover:text-primary transition-colors glass-btn"
+                className="el-btn-outline"
               >
                 Reset Filters
               </Button>
@@ -110,10 +106,10 @@ export function JobsSection({
               {/* Featured Jobs */}
               {featuredJobs.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-primary mb-4 uppercase tracking-wider">
+                  <p className="text-xs font-semibold text-foreground mb-4 uppercase tracking-wider">
                     ⭐ Featured Positions
                   </p>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {featuredJobs.map((job) => (
                       <FeaturedJobCard
                         key={job.id}
@@ -130,11 +126,11 @@ export function JobsSection({
               {regularJobs.length > 0 && (
                 <div>
                   {featuredJobs.length > 0 && (
-                    <p className="text-xs font-semibold text-primary/70 mb-4 uppercase tracking-wider">
+                    <p className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wider">
                       Other Positions
                     </p>
                   )}
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {regularJobs.map((job, idx) => (
                       <JobCard
                         key={job.id}
@@ -153,12 +149,12 @@ export function JobsSection({
 
         {/* CTA Section */}
         <AnimatedSection delay={0.2} className="text-center mt-12">
-          <p className="text-foreground/70 mb-4">
+          <p className="text-muted-foreground mb-5">
             Don't see a position that fits? We're always looking for talented healthcare professionals.
           </p>
           <Link
             to={applyUrl()}
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-105 shadow-lg shadow-primary/20"
+            className="el-btn-primary"
           >
             Send a General Application
           </Link>

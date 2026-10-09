@@ -32,7 +32,7 @@ export function JobFilters({
           placeholder="Search by job title..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 pr-10 h-10 border-border/50 focus:border-accent/50"
+          className="pl-10 pr-10 h-12 rounded-full border-border bg-surface"
         />
         {searchQuery && (
           <button
@@ -55,7 +55,7 @@ export function JobFilters({
               <TabsTrigger
                 key={type.value}
                 value={type.value}
-                className="text-xs md:text-sm px-3 py-2 rounded-lg border border-border/50 bg-background data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary transition-all duration-200"
+                className="text-xs md:text-sm px-4 py-2.5 rounded-full border border-border bg-background font-semibold data-[state=active]:border-foreground data-[state=active]:bg-foreground data-[state=active]:text-background data-[state=active]:shadow-none transition-colors duration-200"
               >
                 {type.label}
               </TabsTrigger>

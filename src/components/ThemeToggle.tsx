@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
  * Animated sun/moon toggle button.
  * Works on all screen sizes — renders inline in the header.
  */
-/** compact: a small version for the desktop utility bar (on the blue gradient). */
+/** compact: a small version for the desktop utility bar. */
 const ThemeToggle = ({ compact = false }: { compact?: boolean }) => {
   const { isDark, toggleTheme } = useTheme();
 
@@ -13,18 +13,9 @@ const ThemeToggle = ({ compact = false }: { compact?: boolean }) => {
     <button
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className={`relative flex items-center justify-center rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+      className={`relative flex items-center justify-center rounded-full border border-border bg-background hover:bg-surface transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
         compact ? "w-7 h-7 [&>svg]:!w-[15px] [&>svg]:!h-[15px]" : "w-11 h-11"
       }`}
-      style={compact ? {
-        background: "rgba(255,255,255,0.18)",
-        border: "1px solid rgba(255,255,255,0.3)",
-      } : {
-        background: isDark
-          ? "rgba(255,255,255,0.08)"
-          : "rgba(38,104,188,0.08)",
-        border: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(38,104,188,0.12)"}`,
-      }}
     >
       {/* Sun icon */}
       <motion.svg

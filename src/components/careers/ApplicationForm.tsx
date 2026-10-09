@@ -21,15 +21,8 @@ import { trackLead } from "@/lib/leads";
 const MAX_RESUME_BYTES = 700 * 1024;
 export const GENERAL_APPLICATION = "General application (any open role)";
 
-const GRADIENT_BTN = {
-  background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)",
-  color: "#fff",
-};
-
-const labelCls = "block text-xs font-semibold text-gray-600 font-sans uppercase tracking-wider mb-1.5";
-const inputCls = "font-sans h-12 rounded-xl border-border focus-visible:ring-[#2a66b0]/30";
+const labelCls = "block text-xs font-semibold text-foreground/70 font-sans uppercase tracking-wider mb-1.5";
+const inputCls = "font-sans h-12 rounded-xl border-border bg-background";
 
 export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { initialPosition?: string; idPrefix?: string }) => {
   const { toast } = useToast();
@@ -126,24 +119,24 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
       {spamGuard.honeypotField}
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
-          <label htmlFor={id("name")} className={labelCls}>Full name <span className="text-[#2a66b0]">*</span></label>
+          <label htmlFor={id("name")} className={labelCls}>Full name <span className="text-primary">*</span></label>
           <Input id={id("name")} autoComplete="name" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className={inputCls} />
         </div>
         <div>
-          <label htmlFor={id("email")} className={labelCls}>Email <span className="text-[#2a66b0]">*</span></label>
+          <label htmlFor={id("email")} className={labelCls}>Email <span className="text-primary">*</span></label>
           <Input id={id("email")} type="email" autoComplete="email" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className={inputCls} />
         </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
-          <label htmlFor={id("phone")} className={labelCls}>Phone <span className="text-[#2a66b0]">*</span></label>
+          <label htmlFor={id("phone")} className={labelCls}>Phone <span className="text-primary">*</span></label>
           <Input id={id("phone")} type="tel" autoComplete="tel" required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className={inputCls} />
         </div>
         <div>
-          <label htmlFor={id("position")} className={labelCls}>Position <span className="text-[#2a66b0]">*</span></label>
+          <label htmlFor={id("position")} className={labelCls}>Position <span className="text-primary">*</span></label>
           <Select value={form.position} onValueChange={v => setForm({ ...form, position: v })}>
-            <SelectTrigger id={id("position")} className="font-sans h-12 rounded-xl border-border">
+            <SelectTrigger id={id("position")} className="font-sans h-12 rounded-xl border-border bg-background">
               <SelectValue placeholder="Select a position" />
             </SelectTrigger>
             <SelectContent>
@@ -155,16 +148,16 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
 
       <div>
         <label htmlFor={id("resume")} className={labelCls}>
-          Resume <span className="normal-case tracking-normal font-normal text-gray-400">(optional, speeds up your application)</span>
+          Resume <span className="normal-case tracking-normal font-normal text-muted-foreground">(optional, speeds up your application)</span>
         </label>
         <label htmlFor={id("resume")}
-          className="flex items-center gap-3 rounded-xl border border-dashed border-[#2a66b0]/30 bg-[#2a66b0]/[0.03] px-4 py-3.5 cursor-pointer hover:border-[#2a66b0]/60 hover:bg-[#2a66b0]/[0.06] transition-colors">
-          <span className="w-9 h-9 rounded-lg bg-[#2a66b0]/10 flex items-center justify-center shrink-0">
-            <Paperclip className="h-4 w-4 text-[#2a66b0]" />
+          className="flex items-center gap-3 rounded-xl border border-dashed border-foreground/25 bg-background px-4 py-3.5 cursor-pointer hover:border-foreground/50 transition-colors">
+          <span className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0">
+            <Paperclip className="h-4 w-4 text-accent-foreground" />
           </span>
           <span className="text-sm min-w-0">
-            <span className="block font-semibold text-gray-800 truncate">{resumeFileName || "Choose a file"}</span>
-            <span className="block text-xs text-gray-500">PDF, DOC or DOCX, up to 700 KB</span>
+            <span className="block font-semibold text-foreground truncate">{resumeFileName || "Choose a file"}</span>
+            <span className="block text-xs text-muted-foreground">PDF, DOC or DOCX, up to 700 KB</span>
           </span>
         </label>
         <input id={id("resume")} ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" className="sr-only"
@@ -173,22 +166,21 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
 
       <div>
         <label htmlFor={id("cover")} className={labelCls}>
-          Cover letter <span className="normal-case tracking-normal font-normal text-gray-400">(optional)</span>
+          Cover letter <span className="normal-case tracking-normal font-normal text-muted-foreground">(optional)</span>
         </label>
         <Textarea id={id("cover")} rows={5} maxLength={5000} placeholder="Tell us about your experience and why you'd be a great fit for MintexCare..."
           value={form.coverLetter} onChange={e => setForm({ ...form, coverLetter: e.target.value })}
-          className="font-sans rounded-xl border-border resize-none focus-visible:ring-[#2a66b0]/30" />
+          className="font-sans rounded-xl border-border bg-background resize-none" />
       </div>
 
       <div className="pt-1">
         <button type="submit" disabled={submitting}
-          className="w-full inline-flex items-center justify-center gap-2 font-semibold text-base px-8 py-4 rounded-full transition-all hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-          style={GRADIENT_BTN}>
+          className="el-btn-primary w-full h-14 text-base disabled:opacity-70 disabled:cursor-not-allowed">
           {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</> : <>Submit Application <ArrowRight className="h-4 w-4" /></>}
         </button>
-        <p className="text-center text-xs text-gray-500 font-sans mt-3">
+        <p className="text-center text-xs text-muted-foreground font-sans mt-3">
           We respond to all applications within 3–5 business days. See our{" "}
-          <Link to="/privacy-policy" className="underline hover:text-[#2a66b0]">Privacy Policy</Link>.
+          <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy Policy</Link>.
         </p>
       </div>
     </form>

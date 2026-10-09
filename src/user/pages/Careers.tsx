@@ -7,7 +7,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { BenefitsSection } from "@/components/benefits/BenefitsSection";
 import { JobsSection } from "@/components/jobs/JobsSection";
 import { Link } from "react-router-dom";
-import { Briefcase, Heart, ArrowRight, MapPin, Phone, FileText, PhoneCall, ClipboardCheck, CheckCircle } from "lucide-react";
+import { Briefcase, Heart, ArrowRight, MapPin, Phone, FileText, PhoneCall, ClipboardCheck, Check } from "lucide-react";
 import { usePageImages } from "@/hooks/usePageImages";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useMemo } from "react";
@@ -20,13 +20,6 @@ const processSteps = [
   { label: "Welcome to MintexCare", icon: Heart },
 ];
 
-const stats = [
-  { value: "500+", label: "Clients Served" },
-  { value: "10+", label: "Years Experience" },
-  { value: "NJ", label: "Licensed & Insured" },
-  { value: "24/7", label: "Care Available" },
-];
-
 const Careers = () => {
   const { jobPositions, siteImages, contactInfo } = useAdmin();
   usePageImages("/careers");
@@ -35,81 +28,68 @@ const Careers = () => {
   return (
     <>
       <Header />
-      <main className="overflow-x-hidden">
+      <main className="theme-el overflow-x-hidden">
 
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="bg-[#e8ebed] pt-32 lg:pt-40 pb-20 overflow-hidden">
-          <div className="container mx-auto px-4">
+        <section className="pt-32 lg:pt-40 pb-16 md:pb-20">
+          <div className="container mx-auto px-6 md:px-10">
             <div className="flex flex-col lg:flex-row lg:items-center gap-12">
 
               {/* Left */}
               <AnimatedSection className="flex-1 max-w-xl">
-                <p className="text-sm text-gray-500 font-sans mb-6 flex items-center gap-2">
-                  <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-                  <span>/</span>
-                  <span className="text-gray-600">Careers</span>
+                <p className="text-sm text-muted-foreground font-sans mb-6 flex items-center gap-2">
+                  <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                  <span className="text-foreground/30">/</span>
+                  <span className="text-foreground font-semibold">Careers</span>
                 </p>
 
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-gray-900 leading-[1.1] mb-5">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground leading-[1.1] mb-6">
                   Home Care<br />Jobs in<br />
                   <span className="text-primary">Edison, NJ</span>
                 </h1>
 
-                <p className="text-gray-500 font-sans leading-relaxed mb-8 max-w-sm">
+                <p className="text-muted-foreground font-sans leading-relaxed mb-8 max-w-sm">
                   Join the MintexCare team in Edison and help families across Central New Jersey
                   get compassionate care at home.
                 </p>
 
                 <div className="flex flex-wrap gap-3">
-                  <Link
-                    to="/careers/jobs"
-                    className="inline-flex items-center gap-2 font-sans font-semibold px-8 py-3.5 rounded-full transition-all hover:scale-105"
-                    style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
-                  >
+                  <Link to="/careers/jobs" className="el-btn-primary">
                     View Openings
                   </Link>
-                  <a
-                    href="#apply-section"
-                    className="inline-flex items-center gap-2 font-sans font-medium px-8 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn"
-                  >
+                  <a href="#apply-section" className="el-btn-soft">
                     Apply Now
                   </a>
                 </div>
               </AnimatedSection>
 
-              {/* Right: image / decorative */}
-              <AnimatedSection delay={0.15} className="flex-1 relative flex justify-center items-center">
+              {/* Right: image card */}
+              <AnimatedSection delay={0.1} className="flex-1 relative flex justify-center items-center">
                 <div className="relative w-full max-w-md">
-                  {/* Decorative blobs */}
-                  <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-accent/10 pointer-events-none" />
-                  <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-primary/10 pointer-events-none" />
-
-                  <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border border-white">
+                  <div className="el-card p-3">
                     <img
                       src={siteImages.careersPageBanner}
                       alt="MintexCare team"
-                      className="w-full h-72 md:h-80 object-cover"
+                      className="w-full h-72 md:h-96 object-cover rounded-[16px]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
                   </div>
 
-                  {/* Floating chip */}
-                  <div className="absolute -bottom-5 -left-5 bg-card rounded-2xl shadow-xl px-5 py-3 flex items-center gap-3 border border-border">
-                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-                      <Briefcase className="h-5 w-5 text-accent" />
+                  {/* Floating chips */}
+                  <div className="el-chip absolute bottom-6 -left-4 sm:-left-8 px-5 py-3">
+                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
+                      <Briefcase className="h-5 w-5 text-accent-foreground" />
                     </div>
                     <div>
-                      <p className="text-xl font-serif font-bold text-gray-900 leading-none">{activePositions.length}</p>
-                      <p className="text-xs text-gray-500 font-sans mt-0.5">Open Positions</p>
+                      <p className="text-xl font-serif font-bold text-foreground leading-none">{activePositions.length}</p>
+                      <p className="text-xs text-muted-foreground font-sans mt-1">Open Positions</p>
                     </div>
                   </div>
 
-                  {/* NJ chip */}
-                  <div className="absolute -top-5 -right-3 bg-card rounded-2xl shadow-xl px-5 py-3 flex items-center gap-2 border border-border">
+                  <div className="el-chip absolute top-6 -right-3 sm:-right-6 px-5 py-3">
                     <MapPin className="h-4 w-4 text-primary" />
-                    <p className="text-sm font-sans font-semibold text-gray-700">New Jersey</p>
+                    <p className="text-sm font-sans font-semibold text-foreground">New Jersey</p>
                   </div>
                 </div>
               </AnimatedSection>
@@ -119,81 +99,56 @@ const Careers = () => {
         </section>
 
         {/* ══════════════════════════════════════
-            BENEFITS / WHY JOIN US — REDESIGNED
+            BENEFITS / WHY JOIN US
         ══════════════════════════════════════ */}
         <BenefitsSection />
 
         {/* ══════════════════════════════════════
-            JOB OPENINGS — REDESIGNED
+            JOB OPENINGS
         ══════════════════════════════════════ */}
-        <section id="positions" className="py-24 bg-background">
-          <JobsSection 
+        <div id="positions" className="py-4 md:py-8">
+          <JobsSection
             title="Join Our Healthcare Team"
             subtitle="Explore rewarding nursing and care positions in New Jersey"
           />
-        </section>
-
-        {/* ══════════════════════════════════════
-            STATS BAR
-        ══════════════════════════════════════ 
-        <section className="bg-primary py-14">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              {stats.map((s, i) => (
-                <AnimatedSection key={s.label} delay={i * 0.08}>
-                  <div>
-                    <p className="text-4xl md:text-5xl font-serif font-bold text-white mb-1">{s.value}</p>
-                    <p className="text-sm text-white/65 font-sans uppercase tracking-widest">{s.label}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>*/}
+        </div>
 
         {/* ══════════════════════════════════════
             YOUR LIFE AT MINTEXCARE
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-background overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <section className="py-20 md:py-28 bg-surface">
+          <div className="container mx-auto px-6 md:px-10">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
               {/* Left: image */}
               <AnimatedSection>
-                <div className="relative">
-                  <div className="absolute -top-6 -left-6 w-32 h-32 rounded-full bg-accent/8 pointer-events-none" />
-                  <div className="absolute -bottom-6 -right-6 w-48 h-48 rounded-full bg-primary/6 pointer-events-none" />
-                  <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary/10">
-                    <img
-                      src={siteImages.careersPageBanner}
-                      alt="Life at MintexCare"
-                      className="w-full h-96 object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 to-transparent" />
-                  </div>
-                  {/* Floating quote */}
-                  <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white">
-                    <p className="text-sm font-serif font-semibold text-gray-800 leading-snug">
+                <div className="relative rounded-[28px] overflow-hidden">
+                  <img
+                    src={siteImages.careersPageBanner}
+                    alt="Life at MintexCare"
+                    className="w-full h-96 md:h-[460px] object-cover"
+                  />
+                  <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 bg-background/95 rounded-2xl p-5">
+                    <p className="text-sm font-serif font-semibold text-foreground leading-snug">
                       "A place where caregivers are celebrated, not just employed."
                     </p>
-                    <p className="text-xs text-gray-500 font-sans mt-1">— MintexCare Culture</p>
+                    <p className="text-xs text-muted-foreground font-sans mt-1">— MintexCare Culture</p>
                   </div>
                 </div>
               </AnimatedSection>
 
               {/* Right: text */}
-              <AnimatedSection delay={0.15}>
-                <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.25em] mb-4">Our Culture</p>
-                <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6 leading-tight">
+              <AnimatedSection delay={0.1}>
+                <div className="el-eyebrow bg-background mb-5">Our Culture</div>
+                <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6 leading-tight">
                   Your Life At <span className="text-primary">MintexCare</span>
                 </h2>
-                <div className="w-10 h-[3px] rounded-full bg-accent mb-6" />
-                <p className="text-gray-500 font-sans leading-relaxed mb-4">
+                <p className="text-muted-foreground font-sans leading-relaxed mb-4">
                   At MintexCare we believe in working together and working hard. With our compassionate team
                   of healthcare professionals, we see looking for dynamic and creative individuals who are
                   willing to dedicate themselves to providing innovative care and services for our clients.
                 </p>
-                <p className="text-gray-500 font-sans leading-relaxed mb-8">
+                <p className="text-muted-foreground font-sans leading-relaxed mb-8">
                   Besides getting the opportunity to unlock your true potential, at MintexCare you can also
                   network with some of the most talented people in the industry, build meaningful connections,
                   and enjoy many other benefits by working with us.
@@ -202,18 +157,16 @@ const Careers = () => {
                 <div className="space-y-3 mb-8">
                   {["Compassionate team culture", "Professional development support", "Making real impact daily"].map((item) => (
                     <div key={item} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
-                      <span className="text-sm text-gray-700 font-sans">{item}</span>
+                      <span className="h-5 w-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+                        <Check className="h-3 w-3 text-accent-foreground" strokeWidth={3} />
+                      </span>
+                      <span className="text-sm font-semibold text-foreground/85 font-sans">{item}</span>
                     </div>
                   ))}
                 </div>
 
-                <a
-                  href="#apply-section"
-                  className="inline-flex items-center gap-2 font-sans font-semibold px-7 py-3.5 rounded-full transition-all hover:scale-105"
-                  style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)", color: "#fff" }}
-                >
-                  Learn More <ArrowRight className="h-4 w-4" />
+                <a href="#apply-section" className="el-btn-primary group">
+                  Learn More <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </a>
               </AnimatedSection>
 
@@ -224,35 +177,31 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             RECRUITMENT PROCESS
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-[#e8ebed]">
-          <div className="container mx-auto px-4">
+        <section className="py-20 md:py-28">
+          <div className="container mx-auto px-6 md:px-10">
 
-            <AnimatedSection className="text-center mb-14">
-              <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.25em] mb-3">Hiring Steps</p>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900">
+            <AnimatedSection className="text-center mb-12 md:mb-14">
+              <div className="el-eyebrow mb-5">Hiring Steps</div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
                 Learn Our <span className="text-primary">Recruitment</span> Process
               </h2>
             </AnimatedSection>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-              {/* Connecting line (desktop) */}
-              <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-primary/15 pointer-events-none" />
-
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
               {processSteps.map((step, i) => {
                 const SIcon = step.icon;
                 return (
-                  <AnimatedSection key={step.label} delay={i * 0.1}>
-                    <div className="relative flex flex-col items-center text-center group">
-                      {/* Step number */}
-                      <div className="relative mb-5">
-                        <div className="w-20 h-20 rounded-2xl bg-card border border-border shadow-md flex items-center justify-center group-hover:border-primary/30 group-hover:shadow-lg transition-all duration-300">
-                          <SIcon className="h-7 w-7 text-primary" />
+                  <AnimatedSection key={step.label} delay={i * 0.08} className="h-full">
+                    <div className="el-card h-full p-6 md:p-7">
+                      <div className="flex items-center justify-between mb-10">
+                        <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center">
+                          <SIcon className="h-6 w-6 text-accent-foreground" />
                         </div>
-                        <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold font-sans shadow-md">
-                          {i + 1}
-                        </div>
+                        <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
                       </div>
-                      <h3 className="font-serif font-semibold text-gray-900 text-sm leading-snug">{step.label}</h3>
+                      <h3 className="font-serif font-semibold text-foreground text-lg leading-snug">{step.label}</h3>
                     </div>
                   </AnimatedSection>
                 );
@@ -265,68 +214,60 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             APPLY FORM
         ══════════════════════════════════════ */}
-        <section id="apply-section" className="relative py-24 bg-background overflow-hidden">
-          <div className="absolute rounded-full bg-primary/4 pointer-events-none" style={{ width: 420, height: 420, bottom: "-10%", right: "-6%" }} />
+        <section id="apply-section" className="py-20 md:py-28 bg-surface">
+          <div className="container mx-auto px-6 md:px-10">
 
-          <div className="container mx-auto px-4">
-
-            <AnimatedSection className="text-center mb-14">
-              <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.25em] mb-3">Apply Now</p>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
+            <AnimatedSection className="text-center mb-12 md:mb-14">
+              <div className="el-eyebrow bg-background mb-5">Apply Now</div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
                 Start Your Journey <span className="text-primary">With Us</span>
               </h2>
-              <p className="text-gray-500 font-sans max-w-md mx-auto">
+              <p className="text-muted-foreground font-sans max-w-md mx-auto">
                 Fill out the form and we'll review your application within 3–5 business days.
               </p>
             </AnimatedSection>
 
-            <div className="grid lg:grid-cols-[320px_1fr] gap-8 items-start max-w-5xl mx-auto">
+            <div className="grid lg:grid-cols-[320px_1fr] gap-5 items-start max-w-5xl mx-auto">
 
               {/* Left: info panel */}
               <AnimatedSection className="lg:sticky lg:top-28">
-                <div className="relative rounded-3xl bg-primary p-7 overflow-hidden">
-                  <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-accent/10 translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+                <div className="rounded-[28px] bg-foreground text-background p-7">
+                  <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mb-6">
+                    <Briefcase className="h-6 w-6 text-accent-foreground" />
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold mb-3 leading-snug">
+                    Ready to Make<br />a Difference?
+                  </h3>
+                  <p className="text-sm text-background/70 font-sans leading-relaxed mb-7">
+                    Fill out the form and we'll review your application within 3–5 business days.
+                  </p>
 
-                  <div className="relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-5">
-                      <Briefcase className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-serif font-bold text-white mb-3 leading-snug">
-                      Ready to Make<br />a Difference?
-                    </h3>
-                    <div className="w-8 h-[2px] rounded-full bg-accent/60 mb-5" />
-                    <p className="text-sm text-white/65 font-sans leading-relaxed mb-7">
-                      Fill out the form and we'll review your application within 3–5 business days.
-                    </p>
-
-                    <div className="space-y-3 mb-7">
-                      {processSteps.map((step, i) => (
-                        <div key={step.label} className="flex items-center gap-3">
-                          <div className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0 text-xs font-bold font-sans text-white">
-                            {i + 1}
-                          </div>
-                          <span className="text-sm text-white/75 font-sans">{step.label}</span>
+                  <div className="space-y-3 mb-7">
+                    {processSteps.map((step, i) => (
+                      <div key={step.label} className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded-full bg-background/15 flex items-center justify-center flex-shrink-0 text-xs font-bold font-sans">
+                          {i + 1}
                         </div>
-                      ))}
-                    </div>
+                        <span className="text-sm text-background/80 font-sans">{step.label}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                    <div className="pt-5 border-t border-white/15">
-                      <p className="text-white/50 text-xs font-sans mb-1 flex items-center gap-1.5">
-                        <Phone className="h-3 w-3 text-accent" /> Questions? Call us:
-                      </p>
-                      <p className="text-lg font-serif font-bold text-white">{contactInfo.phone}</p>
-                    </div>
+                  <div className="pt-5 border-t border-background/15">
+                    <p className="text-background/60 text-xs font-sans mb-1 flex items-center gap-1.5">
+                      <Phone className="h-3 w-3" /> Questions? Call us:
+                    </p>
+                    <p className="text-lg font-serif font-bold">{contactInfo.phone}</p>
                   </div>
                 </div>
               </AnimatedSection>
 
               {/* Right: form */}
-              <AnimatedSection delay={0.15}>
-                <div className="bg-card border border-border rounded-3xl p-8 md:p-10 shadow-sm">
+              <AnimatedSection delay={0.1}>
+                <div className="bg-background rounded-[28px] p-7 md:p-10">
                   <div className="mb-7">
-                    <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.22em] mb-2">Application Form</p>
-                    <h3 className="text-2xl font-serif font-bold text-gray-900">Tell Us About Yourself</h3>
+                    <div className="el-eyebrow mb-4">Application Form</div>
+                    <h3 className="text-2xl font-serif font-bold text-foreground">Tell Us About Yourself</h3>
                   </div>
 
                   <ApplicationForm idPrefix="careers" />

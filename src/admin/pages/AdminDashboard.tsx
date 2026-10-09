@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (isLoading) return (
-    <div className="min-h-screen flex items-center justify-center bg-hero-bg">
+    <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="text-center space-y-3">
         <div className="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
         <p className="text-muted-foreground font-sans text-sm">Loading admin panel…</p>
@@ -48,22 +48,22 @@ const AdminDashboard = () => {
   const selectTab = (t: Tab) => { setTab(t); setSidebarOpen(false); };
 
   return (
-    <div className="min-h-screen flex bg-hero-bg">
+    <div className="min-h-screen flex bg-surface">
       {sidebarOpen && <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />}
       <aside className={`fixed lg:sticky top-0 left-0 h-screen z-40 w-64 bg-card border-r border-border transition-transform duration-300 flex-shrink-0 flex flex-col ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         <div className="p-4 border-b border-border">
-          <div className="text-xl font-serif font-bold text-primary">Mintex<span className="text-accent">Care</span></div>
+          <div className="text-xl font-serif font-bold text-foreground">Mintex<span className="text-primary">Care</span></div>
           <p className="text-xs text-muted-foreground font-sans">Admin Panel</p>
         </div>
         <nav className="p-2 space-y-1 flex-1 overflow-y-auto">
           {tabs.map(t => (
-            <button key={t.key} onClick={() => selectTab(t.key)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-sans transition-colors ${tab === t.key ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"}`}>
+            <button key={t.key} onClick={() => selectTab(t.key)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-full text-sm font-sans transition-colors ${tab === t.key ? "bg-foreground text-background font-semibold" : "text-foreground/75 hover:bg-surface hover:text-foreground"}`}>
               <t.icon className="h-4 w-4 shrink-0" /> {t.label}
             </button>
           ))}
         </nav>
         <div className="p-2 border-t border-border">
-          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-sans text-destructive hover:bg-destructive/10 transition-colors">
+          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-full text-sm font-sans text-destructive hover:bg-destructive/10 transition-colors">
             <LogOut className="h-4 w-4" /> Logout
           </button>
         </div>
@@ -98,10 +98,10 @@ const DashboardTab = ({ submissions, teamMembers, testimonials, jobPositions }: 
   <div>
     <h1 className="text-2xl font-serif font-bold text-foreground mb-6">Dashboard</h1>
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Submissions</CardTitle></CardHeader><CardContent><p className="text-3xl font-bold text-primary font-sans">{submissions.length}</p></CardContent></Card>
-      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Team</CardTitle></CardHeader><CardContent><p className="text-3xl font-bold text-primary font-sans">{teamMembers.length}</p></CardContent></Card>
-      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Testimonials</CardTitle></CardHeader><CardContent><p className="text-3xl font-bold text-primary font-sans">{testimonials.length}</p></CardContent></Card>
-      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Open Positions</CardTitle></CardHeader><CardContent><p className="text-3xl font-bold text-primary font-sans">{jobPositions?.filter((p: any) => p.active).length || 0}</p></CardContent></Card>
+      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Submissions</CardTitle></CardHeader><CardContent><p className="text-4xl font-bold text-foreground font-sans">{submissions.length}</p></CardContent></Card>
+      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Team</CardTitle></CardHeader><CardContent><p className="text-4xl font-bold text-foreground font-sans">{teamMembers.length}</p></CardContent></Card>
+      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Testimonials</CardTitle></CardHeader><CardContent><p className="text-4xl font-bold text-foreground font-sans">{testimonials.length}</p></CardContent></Card>
+      <Card className="shadow-sm"><CardHeader className="pb-2"><CardTitle className="text-sm font-sans text-muted-foreground">Open Positions</CardTitle></CardHeader><CardContent><p className="text-4xl font-bold text-foreground font-sans">{jobPositions?.filter((p: any) => p.active).length || 0}</p></CardContent></Card>
     </div>
     <Card className="shadow-sm">
       <CardHeader><CardTitle className="text-lg font-serif">Recent Submissions</CardTitle></CardHeader>
@@ -109,9 +109,9 @@ const DashboardTab = ({ submissions, teamMembers, testimonials, jobPositions }: 
         {submissions.length === 0 ? <p className="text-muted-foreground font-sans text-sm">No submissions yet.</p> : (
           <div className="space-y-3">
             {submissions.slice(0, 5).map((s: any) => (
-              <div key={s.id} className="flex items-center justify-between p-3 bg-hero-bg rounded-lg">
+              <div key={s.id} className="flex items-center justify-between p-3 bg-surface rounded-lg">
                 <div><p className="font-sans font-medium text-sm text-foreground">{s.name}</p><p className="font-sans text-xs text-muted-foreground">{s.email} • {new Date(s.date).toLocaleDateString()}</p></div>
-                {!s.read && <span className="h-2 w-2 rounded-full bg-accent shrink-0" />}
+                {!s.read && <span className="h-2 w-2 rounded-full bg-primary shrink-0" />}
               </div>
             ))}
           </div>
@@ -150,7 +150,7 @@ const TestimonialsTab = ({ testimonials, setTestimonials, toast }: any) => {
       <Card className="shadow-sm overflow-hidden"><div className="overflow-x-auto"><Table>
         <TableHeader><TableRow><TableHead>Name</TableHead><TableHead className="hidden sm:table-cell">Text</TableHead><TableHead>Rating</TableHead><TableHead className="hidden md:table-cell">Location</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
         <TableBody>{testimonials.map((t: any) => (
-          <TableRow key={t.id}><TableCell className="font-sans font-medium">{t.name}</TableCell><TableCell className="font-sans max-w-xs truncate hidden sm:table-cell">{t.text}</TableCell><TableCell><div className="flex">{Array.from({ length: t.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-accent text-accent" />)}</div></TableCell><TableCell className="font-sans hidden md:table-cell">{t.location}</TableCell><TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(t)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(t.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell></TableRow>
+          <TableRow key={t.id}><TableCell className="font-sans font-medium">{t.name}</TableCell><TableCell className="font-sans max-w-xs truncate hidden sm:table-cell">{t.text}</TableCell><TableCell><div className="flex">{Array.from({ length: t.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />)}</div></TableCell><TableCell className="font-sans hidden md:table-cell">{t.location}</TableCell><TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(t)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(t.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell></TableRow>
         ))}</TableBody>
       </Table></div></Card>
     </div>
@@ -190,7 +190,7 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
         <div className="grid sm:grid-cols-2 gap-3"><Input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="font-sans" /><Input placeholder="Role" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="font-sans" /></div>
         <Input placeholder="Photo URL" value={form.photoUrl} onChange={e => setForm({ ...form, photoUrl: e.target.value })} className="font-sans" />
         <div className="flex items-center gap-3">
-          <label className={`flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background font-sans text-sm cursor-pointer hover:bg-accent/10 transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+          <label className={`flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background font-sans text-sm cursor-pointer hover:bg-surface transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
             <Upload className="h-4 w-4" /> {uploading ? "Processing…" : "Upload from PC"}
             <input ref={teamFileRef} type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handlePhotoFile} />
           </label>
@@ -236,7 +236,7 @@ const GalleryTab = ({ gallery, setGallery, toast }: any) => {
         <Input placeholder="Caption (optional)" value={caption} onChange={e => setCaption(e.target.value)} className="font-sans" />
         <div className="flex flex-wrap gap-2">
           <Button onClick={add} className="font-sans"><Plus className="h-4 w-4 mr-1" /> Add by URL</Button>
-          <label className={`flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background font-sans text-sm cursor-pointer hover:bg-accent/10 transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+          <label className={`flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background font-sans text-sm cursor-pointer hover:bg-surface transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
             <Upload className="h-4 w-4" /> {uploading ? "Processing…" : "Upload from PC"}
             <input ref={galleryFileRef} type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleGalleryFile} />
           </label>
@@ -609,7 +609,7 @@ const ResumePanel = ({ resumeDataId, resumeName }: {
         <button
           onClick={handleDownload}
           disabled={loading}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition-colors text-xs font-semibold disabled:opacity-50"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent border border-transparent text-accent-foreground hover:bg-accent/75 transition-colors text-xs font-semibold disabled:opacity-50"
         >
           <Download className="h-3.5 w-3.5" />
           {loading ? "Loading…" : "Download"}
@@ -643,7 +643,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
           <button
             key={f}
             onClick={() => { setFilter(f); setSelected(null); }}
-            className={`px-4 py-1.5 rounded-full text-xs font-sans font-semibold capitalize transition-colors ${filter === f ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"}`}
+            className={`px-4 py-1.5 rounded-full text-xs font-sans font-semibold capitalize transition-colors ${filter === f ? "bg-foreground text-background" : "bg-surface text-muted-foreground hover:text-foreground"}`}
           >
             {f === "all" ? `All (${submissions.length})` : f === "career" ? `Applications (${submissions.filter((s: any) => (s.type ?? "contact") === "career").length})` : `Contact (${submissions.filter((s: any) => (s.type ?? "contact") === "contact").length})`}
           </button>
@@ -678,9 +678,9 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
                       className={`cursor-pointer transition-colors ${s.read ? "opacity-60" : ""} ${selected?.id === s.id ? "bg-primary/5" : "hover:bg-muted/40"}`}
                       onClick={() => setSelected(s)}
                     >
-                      <TableCell>{s.read ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-accent" />}</TableCell>
+                      <TableCell>{s.read ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-primary" />}</TableCell>
                       <TableCell>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans ${isCareer ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans ${isCareer ? "bg-accent text-accent-foreground" : "bg-primary/10 text-primary"}`}>
                           {isCareer ? "Application" : "Contact"}
                         </span>
                       </TableCell>
@@ -706,7 +706,7 @@ const SubmissionsTab = ({ submissions, setSubmissions, updateSubmission }: any) 
           <Card className="shadow-sm h-fit sticky top-20">
             <CardHeader className="pb-3 flex flex-row items-start justify-between gap-2">
               <div>
-                <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans mb-2 ${(selected.type ?? "contact") === "career" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-sans mb-2 ${(selected.type ?? "contact") === "career" ? "bg-accent text-accent-foreground" : "bg-primary/10 text-primary"}`}>
                   {(selected.type ?? "contact") === "career" ? "Job Application" : "Contact Message"}
                 </div>
                 <CardTitle className="text-base font-serif">{selected.name}</CardTitle>
@@ -829,7 +829,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
           <button
             key={f}
             onClick={() => { setStatusFilter(f); setSelected(null); }}
-            className={`px-3 py-1.5 rounded-full text-xs font-sans font-semibold capitalize transition-colors ${statusFilter === f ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"}`}
+            className={`px-3 py-1.5 rounded-full text-xs font-sans font-semibold capitalize transition-colors ${statusFilter === f ? "bg-foreground text-background" : "bg-surface text-muted-foreground hover:text-foreground"}`}
           >
             {f === "all" ? `All (${applications.length})` : `${statusLabels[f]} (${applications.filter((s: any) => (s.status || "new") === f).length})`}
           </button>
@@ -873,7 +873,7 @@ const ApplicationsTab = ({ submissions, updateSubmission, deleteSubmission, toas
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {s.resumeDataId
-                        ? <span className="inline-flex items-center gap-1 text-xs text-accent font-sans"><FileIcon className="h-3.5 w-3.5" /> Attached</span>
+                        ? <span className="inline-flex items-center gap-1 text-xs text-primary font-sans"><FileIcon className="h-3.5 w-3.5" /> Attached</span>
                         : <span className="text-xs text-muted-foreground font-sans">—</span>
                       }
                     </TableCell>
@@ -1145,7 +1145,7 @@ const ImageField = ({
               />
             </label>
             {fileReady && (
-              <p className="text-[11px] text-accent font-sans">✓ Image uploaded — click Save to apply</p>
+              <p className="text-[11px] text-primary font-sans">✓ Image uploaded — click Save to apply</p>
             )}
             <div className="flex gap-2 pt-1">
               <Button size="sm" onClick={save} disabled={uploading || saving} className="font-sans">
@@ -1260,7 +1260,7 @@ const TeamMemberPhotoField = ({
               />
             </label>
             {fileReady && (
-              <p className="text-[11px] text-accent font-sans">✓ Image uploaded — click Save to apply</p>
+              <p className="text-[11px] text-primary font-sans">✓ Image uploaded — click Save to apply</p>
             )}
             <div className="flex gap-2 pt-1">
               <Button size="sm" onClick={save} disabled={uploading || saving} className="font-sans">
@@ -1291,7 +1291,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
   <div>
     <div className="flex items-center justify-between mb-2">
       <h1 className="text-2xl font-serif font-bold text-foreground">Site Images</h1>
-      <a href="/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-sans text-accent hover:underline">
+      <a href="/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-sans text-primary hover:underline">
         <Eye className="h-4 w-4" /> View Website
       </a>
     </div>
@@ -1304,7 +1304,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
           <CardHeader className="pb-1">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-serif">{group.page}</CardTitle>
-              <a href={group.pageUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
+              <a href={group.pageUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
                 <Eye className="h-3 w-3" /> View section
               </a>
             </div>
@@ -1330,7 +1330,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
           <CardHeader className="pb-1">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-serif">About Us Page — Meet Our Team</CardTitle>
-              <a href="/about" target="_blank" rel="noopener noreferrer" className="text-xs text-accent font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
+              <a href="/about" target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
                 <Eye className="h-3 w-3" /> View section
               </a>
             </div>
@@ -1344,7 +1344,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
       ) : (
         <Card className="shadow-sm">
           <CardContent className="pt-6 pb-5 text-center text-sm text-muted-foreground font-sans">
-            No team members yet. <button className="text-accent underline" onClick={() => {}}>Add them in the Team Members tab</button> to manage their photos here.
+            No team members yet. <button className="text-primary underline" onClick={() => {}}>Add them in the Team Members tab</button> to manage their photos here.
           </CardContent>
         </Card>
       )}

@@ -1,55 +1,41 @@
 import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
 import { COUNTIES } from "@/data/areas";
 
-const MotionLink = motion.create(Link);
-
 const ServiceAreasSection = () => (
-  <section className="py-16 md:py-20">
-    <div className="container mx-auto px-4">
-      <AnimatedSection className="text-center mb-12">
-        <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 font-sans">Coverage</p>
-        <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-3">Proudly Serving Communities Across New Jersey</h2>
-        <p className="text-base text-muted-foreground max-w-2xl mx-auto font-sans">MintexCare provides home care across 12 New Jersey counties. Choose yours to see the towns we serve:</p>
+  <section className="py-20 md:py-24 bg-surface">
+    <div className="container mx-auto px-6 md:px-10">
+      <AnimatedSection className="text-center mb-12 max-w-3xl mx-auto">
+        <div className="el-eyebrow bg-background mb-5">Coverage</div>
+        <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">Proudly Serving Communities Across New Jersey</h2>
+        <p className="text-base text-muted-foreground font-sans">MintexCare provides home care across 12 New Jersey counties. Choose yours to see the towns we serve:</p>
       </AnimatedSection>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        {COUNTIES.map((c, i) => (
-          <AnimatedSection key={c.slug} delay={i * 0.05} from="scale">
-            <MotionLink
-              to={`/areas-we-serve/${c.slug}`}
-              className="group flex items-center gap-2 p-3.5 bg-card border border-border rounded-lg transition-all duration-300 hover:bg-primary/5 hover:border-primary/20 hover:shadow-lg dark:hover:bg-primary/10 dark:hover:border-primary/30"
-              whileHover={{
-                y: -3,
-                scale: 1.04,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            >
-              <motion.div
-                whileHover={{ rotate: [0, -15, 15, 0], scale: 1.2 }}
-                transition={{ duration: 0.5 }}
-              >
-                <MapPin className="h-4 w-4 text-accent shrink-0 transition-colors duration-300 group-hover:text-primary dark:group-hover:text-white" />
-              </motion.div>
-              <span className="text-sm font-medium text-foreground font-sans transition-colors duration-300 group-hover:text-primary dark:group-hover:text-white">
-                {c.name} County
-              </span>
-            </MotionLink>
-          </AnimatedSection>
+      <AnimatedSection delay={0.1} className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+        {COUNTIES.map((c) => (
+          <Link
+            key={c.slug}
+            to={`/areas-we-serve/${c.slug}`}
+            className="group inline-flex items-center gap-2 rounded-full bg-background border border-border px-5 py-3 transition-colors duration-200 hover:bg-foreground hover:border-foreground"
+          >
+            <MapPin className="h-4 w-4 text-primary shrink-0 transition-colors duration-200 group-hover:text-background" />
+            <span className="text-sm font-semibold text-foreground font-sans transition-colors duration-200 group-hover:text-background">
+              {c.name} County
+            </span>
+          </Link>
         ))}
-      </div>
+      </AnimatedSection>
 
-      <AnimatedSection delay={0.8} className="text-center mt-8">
-        <Link to="/areas-we-serve" className="inline-flex items-center gap-2 text-primary font-semibold font-sans hover:gap-3 transition-all">
-          Find your town <ArrowRight className="h-4 w-4" />
+      <AnimatedSection delay={0.2} className="text-center mt-10">
+        <Link to="/areas-we-serve" className="el-btn-primary group">
+          Find your town <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </Link>
-        <p className="text-sm text-muted-foreground font-sans mt-3">
+        <p className="text-sm text-muted-foreground font-sans mt-5">
           Don't see your area?{" "}
           <Link
             to="/contact"
-            className="text-primary font-semibold transition-colors hover:text-[#102a43]"
+            className="text-foreground font-semibold underline underline-offset-4 decoration-primary/50 transition-colors hover:text-primary"
           >
             Contact us
           </Link>
@@ -60,4 +46,4 @@ const ServiceAreasSection = () => (
   </section>
 );
 
-export default ServiceAreasSection; 
+export default ServiceAreasSection;

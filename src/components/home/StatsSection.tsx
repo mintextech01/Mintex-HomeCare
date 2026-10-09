@@ -1,5 +1,4 @@
 import { Users, Clock, ShieldCheck, Heart } from "lucide-react";
-import AnimatedSection from "@/components/AnimatedSection";
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
@@ -33,22 +32,7 @@ const Counter = ({ target, suffix }: { target: number; suffix: string }) => {
     return () => observer.disconnect();
   }, [target]);
 
-  return <div ref={ref} className="text-3xl md:text-4xl font-bold text-primary font-sans">{count}{suffix}</div>;
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, rotateX: 25, scale: 0.9 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    scale: 1,
-    transition: {
-      duration: 0.7,
-      delay: i * 0.12,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
+  return <div ref={ref} className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-none">{count}{suffix}</div>;
 };
 
 const StatsSection = () => {
@@ -56,28 +40,24 @@ const StatsSection = () => {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-14 bg-muted/50 border-y border-border" style={{ perspective: 1000 }}>
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+    <section ref={ref} className="pb-16 md:pb-20">
+      <div className="container mx-auto px-6 md:px-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="text-center"
-              style={{ transformStyle: "preserve-3d" }}
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="el-card flex flex-col justify-between gap-8 p-5 md:p-7 min-h-[170px] md:min-h-[200px]"
             >
-              <motion.div
-                className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3"
-                whileHover={{ scale: 1.2, rotateY: 180 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              >
-                <stat.icon className="h-6 w-6 text-accent" />
-              </motion.div>
-              <Counter target={stat.value} suffix={stat.suffix} />
-              <p className="text-sm text-muted-foreground mt-1 font-sans">{stat.label}</p>
+              <div className="flex items-start justify-between gap-3">
+                <Counter target={stat.value} suffix={stat.suffix} />
+                <div className="h-10 w-10 rounded-full bg-background flex items-center justify-center shrink-0">
+                  <stat.icon className="h-5 w-5 text-primary" />
+                </div>
+              </div>
+              <p className="text-sm md:text-base font-semibold text-foreground/80 font-sans leading-snug">{stat.label}</p>
             </motion.div>
           ))}
         </div>

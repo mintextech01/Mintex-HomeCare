@@ -8,7 +8,7 @@ import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin, type ContactInfo } from "@/contexts/AdminContext";
 import {
-  Phone, Mail, MapPin, CheckCircle2, ShieldCheck, FileText, HeartPulse,
+  Phone, Mail, MapPin, Check, ShieldCheck, FileText, HeartPulse,
   Accessibility, Scale, CalendarDays, ListOrdered, Info, ArrowRight, type LucideIcon,
 } from "lucide-react";
 
@@ -16,13 +16,6 @@ import {
 // Content is a starting draft: have it reviewed by MintexCare's attorney / compliance officer.
 
 const EFFECTIVE_DATE = "October 6, 2026";
-
-const GRADIENT_BTN = {
-  background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)",
-  color: "#fff",
-};
 
 interface LegalDoc {
   title: string;
@@ -34,14 +27,16 @@ interface LegalDoc {
 }
 
 const P = ({ children }: { children: ReactNode }) => (
-  <p className="text-gray-600 leading-relaxed mb-4 last:mb-0">{children}</p>
+  <p className="text-muted-foreground leading-relaxed mb-4 last:mb-0">{children}</p>
 );
 
 const List = ({ items }: { items: ReactNode[] }) => (
   <ul className="space-y-3 mb-4 last:mb-0">
     {items.map((item, i) => (
-      <li key={i} className="flex items-start gap-3 text-gray-600 leading-relaxed">
-        <CheckCircle2 className="h-5 w-5 text-[#0891b2] shrink-0 mt-0.5" />
+      <li key={i} className="flex items-start gap-3 text-muted-foreground leading-relaxed">
+        <span className="h-5 w-5 rounded-full bg-accent flex items-center justify-center shrink-0 mt-0.5">
+          <Check className="h-3 w-3 text-accent-foreground" strokeWidth={3} />
+        </span>
         <span>{item}</span>
       </li>
     ))}
@@ -49,7 +44,7 @@ const List = ({ items }: { items: ReactNode[] }) => (
 );
 
 const A = ({ href, children }: { href: string; children: ReactNode }) => (
-  <a href={href} className="text-[#2a66b0] font-medium underline decoration-[#2a66b0]/30 underline-offset-2 hover:decoration-[#2a66b0]">{children}</a>
+  <a href={href} className="text-foreground font-semibold underline decoration-primary/40 underline-offset-2 hover:decoration-primary">{children}</a>
 );
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -73,7 +68,7 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
         This Privacy Policy explains how MintexCare ("we", "us") collects, uses and protects information
         when you visit mintexcare.com, contact us, request care or apply for a job. Health information we
         receive while providing care is also protected under our{" "}
-        <Link to="/hipaa-notice" className="text-[#2a66b0] font-medium underline decoration-[#2a66b0]/30 underline-offset-2 hover:decoration-[#2a66b0]">HIPAA Notice of Privacy Practices</Link>.
+        <Link to="/hipaa-notice" className="text-foreground font-semibold underline decoration-primary/40 underline-offset-2 hover:decoration-primary">HIPAA Notice of Privacy Practices</Link>.
       </P>
     ),
     sections: [
@@ -81,10 +76,10 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
         heading: "Information we collect",
         body: (
           <List items={[
-            <><strong className="text-gray-900">Contact and care requests:</strong> your name, phone number, email address, the type of care you are interested in and any message you send us.</>,
-            <><strong className="text-gray-900">Job applications:</strong> your name, contact details, the position you apply for, your resume and cover letter if you attach them.</>,
-            <><strong className="text-gray-900">Website usage:</strong> pages visited, device and browser type, approximate location and referring website, collected through cookies and Google Tag Manager / Google Analytics.</>,
-            <><strong className="text-gray-900">Phone and WhatsApp:</strong> information you share with us when you call or message us.</>,
+            <><strong className="text-foreground">Contact and care requests:</strong> your name, phone number, email address, the type of care you are interested in and any message you send us.</>,
+            <><strong className="text-foreground">Job applications:</strong> your name, contact details, the position you apply for, your resume and cover letter if you attach them.</>,
+            <><strong className="text-foreground">Website usage:</strong> pages visited, device and browser type, approximate location and referring website, collected through cookies and Google Tag Manager / Google Analytics.</>,
+            <><strong className="text-foreground">Phone and WhatsApp:</strong> information you share with us when you call or message us.</>,
           ]} />
         ),
       },
@@ -176,7 +171,7 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
           <P>
             Content on this website is for general information only and is not medical advice, diagnosis or
             treatment. Always consult your physician or another qualified health provider about a medical
-            condition. <strong className="text-gray-900">In an emergency, call 911.</strong>
+            condition. <strong className="text-foreground">In an emergency, call 911.</strong>
           </P>
         ),
       },
@@ -254,7 +249,7 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
     subtitle: "How your health information is protected while you receive care from MintexCare, and your rights.",
     intro: (
       <P>
-        <strong className="text-gray-900">
+        <strong className="text-foreground">
           This notice describes how medical information about you may be used and disclosed and how you can
           get access to this information. Please review it carefully.
         </strong>
@@ -276,11 +271,11 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
         heading: "How we may use and share your health information",
         body: (
           <List items={[
-            <><strong className="text-gray-900">Treatment:</strong> to provide and coordinate your care, for example sharing information with your physician, nurses and caregivers.</>,
-            <><strong className="text-gray-900">Payment:</strong> to bill and get payment from you, your insurer, Medicaid or another payer.</>,
-            <><strong className="text-gray-900">Health care operations:</strong> to run our agency, supervise care quality, train staff and meet licensing requirements.</>,
-            <><strong className="text-gray-900">Family and caregivers:</strong> with family members or others involved in your care, unless you object.</>,
-            <><strong className="text-gray-900">As required by law:</strong> including public health reporting, reporting suspected abuse or neglect, health oversight activities, legal proceedings, law enforcement, and to prevent a serious threat to health or safety.</>,
+            <><strong className="text-foreground">Treatment:</strong> to provide and coordinate your care, for example sharing information with your physician, nurses and caregivers.</>,
+            <><strong className="text-foreground">Payment:</strong> to bill and get payment from you, your insurer, Medicaid or another payer.</>,
+            <><strong className="text-foreground">Health care operations:</strong> to run our agency, supervise care quality, train staff and meet licensing requirements.</>,
+            <><strong className="text-foreground">Family and caregivers:</strong> with family members or others involved in your care, unless you object.</>,
+            <><strong className="text-foreground">As required by law:</strong> including public health reporting, reporting suspected abuse or neglect, health oversight activities, legal proceedings, law enforcement, and to prevent a serious threat to health or safety.</>,
           ]} />
         ),
       },
@@ -484,59 +479,38 @@ const Legal = () => {
     <>
       <Header />
       {/* overflow-x-clip (not hidden) so the sidebar's position: sticky still works. */}
-      <main className="bg-background overflow-x-clip">
+      <main className="theme-el overflow-x-clip">
 
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="relative pt-32 md:pt-40 pb-16 md:pb-20 overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 560, height: 560, top: "-20%", right: "-8%", opacity: 0.7 }} />
-            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 380, height: 380, bottom: "-25%", left: "-8%", opacity: 0.5 }} />
-            <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 280, height: 280, top: "10%", left: "30%", opacity: 0.35 }} />
-
-            <div className="absolute bottom-20 left-[48%] hidden lg:grid grid-cols-6 gap-3">
-              {Array.from({ length: 24 }).map((_, i) => (
-                <div key={`ld-${i}`} className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]/15" />
-              ))}
-            </div>
-            <div className="absolute top-[18%] right-[8%] w-44 h-44 rounded-full border-2 border-[#2a66b0]/[0.08] deco-spin-slow hidden lg:block" />
-            <div className="absolute bottom-[12%] right-[30%] w-24 h-24 rounded-full border-[3px] border-dashed border-[#0891b2]/[0.1] deco-spin-slow hidden lg:block" style={{ animationDirection: "reverse" }} />
-            <div className="absolute bottom-[22%] right-[6%] w-6 h-6 border-2 border-[#0891b2]/15 rotate-45 deco-drift hidden lg:block" />
-            <svg className="absolute bottom-0 left-0 w-full h-16 opacity-[0.06]" viewBox="0 0 1440 64" preserveAspectRatio="none">
-              <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,16 1440,32 L1440,64 L0,64 Z" fill="#2a66b0" />
-            </svg>
-          </div>
-
-          <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+          <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-[1fr_auto] gap-12 items-center">
-              <AnimatedSection from="left">
-                <p className="text-sm text-gray-500 mb-8 flex items-center gap-2">
-                  <Link to="/" className="hover:text-[#2a66b0] transition-colors">Home</Link>
-                  <span className="text-gray-300">/</span>
-                  <span className="text-[#2a66b0] font-medium">{doc.crumb}</span>
+              <AnimatedSection>
+                <p className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
+                  <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                  <span className="text-foreground/30">/</span>
+                  <span className="text-foreground font-semibold">{doc.crumb}</span>
                 </p>
 
-                <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]" />
-                  <span className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest">Legal &amp; Compliance</span>
-                </div>
+                <div className="el-eyebrow mb-6">Legal &amp; Compliance</div>
 
-                <h1 className="font-bold text-gray-900 leading-[1.08] mb-5" style={{ fontSize: "clamp(2.2rem, 5vw, 3.5rem)" }}>
+                <h1 className="font-bold text-foreground leading-[1.08] mb-6" style={{ fontSize: "clamp(2.2rem, 5vw, 3.5rem)" }}>
                   {titleStart && <>{titleStart} </>}
-                  <span className="text-[#2a66b0]">{titleEnd}</span>
+                  <span className="text-primary">{titleEnd}</span>
                 </h1>
 
-                <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-[600px]">{doc.subtitle}</p>
+                <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[600px]">{doc.subtitle}</p>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
                   {[
                     { icon: CalendarDays, label: `Effective ${EFFECTIVE_DATE}` },
                     { icon: ListOrdered,  label: `${doc.sections.length} sections` },
                     { icon: ShieldCheck,  label: "NJ Licensed Agency" },
                   ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 bg-card border border-border rounded-full px-3 sm:px-4 py-2 shadow-sm">
-                      <Icon className="w-4 h-4 text-[#2a66b0]" />
+                    <div key={label} className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground bg-surface rounded-full px-3 sm:px-4 py-2">
+                      <Icon className="w-4 h-4 text-primary" />
                       <span>{label}</span>
                     </div>
                   ))}
@@ -544,22 +518,20 @@ const Legal = () => {
               </AnimatedSection>
 
               {/* Icon card */}
-              <AnimatedSection from="right" delay={0.15} className="hidden lg:block">
+              <AnimatedSection delay={0.1} className="hidden lg:block">
                 <div className="relative w-64 h-64">
-                  <div className="absolute inset-0 rounded-[2.5rem] rotate-6 bg-[#2a66b0]/[0.06] border border-[#2a66b0]/10" />
-                  <div className="absolute inset-0 rounded-[2.5rem] flex items-center justify-center shadow-2xl"
-                    style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)" }}>
-                    <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[rgba(255,255,255,0.10)] -translate-y-1/3 translate-x-1/4" />
-                    <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-[rgba(255,255,255,0.08)] translate-y-1/3 -translate-x-1/4" />
-                    <DocIcon className="relative w-24 h-24 text-white" strokeWidth={1.4} />
+                  <div className="absolute inset-0 rounded-[2.5rem] flex items-center justify-center bg-accent">
+                    <div className="w-36 h-36 rounded-[2rem] bg-background flex items-center justify-center shadow-xl">
+                      <DocIcon className="w-16 h-16 text-foreground" strokeWidth={1.4} />
+                    </div>
                   </div>
-                  <div className="absolute -bottom-5 -left-8 bg-card rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 border border-border">
-                    <div className="w-9 h-9 rounded-xl bg-[#0891b2]/10 flex items-center justify-center">
-                      <ShieldCheck className="w-4 h-4 text-[#0891b2]" />
+                  <div className="el-chip absolute -bottom-5 -left-8 px-4 py-3">
+                    <div className="w-9 h-9 rounded-xl bg-foreground flex items-center justify-center">
+                      <ShieldCheck className="w-4 h-4 text-background" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900 leading-none">MintexCare</p>
-                      <p className="text-xs text-gray-500 mt-0.5">Care you can believe in</p>
+                      <p className="text-sm font-bold text-foreground leading-none">MintexCare</p>
+                      <p className="text-xs text-muted-foreground mt-1">Care you can believe in</p>
                     </div>
                   </div>
                 </div>
@@ -571,17 +543,16 @@ const Legal = () => {
         {/* ══════════════════════════════════════
             POLICY SWITCHER
         ══════════════════════════════════════ */}
-        <nav aria-label="Legal pages" className="border-y border-border bg-muted/40">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="flex gap-2 overflow-x-auto py-3 -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
+        <nav aria-label="Legal pages" className="pb-6">
+          <div className="container mx-auto px-6 md:px-10">
+            <div className="flex gap-2 overflow-x-auto p-1.5 rounded-full bg-surface w-fit max-w-full" style={{ scrollbarWidth: "none" }}>
               {NAV.map(({ path, label, icon: Icon }) => {
                 const active = path === pathname;
                 return (
                   <Link key={path} to={path} aria-current={active ? "page" : undefined}
-                    className={`shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                      active ? "text-white" : "text-gray-600 hover:text-[#2a66b0] glass-btn"
-                    }`}
-                    style={active ? GRADIENT_BTN : undefined}>
+                    className={`shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                      active ? "bg-foreground text-background" : "text-foreground/70 hover:text-foreground hover:bg-background"
+                    }`}>
                     <Icon className="h-4 w-4" />
                     {label}
                   </Link>
@@ -594,28 +565,24 @@ const Legal = () => {
         {/* ══════════════════════════════════════
             CONTENT
         ══════════════════════════════════════ */}
-        <section className="relative py-14 md:py-20">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 420, height: 420, top: "30%", right: "-12%", opacity: 0.5 }} />
-          </div>
-
-          <div className="container mx-auto px-4 md:px-6 relative z-10">
-            <div className="grid lg:grid-cols-[280px_1fr] gap-10 xl:gap-14 items-start max-w-6xl mx-auto">
+        <section className="py-14 md:py-20 bg-surface">
+          <div className="container mx-auto px-6 md:px-10">
+            <div className="grid lg:grid-cols-[280px_1fr] gap-8 xl:gap-12 items-start max-w-6xl mx-auto">
 
               {/* Sidebar: on-this-page + contact (sticky on desktop) */}
-              <aside className="hidden lg:block sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto space-y-5 pb-1" style={{ scrollbarWidth: "thin" }}>
-                <div className="bg-card border border-border rounded-3xl p-5 shadow-sm">
-                  <p className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest mb-3 px-3">On this page</p>
+              <aside className="hidden lg:block sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto space-y-4 pb-1" style={{ scrollbarWidth: "thin" }}>
+                <div className="bg-background rounded-[24px] p-4">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 px-3 pt-1">On this page</p>
                   <ol className="space-y-0.5">
                     {doc.sections.map((s, i) => {
                       const active = activeId === ids[i];
                       return (
                         <li key={s.heading}>
                           <a href={`#${ids[i]}`}
-                            className={`flex items-start gap-3 rounded-xl px-3 py-1.5 text-sm leading-snug transition-colors ${
-                              active ? "bg-blue-50 text-[#2a66b0] font-semibold" : "text-gray-500 hover:text-[#2a66b0]"
+                            className={`flex items-start gap-3 rounded-xl px-3 py-2 text-sm leading-snug transition-colors ${
+                              active ? "bg-accent text-accent-foreground font-semibold" : "text-foreground/70 hover:text-foreground hover:bg-surface"
                             }`}>
-                            <span className={`text-xs font-bold mt-0.5 ${active ? "text-[#2a66b0]" : "text-gray-400"}`}>{String(i + 1).padStart(2, "0")}</span>
+                            <span className={`text-xs font-bold mt-0.5 ${active ? "text-accent-foreground" : "text-muted-foreground"}`}>{String(i + 1).padStart(2, "0")}</span>
                             {s.heading}
                           </a>
                         </li>
@@ -624,16 +591,13 @@ const Legal = () => {
                   </ol>
                 </div>
 
-                {/* White tints are inline styles: the dark theme overrides bg-white/* utility classes. */}
-                <div className="relative rounded-3xl p-5 overflow-hidden text-white"
-                  style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)" }}>
-                  <div className="absolute top-0 right-0 w-28 h-28 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-                  <p className="relative font-bold text-lg mb-1">Have a question?</p>
-                  <p className="relative text-white/75 text-sm mb-4">Our team is available 24/7.</p>
-                  <a href={`tel:+1${tel}`} className="relative flex items-center gap-2 text-sm font-semibold hover:opacity-90 transition-opacity rounded-full px-4 py-2.5 mb-2" style={{ background: "rgba(255,255,255,0.16)" }}>
+                <div className="rounded-[24px] p-5 bg-foreground text-background">
+                  <p className="font-bold text-lg mb-1">Have a question?</p>
+                  <p className="text-background/70 text-sm mb-4">Our team is available 24/7.</p>
+                  <a href={`tel:+1${tel}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 mb-2 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
                     <Phone className="h-4 w-4" /> {contactInfo.phone}
                   </a>
-                  <a href={`mailto:${contactInfo.email}`} className="relative flex items-center gap-2 text-sm font-semibold hover:opacity-90 transition-opacity rounded-full px-4 py-2.5 break-all" style={{ background: "rgba(255,255,255,0.16)" }}>
+                  <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 break-all bg-background/10 hover:bg-background/20 transition-colors">
                     <Mail className="h-4 w-4 shrink-0" /> {contactInfo.email}
                   </a>
                 </div>
@@ -642,29 +606,25 @@ const Legal = () => {
               {/* Document */}
               <article className="min-w-0">
                 <AnimatedSection>
-                  <div className="relative rounded-3xl border border-blue-100 bg-blue-50 p-6 md:p-8 mb-8 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: "linear-gradient(180deg, #2a66b0 0%, #0891b2 100%)" }} />
+                  <div className="rounded-[24px] bg-accent p-6 md:p-8 mb-5">
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-[#2a66b0] flex items-center justify-center shrink-0">
-                        <Info className="h-5 w-5 text-white" />
+                      <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shrink-0">
+                        <Info className="h-5 w-5 text-foreground" />
                       </div>
-                      <div className="min-w-0 pt-1.5">{doc.intro}</div>
+                      <div className="min-w-0 pt-1.5 [&_p]:text-accent-foreground/85">{doc.intro}</div>
                     </div>
                   </div>
                 </AnimatedSection>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {doc.sections.map((s, i) => (
                     <AnimatedSection key={s.heading} delay={Math.min(i, 3) * 0.04}>
-                      <section id={ids[i]} className="group relative scroll-mt-32 bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-lg hover:border-[#2a66b0]/25 transition-all duration-300 overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[3px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"
-                          style={{ background: "linear-gradient(90deg, #2a66b0 0%, #0891b2 100%)" }} />
+                      <section id={ids[i]} className="scroll-mt-32 bg-background rounded-[24px] p-6 md:p-8">
                         <div className="flex items-center gap-4 mb-5">
-                          <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-bold shrink-0 text-white shadow-md"
-                            style={{ background: "linear-gradient(135deg, #2a66b0 0%, #0891b2 100%)" }}>
+                          <span className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold shrink-0 bg-surface text-foreground">
                             {String(i + 1).padStart(2, "0")}
                           </span>
-                          <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug">{s.heading}</h2>
+                          <h2 className="text-xl md:text-2xl font-bold text-foreground leading-snug">{s.heading}</h2>
                         </div>
                         <div className="md:pl-[60px]">{s.body}</div>
                       </section>
@@ -674,7 +634,7 @@ const Legal = () => {
 
                 {/* Contact details */}
                 <AnimatedSection>
-                  <div className="mt-8 grid sm:grid-cols-3 gap-4">
+                  <div className="mt-5 grid sm:grid-cols-3 gap-4">
                     {[
                       { icon: Phone,  label: "Call 24/7", value: contactInfo.phone,   href: `tel:+1${tel}` },
                       { icon: Mail,   label: "Email",     value: contactInfo.email,   href: `mailto:${contactInfo.email}` },
@@ -682,16 +642,16 @@ const Legal = () => {
                     ].map(({ icon: Icon, label, value, href }) => {
                       const body = (
                         <>
-                          <div className="w-11 h-11 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center mb-3">
-                            <Icon className="w-5 h-5 text-[#2a66b0]" />
+                          <div className="w-11 h-11 rounded-full bg-accent flex items-center justify-center mb-4">
+                            <Icon className="w-5 h-5 text-accent-foreground" />
                           </div>
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
-                          <p className="text-sm font-semibold text-gray-900 break-words">{value}</p>
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">{label}</p>
+                          <p className="text-sm font-semibold text-foreground break-words">{value}</p>
                         </>
                       );
-                      const cls = "block bg-card border border-border rounded-2xl p-5 shadow-sm transition-all";
+                      const cls = "block bg-background rounded-[20px] p-5 transition-shadow";
                       return href
-                        ? <a key={label} href={href} className={`${cls} hover:shadow-lg hover:border-[#2a66b0]/25`}>{body}</a>
+                        ? <a key={label} href={href} className={`${cls} hover:shadow-md`}>{body}</a>
                         : <div key={label} className={cls}>{body}</div>;
                     })}
                   </div>
@@ -704,30 +664,25 @@ const Legal = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="pb-20 bg-background relative">
-          <div className="container mx-auto px-4 md:px-6">
+        <section className="py-16 md:py-20">
+          <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
-              <div className="relative rounded-3xl overflow-hidden px-6 py-12 sm:px-10 sm:py-14 md:px-16 max-w-6xl mx-auto"
-                style={{ background: "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)" }}>
-                <div className="pointer-events-none absolute top-0 right-0 w-72 h-72 rounded-full bg-[rgba(255,255,255,0.10)] -translate-y-1/2 translate-x-1/4" />
-                <div className="pointer-events-none absolute bottom-0 left-0 w-52 h-52 rounded-full bg-[rgba(255,255,255,0.08)] translate-y-1/2 -translate-x-1/4" />
-                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+              <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16 max-w-6xl mx-auto">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
                   <div>
-                    <div className="inline-flex items-center gap-2 bg-[rgba(255,255,255,0.15)] rounded-full px-4 py-1.5 mb-4">
-                      <ShieldCheck className="w-3.5 h-3.5 text-white" />
-                      <span className="text-xs font-semibold text-white uppercase tracking-widest">Licensed &amp; Insured</span>
+                    <div className="el-eyebrow bg-background border-transparent mb-4">
+                      <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+                      Licensed &amp; Insured
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-white leading-snug mb-3">
+                    <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground leading-snug mb-3">
                       Care you can trust, from people who respect your privacy.
                     </h2>
-                    <p className="text-white/75 text-sm max-w-md leading-relaxed">
+                    <p className="text-accent-foreground/75 text-sm max-w-md leading-relaxed">
                       Talk to a care coordinator about a personalized plan for your loved one, with no obligation.
                     </p>
                   </div>
-                  <Link to="/free-consultation"
-                    className="shrink-0 inline-flex items-center gap-2 font-bold text-sm px-9 py-4 rounded-full hover:scale-105 transition-all whitespace-nowrap shadow-lg"
-                    style={{ background: "#fff", color: "#1d4f8c" }}>
-                    Free Consultation <ArrowRight className="h-4 w-4" />
+                  <Link to="/free-consultation" className="el-btn-primary group shrink-0 whitespace-nowrap">
+                    Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>

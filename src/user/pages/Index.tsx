@@ -35,7 +35,7 @@ const Index = () => {
 
 
       <Header />
-      <main className="overflow-x-hidden">
+      <main className="theme-el overflow-x-hidden">
         <HeroSection />
         <StatsSection />
         <AboutSection />

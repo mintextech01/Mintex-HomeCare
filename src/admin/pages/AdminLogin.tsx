@@ -23,21 +23,21 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-hero-bg p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+      <Card className="w-full max-w-md rounded-[28px] border-0 shadow-sm p-2">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
-            <ShieldCheck className="h-7 w-7 text-primary" />
+          <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-accent flex items-center justify-center">
+            <ShieldCheck className="h-7 w-7 text-accent-foreground" />
           </div>
           <CardTitle className="text-2xl font-serif">MintexCare Admin</CardTitle>
           <p className="text-sm text-muted-foreground font-sans">Sign in to access the admin panel</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input type="email" placeholder="Admin Email" value={email} onChange={e => { setEmail(e.target.value); setError(""); }} className="font-sans" />
-            <Input type="password" placeholder="Password" value={password} onChange={e => { setPassword(e.target.value); setError(""); }} className="font-sans" />
+            <Input type="email" placeholder="Admin Email" value={email} onChange={e => { setEmail(e.target.value); setError(""); }} className="font-sans h-12 rounded-xl" />
+            <Input type="password" placeholder="Password" value={password} onChange={e => { setPassword(e.target.value); setError(""); }} className="font-sans h-12 rounded-xl" />
             {error && <p className="text-sm text-destructive font-sans">{error}</p>}
-            <Button type="submit" className="w-full font-sans">Sign In</Button>
+            <Button type="submit" className="w-full h-12 rounded-full font-sans font-semibold bg-foreground text-background hover:bg-foreground/85">Sign In</Button>
           </form>
         </CardContent>
       </Card>

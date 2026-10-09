@@ -61,6 +61,7 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        surface: "hsl(var(--surface))",
         "hero-bg": "hsl(var(--hero-bg))",
         "footer-bg": "hsl(var(--footer-bg))",
         "footer-foreground": "hsl(var(--footer-foreground))",

@@ -16,18 +16,17 @@ export function BenefitCard({ benefit, delay = 0 }: BenefitCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ delay, duration: 0.4, ease: "easeOut" }}
-      whileHover={{ y: -4 }}
       className="h-full"
     >
-      <Card className="h-full border-border/50 bg-card hover:border-accent/30 hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <Card className="h-full rounded-[24px] border-0 shadow-none bg-background hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] transition-shadow duration-300 overflow-hidden group">
         <CardContent className="p-6 md:p-8 flex flex-col h-full">
           {/* Icon Container */}
           <motion.div
-            className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-5 group-hover:bg-accent/15 transition-colors duration-300"
+            className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-7 group-hover:bg-foreground transition-colors duration-300"
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <IconComponent className="h-6 w-6 text-accent" />
+            <IconComponent className="h-6 w-6 text-accent-foreground group-hover:text-background transition-colors duration-300" />
           </motion.div>
 
           {/* Title */}
@@ -36,17 +35,10 @@ export function BenefitCard({ benefit, delay = 0 }: BenefitCardProps) {
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-foreground/70 leading-relaxed flex-1 font-body">
+          <p className="text-sm text-muted-foreground leading-relaxed flex-1 font-body">
             {benefit.description}
           </p>
 
-          {/* Bottom accent line (appears on hover) */}
-          <motion.div
-            className="h-1 bg-gradient-to-r from-accent to-accent/50 rounded-full mt-5 origin-left"
-            initial={{ scaleX: 0 }}
-            whileHover={{ scaleX: 1 }}
-            transition={{ duration: 0.3 }}
-          />
         </CardContent>
       </Card>
     </motion.div>

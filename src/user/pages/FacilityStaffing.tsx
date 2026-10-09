@@ -17,118 +17,71 @@ import { PENDING_IMAGE } from "@/config/siteImageConfig";
 import { STAFFING_ROLES, STAFFING_FAQS, FACILITY_TYPES, type StaffingRole } from "@/data/staffing";
 import { trackLead, type LeadSource } from "@/lib/leads";
 import {
-  ArrowRight, Phone, MessageCircle, CheckCircle2, ShieldCheck, Clock, Building2, Users, CalendarDays,
+  ArrowRight, Phone, MessageCircle, Check, CheckCircle2, ShieldCheck, Clock, Building2, Users, CalendarDays,
   CalendarClock, CalendarRange, BadgeCheck, FileSearch, HeartPulse, Brain, Home, Activity, Hospital,
-  ChevronRight, Send, Loader2, ClipboardCheck, Handshake, UserCheck, Sparkles, Plus,
+  ChevronDown, Send, Loader2, ClipboardCheck, Handshake, UserCheck,
 } from "lucide-react";
 import React from "react";
 
 // /facility-staffing, /facility-staffing/roles and /facility-staffing/request-staff share this chunk.
 
-const GRADIENT_BTN = {
-  background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)",
-  color: "#fff",
-};
-const BRAND_GRADIENT = "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)";
-// White tints are inline styles: the dark theme overrides bg-white/* classes.
-const WHITE_TINT = "rgba(255,255,255,0.15)";
-
 const REQUEST_PATH = "/facility-staffing/request-staff";
-
-const ROLE_PALETTES = [
-  { solid: "#2a66b0", bg: "rgba(42,102,176,0.08)" },
-  { solid: "#0891b2", bg: "rgba(8,145,178,0.08)" },
-  { solid: "#14b8a6", bg: "rgba(20,184,166,0.08)" },
-  { solid: "#6366f1", bg: "rgba(99,102,241,0.08)" },
-];
 
 /* ════════════════════════════════════════════
    SHARED PIECES
    ════════════════════════════════════════════ */
 
-const Eyebrow = ({ children, color = "#2a66b0" }: { children: ReactNode; color?: string }) => (
-  <div className="inline-flex items-center gap-3 mb-5">
-    <span className="h-px w-10 inline-block" style={{ background: color }} />
-    <span className="text-xs font-extrabold uppercase tracking-[0.25em]" style={{ color }}>{children}</span>
-    <span className="h-px w-10 inline-block" style={{ background: color }} />
-  </div>
+const Eyebrow = ({ children, onSurface = false }: { children: ReactNode; onSurface?: boolean }) => (
+  <div className={`el-eyebrow mb-5 ${onSurface ? "bg-background" : ""}`}>{children}</div>
 );
 
-const Pill = ({ icon: Icon, children }: { icon?: typeof Building2; children: ReactNode }) => (
-  <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-6">
-    {Icon ? <Icon className="w-3.5 h-3.5 text-[#2a66b0]" /> : <span className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]" />}
-    <span className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest">{children}</span>
+const Pill = ({ icon: Icon, children, onSurface = false }: { icon?: typeof Building2; children: ReactNode; onSurface?: boolean }) => (
+  <div className={`el-eyebrow mb-6 ${onSurface ? "bg-background" : ""}`}>
+    {Icon && <Icon className="w-3.5 h-3.5 text-primary" />}
+    {children}
   </div>
 );
 
 const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
-  <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-8 flex flex-wrap items-center gap-2">
+  <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground mb-8 flex flex-wrap items-center gap-2">
     {trail.map((c, i) => (
       <React.Fragment key={c.label}>
-        {i > 0 && <span className="text-gray-300">/</span>}
+        {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-[#2a66b0] transition-colors">{c.label}</Link>
-          : <span className="text-[#2a66b0] font-medium" aria-current="page">{c.label}</span>}
+          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
   </nav>
 );
 
-const HeroDeco = () => (
-  <div className="pointer-events-none absolute inset-0 overflow-hidden">
-    <div className="absolute rounded-full deco-drift" style={{ background: "radial-gradient(circle, #bfdbfe 0%, transparent 70%)", width: 620, height: 620, top: "-18%", right: "-10%", opacity: 0.7 }} />
-    <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #a7f3d0 0%, transparent 70%)", width: 400, height: 400, bottom: "-20%", left: "-8%", opacity: 0.5 }} />
-    <div className="absolute rounded-full deco-float-up" style={{ background: "radial-gradient(circle, #c7d2fe 0%, transparent 70%)", width: 300, height: 300, top: "12%", left: "28%", opacity: 0.35 }} />
-    <div className="absolute top-[22%] right-[42%] w-28 h-28 rounded-full border-[3px] border-dashed border-[#0891b2]/[0.1] deco-spin-slow hidden lg:block" />
-    <div className="absolute bottom-[16%] left-[44%] hidden lg:grid grid-cols-5 gap-3">
-      {Array.from({ length: 15 }).map((_, i) => <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#2a66b0]/15" />)}
-    </div>
-    <svg className="absolute bottom-0 left-0 w-full h-16 opacity-[0.06]" viewBox="0 0 1440 64" preserveAspectRatio="none">
-      <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,16 1440,32 L1440,64 L0,64 Z" fill="#2a66b0" />
-    </svg>
-  </div>
-);
-
-const CallButton = ({ tel, phone, light = false }: { tel: string; phone: string; light?: boolean }) => (
-  <a href={`tel:+1${tel}`}
-    className={light
-      ? "inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-4 rounded-full transition-all hover:scale-105 shadow-lg"
-      : "inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full text-foreground hover:text-primary transition-all glass-btn"}
-    style={light ? { background: "#fff", color: "#1d4f8c" } : undefined}>
+const CallButton = ({ tel, phone }: { tel: string; phone: string }) => (
+  <a href={`tel:+1${tel}`} className="el-btn-soft">
     <Phone className="h-4 w-4" /> Call {phone}
   </a>
 );
 
 const CtaBanner = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-20 bg-background">
-    <div className="container mx-auto px-4 md:px-6">
+  <section className="py-16 md:py-20">
+    <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
-        <div className="relative rounded-3xl overflow-hidden px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center" style={{ background: BRAND_GRADIENT }}>
-          <div className="pointer-events-none absolute top-0 right-0 w-72 h-72 rounded-full -translate-y-1/2 translate-x-1/4" style={{ background: "rgba(255,255,255,0.10)" }} />
-          <div className="pointer-events-none absolute bottom-0 left-0 w-52 h-52 rounded-full translate-y-1/2 -translate-x-1/4" style={{ background: "rgba(255,255,255,0.08)" }} />
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-5" style={{ background: WHITE_TINT }}>
-              <Handshake className="w-3.5 h-3.5 text-white" />
-              <span className="text-xs font-semibold text-white uppercase tracking-widest">Partner With MintexCare</span>
+        <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
+          <div className="max-w-2xl mx-auto">
+            <div className="el-eyebrow bg-background border-transparent mb-5">
+              <Handshake className="w-3.5 h-3.5 text-primary" />
+              Partner With MintexCare
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-white leading-snug mb-4">{title}</h2>
-            <p className="text-white/80 text-sm md:text-base leading-relaxed mb-9">{text}</p>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-              <Link to={REQUEST_PATH}
-                className="inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-4 rounded-full transition-all hover:scale-105 shadow-lg"
-                style={{ background: "#fff", color: "#1d4f8c" }}>
+              <Link to={REQUEST_PATH} className="el-btn-primary">
                 Request Staff <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href={`tel:+1${tel}`}
-                className="inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-4 rounded-full text-white transition-all hover:scale-105"
-                style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.35)" }}>
+              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground hover:bg-background/80">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
               <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-4 rounded-full text-white transition-all hover:scale-105"
-                style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.35)" }}>
+                className="el-btn bg-background text-foreground hover:bg-background/80">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
@@ -141,25 +94,22 @@ const CtaBanner = ({ tel, phone, title, text }: { tel: string; phone: string; ti
 
 /** Role card in the same style as the Services page cards. */
 const RoleCard = ({ role, i }: { role: StaffingRole; i: number }) => {
-  const palette = ROLE_PALETTES[i % ROLE_PALETTES.length];
   const Icon = role.icon;
   return (
-    <AnimatedSection delay={i * 0.07} className="h-full">
+    <AnimatedSection delay={i * 0.06} className="h-full">
       <Link to={`/facility-staffing/roles#${role.code.toLowerCase()}`}
-        className="svc-card-wrapper h-full block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2a66b0] focus-visible:ring-offset-4"
-        style={{ "--icon-color": palette.solid } as React.CSSProperties}>
-        <div className="svc-card group relative rounded-2xl p-8 border border-gray-100 h-full flex flex-col items-center text-center bg-[#f4f6f8]">
-          <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" style={{ background: palette.solid }} />
-          <div className="svc-icon-box mb-6" style={{ "--icon-color": palette.solid, "--icon-bg": palette.bg } as React.CSSProperties}>
-            <Icon className="icon-svg w-7 h-7" style={{ color: palette.solid }} />
+        className="group h-full flex flex-col rounded-[24px] bg-background p-7 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4">
+        <div className="flex items-start justify-between mb-7">
+          <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300 group-hover:bg-foreground">
+            <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
           </div>
-          <p className="text-2xl font-extrabold mb-1" style={{ color: palette.solid }}>{role.code}</p>
-          <h3 className="font-bold text-gray-900 text-[17px] leading-snug mb-3">{role.title}</h3>
-          <p className="text-sm text-gray-500 leading-relaxed flex-1">{role.summary}</p>
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold mt-5 transition-all group-hover:gap-2.5" style={{ color: palette.solid }}>
-            View role <ArrowRight className="h-4 w-4" />
-          </span>
+          <p className="text-2xl font-extrabold text-foreground">{role.code}</p>
         </div>
+        <h3 className="font-bold text-foreground text-lg leading-snug mb-2">{role.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed flex-1">{role.summary}</p>
+        <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-6">
+          View role <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+        </span>
       </Link>
     </AnimatedSection>
   );
@@ -208,24 +158,23 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
   return (
     <>
       {/* HERO */}
-      <section className="relative pt-32 md:pt-40 pb-24 md:pb-28 overflow-hidden">
-        <HeroDeco />
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-14 xl:gap-20 items-center">
-            <AnimatedSection from="left">
+      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+        <div className="container mx-auto px-6 md:px-10">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 xl:gap-16 items-center">
+            <AnimatedSection>
               <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing" }]} />
               <Pill icon={Building2}>Facility Staffing</Pill>
-              <h1 className="font-bold text-gray-900 leading-[1.07] mb-5" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
+              <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
                 Reliable Staffing for<br />
-                <span className="text-[#2a66b0]">NJ Care Facilities</span>
+                <span className="text-primary">NJ Care Facilities</span>
               </h1>
-              <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-[560px]">
+              <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[560px]">
                 Short-staffed? MintexCare provides screened home health aides, CNAs, LPNs and RNs to skilled nursing,
                 assisted living, rehab and long-term care facilities across New Jersey, from a single shift to long-term placements.
               </p>
               <div className="flex flex-wrap gap-3 mb-9">
-                <Link to={REQUEST_PATH} className="inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105" style={GRADIENT_BTN}>
-                  Request Staff <ArrowRight className="h-4 w-4" />
+                <Link to={REQUEST_PATH} className="el-btn-primary group">
+                  Request Staff <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <CallButton tel={tel} phone={phone} />
               </div>
@@ -235,63 +184,55 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
                   { icon: Users,       label: "HHA · CNA · LPN · RN" },
                   { icon: Clock,       label: "Available 24/7" },
                 ].map(({ icon: I, label }) => (
-                  <div key={label} className="flex items-center gap-2 text-sm text-gray-500">
-                    <I className="w-4 h-4 text-[#2a66b0]" /><span>{label}</span>
+                  <div key={label} className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
+                    <I className="w-4 h-4 text-primary" /><span>{label}</span>
                   </div>
                 ))}
               </div>
             </AnimatedSection>
 
-            <AnimatedSection from="right" delay={0.15} className="relative max-w-[520px] w-full mx-auto lg:mx-0 lg:justify-self-end">
-              <div className="absolute -inset-3 rounded-[2.5rem] rotate-3 bg-[#2a66b0]/[0.06] border border-[#2a66b0]/10 hidden sm:block" />
-              <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/4.2]">
-                {hasPhoto ? (
-                  <>
+            <AnimatedSection delay={0.1} className="relative max-w-[520px] w-full mx-auto lg:mx-0 lg:justify-self-end">
+              <div className="el-card p-3">
+                <div className="relative rounded-[16px] overflow-hidden aspect-[4/4.2]">
+                  {hasPhoto ? (
                     <img src={photo} alt="MintexCare nurse staffing a care facility" className="w-full h-full object-cover" loading="eager" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,30,60,0.55) 0%, transparent 55%)" }} />
-                  </>
-                ) : (
-                  <div className="w-full h-full relative flex items-center justify-center" style={{ background: BRAND_GRADIENT }}>
-                    <div className="absolute top-0 right-0 w-56 h-56 rounded-full -translate-y-1/3 translate-x-1/4" style={{ background: "rgba(255,255,255,0.10)" }} />
-                    <div className="absolute bottom-0 left-0 w-44 h-44 rounded-full translate-y-1/3 -translate-x-1/4" style={{ background: "rgba(255,255,255,0.08)" }} />
-                    <div className="absolute inset-10 rounded-full border border-dashed deco-spin-slow" style={{ borderColor: "rgba(255,255,255,0.18)" }} />
-                    <Plus className="absolute top-10 left-10 w-6 h-6 deco-float-up" style={{ color: "rgba(255,255,255,0.35)" }} />
-                    <Sparkles className="absolute bottom-16 right-12 w-6 h-6 deco-float-down" style={{ color: "rgba(255,255,255,0.35)" }} />
-                    <div className="relative grid grid-cols-2 gap-3">
-                      {STAFFING_ROLES.map(r => {
-                        const I = r.icon;
-                        return (
-                          <div key={r.code} className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl flex flex-col items-center justify-center gap-1.5 shadow-xl"
-                            style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.3)", backdropFilter: "blur(6px)" }}>
-                            <I className="w-8 h-8 text-white" strokeWidth={1.6} />
-                            <span className="text-white font-bold text-sm tracking-wide">{r.code}</span>
-                          </div>
-                        );
-                      })}
+                  ) : (
+                    <div className="w-full h-full relative flex items-center justify-center bg-accent pb-16">
+                      <div className="relative grid grid-cols-2 gap-3">
+                        {STAFFING_ROLES.map(r => {
+                          const I = r.icon;
+                          return (
+                            <div key={r.code} className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl flex flex-col items-center justify-center gap-1.5 bg-background shadow-lg">
+                              <I className="w-8 h-8 text-foreground" strokeWidth={1.6} />
+                              <span className="text-foreground font-bold text-sm tracking-wide">{r.code}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
+                  )}
+                  <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 px-5 py-4">
+                    <p className="text-muted-foreground text-xs uppercase tracking-widest mb-1 font-semibold">MintexCare</p>
+                    <p className="text-foreground font-bold text-lg leading-snug">Healthcare Staffing</p>
                   </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 px-6 sm:px-7 pt-6 pb-16">
-                  <p className="text-white/75 text-xs uppercase tracking-widest mb-1 font-semibold">MintexCare</p>
-                  <p className="text-white font-bold text-lg leading-snug">Healthcare Staffing</p>
                 </div>
               </div>
-              <div className="absolute top-4 -left-2 sm:-left-8 bg-card rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 border border-border z-10">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: BRAND_GRADIENT }}>
-                  <CalendarDays className="w-5 h-5 text-white" />
+              <div className="el-chip absolute top-6 -left-2 sm:-left-8 z-10 px-4 py-3">
+                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0">
+                  <CalendarDays className="w-5 h-5 text-accent-foreground" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-900 leading-none">Per diem to long-term</p>
-                  <p className="text-xs text-gray-500 mt-1">Flexible coverage</p>
+                  <p className="text-sm font-bold text-foreground leading-none">Per diem to long-term</p>
+                  <p className="text-xs text-muted-foreground mt-1">Flexible coverage</p>
                 </div>
               </div>
-              <div className="absolute -bottom-5 right-2 sm:-right-6 bg-card rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 border border-border z-10">
-                <div className="w-10 h-10 rounded-xl bg-[#0891b2]/10 flex items-center justify-center shrink-0">
-                  <BadgeCheck className="w-5 h-5 text-[#0891b2]" />
+              <div className="el-chip absolute top-28 -left-2 sm:-left-8 z-10 px-4 py-3 hidden sm:flex">
+                <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center shrink-0">
+                  <BadgeCheck className="w-5 h-5 text-background" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-900 leading-none">Credentials verified</p>
-                  <p className="text-xs text-gray-500 mt-1">Before every placement</p>
+                  <p className="text-sm font-bold text-foreground leading-none">Credentials verified</p>
+                  <p className="text-xs text-muted-foreground mt-1">Before every placement</p>
                 </div>
               </div>
             </AnimatedSection>
@@ -300,17 +241,17 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* WHO WE SERVE */}
-      <section className="py-8 bg-muted/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6">
-          <p className="text-center text-xs font-semibold text-gray-500 uppercase tracking-widest mb-5">Facilities we staff</p>
+      <section className="pb-16 md:pb-20">
+        <div className="container mx-auto px-6 md:px-10">
+          <p className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-5">Facilities we staff</p>
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
             {FACILITIES.map(({ icon: I, label }, i) => (
-              <AnimatedSection key={label} delay={i * 0.04}>
-                <div className="flex items-center gap-3 bg-card rounded-2xl px-4 py-4 border border-border h-full">
-                  <div className="w-10 h-10 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center shrink-0">
-                    <I className="w-5 h-5 text-[#2a66b0]" />
+              <AnimatedSection key={label} delay={i * 0.04} className="h-full">
+                <div className="el-card flex flex-col gap-4 px-5 py-5 h-full">
+                  <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shrink-0">
+                    <I className="w-5 h-5 text-primary" />
                   </div>
-                  <p className="text-sm font-semibold text-gray-800 leading-snug">{label}</p>
+                  <p className="text-sm font-semibold text-foreground leading-snug">{label}</p>
                 </div>
               </AnimatedSection>
             ))}
@@ -319,49 +260,39 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* ROLES */}
-      <section className="py-24 bg-[#f7f8f9] relative overflow-hidden">
-        <div className="pointer-events-none select-none absolute inset-0 z-0" aria-hidden="true">
-          <svg className="svc-deco-float absolute -top-4 -left-4 w-44 h-44 opacity-[0.15]" viewBox="0 0 100 100" fill="none">
-            <rect x="44" y="2" width="12" height="96" rx="5" fill="#2a66b0" /><rect x="2" y="44" width="96" height="12" rx="5" fill="#2a66b0" />
-          </svg>
-          <svg className="svc-deco-mid absolute top-8 right-0 w-72 h-16 opacity-[0.15]" viewBox="0 0 260 50" fill="none">
-            <polyline points="0,25 36,25 52,5 66,45 80,10 94,38 110,25 260,25" stroke="#2a66b0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <section className="py-20 md:py-28 bg-surface">
+        <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-14">
-            <Eyebrow>Roles We Staff</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Aides &amp; <span className="text-[#2a66b0]">Nurses</span></h2>
-            <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">Qualified staff for every level of care on your floor</p>
+            <Eyebrow onSurface>Roles We Staff</Eyebrow>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Aides &amp; <span className="text-primary">Nurses</span></h2>
+            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">Qualified staff for every level of care on your floor</p>
           </AnimatedSection>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {STAFFING_ROLES.map((r, i) => <RoleCard key={r.code} role={r} i={i} />)}
           </div>
         </div>
       </section>
 
       {/* STAFFING OPTIONS */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute rounded-full deco-float-down" style={{ background: "radial-gradient(circle, #e0f2fe 0%, transparent 70%)", width: 460, height: 460, top: "-10%", right: "-12%", opacity: 0.55 }} />
-        </div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-14">
-            <Eyebrow color="#0891b2">Staffing Options</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Coverage That <span className="text-[#0891b2]">Fits</span></h2>
-            <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">One shift, a few months or long term: tell us what your team needs</p>
+            <Eyebrow>Staffing Options</Eyebrow>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Coverage That <span className="text-primary">Fits</span></h2>
+            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">One shift, a few months or long term: tell us what your team needs</p>
           </AnimatedSection>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {OPTIONS.map(({ icon: I, title, text }, i) => (
-              <AnimatedSection key={title} delay={i * 0.07} className="h-full">
-                <div className="group relative h-full bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-[#2a66b0]/25 transition-all duration-300 overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-[3px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" style={{ background: BRAND_GRADIENT }} />
-                  <span className="absolute top-6 right-7 text-5xl font-extrabold text-[#2a66b0]/[0.07]">{String(i + 1).padStart(2, "0")}</span>
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-md" style={{ background: BRAND_GRADIENT }}>
-                    <I className="w-7 h-7 text-white" />
+              <AnimatedSection key={title} delay={i * 0.06} className="h-full">
+                <div className="h-full el-card p-7 md:p-8">
+                  <div className="flex items-start justify-between mb-8">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-accent">
+                      <I className="w-6 h-6 text-accent-foreground" />
+                    </div>
+                    <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">{String(i + 1).padStart(2, "0")}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-                  <p className="text-gray-500 leading-relaxed">{text}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{text}</p>
                 </div>
               </AnimatedSection>
             ))}
@@ -370,53 +301,46 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* HOW IT WORKS + SCREENING */}
-      <section className="py-24 bg-[#f7f8f9] relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute top-[14%] right-[6%] w-40 h-40 rounded-full border-2 border-[#2a66b0]/[0.08] deco-spin-slow hidden lg:block" />
-        </div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <section className="py-20 md:py-28 bg-surface">
+        <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 xl:gap-14 items-start">
-            <AnimatedSection from="left">
-              <Pill>How It Works</Pill>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-10">
-                From request to <span className="text-[#2a66b0]">staff on the floor</span>
+            <AnimatedSection>
+              <Pill onSurface>How It Works</Pill>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-10">
+                From request to <span className="text-primary">staff on the floor</span>
               </h2>
-              <div className="grid sm:grid-cols-2 gap-5">
+              <div className="grid sm:grid-cols-2 gap-4">
                 {PROCESS.map(({ icon: I, title, text }, i) => (
-                  <div key={title} className="relative bg-card border border-border rounded-3xl p-6 shadow-sm">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-md" style={{ background: BRAND_GRADIENT }}>
-                        <I className="w-5 h-5 text-white" />
+                  <div key={title} className="bg-background rounded-[24px] p-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-accent">
+                        <I className="w-5 h-5 text-accent-foreground" />
                       </div>
-                      <span className="text-xs font-bold text-[#2a66b0]">STEP {i + 1}</span>
+                      <span className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</span>
                     </div>
-                    <p className="font-bold text-gray-900 mb-1">{title}</p>
-                    <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                    <p className="font-bold text-foreground mb-1">{title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                   </div>
                 ))}
               </div>
             </AnimatedSection>
 
-            <AnimatedSection from="right" delay={0.1} className="lg:sticky lg:top-32">
-              <div className="relative rounded-3xl p-8 overflow-hidden text-white" style={{ background: BRAND_GRADIENT }}>
-                <div className="absolute top-0 right-0 w-40 h-40 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: WHITE_TINT }}>
-                    <ShieldCheck className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 leading-snug">Every placement is screened</h3>
-                  <div className="w-10 h-[3px] rounded-full mb-5" style={{ background: "rgba(255,255,255,0.5)" }} />
-                  <ul className="space-y-3.5 mb-7">
-                    {SCREENING.map(({ icon: I, text }) => (
-                      <li key={text} className="flex items-start gap-3 text-sm text-white/90">
-                        <I className="w-4 h-4 mt-0.5 shrink-0 text-white" />{text}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to={REQUEST_PATH} className="flex items-center justify-center gap-2 font-bold text-sm px-6 py-3.5 rounded-full transition-all hover:scale-[1.03] shadow-lg" style={{ background: "#fff", color: "#1d4f8c" }}>
-                    Request Staff <ArrowRight className="h-4 w-4" />
-                  </Link>
+            <AnimatedSection delay={0.1} className="lg:sticky lg:top-32">
+              <div className="rounded-[28px] p-8 bg-foreground text-background">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
+                  <ShieldCheck className="w-6 h-6 text-accent-foreground" />
                 </div>
+                <h3 className="text-xl font-bold mb-6 leading-snug">Every placement is screened</h3>
+                <ul className="space-y-4 mb-8">
+                  {SCREENING.map(({ icon: I, text }) => (
+                    <li key={text} className="flex items-start gap-3 text-sm text-background/85">
+                      <I className="w-4 h-4 mt-0.5 shrink-0" />{text}
+                    </li>
+                  ))}
+                </ul>
+                <Link to={REQUEST_PATH} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+                  Request Staff <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </AnimatedSection>
           </div>
@@ -424,30 +348,29 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* PARTNER FAQ */}
-      <section id="faq" className="py-24 scroll-mt-28">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+      <section id="faq" className="py-20 md:py-28 scroll-mt-28">
+        <div className="container mx-auto px-6 md:px-10 max-w-4xl">
           <AnimatedSection className="text-center mb-12">
             <Eyebrow>Partner FAQ</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Questions from <span className="text-[#2a66b0]">facilities</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Questions from <span className="text-primary">facilities</span></h2>
           </AnimatedSection>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {STAFFING_FAQS.map((f, i) => {
               const open = openFaq === i;
               return (
-                <AnimatedSection key={f.q} delay={Math.min(i, 4) * 0.05}>
-                  <div className={`bg-card border rounded-2xl shadow-sm transition-all duration-300 ${open ? "border-[#2a66b0]/30 shadow-lg" : "border-border hover:shadow-md"}`}>
+                <AnimatedSection key={f.q} delay={Math.min(i, 4) * 0.04}>
+                  <div className="el-card rounded-2xl">
                     <button type="button" onClick={() => setOpenFaq(open ? null : i)} aria-expanded={open} aria-controls={`sfaq-${i}`}
                       className="w-full flex items-center gap-4 text-left px-5 md:px-7 py-5">
-                      <span className="h-9 w-9 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 text-white shadow-md" style={{ background: BRAND_GRADIENT }}>
-                        {String(i + 1).padStart(2, "0")}
+                      <span className="flex-1 font-semibold text-foreground leading-snug">{f.q}</span>
+                      <span className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 transition-colors ${open ? "bg-foreground text-background" : "bg-background text-foreground"}`}>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
                       </span>
-                      <span className="flex-1 font-semibold text-gray-900 leading-snug">{f.q}</span>
-                      <ChevronRight className={`h-5 w-5 text-[#2a66b0] shrink-0 transition-transform duration-300 ${open ? "rotate-90" : ""}`} />
                     </button>
                     {/* Answer stays in the HTML when closed so search engines can read it. */}
                     <div id={`sfaq-${i}`} className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: open ? "1fr" : "0fr" }}>
                       <div className="overflow-hidden">
-                        <p className="text-gray-600 leading-relaxed px-5 md:px-7 pb-6 md:pl-[80px]">{f.a}</p>
+                        <p className="text-muted-foreground leading-relaxed px-5 md:px-7 pb-6">{f.a}</p>
                       </div>
                     </div>
                   </div>
@@ -471,23 +394,22 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
 
 const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
   <>
-    <section className="relative pt-32 md:pt-40 pb-16 md:pb-20 overflow-hidden">
-      <HeroDeco />
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+    <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+      <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-3xl">
           <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing", to: "/facility-staffing" }, { label: "Roles" }]} />
           <Pill icon={Users}>Roles We Staff</Pill>
-          <h1 className="font-bold text-gray-900 leading-[1.07] mb-5" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-            HHA, CNA, LPN &amp; RN<br /><span className="text-[#2a66b0]">Staffing</span>
+          <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
+            HHA, CNA, LPN &amp; RN<br /><span className="text-primary">Staffing</span>
           </h1>
-          <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-[620px]">
+          <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[620px]">
             See what each role covers, the settings we staff and the credentials we verify, then request the staff you need.
           </p>
           <div className="flex flex-wrap gap-3">
             {STAFFING_ROLES.map(r => (
               <a key={r.code} href={`#${r.code.toLowerCase()}`}
-                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-gray-700 bg-card border border-border shadow-sm hover:text-[#2a66b0] hover:border-[#2a66b0]/30 transition-all">
-                <r.icon className="h-4 w-4 text-[#2a66b0]" /> {r.code}
+                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-foreground bg-background border border-border hover:bg-foreground hover:text-background hover:border-foreground transition-colors">
+                <r.icon className="h-4 w-4" /> {r.code}
               </a>
             ))}
           </div>
@@ -495,57 +417,53 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     </section>
 
-    <section className="py-16 md:py-20 bg-[#f7f8f9] border-t border-border">
-      <div className="container mx-auto px-4 md:px-6 space-y-8">
-        {STAFFING_ROLES.map((r, i) => {
-          const palette = ROLE_PALETTES[i % ROLE_PALETTES.length];
+    <section className="py-16 md:py-20 bg-surface">
+      <div className="container mx-auto px-6 md:px-10 space-y-5">
+        {STAFFING_ROLES.map((r) => {
           const Icon = r.icon;
           return (
             <AnimatedSection key={r.code}>
-              <article id={r.code.toLowerCase()} className="scroll-mt-32 bg-card border border-border rounded-3xl shadow-sm overflow-hidden grid lg:grid-cols-[360px_1fr]">
-                <div className="relative p-8 md:p-10 text-white overflow-hidden" style={{ background: BRAND_GRADIENT }}>
-                  <div className="absolute top-0 right-0 w-44 h-44 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-                  <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full translate-y-1/2 -translate-x-1/3" style={{ background: "rgba(255,255,255,0.08)" }} />
-                  <div className="relative">
-                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style={{ background: WHITE_TINT, border: "1px solid rgba(255,255,255,0.3)" }}>
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    <p className="text-5xl font-extrabold leading-none mb-2">{r.code}</p>
-                    <h2 className="text-xl font-bold mb-4">{r.title}</h2>
-                    <p className="text-white/80 text-sm leading-relaxed mb-7">{r.summary}</p>
-                    <Link to={`${REQUEST_PATH}?role=${r.code}`}
-                      className="inline-flex items-center gap-2 font-bold text-sm px-6 py-3 rounded-full transition-all hover:scale-105 shadow-lg"
-                      style={{ background: "#fff", color: "#1d4f8c" }}>
-                      Request {r.code}s <ArrowRight className="h-4 w-4" />
-                    </Link>
+              <article id={r.code.toLowerCase()} className="scroll-mt-32 bg-background rounded-[28px] overflow-hidden grid lg:grid-cols-[360px_1fr] p-3 gap-3">
+                <div className="rounded-[22px] p-7 md:p-9 bg-foreground text-background">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-accent">
+                    <Icon className="w-8 h-8 text-accent-foreground" />
                   </div>
+                  <p className="text-5xl font-extrabold leading-none mb-2">{r.code}</p>
+                  <h2 className="text-xl font-bold mb-4">{r.title}</h2>
+                  <p className="text-background/70 text-sm leading-relaxed mb-7">{r.summary}</p>
+                  <Link to={`${REQUEST_PATH}?role=${r.code}`} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80">
+                    Request {r.code}s <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
-                <div className="p-8 md:p-10 grid md:grid-cols-2 gap-8">
+                <div className="p-5 md:p-7 grid md:grid-cols-2 gap-8">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: palette.solid }}>Typical duties</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Typical duties</p>
                     <ul className="space-y-3">
                       {r.duties.map(d => (
-                        <li key={d} className="flex items-start gap-3 text-gray-700 leading-snug">
-                          <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-[#0891b2]" />{d}
+                        <li key={d} className="flex items-start gap-3 text-foreground/85 leading-snug">
+                          <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-3 h-3 text-accent-foreground" strokeWidth={3} />
+                          </span>
+                          {d}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div className="space-y-7">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: palette.solid }}>Settings</p>
+                      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Settings</p>
                       <div className="flex flex-wrap gap-2">
                         {r.settings.map(s => (
-                          <span key={s} className="text-sm text-gray-700 bg-gray-100 rounded-full px-3.5 py-1.5">{s}</span>
+                          <span key={s} className="text-sm text-foreground/85 bg-surface rounded-full px-3.5 py-1.5">{s}</span>
                         ))}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5">
+                    <div className="el-card p-5">
                       <div className="flex items-start gap-3">
-                        <BadgeCheck className="w-5 h-5 text-[#2a66b0] shrink-0 mt-0.5" />
+                        <BadgeCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-xs font-semibold text-[#2a66b0] uppercase tracking-widest mb-1">Credential verified</p>
-                          <p className="text-sm text-gray-700 leading-snug">{r.credential}</p>
+                          <p className="text-xs font-semibold text-foreground uppercase tracking-widest mb-1">Credential verified</p>
+                          <p className="text-sm text-muted-foreground leading-snug">{r.credential}</p>
                         </div>
                       </div>
                     </div>
@@ -578,15 +496,15 @@ const EMPTY_FORM = {
 };
 
 const FieldLabel = ({ htmlFor, children, required = false }: { htmlFor?: string; children: ReactNode; required?: boolean }) => (
-  <label htmlFor={htmlFor} className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
-    {children}{required && <span className="text-[#2a66b0]"> *</span>}
+  <label htmlFor={htmlFor} className="block text-xs font-semibold text-foreground/70 uppercase tracking-wider mb-1.5">
+    {children}{required && <span className="text-primary"> *</span>}
   </label>
 );
 
 const TogglePill = ({ checked, onChange, children }: { checked: boolean; onChange: () => void; children: ReactNode }) => (
-  <label className={`cursor-pointer select-none inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold border transition-all focus-within:ring-2 focus-within:ring-[#2a66b0]/40 ${
-    checked ? "text-white border-transparent shadow-md" : "text-gray-600 bg-card border-border hover:border-[#2a66b0]/40 hover:text-[#2a66b0]"
-  }`} style={checked ? { background: BRAND_GRADIENT } : undefined}>
+  <label className={`cursor-pointer select-none inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold border transition-colors focus-within:ring-2 focus-within:ring-ring/40 ${
+    checked ? "bg-foreground text-background border-foreground" : "text-foreground/75 bg-background border-border hover:border-foreground/40 hover:text-foreground"
+  }`}>
     <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} />
     {checked ? <CheckCircle2 className="h-4 w-4" /> : <span className="h-4 w-4 rounded-full border-2 border-current opacity-50" />}
     {children}
@@ -664,20 +582,19 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
     }
   };
 
-  const inputCls = "font-sans h-12 rounded-xl border-border focus-visible:ring-[#2a66b0]/30";
+  const inputCls = "font-sans h-12 rounded-xl border-border bg-background";
 
   return (
     <>
-      <section className="relative pt-32 md:pt-40 pb-14 overflow-hidden">
-        <HeroDeco />
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <section className="pt-32 md:pt-40 pb-12">
+        <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing", to: "/facility-staffing" }, { label: "Request Staff" }]} />
             <Pill icon={ClipboardCheck}>For Facilities</Pill>
-            <h1 className="font-bold text-gray-900 leading-[1.07] mb-5" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-              Request <span className="text-[#2a66b0]">Facility Staff</span>
+            <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
+              Request <span className="text-primary">Facility Staff</span>
             </h1>
-            <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-[620px]">
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-[620px]">
               Tell us about the shifts you need to cover. Our staffing team will follow up to confirm availability, rates and next steps.
             </p>
           </AnimatedSection>
@@ -685,20 +602,19 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       <section className="pb-24">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start max-w-6xl mx-auto">
+        <div className="container mx-auto px-6 md:px-10">
+          <div className="grid lg:grid-cols-[1fr_340px] gap-5 lg:gap-8 items-start max-w-6xl mx-auto">
 
             {/* Form (a successful request goes to /thank-you) */}
             <AnimatedSection>
-              <div className="bg-card rounded-3xl shadow-2xl shadow-primary/5 border border-border overflow-hidden">
-                <div className="h-1.5 w-full" style={{ background: "linear-gradient(90deg, #2a66b0, #0891b2)" }} />
+              <div className="el-card rounded-[28px]">
                   <form onSubmit={handleSubmit} className="relative p-6 sm:p-8 md:p-10 space-y-9" noValidate>
                     {spamGuard.honeypotField}
 
                     {/* Roles */}
                     <fieldset>
-                      <legend className="text-lg font-bold text-gray-900 mb-1">What staff do you need?</legend>
-                      <p className="text-sm text-gray-500 mb-4">Choose one or more roles. <span className="text-[#2a66b0]">*</span></p>
+                      <legend className="text-lg font-bold text-foreground mb-1">What staff do you need?</legend>
+                      <p className="text-sm text-muted-foreground mb-4">Choose one or more roles. <span className="text-primary">*</span></p>
                       <div className="flex flex-wrap gap-2.5">
                         {STAFFING_ROLES.map(r => (
                           <TogglePill key={r.code} checked={form.roles.includes(r.code)} onChange={() => toggle("roles", r.code)}>
@@ -710,7 +626,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
 
                     {/* Schedule */}
                     <fieldset>
-                      <legend className="text-lg font-bold text-gray-900 mb-4">Shifts &amp; schedule</legend>
+                      <legend className="text-lg font-bold text-foreground mb-4">Shifts &amp; schedule</legend>
                       <div className="flex flex-wrap gap-2.5 mb-5">
                         {SHIFTS.map(s => (
                           <TogglePill key={s} checked={form.shifts.includes(s)} onChange={() => toggle("shifts", s)}>{s}</TogglePill>
@@ -728,7 +644,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                         <div>
                           <FieldLabel htmlFor="rs-duration">Assignment</FieldLabel>
                           <Select value={form.duration} onValueChange={v => setForm(f => ({ ...f, duration: v }))}>
-                            <SelectTrigger id="rs-duration" className="font-sans h-12 rounded-xl border-border"><SelectValue placeholder="Select" /></SelectTrigger>
+                            <SelectTrigger id="rs-duration" className="font-sans h-12 rounded-xl border-border bg-background"><SelectValue placeholder="Select" /></SelectTrigger>
                             <SelectContent>{DURATIONS.map(d => <SelectItem key={d} value={d} className="font-sans">{d}</SelectItem>)}</SelectContent>
                           </Select>
                         </div>
@@ -737,7 +653,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
 
                     {/* Facility */}
                     <fieldset className="space-y-4">
-                      <legend className="text-lg font-bold text-gray-900 mb-4">Your facility</legend>
+                      <legend className="text-lg font-bold text-foreground mb-4">Your facility</legend>
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div>
                           <FieldLabel htmlFor="rs-facility" required>Facility name</FieldLabel>
@@ -746,7 +662,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                         <div>
                           <FieldLabel htmlFor="rs-type">Facility type</FieldLabel>
                           <Select value={form.facilityType} onValueChange={v => setForm(f => ({ ...f, facilityType: v }))}>
-                            <SelectTrigger id="rs-type" className="font-sans h-12 rounded-xl border-border"><SelectValue placeholder="Select facility type" /></SelectTrigger>
+                            <SelectTrigger id="rs-type" className="font-sans h-12 rounded-xl border-border bg-background"><SelectValue placeholder="Select facility type" /></SelectTrigger>
                             <SelectContent>{FACILITY_TYPES.map(t => <SelectItem key={t} value={t} className="font-sans">{t}</SelectItem>)}</SelectContent>
                           </Select>
                         </div>
@@ -759,7 +675,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
 
                     {/* Contact */}
                     <fieldset className="space-y-4">
-                      <legend className="text-lg font-bold text-gray-900 mb-4">Your contact details</legend>
+                      <legend className="text-lg font-bold text-foreground mb-4">Your contact details</legend>
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div>
                           <FieldLabel htmlFor="rs-name" required>Your name</FieldLabel>
@@ -780,19 +696,18 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                       </div>
                       <div>
                         <FieldLabel htmlFor="rs-notes">Anything else we should know?</FieldLabel>
-                        <Textarea id="rs-notes" rows={4} maxLength={3000} placeholder="Unit, special skills (e.g. dementia care, IV certified), parking, orientation…" value={form.notes} onChange={set("notes")} className="font-sans rounded-xl border-border resize-none focus-visible:ring-[#2a66b0]/30" />
+                        <Textarea id="rs-notes" rows={4} maxLength={3000} placeholder="Unit, special skills (e.g. dementia care, IV certified), parking, orientation…" value={form.notes} onChange={set("notes")} className="font-sans rounded-xl border-border bg-background resize-none" />
                       </div>
                     </fieldset>
 
                     <div>
                       <button type="submit" disabled={submitting}
-                        className="w-full inline-flex items-center justify-center gap-2 font-semibold text-base px-8 py-4 rounded-full transition-all hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-                        style={GRADIENT_BTN}>
+                        className="el-btn-primary w-full h-14 text-base disabled:opacity-70 disabled:cursor-not-allowed">
                         {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</> : <><Send className="h-4 w-4" /> Send Staffing Request</>}
                       </button>
-                      <p className="text-xs text-center text-gray-500 mt-3">
+                      <p className="text-xs text-center text-muted-foreground mt-3">
                         We'll only use your details to respond to this request. See our{" "}
-                        <Link to="/privacy-policy" className="underline hover:text-[#2a66b0]">Privacy Policy</Link>.
+                        <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy Policy</Link>.
                       </p>
                     </div>
                   </form>
@@ -800,36 +715,33 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
             </AnimatedSection>
 
             {/* Sidebar */}
-            <aside className="space-y-5 lg:sticky lg:top-32">
-              <div className="relative rounded-3xl p-7 overflow-hidden text-white" style={{ background: BRAND_GRADIENT }}>
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-                <div className="relative">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-white/75 mb-2">Urgent shift?</p>
-                  <p className="text-xl font-bold mb-2 leading-snug">Call our staffing line</p>
-                  <p className="text-white/75 text-sm mb-5">Available 24/7 for same-day and next-day coverage requests.</p>
-                  <a href={`tel:+1${tel}`} className="flex items-center justify-center gap-2 font-bold text-sm px-5 py-3 rounded-full shadow-lg transition-all hover:scale-[1.03]" style={{ background: "#fff", color: "#1d4f8c" }}>
-                    <Phone className="h-4 w-4" /> {phone}
-                  </a>
-                </div>
+            <aside className="space-y-4 lg:sticky lg:top-32">
+              <div className="rounded-[28px] p-7 bg-foreground text-background">
+                <p className="text-xs font-semibold uppercase tracking-widest text-background/60 mb-2">Urgent shift?</p>
+                <p className="text-xl font-bold mb-2 leading-snug">Call our staffing line</p>
+                <p className="text-background/70 text-sm mb-6">Available 24/7 for same-day and next-day coverage requests.</p>
+                <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+                  <Phone className="h-4 w-4" /> {phone}
+                </a>
               </div>
-              <div className="bg-card border border-border rounded-3xl p-7 shadow-sm">
-                <p className="text-xs font-semibold text-[#0891b2] uppercase tracking-widest mb-5">What happens next</p>
+              <div className="el-card rounded-[28px] p-7">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-5">What happens next</p>
                 <ol className="space-y-5">
                   {PROCESS.slice(1).map(({ icon: I, title, text }) => (
                     <li key={title} className="flex gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center shrink-0">
-                        <I className="w-5 h-5 text-[#2a66b0]" />
+                      <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center shrink-0">
+                        <I className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-bold text-gray-900 text-sm">{title}</p>
-                        <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+                        <p className="font-bold text-foreground text-sm">{title}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                       </div>
                     </li>
                   ))}
                 </ol>
               </div>
-              <Link to="/facility-staffing#faq" className="flex items-center justify-between gap-3 bg-card border border-border rounded-2xl px-5 py-4 shadow-sm hover:border-[#2a66b0]/30 hover:shadow-md transition-all text-sm font-semibold text-gray-700">
-                Partner FAQ <ArrowRight className="h-4 w-4 text-[#2a66b0]" />
+              <Link to="/facility-staffing#faq" className="flex items-center justify-between gap-3 el-card rounded-2xl px-5 py-4 hover:bg-accent transition-colors text-sm font-semibold text-foreground">
+                Partner FAQ <ArrowRight className="h-4 w-4" />
               </Link>
             </aside>
           </div>
@@ -894,7 +806,7 @@ const FacilityStaffing = () => {
   return (
     <>
       <Header />
-      <main className="bg-background overflow-x-clip">
+      <main className="theme-el overflow-x-clip">
         {pathname === "/facility-staffing/roles" ? <Roles tel={tel} phone={phone} />
           : pathname === REQUEST_PATH ? <RequestStaff tel={tel} phone={phone} />
           : <Overview tel={tel} phone={phone} />}

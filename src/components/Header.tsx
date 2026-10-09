@@ -38,13 +38,10 @@ const RESOURCE_LINKS = [
 
 const CONSULTATION_HREF = "/free-consultation";
 
-const GRADIENT_BTN = {
-  background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  boxShadow: "0 2px 12px rgba(38,104,188,0.30), inset 0 1px 0 rgba(255,255,255,0.25)",
-  color: "#fff",
-};
-const BRAND_GRADIENT = "linear-gradient(135deg, #1d4f8c 0%, #2a66b0 55%, #0891b2 100%)";
+// Solid ink pill (redesign palette) — used for every "Free Consultation" button in the header.
+const INK_BTN = "bg-foreground text-background hover:bg-foreground/85 transition-colors";
+// Promo card in the mega menus.
+const PROMO_CARD = "relative rounded-2xl p-6 overflow-hidden bg-foreground text-background flex flex-col";
 
 const isActive = (pathname: string, href: string) =>
   pathname === href || pathname.startsWith(`${href}/`) || (href === "/about" && pathname === "/reviews");
@@ -55,16 +52,16 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="grid grid-cols-[1fr_1fr_280px] gap-8">
     {(["in-home", "clinical"] as ServiceGroup[]).map(group => (
       <div key={group}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2a66b0] mb-3 px-3">{SERVICE_GROUP_LABEL[group]}</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3 px-3">{SERVICE_GROUP_LABEL[group]}</p>
         <ul className="space-y-0.5">
           {SERVICE_INDEX.filter(s => s.group === group).map(s => (
             <li key={s.slug}>
-              <Link to={`/services/${s.slug}`} className="group flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-[#2a66b0]/[0.06] transition-colors">
-                <span className="w-9 h-9 rounded-lg bg-[#2a66b0]/10 flex items-center justify-center shrink-0 group-hover:bg-[#2a66b0] transition-colors">
-                  <s.icon className="w-[18px] h-[18px] text-[#2a66b0] group-hover:text-white transition-colors" />
+              <Link to={`/services/${s.slug}`} className="group flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-surface transition-colors">
+                <span className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0 group-hover:bg-foreground transition-colors">
+                  <s.icon className="w-[18px] h-[18px] text-accent-foreground group-hover:text-background transition-colors" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-semibold text-foreground group-hover:text-[#2a66b0] transition-colors">{s.name}</span>
+                  <span className="block text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{s.name}</span>
                   <span className="text-xs text-muted-foreground leading-snug line-clamp-1">{s.short}</span>
                 </span>
               </Link>
@@ -73,24 +70,23 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
         </ul>
       </div>
     ))}
-    <div className="relative rounded-2xl p-6 overflow-hidden text-white flex flex-col" style={{ background: BRAND_GRADIENT }}>
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-white/75 mb-2">Not sure what you need?</p>
+    <div className={PROMO_CARD}>
+      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Not sure what you need?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Talk to a care coordinator. It's free.</p>
       <div className="relative mt-auto space-y-2">
-        <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 shadow-md" style={{ background: "#fff", color: "#1d4f8c" }}>
+        <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
           Free Consultation <ArrowRight className="h-4 w-4" />
         </Link>
-        <a href={`tel:+1${tel}`} className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5" style={{ background: "rgba(255,255,255,0.15)" }}>
+        <a href={`tel:+1${tel}`} className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 bg-background/15 hover:bg-background/25 transition-colors">
           <Phone className="h-4 w-4" /> {phone}
         </a>
       </div>
     </div>
     <div className="col-span-3 flex items-center justify-between border-t border-border pt-4 -mb-1 text-sm">
-      <Link to="/services" className="inline-flex items-center gap-2 font-semibold text-[#2a66b0] hover:gap-3 transition-all">
+      <Link to="/services" className="inline-flex items-center gap-2 font-semibold text-primary hover:gap-3 transition-all">
         View all care services <ArrowRight className="h-4 w-4" />
       </Link>
-      <Link to="/facility-staffing" className="inline-flex items-center gap-2 font-medium text-muted-foreground hover:text-[#2a66b0] transition-colors">
+      <Link to="/facility-staffing" className="inline-flex items-center gap-2 font-medium text-muted-foreground hover:text-primary transition-colors">
         <Building2 className="h-4 w-4" /> Staffing for care facilities
       </Link>
     </div>
@@ -101,23 +97,22 @@ const AreasPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-8">
     {(["central", "north", "shore"] as AreaRegion[]).map(region => (
       <div key={region}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2a66b0] mb-3 px-3">{AREA_REGION_LABEL[region]}</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3 px-3">{AREA_REGION_LABEL[region]}</p>
         <ul className="space-y-0.5">
           {COUNTIES.filter(c => c.region === region).map(c => (
             <li key={c.slug}>
-              <Link to={`/areas-we-serve/${c.slug}`} className="group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground hover:bg-[#2a66b0]/[0.06] hover:text-[#2a66b0] transition-colors">
-                <MapPin className="h-4 w-4 text-[#0891b2] shrink-0" /> {c.name} County
+              <Link to={`/areas-we-serve/${c.slug}`} className="group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground hover:bg-surface hover:text-primary transition-colors">
+                <MapPin className="h-4 w-4 text-primary shrink-0" /> {c.name} County
               </Link>
             </li>
           ))}
         </ul>
       </div>
     ))}
-    <div className="relative rounded-2xl p-6 overflow-hidden text-white flex flex-col" style={{ background: BRAND_GRADIENT }}>
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-white/75 mb-2">12 NJ counties</p>
+    <div className={PROMO_CARD}>
+      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">12 NJ counties</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Is my town covered?</p>
-      <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 shadow-md" style={{ background: "#fff", color: "#1d4f8c" }}>
+      <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
         <Search className="h-4 w-4" /> Find your town
       </Link>
     </div>
@@ -133,19 +128,18 @@ const COST_LINKS = [
 const CostsPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
     {COST_LINKS.map(({ to, icon: I, title, text }) => (
-      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-[#2a66b0]/30 hover:bg-[#2a66b0]/[0.04] transition-colors">
-        <span className="w-11 h-11 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center mb-4 group-hover:bg-[#2a66b0] transition-colors">
-          <I className="w-5 h-5 text-[#2a66b0] group-hover:text-white transition-colors" />
+      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-foreground/15 hover:bg-surface transition-colors">
+        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-foreground transition-colors">
+          <I className="w-5 h-5 text-accent-foreground group-hover:text-background transition-colors" />
         </span>
-        <span className="font-semibold text-foreground group-hover:text-[#2a66b0] transition-colors">{title}</span>
+        <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{title}</span>
         <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
       </Link>
     ))}
-    <div className="relative rounded-2xl p-6 overflow-hidden text-white flex flex-col" style={{ background: BRAND_GRADIENT }}>
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-white/75 mb-2">Free, no obligation</p>
+    <div className={PROMO_CARD}>
+      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Free, no obligation</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Get a clear, written quote</p>
-      <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 shadow-md" style={{ background: "#fff", color: "#1d4f8c" }}>
+      <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
         Get a Free Quote <ArrowRight className="h-4 w-4" />
       </Link>
     </div>
@@ -161,19 +155,18 @@ const ABOUT_LINKS = [
 const AboutPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
     {ABOUT_LINKS.map(({ to, icon: I, title, text }) => (
-      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-[#2a66b0]/30 hover:bg-[#2a66b0]/[0.04] transition-colors">
-        <span className="w-11 h-11 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center mb-4 group-hover:bg-[#2a66b0] transition-colors">
-          <I className="w-5 h-5 text-[#2a66b0] group-hover:text-white transition-colors" />
+      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-foreground/15 hover:bg-surface transition-colors">
+        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-foreground transition-colors">
+          <I className="w-5 h-5 text-accent-foreground group-hover:text-background transition-colors" />
         </span>
-        <span className="font-semibold text-foreground group-hover:text-[#2a66b0] transition-colors">{title}</span>
+        <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{title}</span>
         <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
       </Link>
     ))}
-    <div className="relative rounded-2xl p-6 overflow-hidden text-white flex flex-col" style={{ background: BRAND_GRADIENT }}>
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
+    <div className={PROMO_CARD}>
       <ShieldCheck className="relative w-8 h-8 mb-3" />
       <p className="relative text-lg font-bold leading-snug">Licensed by the State of New Jersey</p>
-      <p className="relative text-xs text-white/80 mt-1">Bonded, insured and RN-supervised</p>
+      <p className="relative text-xs text-background/75 mt-1">Bonded, insured and RN-supervised</p>
     </div>
   </div>
 );
@@ -182,22 +175,21 @@ const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="grid grid-cols-[1fr_280px] gap-5">
     <div className="grid grid-cols-3 gap-3">
       {RESOURCE_LINKS.map(({ to, icon: I, title, text }) => (
-        <Link key={to} to={to} className="group flex items-start gap-3 rounded-2xl border border-border p-4 hover:border-[#2a66b0]/30 hover:bg-[#2a66b0]/[0.04] transition-colors">
-          <span className="w-10 h-10 rounded-xl bg-[#2a66b0]/10 flex items-center justify-center shrink-0 group-hover:bg-[#2a66b0] transition-colors">
-            <I className="w-5 h-5 text-[#2a66b0] group-hover:text-white transition-colors" />
+        <Link key={to} to={to} className="group flex items-start gap-3 rounded-2xl border border-border p-4 hover:border-foreground/15 hover:bg-surface transition-colors">
+          <span className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0 group-hover:bg-foreground transition-colors">
+            <I className="w-5 h-5 text-accent-foreground group-hover:text-background transition-colors" />
           </span>
           <span className="min-w-0">
-            <span className="block font-semibold text-sm text-foreground group-hover:text-[#2a66b0] transition-colors">{title}</span>
+            <span className="block font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{title}</span>
             <span className="block text-xs text-muted-foreground mt-0.5 leading-snug">{text}</span>
           </span>
         </Link>
       ))}
     </div>
-    <div className="relative rounded-2xl p-6 overflow-hidden text-white flex flex-col" style={{ background: BRAND_GRADIENT }}>
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/3" style={{ background: "rgba(255,255,255,0.10)" }} />
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-white/75 mb-2">Still have questions?</p>
+    <div className={PROMO_CARD}>
+      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Still have questions?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">We're here 24/7</p>
-      <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 shadow-md" style={{ background: "#fff", color: "#1d4f8c" }}>
+      <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
         <Phone className="h-4 w-4" /> {phone}
       </a>
     </div>
@@ -210,8 +202,7 @@ const DrawerSection = ({ label, open, onToggle, children, isDark }: {
 }) => (
   <div className="mb-1">
     <button type="button" onClick={onToggle} aria-expanded={open}
-      className="w-full flex items-center justify-between text-sm font-medium px-4 py-3.5 rounded-xl transition-colors"
-      style={{ background: open ? (isDark ? "rgba(38,104,188,0.15)" : "rgba(38,104,188,0.08)") : "transparent" }}>
+      className={`w-full flex items-center justify-between text-sm font-medium px-4 py-3.5 rounded-xl transition-colors ${open ? "bg-surface" : "hover:bg-surface"}`}>
       {label}
       <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
     </button>
@@ -271,7 +262,9 @@ const Header = () => {
   };
 
   const solid = scrolled || !isHome || menu !== null;
-  const headerClass = solid ? "glass-nav" : "bg-transparent backdrop-blur-sm";
+  const headerClass = solid
+    ? "bg-background/95 backdrop-blur-md border-b border-border"
+    : "bg-transparent border-b border-transparent";
 
   return (
     <>
@@ -280,46 +273,38 @@ const Header = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerClass}`}
+        className={`theme-el fixed top-0 left-0 right-0 z-50 text-foreground transition-all duration-500 ${headerClass}`}
         onMouseLeave={scheduleClose}
       >
         {/* Utility bar — collapses once the page is scrolled */}
         <div
-          className="hidden lg:block overflow-hidden transition-[max-height] duration-300"
-          style={{ background: BRAND_GRADIENT, maxHeight: scrolled ? 0 : 36 }}
+          className="hidden lg:block overflow-hidden bg-surface transition-[max-height] duration-300"
+          style={{ maxHeight: scrolled ? 0 : 36 }}
         >
-          <div className="container mx-auto px-4 h-9 flex items-center justify-between text-xs text-white/90">
-            <Link to="/areas-we-serve" className="flex items-center gap-1.5 hover:text-white transition-colors">
+          <div className="container mx-auto px-4 h-9 flex items-center justify-between text-xs font-medium text-foreground/75">
+            <Link to="/areas-we-serve" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <MapPin className="h-3.5 w-3.5" /> Serving 12 NJ counties
             </Link>
             <div className="flex items-center gap-5">
-              <a href={`tel:+1${phoneLink}`} className="flex items-center gap-1.5 font-semibold hover:text-white transition-colors">
+              <a href={`tel:+1${phoneLink}`} className="flex items-center gap-1.5 font-semibold text-foreground hover:text-primary transition-colors">
                 <Clock className="h-3.5 w-3.5" /> 24/7: {contactInfo.phone}
               </a>
-              <span className="h-3.5 w-px" style={{ background: "rgba(255,255,255,0.3)" }} />
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <span className="h-3.5 w-px bg-border" />
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                 <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
               </a>
-              <span className="h-3.5 w-px" style={{ background: "rgba(255,255,255,0.3)" }} />
-              <Link to="/careers/jobs" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <span className="h-3.5 w-px bg-border" />
+              <Link to="/careers/jobs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                 <Briefcase className="h-3.5 w-3.5" /> Caregiver Jobs
               </Link>
-              <span className="h-3.5 w-px" style={{ background: "rgba(255,255,255,0.3)" }} />
-              <Link to="/contact" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <span className="h-3.5 w-px bg-border" />
+              <Link to="/contact" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                 <Mail className="h-3.5 w-3.5" /> Contact
               </Link>
               <ThemeToggle compact />
             </div>
           </div>
         </div>
-
-        {/* Specular top-edge highlight */}
-        {solid && (
-          <div
-            className="absolute inset-x-0 top-0 h-px pointer-events-none"
-            style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.9) 70%, transparent 100%)" }}
-          />
-        )}
 
         <div ref={navRef}>
           <div className="container mx-auto px-4 flex items-center justify-between h-20 md:h-28 lg:h-24">
@@ -333,14 +318,14 @@ const Header = () => {
               {navItems.map(item => {
                 const active = isActive(location.pathname, item.href);
                 const cls = `relative flex items-center gap-1 whitespace-nowrap text-[13px] min-[1400px]:text-sm font-medium px-1.5 min-[1400px]:px-3 py-2 rounded-full transition-colors duration-200 ${
-                  active ? "text-[#2a66b0] dark:text-[hsl(214_66%_68%)]" : "text-foreground hover:text-[#2a66b0] dark:hover:text-[hsl(214_66%_68%)]"
+                  active ? "text-foreground font-semibold" : "text-foreground/70 hover:text-foreground"
                 }`;
                 if (!item.menu) {
                   return (
                     <Link key={item.label} to={item.href} className={`${cls} ${item.drawerOnly ? "hidden" : ""}`} aria-current={location.pathname === item.href ? "page" : undefined}
                       onMouseEnter={scheduleClose}>
                       {item.label}
-                      {active && <span className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-[#2a66b0]" />}
+                      {active && <span className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-foreground" />}
                     </Link>
                   );
                 }
@@ -353,11 +338,11 @@ const Header = () => {
                       {item.short
                         ? <><span className="min-[1400px]:hidden" aria-hidden="true">{item.short}</span><span className="hidden min-[1400px]:inline">{item.label}</span><span className="sr-only min-[1400px]:hidden">{item.label}</span></>
                         : item.label}
-                      {active && <span className="absolute left-3 right-1 -bottom-0.5 h-0.5 rounded-full bg-[#2a66b0]" />}
+                      {active && <span className="absolute left-3 right-1 -bottom-0.5 h-0.5 rounded-full bg-foreground" />}
                     </Link>
                     <button type="button"
-                      className={`h-7 w-5 min-[1400px]:w-6 -ml-0.5 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#2a66b0]/40 ${
-                        open || active ? "text-[#2a66b0] dark:text-[hsl(214_66%_68%)]" : "text-foreground hover:text-[#2a66b0]"
+                      className={`h-7 w-5 min-[1400px]:w-6 -ml-0.5 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
+                        open || active ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                       }`}
                       aria-label={`${open ? "Hide" : "Show"} ${item.label} menu`}
                       aria-expanded={open} aria-controls={`mega-${item.menu}`}
@@ -374,10 +359,10 @@ const Header = () => {
               {/* The light/dark switch is in the utility bar on desktop, to keep this row on one line. */}
               {/* Compact call button (the full number is in the utility bar), so the row never overflows. */}
               <a href={`tel:+1${phoneLink}`} aria-label={`Call MintexCare at ${contactInfo.phone}`} title={contactInfo.phone}
-                className="hidden xl:flex h-10 w-10 items-center justify-center rounded-full glass-btn text-foreground hover:text-primary transition-colors">
+                className="hidden xl:flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground hover:bg-surface transition-colors">
                 <Phone className="h-4 w-4" />
               </a>
-              <Link to={CONSULTATION_HREF} className="inline-flex items-center rounded-full px-4 xl:px-6 py-2.5 text-[13px] xl:text-sm font-semibold whitespace-nowrap transition-transform hover:scale-[1.03]" style={GRADIENT_BTN}>
+              <Link to={CONSULTATION_HREF} className={`inline-flex items-center rounded-full px-4 xl:px-6 py-2.5 text-[13px] xl:text-sm font-semibold whitespace-nowrap ${INK_BTN}`}>
                 Free Consultation
               </Link>
             </div>
@@ -386,15 +371,14 @@ const Header = () => {
             <div className="flex lg:hidden items-center gap-2">
               <a
                 href={`tel:+1${phoneLink}`}
-                className="h-11 w-11 rounded-full flex items-center justify-center flex-shrink-0 text-white"
-                style={{ background: "linear-gradient(135deg, hsl(214 66% 44%) 0%, hsl(192 91% 37%) 100%)", boxShadow: "0 2px 10px rgba(38,104,188,0.30)" }}
+                className="h-11 w-11 rounded-full flex items-center justify-center flex-shrink-0 bg-accent text-accent-foreground"
                 aria-label={`Call MintexCare at ${contactInfo.phone}`}
               >
                 <Phone className="h-5 w-5" />
               </a>
               <ThemeToggle />
               <button
-                className="h-11 w-11 flex items-center justify-center rounded-xl glass transition-all duration-200 flex-shrink-0"
+                className="h-11 w-11 flex items-center justify-center rounded-full border border-border bg-background hover:bg-surface transition-colors duration-200 flex-shrink-0"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={mobileOpen}
@@ -412,7 +396,7 @@ const Header = () => {
                 className={`hidden lg:block absolute left-0 right-0 top-full transition-all duration-200 ${open ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}
                 onMouseEnter={() => openMenu(id)}>
                 <div className="container mx-auto px-4 pt-2">
-                  <div className="rounded-3xl border border-border bg-card shadow-2xl p-6 xl:p-7">
+                  <div className="rounded-3xl border border-border bg-background shadow-2xl p-6 xl:p-7">
                     {id === "services" ? <ServicesPanel tel={phoneLink} phone={contactInfo.phone} />
                       : id === "areas" ? <AreasPanel />
                       : id === "costs" ? <CostsPanel />
@@ -427,17 +411,17 @@ const Header = () => {
       </motion.header>
 
       {/* ── Mobile sticky bar: Call · WhatsApp · Free Consultation ── */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-md px-3 pt-2.5"
-        style={{ paddingBottom: "max(0.625rem, env(safe-area-inset-bottom))", boxShadow: "0 -6px 24px rgba(15,40,80,0.10)" }}>
+      <div className="theme-el lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-md px-3 pt-2.5"
+        style={{ paddingBottom: "max(0.625rem, env(safe-area-inset-bottom))", boxShadow: "0 -6px 24px rgba(0,0,0,0.08)" }}>
         <div className="grid grid-cols-[auto_auto_1fr] gap-2 max-w-xl mx-auto">
           {/* Icon-only below 420px so "Free Consultation" always fits. */}
-          <a href={`tel:+1${phoneLink}`} aria-label="Call" className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-full text-[13px] font-semibold text-foreground glass-btn">
-            <Phone className="h-4 w-4 text-[#2a66b0]" /> <span className="hidden min-[420px]:inline">Call</span>
+          <a href={`tel:+1${phoneLink}`} aria-label="Call" className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-full text-[13px] font-semibold text-foreground border border-border bg-background">
+            <Phone className="h-4 w-4 text-primary" /> <span className="hidden min-[420px]:inline">Call</span>
           </a>
-          <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-full text-[13px] font-semibold text-foreground glass-btn">
-            <MessageCircle className="h-4 w-4 text-[#0891b2]" /> <span className="hidden min-[420px]:inline">WhatsApp</span>
+          <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-full text-[13px] font-semibold text-foreground border border-border bg-background">
+            <MessageCircle className="h-4 w-4 text-primary" /> <span className="hidden min-[420px]:inline">WhatsApp</span>
           </a>
-          <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-1.5 h-11 px-3 rounded-full text-[13px] font-bold whitespace-nowrap" style={GRADIENT_BTN}>
+          <Link to={CONSULTATION_HREF} className={`flex items-center justify-center gap-1.5 h-11 px-3 rounded-full text-[13px] font-bold whitespace-nowrap ${INK_BTN}`}>
             Free Consultation
           </Link>
         </div>
@@ -455,7 +439,7 @@ const Header = () => {
       {/* Slide-in panel. When closed it is hidden (after the slide-out) and has no shadow,
           otherwise the off-screen panel's shadow shows as a grey strip on the right edge. */}
       <div
-        className={`lg:hidden fixed top-0 right-0 h-full z-[70] flex flex-col ease-out ${
+        className={`theme-el lg:hidden fixed top-0 right-0 h-full z-[70] flex flex-col ease-out bg-background text-foreground border-l border-border ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-hidden={!mobileOpen}
@@ -463,31 +447,17 @@ const Header = () => {
           width: "min(88vw, 340px)",
           visibility: mobileOpen ? "visible" : "hidden",
           transition: `transform 300ms ease-out, box-shadow 300ms ease-out, visibility 0s linear ${mobileOpen ? "0s" : "300ms"}`,
-          background: isDark
-            ? "linear-gradient(160deg, rgba(16,28,52,0.98) 0%, rgba(12,22,42,0.96) 100%)"
-            : "linear-gradient(160deg, rgba(255,255,255,0.98) 0%, rgba(235,246,255,0.96) 100%)",
-          boxShadow: !mobileOpen
-            ? "none"
-            : isDark
-              ? "-8px 0 40px rgba(0,0,0,0.40)"
-              : "-8px 0 40px rgba(0,0,0,0.18)",
-          borderLeft: isDark
-            ? "1px solid rgba(255,255,255,0.06)"
-            : "1px solid rgba(255,255,255,0.7)",
+          boxShadow: !mobileOpen ? "none" : isDark ? "-8px 0 40px rgba(0,0,0,0.40)" : "-8px 0 40px rgba(0,0,0,0.18)",
         }}
       >
         {/* Drawer header: logo + close */}
-        <div
-          className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-          style={{ borderBottom: "1px solid rgba(38,104,188,0.10)" }}
-        >
+        <div className="flex items-center justify-between px-5 py-4 flex-shrink-0 border-b border-border">
           <Link to="/" onClick={() => setMobileOpen(false)}>
             <img src={logo} alt="MintexCare" className="h-12 w-auto object-contain" />
           </Link>
           <button
             onClick={() => setMobileOpen(false)}
-            className="p-2 rounded-xl transition-colors"
-            style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(38,104,188,0.06)" }}
+            className="h-10 w-10 flex items-center justify-center rounded-full bg-surface hover:bg-accent transition-colors"
             aria-label="Close menu"
           >
             <X className="h-5 w-5 text-foreground" />
@@ -496,8 +466,7 @@ const Header = () => {
 
         {/* Nav links — scrollable */}
         <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-3 py-3 text-foreground">
-          <Link to="/" className="flex items-center text-sm font-medium px-4 py-3.5 rounded-xl mb-1"
-            style={{ color: isHome ? (isDark ? "hsl(214 66% 65%)" : "hsl(214 66% 44%)") : "inherit", fontWeight: isHome ? 600 : 500 }}>
+          <Link to="/" className={`flex items-center text-sm px-4 py-3.5 rounded-xl mb-1 ${isHome ? "bg-surface font-semibold" : "font-medium"}`}>
             Home
           </Link>
           {navItems.map(item => {
@@ -507,15 +476,15 @@ const Header = () => {
                   open={drawerSection === "services"} onToggle={() => setDrawerSection(s => (s === "services" ? null : "services"))}>
                   {(["in-home", "clinical"] as ServiceGroup[]).map(group => (
                     <div key={group} className="mb-2">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#2a66b0] px-3 py-1.5">{SERVICE_GROUP_LABEL[group]}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary px-3 py-1.5">{SERVICE_GROUP_LABEL[group]}</p>
                       {SERVICE_INDEX.filter(s => s.group === group).map(s => (
-                        <Link key={s.slug} to={`/services/${s.slug}`} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-[#2a66b0]/[0.06]">
-                          <s.icon className="h-4 w-4 text-[#2a66b0] shrink-0" /> {s.name}
+                        <Link key={s.slug} to={`/services/${s.slug}`} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                          <s.icon className="h-4 w-4 text-primary shrink-0" /> {s.name}
                         </Link>
                       ))}
                     </div>
                   ))}
-                  <Link to="/services" className="flex items-center gap-2 text-sm font-semibold text-[#2a66b0] px-3 py-2.5">
+                  <Link to="/services" className="flex items-center gap-2 text-sm font-semibold text-primary px-3 py-2.5">
                     All care services <ArrowRight className="h-4 w-4" />
                   </Link>
                 </DrawerSection>
@@ -527,12 +496,12 @@ const Header = () => {
                   open={drawerSection === "areas"} onToggle={() => setDrawerSection(s => (s === "areas" ? null : "areas"))}>
                   <div className="grid grid-cols-2 gap-x-1">
                     {COUNTIES.map(c => (
-                      <Link key={c.slug} to={`/areas-we-serve/${c.slug}`} className="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-lg hover:bg-[#2a66b0]/[0.06]">
-                        <MapPin className="h-3.5 w-3.5 text-[#0891b2] shrink-0" /> {c.name}
+                      <Link key={c.slug} to={`/areas-we-serve/${c.slug}`} className="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                        <MapPin className="h-3.5 w-3.5 text-primary shrink-0" /> {c.name}
                       </Link>
                     ))}
                   </div>
-                  <Link to="/areas-we-serve" className="flex items-center gap-2 text-sm font-semibold text-[#2a66b0] px-3 py-2.5">
+                  <Link to="/areas-we-serve" className="flex items-center gap-2 text-sm font-semibold text-primary px-3 py-2.5">
                     Find your town <ArrowRight className="h-4 w-4" />
                   </Link>
                 </DrawerSection>
@@ -543,8 +512,8 @@ const Header = () => {
                 <DrawerSection key={item.label} label={item.label} isDark={isDark}
                   open={drawerSection === "about"} onToggle={() => setDrawerSection(s => (s === "about" ? null : "about"))}>
                   {ABOUT_LINKS.map(({ to, icon: I, title }) => (
-                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-[#2a66b0]/[0.06]">
-                      <I className="h-4 w-4 text-[#2a66b0] shrink-0" /> {title}
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                      <I className="h-4 w-4 text-primary shrink-0" /> {title}
                     </Link>
                   ))}
                 </DrawerSection>
@@ -555,8 +524,8 @@ const Header = () => {
                 <DrawerSection key={item.label} label={item.label} isDark={isDark}
                   open={drawerSection === "costs"} onToggle={() => setDrawerSection(s => (s === "costs" ? null : "costs"))}>
                   {COST_LINKS.map(({ to, icon: I, title }) => (
-                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-[#2a66b0]/[0.06]">
-                      <I className="h-4 w-4 text-[#2a66b0] shrink-0" /> {title}
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                      <I className="h-4 w-4 text-primary shrink-0" /> {title}
                     </Link>
                   ))}
                 </DrawerSection>
@@ -567,8 +536,8 @@ const Header = () => {
                 <DrawerSection key={item.label} label={item.label} isDark={isDark}
                   open={drawerSection === "resources"} onToggle={() => setDrawerSection(s => (s === "resources" ? null : "resources"))}>
                   {RESOURCE_LINKS.map(({ to, icon: I, title }) => (
-                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-[#2a66b0]/[0.06]">
-                      <I className="h-4 w-4 text-[#2a66b0] shrink-0" /> {title}
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                      <I className="h-4 w-4 text-primary shrink-0" /> {title}
                     </Link>
                   ))}
                 </DrawerSection>
@@ -579,12 +548,9 @@ const Header = () => {
               <Link
                 key={item.label}
                 to={item.href}
-                className="flex items-center text-sm font-medium px-4 py-3.5 rounded-xl mb-1 transition-all duration-200"
-                style={{
-                  color: active ? (isDark ? "hsl(214 66% 65%)" : "hsl(214 66% 44%)") : "inherit",
-                  background: active ? (isDark ? "rgba(38,104,188,0.15)" : "rgba(38,104,188,0.08)") : "transparent",
-                  fontWeight: active ? 600 : 500,
-                }}
+                className={`flex items-center text-sm px-4 py-3.5 rounded-xl mb-1 transition-colors duration-200 ${
+                  active ? "bg-surface font-semibold" : "font-medium hover:bg-surface"
+                }`}
               >
                 {item.label}
               </Link>
@@ -592,27 +558,19 @@ const Header = () => {
           })}
 
           {/* Divider */}
-          <div className="my-2 h-px mx-1" style={{ background: "rgba(38,104,188,0.10)" }} />
+          <div className="my-2 h-px mx-1 bg-border" />
 
           {/* Phone + WhatsApp */}
           <div className="grid grid-cols-2 gap-2">
             <a
               href={`tel:+1${phoneLink}`}
-              className="flex items-center justify-center gap-2 text-sm font-semibold px-3 py-3.5 rounded-xl"
-              style={{
-                border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(38,104,188,0.15)",
-                color: isDark ? "hsl(214 66% 65%)" : "hsl(214 66% 44%)",
-              }}
+              className="flex items-center justify-center gap-2 text-sm font-semibold px-3 py-3.5 rounded-full bg-accent text-accent-foreground"
             >
               <Phone className="h-4 w-4 flex-shrink-0" /> Call 24/7
             </a>
             <a
               href={whatsapp} target="_blank" rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 text-sm font-semibold px-3 py-3.5 rounded-xl"
-              style={{
-                border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(38,104,188,0.15)",
-                color: isDark ? "hsl(192 91% 55%)" : "hsl(192 91% 32%)",
-              }}
+              className="flex items-center justify-center gap-2 text-sm font-semibold px-3 py-3.5 rounded-full border border-border text-foreground"
             >
               <MessageCircle className="h-4 w-4 flex-shrink-0" /> WhatsApp
             </a>
@@ -623,11 +581,8 @@ const Header = () => {
         </nav>
 
         {/* Bottom CTA */}
-        <div
-          className="flex-shrink-0 px-4 pb-8 pt-3"
-          style={{ borderTop: "1px solid rgba(38,104,188,0.10)" }}
-        >
-          <Link to={CONSULTATION_HREF} className="flex items-center justify-center w-full rounded-full font-semibold h-12 text-sm" style={GRADIENT_BTN}>
+        <div className="flex-shrink-0 px-4 pb-8 pt-3 border-t border-border">
+          <Link to={CONSULTATION_HREF} className={`flex items-center justify-center w-full rounded-full font-semibold h-12 text-sm ${INK_BTN}`}>
             Free Consultation
           </Link>
         </div>

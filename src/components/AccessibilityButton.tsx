@@ -137,7 +137,7 @@ export default function AccessibilityButton() {
 
   return (
     // Raised on phones/tablets so it sits above the sticky Call · WhatsApp · Free Consultation bar.
-    <div ref={panelRef} className="fixed bottom-24 lg:bottom-6 right-4 md:right-6 z-50">
+    <div ref={panelRef} className="theme-el fixed bottom-24 lg:bottom-6 right-4 md:right-6 z-50">
 
       {/* ── Panel ── */}
       {open && (

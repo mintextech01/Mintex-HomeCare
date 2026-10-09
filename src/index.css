@@ -60,6 +60,9 @@
 
     --hero-bg: 214 60% 97%;
 
+    /* Soft card / band background used by the redesigned (el-*) pages */
+    --surface: 214 33% 96.5%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 214 30% 26%;
     --sidebar-primary: 214 66% 44%;
@@ -115,6 +118,7 @@
     --footer-bg: 214 66% 10%;
     --footer-foreground: 180 20% 95%;
     --hero-bg: 214 40% 8%;
+    --surface: 214 38% 14%;
 
     /* Dark glass */
     --glass-bg:        rgba(16, 28, 52, 0.58);
@@ -124,6 +128,66 @@
     --glass-border-sm: rgba(255, 255, 255, 0.07);
     --glass-shine:     rgba(255, 255, 255, 0.06);
     --glass-glow:      rgba(0,   0,   0,   0.30);
+  }
+}
+
+/* ════════════════════════════════════════
+   REDESIGN PALETTE (Eldera-style)
+   Applied only inside .theme-el, so each page switches over when it is redesigned.
+   Ink headings, lavender soft accents, neutral light-grey surfaces.
+   ════════════════════════════════════════ */
+@layer base {
+  .theme-el {
+    --background: 0 0% 100%;
+    --foreground: 240 12% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 12% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 12% 10%;
+
+    /* Indigo-lavender: icons, links, highlights (≈5.3:1 on white) */
+    --primary: 238 47% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft lavender: pill buttons and tints, always with ink text on top */
+    --accent: 236 78% 89%;
+    --accent-foreground: 240 12% 10%;
+
+    --secondary: 240 5% 94%;
+    --secondary-foreground: 240 12% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 5% 36%;
+
+    --border: 240 6% 90%;
+    --input: 240 6% 88%;
+    --ring: 238 47% 55%;
+
+    --surface: 240 5% 96%;
+  }
+  /* page wrappers (<main>) also take the page background + ink text */
+  main.theme-el {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+  .dark .theme-el {
+    --background: 240 8% 7%;
+    --foreground: 240 10% 95%;
+    --card: 240 7% 11%;
+    --card-foreground: 240 10% 95%;
+    --popover: 240 7% 11%;
+    --popover-foreground: 240 10% 95%;
+    --primary: 236 75% 78%;
+    --primary-foreground: 240 12% 10%;
+    --accent: 238 30% 26%;
+    --accent-foreground: 240 10% 95%;
+    --secondary: 240 6% 16%;
+    --secondary-foreground: 240 10% 95%;
+    --muted: 240 6% 14%;
+    --muted-foreground: 240 6% 68%;
+    --border: 240 6% 20%;
+    --input: 240 6% 22%;
+    --ring: 236 75% 78%;
+    --surface: 240 7% 12%;
   }
 }
 
@@ -300,6 +364,25 @@
   .label       { @apply text-label font-semibold uppercase tracking-label text-muted-foreground; }
   .body-text   { @apply text-base font-body font-medium leading-relaxed tracking-body; }
   .section-label { @apply text-xs font-semibold text-accent uppercase tracking-label; }
+
+  /* ── Redesign (Eldera-style) building blocks — used page by page as each page is redesigned ── */
+  .el-eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface
+           px-3.5 py-1.5 text-xs font-semibold font-sans text-foreground/80;
+  }
+  .el-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full h-12 px-7 text-sm font-semibold font-sans
+           transition-colors duration-200
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  /* primary = solid ink pill, soft = lavender pill (both as in the reference design) */
+  .el-btn-primary { @apply el-btn bg-foreground text-background shadow-sm hover:bg-foreground/85; }
+  .el-btn-soft    { @apply el-btn bg-accent text-accent-foreground hover:bg-accent/75; }
+  .el-btn-outline { @apply el-btn border border-border bg-background text-foreground hover:border-primary/50 hover:text-primary; }
+  .el-card        { @apply rounded-[20px] bg-surface; }
+  .el-chip {
+    @apply flex items-center gap-2.5 rounded-2xl bg-background/95 px-3.5 py-2.5 shadow-lg border border-border/60;
+  }
 }
 
 /* ════════════════════════════════════════
@@ -863,6 +946,12 @@ html.big-text-cursor * {
   background-color: rgba(16, 28, 52, 0.85) !important;
 }
 
+
+/* The public site's <body> carries .theme-el (index.html; the admin app does not), so pop-ups that
+   render outside <main> (select menus, toasts, dialogs) use the redesign palette. Its plain page
+   background replaces the old blue ambient gradient. */
+body.theme-el,
+.dark body.theme-el { background-image: none; }
 
 /* --- Smooth theme transition --- */
 html {
