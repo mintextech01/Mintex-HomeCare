@@ -29,6 +29,9 @@ export default defineConfig(({ mode }) => ({
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
           if (id.includes("/firebase/auth") || id.includes("/@firebase/auth")) return "firebase-auth";
+          // Full Firestore SDK: admin panel only. Left to Rollup (not forced into the "firebase" chunk
+          // the public site loads, which only needs Firestore Lite ".../firestore/lite/...").
+          if (id.includes("webchannel-wrapper") || (/\/firestore\//.test(id) && !id.includes("/lite/"))) return;
           if (id.includes("firebase")) return "firebase";
           if (id.includes("framer-motion") || id.includes("motion-dom") || id.includes("motion-utils")) return "motion";
           if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return "react";

@@ -4,12 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WBSQ29GT');</script>
+    <!-- Google Tag Manager (deferred) -->
+    <!-- dataLayer starts immediately so no events are lost; gtm.js itself loads after the page has
+         loaded (or on the first tap/scroll/keypress, whichever comes first), keeping its ~110 KB
+         off the critical path. scripts/prerender.mjs strips the injected gtm.js tag from snapshots. -->
+    <script>(function(w,d,i){w.dataLayer=w.dataLayer||[];w.dataLayer.push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var done=false,ev=['pointerdown','keydown','scroll','touchstart'];
+    function load(){if(done)return;done=true;ev.forEach(function(e){w.removeEventListener(e,load)});
+    var j=d.createElement('script');j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;
+    d.head.appendChild(j);}
+    ev.forEach(function(e){w.addEventListener(e,load,{once:true,passive:true})});
+    function later(){setTimeout(function(){(w.requestIdleCallback||setTimeout)(load)},1500)}
+    if(d.readyState==='complete')later();else w.addEventListener('load',later);
+    })(window,document,'GTM-WBSQ29GT');</script>
     <!-- End Google Tag Manager -->
 
     <title>Home Care in Edison, NJ | 24/7 In-Home Care | MintexCare</title>
@@ -55,7 +62,12 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <!-- Loaded without blocking the first paint (text shows in the fallback font, then swaps).
+         data-async-css: scripts/prerender.mjs resets rel to "preload" in the saved snapshots. -->
+    <link rel="preload" as="style" data-async-css href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" /></noscript>
+    <!-- Site content and photos are read from Firestore -->
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
 
     <!-- JSON-LD: MedicalBusiness (the single business entity; other blocks reference this @id) -->
     <script type="application/ld+json">

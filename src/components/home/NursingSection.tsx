@@ -290,7 +290,7 @@ const NursingSection = () => {
                   <div className="relative w-28 sm:w-32 shrink-0 rounded-2xl overflow-hidden bg-background min-h-[128px]">
                     <div className="absolute inset-0 flex items-end justify-center p-2 pb-1">
                       {customImg ? (
-                        <img src={customImg} alt={card.title} className="absolute inset-0 w-full h-full object-cover" />
+                        <img src={customImg} alt={card.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                       ) : (
                         card.illustration
                       )}

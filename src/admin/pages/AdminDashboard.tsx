@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdmin, type JobPosition, type ContactInfo, type Pricing, type PriceItem } from "@/contexts/AdminContext";
-import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS } from "@/config/siteImageConfig";
+import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS, imageFingerprint } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { LayoutDashboard, MessageSquare, Users, Image, LogOut, Mail, Star, Trash2, Edit, Plus, Eye, EyeOff, Menu, Briefcase, Phone, MapPin, Layers, Upload, ClipboardList, Download, FileText as FileIcon, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { db } from "@/lib/firebase";
+import { fullDb as db } from "@/lib/firestoreFull";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "submissions" | "applications" | "positions" | "contact-info" | "pricing";
@@ -1069,8 +1069,10 @@ const ImageField = ({
     setEditing(false);
     setFileReady(false);
     try {
-      // Each image is its own Firestore document — no 1MB size limit issue
-      await setDoc(doc(db, "siteImageData", imgKey), { url: newUrl });
+      // Each image is its own Firestore document — no 1MB size limit issue.
+      // fp lets the public site check whether its build-time copy is still current without
+      // downloading the image (see requestSiteImages in AdminContext).
+      await setDoc(doc(db, "siteImageData", imgKey), { url: newUrl, fp: imageFingerprint(newUrl) });
       toast({ title: "Image saved", description: label + " is now live on the website." });
     } catch (err) {
       console.error("Failed to save site image:", err);

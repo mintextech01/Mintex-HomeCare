@@ -230,9 +230,14 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    handleScroll();
+    // Initial check on the next frame: reading scrollY right after the first render forces a
+    // synchronous layout of the whole page.
+    const frame = requestAnimationFrame(handleScroll);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   useEffect(() => { setMobileOpen(false); setMenu(null); }, [location]);
@@ -341,7 +346,7 @@ const Header = () => {
                       {active && <span className="absolute left-3 right-1 -bottom-0.5 h-0.5 rounded-full bg-foreground" />}
                     </Link>
                     <button type="button"
-                      className={`h-7 w-5 min-[1400px]:w-6 -ml-0.5 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
+                      className={`h-7 w-6 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
                         open || active ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                       }`}
                       aria-label={`${open ? "Hide" : "Show"} ${item.label} menu`}

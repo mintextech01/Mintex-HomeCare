@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+// The public website only does one-time reads and form submissions, so it uses Firestore Lite
+// (plain REST requests, a fraction of the size of the full SDK). The admin panel's real-time
+// listeners use the full SDK from ./firestoreFull, which public pages never download.
+import { getFirestore } from "firebase/firestore/lite";
 import type { Auth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -11,7 +14,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
+/** Firestore Lite instance: use with functions imported from "firebase/firestore/lite". */
 const db = getFirestore(app);
 
 // Auth is loaded lazily: only the admin panel needs it, so public visitors never

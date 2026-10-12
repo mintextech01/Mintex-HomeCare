@@ -23,7 +23,9 @@ const HERO_IMAGE_KEYS = ["heroLargeCenter", "heroTopLeft", "heroBottomLeft", "he
 
 const Index = () => {
   const scrollProgress = usePageScrollProgress();
-  usePageImages("/", HERO_IMAGE_KEYS);
+  // The hero photos are only displayed on large screens (lg:), so phones and tablets skip them.
+  const heroPhotosShown = window.matchMedia("(min-width: 1024px)").matches;
+  usePageImages("/", HERO_IMAGE_KEYS, heroPhotosShown ? [] : HERO_IMAGE_KEYS);
 
   return (
     <>

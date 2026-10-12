@@ -46,7 +46,7 @@ const AboutSection = () => {
                     siteImages.aboutAvatar2,
                     siteImages.aboutAvatar3,
                   ].map((url, i) => (
-                    <img key={i} src={url} alt="Happy MintexCare client"
+                    <img key={i} src={url} alt="Happy MintexCare client" loading="lazy" width={32} height={32}
                       className="w-8 h-8 rounded-full border-2 border-background object-cover" />
                   ))}
                   <div className="w-8 h-8 rounded-full border-2 border-background bg-accent flex items-center justify-center">

@@ -129,18 +129,23 @@ const TestimonialsSection = () => {
               </AnimatePresence>
 
               {/* Progress dots */}
-              <div className="flex gap-1.5 mt-8">
+              {/* Each dot sits in a 24px button so it is big enough to tap (-ml lines the first dot up with the text). */}
+              <div className="flex mt-8 -ml-[9px]">
                 {testimonials.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => go(i)}
                     aria-label={`Go to testimonial ${i + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === current
-                        ? "bg-foreground w-8"
-                        : "bg-foreground/15 w-1.5 hover:bg-foreground/40"
-                    }`}
-                  />
+                    className="group/dot h-6 min-w-6 flex items-center justify-center"
+                  >
+                    <span
+                      className={`block h-1.5 rounded-full transition-all duration-300 ${
+                        i === current
+                          ? "bg-foreground w-8"
+                          : "bg-foreground/15 w-1.5 group-hover/dot:bg-foreground/40"
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
             </div>

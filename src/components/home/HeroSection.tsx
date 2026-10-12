@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Phone, ShieldCheck, ArrowRight, Clock, MapPin, Users, Award, HeartPulse, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAdmin } from "@/contexts/AdminContext";
+import { PENDING_IMAGE } from "@/config/siteImageConfig";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -33,6 +34,24 @@ const InfoChip = ({
       <p className="text-[11px] text-muted-foreground mt-1 leading-none">{label}</p>
     </div>
   </motion.div>
+);
+
+/* ─── photo in the band under the hero ───────────────────────────────────────── */
+/* The band is hidden below lg: <picture> + media gives smaller screens the 1x1 placeholder
+   instead of the photo, so phones don't download it. */
+const BandPhoto = ({ src, alt }: { src: string; alt: string }) => (
+  <picture>
+    <source media="(min-width: 1024px)" srcSet={src} />
+    <img
+      src={PENDING_IMAGE}
+      alt={alt}
+      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+      width={600}
+      height={320}
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
 );
 
 /* ─── section ──────────────────────────────────────────────────────────────── */
@@ -142,12 +161,21 @@ const HeroSection = () => {
           >
             <div className="el-card p-3">
               <div className="relative rounded-[16px] overflow-hidden aspect-[4/5] max-h-[560px]">
-                <img
-                  src={imgs.largeCenter}
-                  alt="Caregiver with elderly patient"
-                  className="w-full h-full object-cover"
-                  loading="eager"
-                />
+                {/* Desktop LCP image. <picture> + media: the card is hidden below lg, so smaller
+                    screens get the 1x1 placeholder instead of downloading the photo. */}
+                <picture>
+                  <source media="(min-width: 1024px)" srcSet={imgs.largeCenter} />
+                  <img
+                    src={PENDING_IMAGE}
+                    alt="Caregiver with elderly patient"
+                    className="w-full h-full object-cover"
+                    width={448}
+                    height={560}
+                    loading="eager"
+                    decoding="async"
+                    {...{ fetchpriority: "high" }}
+                  />
+                </picture>
               </div>
             </div>
             <InfoChip
@@ -175,28 +203,13 @@ const HeroSection = () => {
           className="hidden lg:grid grid-cols-12 gap-4 mt-14"
         >
           <div className="col-span-6 h-[320px] rounded-[24px] overflow-hidden group">
-            <img
-              src={imgs.topLeft}
-              alt="Caring professional"
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              loading="eager"
-            />
+            <BandPhoto src={imgs.topLeft} alt="Caring professional" />
           </div>
           <div className="col-span-3 h-[320px] rounded-[24px] overflow-hidden group">
-            <img
-              src={imgs.bottomLeft}
-              alt="Senior receiving care"
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              loading="eager"
-            />
+            <BandPhoto src={imgs.bottomLeft} alt="Senior receiving care" />
           </div>
           <div className="relative col-span-3 h-[320px] rounded-[24px] overflow-hidden group">
-            <img
-              src={imgs.bottomRight}
-              alt="Compassionate home care"
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              loading="eager"
-            />
+            <BandPhoto src={imgs.bottomRight} alt="Compassionate home care" />
             <InfoChip
               icon={<Users className="w-5 h-5" />}
               value="500+"

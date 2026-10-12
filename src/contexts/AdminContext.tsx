@@ -1,8 +1,34 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
 export type { SiteImages } from "@/config/siteImageConfig";
-import { SiteImages, SiteImageKey, defaultSiteImages, pendingSiteImages } from "@/config/siteImageConfig";
+import { SiteImages, SiteImageKey, defaultSiteImages, pendingSiteImages, bakedSiteImages, imageFingerprint } from "@/config/siteImageConfig";
 import { db, getAppAuth } from "@/lib/firebase";
-import { doc, collection, onSnapshot, setDoc, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
+// Public site: Firestore Lite (one-time reads + form submissions). Admin-only work (listeners,
+// writes) goes through loadFull(), so the full SDK is never part of the public bundle.
+import { doc, collection, getDoc, addDoc } from "firebase/firestore/lite";
+
+/**
+ * siteImageData/{key} -> its `fp` field (null if it has none), from one small REST request that
+ * reads only that field (Firestore Lite can't limit fields). Runs once, 2 s after the page has
+ * loaded, so it never competes with loading the page.
+ */
+let fingerprintsPromise: Promise<Map<string, string | null>> | null = null;
+const siteImageFingerprints = () => {
+  fingerprintsPromise ??= (async () => {
+    if (document.readyState !== "complete") await new Promise(r => window.addEventListener("load", r, { once: true }));
+    await new Promise(r => setTimeout(r, 2000));
+    const { VITE_FIREBASE_PROJECT_ID: project, VITE_FIREBASE_API_KEY: key } = import.meta.env;
+    const res = await fetch(`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents/siteImageData?mask.fieldPaths=fp&pageSize=300&key=${key}`);
+    if (!res.ok) throw new Error(`siteImageData fingerprints: ${res.status}`);
+    const body = await res.json() as { documents?: { name: string; fields?: { fp?: { stringValue?: string } } }[] };
+    return new Map((body.documents ?? []).map(d => [d.name.split("/").pop()!, d.fields?.fp?.stringValue ?? null]));
+  })();
+  return fingerprintsPromise;
+};
+
+const loadFull = async () => {
+  const [sdk, { fullDb }] = await Promise.all([import("firebase/firestore"), import("@/lib/firestoreFull")]);
+  return { ...sdk, fullDb };
+};
 export interface Testimonial {
   id: string;
   name: string;
@@ -251,7 +277,10 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
   const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
   // Public pages start with a blank placeholder (not the stock defaults) so the stock photo
   // isn't downloaded and then swapped for the uploaded one.
-  const [siteImages, setSiteImagesState] = useState<SiteImages>(isPublic ? pendingSiteImages : defaultSiteImages);
+  // Images the build saved as static files are shown straight away (see bakedSiteImages).
+  const [siteImages, setSiteImagesState] = useState<SiteImages>(() => isPublic
+    ? { ...pendingSiteImages, ...Object.fromEntries(Object.entries(bakedSiteImages).map(([k, v]) => [k, v!.src])) }
+    : defaultSiteImages);
   const requestedImageKeys = useRef(new Set<SiteImageKey>());
   const teamRequested = useRef(false);
 
@@ -274,16 +303,38 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     const missing = keys.filter(k => !requestedImageKeys.current.has(k));
     if (missing.length === 0) return;
     missing.forEach(k => requestedImageKeys.current.add(k));
-    const entries = await Promise.all(missing.map(async (key) => {
-      try {
-        const snap = await getDoc(doc(db, "siteImageData", key));
-        const url = snap.exists() ? (snap.data().url as string | undefined) : undefined;
-        return [key, url || defaultSiteImages[key]] as const;
-      } catch {
-        return [key, defaultSiteImages[key]] as const;
-      }
-    }));
-    setSiteImagesState(prev => ({ ...prev, ...Object.fromEntries(entries) }));
+    const fetchImages = async (list: SiteImageKey[]) => {
+      if (list.length === 0) return;
+      const entries = await Promise.all(list.map(async (key) => {
+        const baked = bakedSiteImages[key];
+        try {
+          const snap = await getDoc(doc(db, "siteImageData", key));
+          const url = snap.exists() ? (snap.data().url as string | undefined) : undefined;
+          // Unchanged since the build: keep the optimized static file.
+          if (baked && url && imageFingerprint(url) === baked.fp) return [key, baked.src] as const;
+          return [key, url || defaultSiteImages[key]] as const;
+        } catch {
+          return [key, baked?.src ?? defaultSiteImages[key]] as const;
+        }
+      }));
+      setSiteImagesState(prev => ({ ...prev, ...Object.fromEntries(entries) }));
+    };
+    // Images without a static copy are needed now. Ones that already show their static copy are only
+    // checked for Admin changes once the page has finished loading, using the small `fp` field Admin
+    // saves with each image; the image itself is downloaded only if it changed since the build.
+    // (The returned promise doesn't wait for that check, so callers can move on to the next images.)
+    const bakedKeys = missing.filter(k => bakedSiteImages[k]);
+    if (bakedKeys.length) {
+      siteImageFingerprints()
+        .then(current => fetchImages(bakedKeys.filter(k => {
+          const fp = current.get(k);
+          // null: saved before fingerprints existed, so it is the version the build copied.
+          // undefined: the document is gone, so fetch it to fall back to the default image.
+          return fp !== null && fp !== bakedSiteImages[k]!.fp;
+        })))
+        .catch(() => { /* keep the static copies */ });
+    }
+    await fetchImages(missing.filter(k => !bakedSiteImages[k]));
   }, [isPublic]);
 
   const requestTeamMembers = useCallback(async () => {
@@ -302,13 +353,15 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     if (isPublic) return;
     let cancelled = false;
     let unsubAuth = () => {};
+    let unsubListeners = () => {};
 
     // Initialize any missing Firestore documents when the admin logs in.
     // Uses getDoc + setDoc in sequence (no race condition since we await getDoc first).
     const initMissingDoc = async (docName: string, defaultData: any) => {
-      const snap = await getDoc(doc(db, "appData", docName));
+      const { doc, getDoc, setDoc, fullDb } = await loadFull();
+      const snap = await getDoc(doc(fullDb, "appData", docName));
       if (!snap.exists()) {
-        await setDoc(doc(db, "appData", docName), { data: defaultData });
+        await setDoc(doc(fullDb, "appData", docName), { data: defaultData });
       }
     };
 
@@ -320,7 +373,9 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
       unsubSubmissions = null;
     };
 
-    const onUser = (user: unknown) => {
+    const onUser = async (user: unknown) => {
+      const { onSnapshot, collection, fullDb } = await loadFull();
+      if (cancelled) return;
       setIsAuthenticated(!!user);
       setIsLoading(false);
       stopSubmissions();
@@ -328,7 +383,7 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
         setSubmissionsState([]);
       } else {
         unsubSubmissions = onSnapshot(
-          collection(db, "submissions"),
+          collection(fullDb, "submissions"),
           (snapshot) => {
             const docs = snapshot.docs
               // Exclude chunk documents (they live in submissions/ but are not real submissions)
@@ -363,52 +418,59 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     })().catch(console.error);
 
     // Real-time Firestore listeners
-    const unsubTestimonials = onSnapshot(doc(db, "appData", "testimonials"), (d) => {
-      if (d.exists()) setTestimonialsState(d.data().data);
-    });
-    const unsubTeam = onSnapshot(doc(db, "appData", "teamMembers"), (d) => {
-      if (d.exists()) setTeamMembersState(d.data().data);
-    });
-    const unsubGallery = onSnapshot(doc(db, "appData", "gallery"), (d) => {
-      if (d.exists()) setGalleryState(d.data().data);
-    });
-    const unsubServices = onSnapshot(doc(db, "appData", "services"), (d) => {
-      if (d.exists()) setServicesState(d.data().data);
-    });
-    const unsubPositions = onSnapshot(doc(db, "appData", "jobPositions"), (d) => {
-      if (d.exists()) setJobPositionsState(d.data().data);
-    });
-    const unsubContact = onSnapshot(doc(db, "appData", "contactInfo"), (d) => {
-      if (d.exists()) setContactInfoState(d.data().data);
-    });
-    const unsubPricing = onSnapshot(doc(db, "appData", "pricing"), (d) => {
-      if (d.exists()) setPricingState(d.data().data);
-    });
-    // Each site image lives in its own document: siteImageData/{key} → { url: "..." }
-    // This avoids Firestore's 1MB per-document limit when images are stored as base64.
-    const unsubImages = onSnapshot(collection(db, "siteImageData"), (snapshot) => {
-      setSiteImagesState(prev => {
-        const next = { ...prev };
-        snapshot.docs.forEach(d => {
-          const url = d.data().url;
-          if (url) next[d.id as keyof SiteImages] = url;
-        });
-        return next;
+    loadFull().then(({ onSnapshot, doc, collection, fullDb }) => {
+      if (cancelled) return;
+      const unsubTestimonials = onSnapshot(doc(fullDb, "appData", "testimonials"), (d) => {
+        if (d.exists()) setTestimonialsState(d.data().data);
       });
-    });
+      const unsubTeam = onSnapshot(doc(fullDb, "appData", "teamMembers"), (d) => {
+        if (d.exists()) setTeamMembersState(d.data().data);
+      });
+      const unsubGallery = onSnapshot(doc(fullDb, "appData", "gallery"), (d) => {
+        if (d.exists()) setGalleryState(d.data().data);
+      });
+      const unsubServices = onSnapshot(doc(fullDb, "appData", "services"), (d) => {
+        if (d.exists()) setServicesState(d.data().data);
+      });
+      const unsubPositions = onSnapshot(doc(fullDb, "appData", "jobPositions"), (d) => {
+        if (d.exists()) setJobPositionsState(d.data().data);
+      });
+      const unsubContact = onSnapshot(doc(fullDb, "appData", "contactInfo"), (d) => {
+        if (d.exists()) setContactInfoState(d.data().data);
+      });
+      const unsubPricing = onSnapshot(doc(fullDb, "appData", "pricing"), (d) => {
+        if (d.exists()) setPricingState(d.data().data);
+      });
+      // Each site image lives in its own document: siteImageData/{key} → { url: "..." }
+      // This avoids Firestore's 1MB per-document limit when images are stored as base64.
+      const unsubImages = onSnapshot(collection(fullDb, "siteImageData"), (snapshot) => {
+        setSiteImagesState(prev => {
+          const next = { ...prev };
+          snapshot.docs.forEach(d => {
+            const url = d.data().url;
+            if (url) next[d.id as keyof SiteImages] = url;
+          });
+          return next;
+        });
+      });
+      unsubListeners = () => {
+        unsubTestimonials(); unsubTeam(); unsubGallery(); unsubServices();
+        unsubPositions(); unsubContact(); unsubPricing(); unsubImages();
+      };
+    }).catch(console.error);
 
     return () => {
       cancelled = true;
       unsubAuth();
-      unsubTestimonials(); unsubTeam(); unsubGallery(); unsubServices();
-      stopSubmissions(); unsubPositions(); unsubContact(); unsubPricing(); unsubImages();
+      stopSubmissions();
+      unsubListeners();
     };
   }, [isPublic]);
 
   // ── Wrapped setters: update React state AND sync to Firestore ────────────────
 
   const updateFirebase = (collectionName: string, data: any) => {
-    setDoc(doc(db, "appData", collectionName), { data }).catch((err) => {
+    loadFull().then(({ setDoc, doc, fullDb }) => setDoc(doc(fullDb, "appData", collectionName), { data })).catch((err) => {
       console.error(`[AdminContext] Failed to save "${collectionName}" to Firestore:`, err);
     });
   };
@@ -507,11 +569,13 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
   };
 
   const updateSubmission = async (id: string, updates: Partial<ContactSubmission>) => {
-    await updateDoc(doc(db, "submissions", id), updates as Record<string, unknown>);
+    const { updateDoc, doc, fullDb } = await loadFull();
+    await updateDoc(doc(fullDb, "submissions", id), updates as Record<string, unknown>);
   };
 
   const deleteSubmission = async (id: string) => {
-    await deleteDoc(doc(db, "submissions", id));
+    const { deleteDoc, doc, fullDb } = await loadFull();
+    await deleteDoc(doc(fullDb, "submissions", id));
   };
 
   return (

@@ -47,12 +47,13 @@ const HowItWorksSection = () => {
               <span className="text-primary">Easy</span>
             </h2>
           </motion.div>
+          {/* Decorative watermark. Drawn by CSS (::before) rather than as text, so it isn't treated as
+              low-contrast content by accessibility checks. */}
           <div
             aria-hidden="true"
-            className="hidden md:block text-[100px] lg:text-[140px] font-serif font-bold leading-none select-none pointer-events-none text-foreground/[0.06]"
-          >
-            04
-          </div>
+            data-watermark="04"
+            className="hidden md:block text-[100px] lg:text-[140px] font-serif font-bold leading-none select-none pointer-events-none text-foreground/[0.06] before:content-[attr(data-watermark)]"
+          />
         </div>
 
         {/* ── Steps ── */}

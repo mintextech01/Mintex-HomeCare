@@ -301,6 +301,26 @@ export const pendingSiteImages: SiteImages = Object.fromEntries(
   SITE_IMAGE_REGISTRY.map((e) => [e.key, PENDING_IMAGE])
 ) as SiteImages;
 
+/**
+ * Uploaded (base64) site images that the build saved as optimized static files
+ * (scripts/prerender.mjs injects window.__SITE_IMAGES__ into every page). Pages show these
+ * immediately; the Firestore copy is still checked afterwards so Admin changes go live without
+ * a rebuild. `fp` is imageFingerprint() of the base64 data URI the file was made from.
+ */
+export type BakedSiteImages = Partial<Record<SiteImageKey, { src: string; fp: string }>>;
+export const bakedSiteImages: BakedSiteImages =
+  (typeof window !== "undefined" && (window as unknown as { __SITE_IMAGES__?: BakedSiteImages }).__SITE_IMAGES__) || {};
+
+/** FNV-1a hash + length of a data URI. Keep identical to fingerprint() in scripts/prerender.mjs. */
+export const imageFingerprint = (s: string): string => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return `${(h >>> 0).toString(36)}-${s.length.toString(36)}`;
+};
+
 /** Image keys displayed on a route ("/#about" counts as "/"), derived from the registry. */
 export const siteImageKeysForPage = (path: string): SiteImageKey[] =>
   SITE_IMAGE_REGISTRY

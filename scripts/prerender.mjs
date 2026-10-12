@@ -14,6 +14,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
@@ -94,7 +95,87 @@ const ROUTES = [
 const PENDING_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 const DATA_IMAGE = /data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=]+/g;
 
+// Analytics/ads must not run while snapshotting: GTM would add its own <script> tags to the saved
+// HTML (so it loaded twice on the live site) and the visits would be counted as real traffic.
+const BLOCKED_HOSTS = /googletagmanager\.com|google-analytics\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|facebook\.net|connect\.facebook/;
+
 const warn = (msg) => console.warn(`\n⚠  prerender: ${msg}\n   The site will still work, but pages are served without prerendered HTML.\n`);
+
+/** FNV-1a hash + length of a data URI. Keep identical to imageFingerprint() in src/config/siteImageConfig.ts. */
+const fingerprint = (s) => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return `${(h >>> 0).toString(36)}-${s.length.toString(36)}`;
+};
+
+/**
+ * Saves every admin-uploaded site image (base64 in Firestore siteImageData/{key}) as an optimized
+ * WebP in dist/site-images/, so pages can show it immediately instead of waiting for the app and a
+ * Firestore round trip (the homepage hero photo is the desktop LCP). Returns:
+ *   manifest: { key: { src, fp } } -> injected as window.__SITE_IMAGES__ (see bakedSiteImages)
+ *   byDataUri: Map(dataUri -> src)  -> used to swap the data URIs in the snapshots for the files
+ * Failures are non-fatal: the site then loads those images from Firestore as before.
+ */
+const bakeSiteImages = async () => {
+  const manifest = {};
+  const byDataUri = new Map();
+  const files = new Map(); // `${width}:${dataUri}` -> src
+  try {
+    const { loadEnv } = await import("vite");
+    const sharp = (await import("sharp")).default;
+    const env = loadEnv("production", ROOT, "VITE_");
+    const base = `https://firestore.googleapis.com/v1/projects/${env.VITE_FIREBASE_PROJECT_ID}/databases/(default)/documents/siteImageData`;
+    const docs = [];
+    let pageToken = "";
+    do {
+      const res = await fetch(`${base}?pageSize=50&key=${env.VITE_FIREBASE_API_KEY}${pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : ""}`);
+      if (!res.ok) throw new Error(`Firestore ${res.status}`);
+      const body = await res.json();
+      docs.push(...(body.documents ?? []));
+      pageToken = body.nextPageToken ?? "";
+    } while (pageToken);
+
+    await mkdir(path.join(DIST, "site-images"), { recursive: true });
+    for (const d of docs) {
+      const key = d.name.split("/").pop();
+      const url = d.fields?.url?.stringValue ?? "";
+      const m = /^data:image\/(jpeg|jpg|png|webp);base64,(.+)$/.exec(url);
+      if (!m) continue;
+      // Avatars are shown tiny; everything else is at most ~550px wide (x2 for retina screens).
+      const width = /avatar/i.test(key) ? 160 : 1100;
+      // The same photo uploaded under several keys shares one file (one download on pages showing both).
+      const existing = files.get(`${width}:${url}`);
+      if (existing) {
+        manifest[key] = { src: existing, fp: fingerprint(url) };
+        continue;
+      }
+      const webp = await sharp(Buffer.from(m[2], "base64"))
+        .rotate()
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality: 78 })
+        .toBuffer();
+      const hash = createHash("sha1").update(webp).digest("hex").slice(0, 10);
+      const src = `/site-images/${key}-${hash}.webp`;
+      await writeFile(path.join(DIST, src), webp);
+      manifest[key] = { src, fp: fingerprint(url) };
+      files.set(`${width}:${url}`, src);
+      if (!byDataUri.has(url) || width > 160) byDataUri.set(url, src);
+      console.log(`✓ site image ${key.padEnd(22)} ${(url.length / 1024).toFixed(0).padStart(5)} KB base64 -> ${(webp.length / 1024).toFixed(0).padStart(4)} KB webp`);
+    }
+  } catch (err) {
+    console.warn(`\n⚠  prerender: could not save site images as files (${err.message}); they load from Firestore instead.\n`);
+  }
+  return { manifest, byDataUri };
+};
+
+/** Adds window.__SITE_IMAGES__ (static copies of the uploaded images) before the app's scripts. */
+const withSiteImages = (html, manifest) =>
+  Object.keys(manifest).length === 0
+    ? html
+    : html.replace("</head>", `<script>window.__SITE_IMAGES__=${JSON.stringify(manifest)}</script></head>`);
 
 /**
  * dist/spa.html: the plain app shell (no prerendered content) for pages whose content is live data
@@ -102,12 +183,12 @@ const warn = (msg) => console.warn(`\n⚠  prerender: ${msg}\n   The site will s
  * first, from Vite's untouched index.html, so it exists even if prerendering below fails. The
  * homepage's canonical/og:url are removed; the job page sets its own when it renders.
  */
-const writeSpaShell = async () => {
+const writeSpaShell = async (manifest) => {
   const shell = (await readFile(path.join(DIST, "index.html"), "utf8"))
     .replace(/\s*<link rel="canonical"[^>]*>/, "")
     .replace(/\s*<meta property="og:url"[^>]*>/, "")
     .replace(/<title>[^<]*<\/title>/, "<title>Careers | MintexCare</title>");
-  await writeFile(path.join(DIST, "spa.html"), shell, "utf8");
+  await writeFile(path.join(DIST, "spa.html"), withSiteImages(shell, manifest), "utf8");
 };
 
 /** Adds the open job pages found on /careers/jobs to dist/sitemap.xml (jobs change in Admin, so they aren't in public/). */
@@ -122,7 +203,8 @@ const addJobsToSitemap = async (jobPaths) => {
 };
 
 const main = async () => {
-  await writeSpaShell();
+  const { manifest, byDataUri } = await bakeSiteImages();
+  await writeSpaShell(manifest);
   let chromium, preview;
   try {
     ({ chromium } = await import("playwright"));
@@ -143,6 +225,7 @@ const main = async () => {
       const page = await browser.newPage({ viewport: { width: 1350, height: 900 } });
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
+      await page.route(BLOCKED_HOSTS, (r) => r.abort());
       await page.goto(baseUrl + route.path, { waitUntil: "load", timeout: 60000 });
       await page.waitForFunction((t) => document.title.startsWith(t), route.title, { timeout: 30000 });
       // Let Firestore content (contact info, services, jobs, testimonials) arrive.
@@ -159,10 +242,18 @@ const main = async () => {
       await page.waitForTimeout(1500);
       if (errors.length) throw new Error(`${route.path}: ${errors[0]}`);
 
-      const html = await page.evaluate(() => "<!DOCTYPE html>\n" + document.documentElement.outerHTML);
+      const html = await page.evaluate(() => {
+        // Scripts added at runtime by tag managers (blocked above, but their tags may still be inserted).
+        document.querySelectorAll('script[src*="googletagmanager.com"], script[src*="google-analytics.com"]').forEach((s) => s.remove());
+        // Non-blocking stylesheets already switched to rel="stylesheet" in this browser; restore
+        // rel="preload" so the saved page loads them without blocking the first paint again.
+        document.querySelectorAll("link[data-async-css]").forEach((l) => { l.rel = "preload"; });
+        return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      });
       const words = await page.evaluate(() => document.querySelector("main")?.innerText.split(/\s+/).length ?? 0);
       if (!html.includes('<div id="root"><') || words < (route.minWords ?? 50)) throw new Error(`${route.path}: page did not render (${words} words)`);
-      pages.push({ ...route, html: html.replace(DATA_IMAGE, PENDING_IMAGE), words });
+      const finalHtml = withSiteImages(html.replace(DATA_IMAGE, (uri) => byDataUri.get(uri) ?? PENDING_IMAGE), manifest);
+      pages.push({ ...route, html: finalHtml, words });
       if (route.path === "/careers/jobs") {
         jobPaths = await page.evaluate(() =>
           [...new Set([...document.querySelectorAll('main a[href^="/careers/jobs/"]')].map((a) => a.getAttribute("href")))]);

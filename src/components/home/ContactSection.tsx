@@ -77,7 +77,7 @@ const ContactSection = () => {
                 </div>
               </div>
               <Select value={form.service} onValueChange={v => setForm({ ...form, service: v })}>
-                <SelectTrigger className="h-12 rounded-xl bg-background font-sans"><SelectValue placeholder="Service Needed" /></SelectTrigger>
+                <SelectTrigger aria-label="Service needed" className="h-12 rounded-xl bg-background font-sans"><SelectValue placeholder="Service Needed" /></SelectTrigger>
                 <SelectContent>
                   {serviceOptions.map(s => <SelectItem key={s} value={s} className="font-sans">{s}</SelectItem>)}
                 </SelectContent>
