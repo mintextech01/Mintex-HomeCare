@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, Menu, X, ChevronDown, MessageCircle, Briefcase, MapPin, ArrowRight, Clock, Building2, Search, ListChecks, HelpCircle, Mail, ClipboardList, Newspaper, Calculator, Wallet, Receipt, Heart, ShieldCheck, Quote } from "lucide-react";
 import logo from "@/assets/Artboard 133 copy (1).svg";
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAdmin } from "@/contexts/AdminContext";

@@ -260,21 +260,32 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
  */
 export type AdminProviderMode = "admin" | "public";
 
+/** Site data a prerendered page was built with (embedded by scripts/prerender.mjs). */
+type PrerenderedSiteData = {
+  testimonials: Testimonial[]; teamMembers: TeamMember[]; gallery: GalleryImage[];
+  jobPositions: JobPosition[]; jobsLoaded: boolean; pricing: Pricing; contactInfo: ContactInfo;
+};
+const prerenderedSiteData = typeof window !== "undefined"
+  ? (window as unknown as { __SITE_DATA__?: PrerenderedSiteData }).__SITE_DATA__
+  : undefined;
+
 export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNode; mode?: AdminProviderMode }) => {
   const isPublic = mode === "public";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(!isPublic);
 
-  // Initialize with defaults until Firebase loads
-  const [testimonials, setTestimonialsState] = useState<Testimonial[]>(defaultTestimonials);
-  const [teamMembers, setTeamMembersState] = useState<TeamMember[]>(defaultTeamMembers);
-  const [gallery, setGalleryState] = useState<GalleryImage[]>([]);
+  // Initialize with the data the prerendered page was built with (so React can take over that HTML
+  // as-is), otherwise with defaults until Firebase loads. Fresh data is still read below.
+  const built = isPublic ? prerenderedSiteData : undefined;
+  const [testimonials, setTestimonialsState] = useState<Testimonial[]>(built?.testimonials ?? defaultTestimonials);
+  const [teamMembers, setTeamMembersState] = useState<TeamMember[]>(built?.teamMembers ?? defaultTeamMembers);
+  const [gallery, setGalleryState] = useState<GalleryImage[]>(built?.gallery ?? []);
   const [services, setServicesState] = useState<ServiceItem[]>(defaultServices);
   const [submissions, setSubmissionsState] = useState<ContactSubmission[]>([]);
-  const [jobPositions, setJobPositionsState] = useState<JobPosition[]>(defaultJobPositions);
-  const [jobsLoaded, setJobsLoaded] = useState(!isPublic);
-  const [pricing, setPricingState] = useState<Pricing>(defaultPricing);
-  const [contactInfo, setContactInfoState] = useState<ContactInfo>(defaultContactInfo);
+  const [jobPositions, setJobPositionsState] = useState<JobPosition[]>(built?.jobPositions ?? defaultJobPositions);
+  const [jobsLoaded, setJobsLoaded] = useState(!isPublic || !!built?.jobsLoaded);
+  const [pricing, setPricingState] = useState<Pricing>(built?.pricing ?? defaultPricing);
+  const [contactInfo, setContactInfoState] = useState<ContactInfo>(built?.contactInfo ?? defaultContactInfo);
   // Public pages start with a blank placeholder (not the stock defaults) so the stock photo
   // isn't downloaded and then swapped for the uploaded one.
   // Images the build saved as static files are shown straight away (see bakedSiteImages).
@@ -283,6 +294,14 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     : defaultSiteImages);
   const requestedImageKeys = useRef(new Set<SiteImageKey>());
   const teamRequested = useRef(false);
+
+  // While scripts/prerender.mjs snapshots a page (automated browser only), expose the data it was
+  // rendered with, so the build can embed it in the page as window.__SITE_DATA__.
+  useEffect(() => {
+    if (!isPublic || !navigator.webdriver) return;
+    (window as unknown as { __SITE_DATA_SNAPSHOT__: PrerenderedSiteData }).__SITE_DATA_SNAPSHOT__ =
+      { testimonials, teamMembers, gallery, jobPositions, jobsLoaded, pricing, contactInfo };
+  }, [isPublic, testimonials, teamMembers, gallery, jobPositions, jobsLoaded, pricing, contactInfo]);
 
   // ── Public site: read each small document once (no live listeners, no auth) ──
   useEffect(() => {

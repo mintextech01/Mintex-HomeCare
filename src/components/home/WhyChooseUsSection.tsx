@@ -1,6 +1,6 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import { ClipboardList, UserCheck, Clock, DollarSign, MessageCircle, ShieldCheck } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 
 const features = [
   { icon: ClipboardList, title: "Personalized Care Plans", desc: "Every care plan is custom-tailored to match the unique needs, preferences, and goals of each client.", accent: "primary" },

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, ShieldCheck, ArrowRight, Clock, MapPin, Users, Award, HeartPulse, CheckCircle2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PENDING_IMAGE } from "@/config/siteImageConfig";
 

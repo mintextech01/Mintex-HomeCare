@@ -59,13 +59,8 @@
     <meta name="theme-color" content="#2a66b0" />
     <meta name="msapplication-TileColor" content="#2a66b0" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Loaded without blocking the first paint (text shows in the fallback font, then swaps).
-         data-async-css: scripts/prerender.mjs resets rel to "preload" in the saved snapshots. -->
-    <link rel="preload" as="style" data-async-css href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" /></noscript>
+    <!-- Fonts (Poppins, Montserrat) are self-hosted from /fonts, see @font-face in src/index.css:
+         no extra connections to Google servers before the first paint. -->
     <!-- Site content and photos are read from Firestore -->
     <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
 

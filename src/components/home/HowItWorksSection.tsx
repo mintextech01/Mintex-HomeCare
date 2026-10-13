@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView } from "@/lib/motion";
 import { PhoneCall, ClipboardCheck, FileText, HeartPulse } from "lucide-react";
 
 const steps = [

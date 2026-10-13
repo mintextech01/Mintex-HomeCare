@@ -1,20 +1,18 @@
 import { ReactNode } from "react";
-import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
+/**
+ * Wrapper around each page (keyed by path, so a new page starts fresh).
+ * data-page: scripts/prerender.mjs puts React's Suspense markers around this element in the saved
+ * HTML, so React can take over (hydrate) the prerendered page.
+ */
 const PageTransition = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
 
   return (
-    <motion.div
-      key={location.pathname}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-    >
+    <div key={location.pathname} data-page="">
       {children}
-    </motion.div>
+    </div>
   );
 };
 

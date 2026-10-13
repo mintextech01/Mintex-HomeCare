@@ -178,6 +178,40 @@ const withSiteImages = (html, manifest) =>
     : html.replace("</head>", `<script>window.__SITE_IMAGES__=${JSON.stringify(manifest)}</script></head>`);
 
 /**
+ * Adds window.__SITE_DATA__: the Firestore content (contact info, testimonials, jobs, ...) the page
+ * was rendered with. The app starts from it, so its first render matches this HTML and React can
+ * take the page over without rebuilding it (see AdminContext and src/user/main.tsx).
+ */
+const withSiteData = (html, json) =>
+  !json ? html : html.replace("</head>", `<script>window.__SITE_DATA__=${json.replace(/</g, "\\u003c")}</script></head>`);
+
+/**
+ * Makes the first paint independent of the JavaScript:
+ *  - the site's stylesheet is inlined (one request less before anything can be drawn). A disabled
+ *    <link> to it stays: browsers don't download a disabled stylesheet, and Vite's loader sees
+ *    it is "already on the page" when a lazily loaded page lists it, instead of downloading it, and
+ *  - the app's entry script starts only after the page has been parsed and painted once. Its
+ *    files still download right away (modulepreload), they just run after the first paint.
+ */
+const withFastStart = async (html) => {
+  const css = /<link rel="stylesheet"[^>]*href="(\/assets\/index-[\w-]+\.css)"[^>]*>/.exec(html);
+  if (css) {
+    const text = await readFile(path.join(DIST, css[1]), "utf8");
+    html = html.replace(css[0], () => `<style>${text}</style><link rel="stylesheet" href="${css[1]}" disabled>`);
+  }
+  const entry = /<script type="module" crossorigin(?:="")? src="(\/assets\/user-[\w-]+\.js)"><\/script>/.exec(html);
+  if (entry) {
+    const src = entry[1];
+    html = html.replace(entry[0], () =>
+      `<link rel="modulepreload" crossorigin href="${src}">` +
+      `<script>(function(){function run(){var s=document.createElement("script");s.type="module";s.crossOrigin="";s.src="${src}";document.head.appendChild(s)}` +
+      `function go(){document.visibilityState==="visible"?requestAnimationFrame(function(){setTimeout(run,0)}):run()}` +
+      `document.readyState==="loading"?document.addEventListener("DOMContentLoaded",go):go()})()</script>`);
+  }
+  return html;
+};
+
+/**
  * dist/spa.html: the plain app shell (no prerendered content) for pages whose content is live data
  * and can't be prerendered — the job pages at /careers/jobs/{slug} (see firebase.json). Written
  * first, from Vite's untouched index.html, so it exists even if prerendering below fails. The
@@ -242,7 +276,25 @@ const main = async () => {
       await page.waitForTimeout(1500);
       if (errors.length) throw new Error(`${route.path}: ${errors[0]}`);
 
+      const siteData = await page.evaluate(() => window.__SITE_DATA_SNAPSHOT__ ?? null);
       const html = await page.evaluate(() => {
+        // React takes over (hydrates) this HTML in the browser, and it expects each piece of text
+        // it rendered as its own text node. Saved HTML merges neighbouring text nodes ("500" + "+"
+        // -> "500+"), so separate them with an empty comment, as React's own server rendering does.
+        const root = document.getElementById("root");
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const texts = [];
+        while (walker.nextNode()) texts.push(walker.currentNode);
+        for (const t of texts) {
+          if (t.previousSibling?.nodeType === Node.TEXT_NODE) t.parentNode.insertBefore(document.createComment(" "), t);
+        }
+        // Dropdowns (Radix Select) keep a hidden native <select> for forms whose <option>s are only
+        // added after the first render; save it empty, as React first renders it.
+        root.querySelectorAll('select[aria-hidden="true"]').forEach((s) => s.replaceChildren());
+        // The page sits inside <Suspense> (src/user/App.tsx); React needs its boundary markers.
+        const pageEl = root.querySelector("[data-page]");
+        pageEl?.before(document.createComment("$"));
+        pageEl?.after(document.createComment("/$"));
         // Scripts added at runtime by tag managers (blocked above, but their tags may still be inserted).
         document.querySelectorAll('script[src*="googletagmanager.com"], script[src*="google-analytics.com"]').forEach((s) => s.remove());
         // Non-blocking stylesheets already switched to rel="stylesheet" in this browser; restore
@@ -252,7 +304,8 @@ const main = async () => {
       });
       const words = await page.evaluate(() => document.querySelector("main")?.innerText.split(/\s+/).length ?? 0);
       if (!html.includes('<div id="root"><') || words < (route.minWords ?? 50)) throw new Error(`${route.path}: page did not render (${words} words)`);
-      const finalHtml = withSiteImages(html.replace(DATA_IMAGE, (uri) => byDataUri.get(uri) ?? PENDING_IMAGE), manifest);
+      const swapImages = (s) => s.replace(DATA_IMAGE, (uri) => byDataUri.get(uri) ?? PENDING_IMAGE);
+      const finalHtml = await withFastStart(withSiteData(withSiteImages(swapImages(html), manifest), siteData && swapImages(JSON.stringify(siteData))));
       pages.push({ ...route, html: finalHtml, words });
       if (route.path === "/careers/jobs") {
         jobPaths = await page.evaluate(() =>

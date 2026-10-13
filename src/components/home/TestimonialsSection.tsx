@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Star, ChevronLeft, ChevronRight, Users, Award, ThumbsUp, Clock, Quote } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/lib/motion";
 
 const stats = [
   { icon: Clock,    value: "24",   unit: "/7", label: "Care Available"   },
