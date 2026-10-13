@@ -23,7 +23,7 @@ const FloatingCTA = () => {
             Need compassionate home care? <span className="font-semibold">We're here 24/7.</span>
           </p>
           <div className="flex items-center gap-3">
-            <a href="tel:+17322685112" className="text-primary-foreground text-sm font-medium flex items-center gap-1.5 font-sans hover:text-accent transition-colors">
+            <a href="tel:+17322685112" className="text-primary-foreground text-sm font-medium flex items-center gap-1.5 font-sans transition-colors">
               <Phone className="h-4 w-4" /> (732) 268-5112
             </a>
             <Link to="/contact">
@@ -39,7 +39,7 @@ const FloatingCTA = () => {
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-primary/95 backdrop-blur-sm border-t border-white/10 p-3 animate-fade-in">
         <div className="flex gap-2">
           <a href="tel:+17322685112" className="flex-1">
-            <Button size="sm" className="w-full rounded-full font-medium text-foreground hover:text-primary transition-colors text-xs glass-btn">
+            <Button size="sm" className="w-full rounded-full font-medium text-foreground transition-colors text-xs glass-btn">
               <Phone className="h-3.5 w-3.5 mr-1" /> Call Now
             </Button>
           </a>

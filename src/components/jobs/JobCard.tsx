@@ -23,14 +23,14 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
       transition={{ delay, duration: 0.4 }}
     >
       <Card
-        className="h-full flex flex-col overflow-hidden rounded-[24px] border-0 shadow-none bg-surface hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] transition-shadow duration-300 cursor-pointer"
+        className="h-full flex flex-col overflow-hidden rounded-[24px] border-0 shadow-none bg-surface transition-shadow duration-300 cursor-pointer"
         onClick={() => onDetailsClick(job)}
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2 mb-2">
             <Badge
               variant="outline"
-              className="text-xs px-2.5 py-0.5 rounded-full bg-accent text-accent-foreground border-transparent hover:bg-accent"
+              className="text-xs px-2.5 py-0.5 rounded-full bg-accent text-accent-foreground border-transparent"
             >
               {job.employmentType}
             </Badge>
@@ -43,7 +43,7 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
               </Badge>
             )}
           </div>
-          <CardTitle className="text-lg leading-tight line-clamp-2 text-foreground hover:text-primary transition-colors">
+          <CardTitle className="text-lg leading-tight line-clamp-2 text-foreground transition-colors">
             {/* A real link so the job page is crawlable; the whole card is clickable too. */}
             {job.slug
               ? <Link to={jobUrl(job.slug)} onClick={e => e.stopPropagation()}>{job.title}</Link>
@@ -73,10 +73,10 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
 
           {/* CTA Buttons */}
           <div className="flex gap-2 pt-2 mt-auto">
-            <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <motion.div className="flex-1">
               <Button
                 size="sm"
-                className="w-full rounded-full font-semibold bg-foreground text-background hover:bg-foreground/85"
+                className="w-full rounded-full font-semibold bg-foreground text-background"
                 onClick={(e) => {
                   e.stopPropagation();
                   onApplyClick(job);
@@ -85,10 +85,10 @@ export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCar
                 Apply Now
               </Button>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <motion.div>
               <Button
                 size="sm"
-                className="rounded-full font-medium bg-background text-foreground hover:bg-accent transition-colors"
+                className="rounded-full font-medium bg-background text-foreground transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDetailsClick(job);

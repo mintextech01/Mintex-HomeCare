@@ -15,27 +15,17 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import AccessibilityButton from "@/components/AccessibilityButton";
-import { usePageScrollProgress } from "@/hooks/useScrollAnimations";
 import { usePageImages } from "@/hooks/usePageImages";
-import { motion } from "framer-motion";
 
 const HERO_IMAGE_KEYS = ["heroLargeCenter", "heroTopLeft", "heroBottomLeft", "heroBottomRight"] as const;
 
 const Index = () => {
-  const scrollProgress = usePageScrollProgress();
   // The hero photos are only displayed on large screens (lg:), so phones and tablets skip them.
   const heroPhotosShown = window.matchMedia("(min-width: 1024px)").matches;
   usePageImages("/", HERO_IMAGE_KEYS, heroPhotosShown ? [] : HERO_IMAGE_KEYS);
 
   return (
     <>
-      {/* ── Scroll progress bar ── */}
-      <motion.div
-        className="scroll-progress-bar"
-        style={{ width: `${scrollProgress * 100}%` }}
-      />
-
-
       <Header />
       <main className="theme-el overflow-x-hidden">
         <HeroSection />

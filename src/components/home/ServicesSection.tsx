@@ -32,7 +32,7 @@ const ServicesSection = () => {
             </p>
           </div>
           <Link to="/services" className="el-btn-primary group shrink-0 self-start md:self-auto">
-            View All Services <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            View All Services <ArrowRight className="h-4 w-4 transition-transform" />
           </Link>
         </AnimatedSection>
 
@@ -43,13 +43,13 @@ const ServicesSection = () => {
               <AnimatedSection key={service.label} delay={i * 0.06} className="h-full">
                 <Link
                   to={service.link}
-                  className="group flex flex-col h-full rounded-[24px] bg-background p-3 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]"
+                  className="group flex flex-col h-full rounded-[24px] bg-background p-3 transition-shadow duration-300"
                 >
                   <div className="relative h-[220px] md:h-[240px] rounded-[18px] overflow-hidden">
                     <img
                       src={service.image}
                       alt={service.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out"
                       loading="lazy"
                     />
                     <div className="absolute top-3 left-3 flex items-center gap-2 rounded-full bg-background/95 px-3.5 py-1.5 shadow-sm">
@@ -67,9 +67,9 @@ const ServicesSection = () => {
                     <p className="text-muted-foreground text-sm leading-relaxed font-sans mb-5 flex-1">
                       {service.description}
                     </p>
-                    <span className="inline-flex items-center gap-2 text-sm font-semibold font-sans text-foreground group-hover:text-primary transition-colors">
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold font-sans text-foreground transition-colors">
                       {service.btnLabel}
-                      <span className="h-8 w-8 rounded-full bg-accent flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1">
+                      <span className="h-8 w-8 rounded-full bg-accent flex items-center justify-center transition-transform duration-300">
                         <ArrowRight className="h-4 w-4 text-accent-foreground" />
                       </span>
                     </span>

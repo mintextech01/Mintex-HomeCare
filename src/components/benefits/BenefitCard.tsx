@@ -18,15 +18,14 @@ export function BenefitCard({ benefit, delay = 0 }: BenefitCardProps) {
       transition={{ delay, duration: 0.4, ease: "easeOut" }}
       className="h-full"
     >
-      <Card className="h-full rounded-[24px] border-0 shadow-none bg-background hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] transition-shadow duration-300 overflow-hidden group">
+      <Card className="h-full rounded-[24px] border-0 shadow-none bg-background transition-shadow duration-300 overflow-hidden group">
         <CardContent className="p-6 md:p-8 flex flex-col h-full">
           {/* Icon Container */}
           <motion.div
-            className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-7 group-hover:bg-foreground transition-colors duration-300"
-            whileHover={{ scale: 1.1 }}
+            className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-7 transition-colors duration-300"
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <IconComponent className="h-6 w-6 text-accent-foreground group-hover:text-background transition-colors duration-300" />
+            <IconComponent className="h-6 w-6 text-accent-foreground transition-colors duration-300" />
           </motion.div>
 
           {/* Title */}

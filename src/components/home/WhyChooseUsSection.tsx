@@ -55,20 +55,11 @@ const WhyChooseUsSection = () => (
           <AnimatedSection key={f.title} delay={i * 0.08} from={i % 3 === 0 ? "depth" : i % 3 === 1 ? "rotateUp" : "flip3d"}>
             <motion.div
               className="group relative flex gap-4 p-6 rounded-2xl border border-border bg-card h-full overflow-hidden bg-[#e8ebed]"
-              whileHover={{
-                y: -6,
-                scale: 1.02,
-                rotateX: -1,
-                rotateY: 2,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.1), 0 0 20px rgba(38,104,188,0.06)",
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              style={{ transformStyle: "preserve-3d", perspective: 800 }}
             >
 
               {/* Animated top accent bar */}
               <div
-                className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ${f.accent === "accent" ? "bg-accent" : "bg-primary"
+                className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl scale-x-0 origin-left transition-transform duration-300 ${f.accent === "accent" ? "bg-accent" : "bg-primary"
                   }`}
               />
 
@@ -80,11 +71,9 @@ const WhyChooseUsSection = () => (
               {/* Icon — 3D flip on hover */}
               <motion.div
                 className={`h-11 w-11 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5 ${f.accent === "accent"
-                    ? "bg-accent/10 group-hover:bg-accent/15"
-                    : "bg-primary/10 group-hover:bg-primary/15"
+                    ? "bg-accent/10"
+                    : "bg-primary/10"
                   }`}
-                whileHover={{ rotateY: 180, scale: 1.15 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
               >
                 <f.icon
                   className={`h-5 w-5 transition-colors ${f.accent === "accent" ? "text-accent" : "text-primary"

@@ -23,18 +23,18 @@ const ServiceCard = ({ s, i, onSurface }: { s: ServiceIndexEntry; i: number; onS
     <AnimatedSection delay={Math.min(i, 4) * 0.06} className="h-full">
       <Link
         to={`/services/${s.slug}`}
-        className={`group h-full flex flex-col rounded-[24px] p-7 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 ${
+        className={`group h-full flex flex-col rounded-[24px] p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 ${
           onSurface ? "bg-background" : "bg-surface"
         }`}
       >
-        <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-7 transition-colors duration-300 group-hover:bg-foreground">
-          <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+        <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-7 transition-colors duration-300">
+          <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
         </div>
         <h3 className="font-bold text-foreground text-lg leading-snug mb-2">{s.name}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed flex-1">{s.short}</p>
-        <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground mt-6 group-hover:text-primary transition-colors">
+        <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground mt-6 transition-colors">
           Learn more
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          <ArrowRight className="h-4 w-4 transition-transform duration-300" />
         </span>
       </Link>
     </AnimatedSection>
@@ -109,7 +109,7 @@ const Services = () => {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14">
                 <Link to="/free-consultation" className="el-btn-primary group w-full sm:w-auto">
-                  Get Started <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  Get Started <ArrowRight className="h-4 w-4 transition-transform" />
                 </Link>
                 <a href="tel:+17322685112" className="el-btn-soft w-full sm:w-auto">
                   <Phone className="h-4 w-4" /> Call (732) 268-5112
@@ -212,7 +212,7 @@ const Services = () => {
                   Our care coordinators are ready to help you find the right service for your loved one — at no obligation.
                 </p>
                 <Link to="/free-consultation" className="el-btn-primary group">
-                  Book a Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  Book a Free Consultation <ArrowRight className="h-4 w-4 transition-transform" />
                 </Link>
               </div>
             </AnimatedSection>

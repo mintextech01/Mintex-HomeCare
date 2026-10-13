@@ -147,9 +147,9 @@ const Contact = () => {
                         </div>
                         <div>
                           <p className="text-background/55 text-xs font-sans uppercase tracking-wider">Phone</p>
-                          <p className="font-semibold font-sans group-hover:underline underline-offset-4">{contactInfo.phone}</p>
+                          <p className="font-semibold font-sans underline-offset-4">{contactInfo.phone}</p>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-background/30 group-hover:text-background ml-auto transition-colors" />
+                        <ArrowRight className="h-4 w-4 text-background/30 ml-auto transition-colors" />
                       </a>
                     </li>
 
@@ -160,9 +160,9 @@ const Contact = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="text-background/55 text-xs font-sans uppercase tracking-wider">Email</p>
-                          <p className="font-semibold font-sans break-all group-hover:underline underline-offset-4">{contactInfo.email}</p>
+                          <p className="font-semibold font-sans break-all underline-offset-4">{contactInfo.email}</p>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-background/30 group-hover:text-background ml-auto transition-colors shrink-0" />
+                        <ArrowRight className="h-4 w-4 text-background/30 ml-auto transition-colors shrink-0" />
                       </a>
                     </li>
 
@@ -347,7 +347,7 @@ const Contact = () => {
                       value={`faq-${i}`}
                       className="el-card rounded-2xl px-6 md:px-7 border-b-0"
                     >
-                      <AccordionTrigger className="font-sans font-semibold text-foreground text-base py-5 hover:no-underline text-left gap-4">
+                      <AccordionTrigger className="font-sans font-semibold text-foreground text-base py-5 text-left gap-4">
                         {faq.q}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground font-sans text-[15px] pb-6 leading-relaxed">
@@ -383,7 +383,7 @@ const Contact = () => {
                     <a href={`tel:+1${phoneLink}`} className="el-btn-primary">
                       <Phone className="h-4 w-4" /> Call Now
                     </a>
-                    <a href={`mailto:${contactInfo.email}`} className="el-btn bg-background text-foreground hover:bg-background/80">
+                    <a href={`mailto:${contactInfo.email}`} className="el-btn bg-background text-foreground">
                       <Mail className="h-4 w-4" /> Email Us
                     </a>
                   </div>

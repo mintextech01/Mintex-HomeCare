@@ -48,7 +48,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -77,11 +77,11 @@ const CtaBanner = ({ tel, phone, title, text }: { tel: string; phone: string; ti
               <Link to={REQUEST_PATH} className="el-btn-primary">
                 Request Staff <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground hover:bg-background/80">
+              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
               <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
-                className="el-btn bg-background text-foreground hover:bg-background/80">
+                className="el-btn bg-background text-foreground">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
@@ -98,17 +98,17 @@ const RoleCard = ({ role, i }: { role: StaffingRole; i: number }) => {
   return (
     <AnimatedSection delay={i * 0.06} className="h-full">
       <Link to={`/facility-staffing/roles#${role.code.toLowerCase()}`}
-        className="group h-full flex flex-col rounded-[24px] bg-background p-7 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4">
+        className="group h-full flex flex-col rounded-[24px] bg-background p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4">
         <div className="flex items-start justify-between mb-7">
-          <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300 group-hover:bg-foreground">
-            <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+          <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300">
+            <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
           </div>
           <p className="text-2xl font-extrabold text-foreground">{role.code}</p>
         </div>
         <h3 className="font-bold text-foreground text-lg leading-snug mb-2">{role.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed flex-1">{role.summary}</p>
-        <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-6">
-          View role <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+        <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
+          View role <ArrowRight className="h-4 w-4 transition-transform" />
         </span>
       </Link>
     </AnimatedSection>
@@ -174,7 +174,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
               </p>
               <div className="flex flex-wrap gap-3 mb-9">
                 <Link to={REQUEST_PATH} className="el-btn-primary group">
-                  Request Staff <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  Request Staff <ArrowRight className="h-4 w-4 transition-transform" />
                 </Link>
                 <CallButton tel={tel} phone={phone} />
               </div>
@@ -338,7 +338,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
                     </li>
                   ))}
                 </ul>
-                <Link to={REQUEST_PATH} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+                <Link to={REQUEST_PATH} className="el-btn bg-accent text-accent-foreground w-full">
                   Request Staff <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -408,7 +408,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
           <div className="flex flex-wrap gap-3">
             {STAFFING_ROLES.map(r => (
               <a key={r.code} href={`#${r.code.toLowerCase()}`}
-                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-foreground bg-background border border-border hover:bg-foreground hover:text-background hover:border-foreground transition-colors">
+                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-foreground bg-background border border-border transition-colors">
                 <r.icon className="h-4 w-4" /> {r.code}
               </a>
             ))}
@@ -431,7 +431,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
                   <p className="text-5xl font-extrabold leading-none mb-2">{r.code}</p>
                   <h2 className="text-xl font-bold mb-4">{r.title}</h2>
                   <p className="text-background/70 text-sm leading-relaxed mb-7">{r.summary}</p>
-                  <Link to={`${REQUEST_PATH}?role=${r.code}`} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80">
+                  <Link to={`${REQUEST_PATH}?role=${r.code}`} className="el-btn bg-accent text-accent-foreground">
                     Request {r.code}s <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -503,7 +503,7 @@ const FieldLabel = ({ htmlFor, children, required = false }: { htmlFor?: string;
 
 const TogglePill = ({ checked, onChange, children }: { checked: boolean; onChange: () => void; children: ReactNode }) => (
   <label className={`cursor-pointer select-none inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold border transition-colors focus-within:ring-2 focus-within:ring-ring/40 ${
-    checked ? "bg-foreground text-background border-foreground" : "text-foreground/75 bg-background border-border hover:border-foreground/40 hover:text-foreground"
+    checked ? "bg-foreground text-background border-foreground" : "text-foreground/75 bg-background border-border"
   }`}>
     <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} />
     {checked ? <CheckCircle2 className="h-4 w-4" /> : <span className="h-4 w-4 rounded-full border-2 border-current opacity-50" />}
@@ -707,7 +707,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                       </button>
                       <p className="text-xs text-center text-muted-foreground mt-3">
                         We'll only use your details to respond to this request. See our{" "}
-                        <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy Policy</Link>.
+                        <Link to="/privacy-policy" className="underline">Privacy Policy</Link>.
                       </p>
                     </div>
                   </form>
@@ -720,7 +720,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                 <p className="text-xs font-semibold uppercase tracking-widest text-background/60 mb-2">Urgent shift?</p>
                 <p className="text-xl font-bold mb-2 leading-snug">Call our staffing line</p>
                 <p className="text-background/70 text-sm mb-6">Available 24/7 for same-day and next-day coverage requests.</p>
-                <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+                <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground w-full">
                   <Phone className="h-4 w-4" /> {phone}
                 </a>
               </div>
@@ -740,7 +740,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                   ))}
                 </ol>
               </div>
-              <Link to="/facility-staffing#faq" className="flex items-center justify-between gap-3 el-card rounded-2xl px-5 py-4 hover:bg-accent transition-colors text-sm font-semibold text-foreground">
+              <Link to="/facility-staffing#faq" className="flex items-center justify-between gap-3 el-card rounded-2xl px-5 py-4 transition-colors text-sm font-semibold text-foreground">
                 Partner FAQ <ArrowRight className="h-4 w-4" />
               </Link>
             </aside>

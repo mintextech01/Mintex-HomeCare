@@ -121,7 +121,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
             {/* Intro */}
             <AnimatedSection className="lg:pt-6 lg:col-start-1 lg:row-start-1">
               <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
-                <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                <Link to="/" className="transition-colors">Home</Link>
                 <span className="text-foreground/30">/</span>
                 <span className="text-foreground font-semibold" aria-current="page">Free Consultation</span>
               </nav>
@@ -225,7 +225,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
                   <p className="flex items-start justify-center gap-2 text-xs text-center text-muted-foreground">
                     <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                     <span>Your information is kept confidential and only used to contact you about care. See our{" "}
-                      <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy Policy</Link>.</span>
+                      <Link to="/privacy-policy" className="underline">Privacy Policy</Link>.</span>
                   </p>
                 </form>
 
@@ -256,9 +256,9 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto">
             {SERVICE_INDEX.map((s, i) => (
               <AnimatedSection key={s.slug} delay={Math.min(i, 5) * 0.04} className="h-full">
-                <Link to={`/services/${s.slug}`} className="group h-full flex flex-col items-center text-center gap-3 bg-background rounded-2xl px-3 py-5 transition-shadow hover:shadow-md">
-                  <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center transition-colors group-hover:bg-foreground">
-                    <s.icon className="w-5 h-5 text-accent-foreground transition-colors group-hover:text-background" />
+                <Link to={`/services/${s.slug}`} className="group h-full flex flex-col items-center text-center gap-3 bg-background rounded-2xl px-3 py-5 transition-shadow">
+                  <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center transition-colors">
+                    <s.icon className="w-5 h-5 text-accent-foreground transition-colors" />
                   </span>
                   <span className="text-sm font-semibold text-foreground leading-snug">{s.name}</span>
                 </Link>
@@ -331,9 +331,9 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
                     { to: "/about", icon: HeartPulse, label: "About MintexCare" },
                   ]
               ).map(({ to, icon: I, label }) => (
-                <Link key={label} to={to} className="group flex items-center justify-center gap-2 rounded-2xl bg-background px-4 py-3.5 text-sm font-semibold text-foreground hover:bg-foreground hover:text-background transition-colors">
+                <Link key={label} to={to} className="group flex items-center justify-center gap-2 rounded-2xl bg-background px-4 py-3.5 text-sm font-semibold text-foreground transition-colors">
                   <I className="h-4 w-4" /> {label}
-                  <ArrowRight className="h-3.5 w-3.5 opacity-0 -ml-1 group-hover:opacity-100 group-hover:ml-0 transition-all" />
+                  <ArrowRight className="h-3.5 w-3.5 opacity-0 -ml-1 transition-all" />
                 </Link>
               ))}
             </div>

@@ -32,7 +32,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -77,10 +77,10 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
               <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
-                className="el-btn bg-background text-foreground hover:bg-background/80">
+                className="el-btn bg-background text-foreground">
                 <MessageCircle className="h-4 w-4" /> WhatsApp Us
               </a>
-              <Link to="/free-consultation" className="el-btn bg-background text-foreground hover:bg-background/80">
+              <Link to="/free-consultation" className="el-btn bg-background text-foreground">
                 Free Consultation <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -96,7 +96,7 @@ const LinkBanner = ({ to, icon: I, title, text }: { to: string; icon: typeof Boo
   <Link to={to} className="group flex items-center gap-4 rounded-[24px] bg-foreground text-background p-6">
     <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent"><I className="w-6 h-6 text-accent-foreground" /></span>
     <span className="flex-1"><span className="block font-bold">{title}</span><span className="block text-sm text-background/70">{text}</span></span>
-    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+    <ArrowRight className="h-5 w-5 transition-transform" />
   </Link>
 );
 
@@ -115,7 +115,7 @@ const FaqRow = ({ item, index, open, onToggle, idPrefix }: { item: FaqItem; inde
         <div className="px-5 md:px-6 pb-6">
           <p className="text-muted-foreground leading-relaxed">{item.a}</p>
           {item.link && (
-            <Link to={item.link.to} className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary mt-3 hover:gap-2.5 transition-all">
+            <Link to={item.link.to} className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground mt-3 transition-all">
               {item.link.label} <ArrowRight className="h-4 w-4" />
             </Link>
           )}
@@ -215,7 +215,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                 placeholder="Search services, towns, questions…"
                 className="w-full h-[60px] rounded-full pl-14 pr-12 bg-surface border border-border text-foreground placeholder:text-muted-foreground outline-none focus:ring-4 focus:ring-accent focus:border-foreground/30 [&::-webkit-search-cancel-button]:appearance-none" />
               {query && (
-                <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-[30px] -translate-y-1/2 p-1.5 rounded-full text-muted-foreground hover:text-foreground">
+                <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-[30px] -translate-y-1/2 p-1.5 rounded-full text-muted-foreground">
                   <X className="h-4 w-4" />
                 </button>
               )}
@@ -226,12 +226,12 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                       <ul className="divide-y divide-border">
                         {results.map(r => (
                           <li key={r.to + r.title}>
-                            <Link to={r.to} className="group flex items-center gap-4 px-5 py-4 hover:bg-surface transition-colors">
+                            <Link to={r.to} className="group flex items-center gap-4 px-5 py-4 transition-colors">
                               <span className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0">
                                 <r.icon className="w-5 h-5 text-accent-foreground" />
                               </span>
                               <span className="flex-1 min-w-0">
-                                <span className="block font-semibold text-foreground group-hover:text-primary truncate">{r.title}</span>
+                                <span className="block font-semibold text-foreground truncate">{r.title}</span>
                                 <span className="block text-xs text-muted-foreground truncate">{r.text}</span>
                               </span>
                               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">{r.kind}</span>
@@ -252,7 +252,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                 <div className="flex flex-wrap justify-center gap-2 mt-4">
                   {["live-in care", "skilled nursing", "Edison", "cost", "caregivers"].map(s => (
                     <button key={s} type="button" onClick={() => setQuery(s)}
-                      className="text-xs font-semibold text-foreground/75 bg-background border border-border rounded-full px-3.5 py-1.5 hover:bg-foreground hover:text-background hover:border-foreground transition-colors">
+                      className="text-xs font-semibold text-foreground/75 bg-background border border-border rounded-full px-3.5 py-1.5 transition-colors">
                       {s}
                     </button>
                   ))}
@@ -268,14 +268,14 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {HUB_CARDS.map(({ to, icon: I, title, text }, i) => (
               <AnimatedSection key={to} delay={i * 0.05} className="h-full">
-                <Link to={to} className="group h-full flex flex-col bg-background rounded-[24px] p-7 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-7 bg-accent transition-colors duration-300 group-hover:bg-foreground">
-                    <I className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+                <Link to={to} className="group h-full flex flex-col bg-background rounded-[24px] p-7 transition-shadow duration-300">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-7 bg-accent transition-colors duration-300">
+                    <I className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
                   </div>
                   <h2 className="text-lg font-bold text-foreground mb-2">{title}</h2>
                   <p className="text-sm text-muted-foreground leading-relaxed flex-1">{text}</p>
-                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-6">
-                    Read more <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
+                    Read more <ArrowRight className="h-4 w-4 transition-transform" />
                   </span>
                 </Link>
               </AnimatedSection>
@@ -286,14 +286,14 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
           <AnimatedSection className="mt-14">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">Popular questions</h2>
-              <Link to="/faq" className="el-btn-outline group self-start md:self-auto">All FAQs <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" /></Link>
+              <Link to="/faq" className="el-btn-outline group self-start md:self-auto">All FAQs <ArrowRight className="h-4 w-4 transition-transform" /></Link>
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {FAQ_GROUPS.slice(0, 4).map(g => g.items[0]).map(item => (
-                <Link key={item.q} to="/faq" className="group flex items-center gap-4 bg-background rounded-2xl px-5 py-4 transition-shadow hover:shadow-md">
+                <Link key={item.q} to="/faq" className="group flex items-center gap-4 bg-background rounded-2xl px-5 py-4 transition-shadow">
                   <HelpCircle className="h-5 w-5 text-primary shrink-0" />
-                  <span className="flex-1 font-semibold text-foreground group-hover:text-primary">{item.q}</span>
-                  <ChevronRight className="h-4 w-4 text-foreground/30 group-hover:text-foreground" />
+                  <span className="flex-1 font-semibold text-foreground">{item.q}</span>
+                  <ChevronRight className="h-4 w-4 text-foreground/30" />
                 </Link>
               ))}
             </div>
@@ -338,7 +338,7 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
       </p>
       <div className="flex flex-wrap gap-3">
         <Link to="/free-consultation" className="el-btn-primary group">
-          Start with a Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          Start with a Free Consultation <ArrowRight className="h-4 w-4 transition-transform" />
         </Link>
         <a href={`tel:+1${tel}`} className="el-btn-soft">
           <Phone className="h-4 w-4" /> Call {phone}
@@ -412,7 +412,7 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
                   </li>
                 ))}
               </ul>
-              <Link to="/free-consultation" className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+              <Link to="/free-consultation" className="el-btn bg-accent text-accent-foreground w-full">
                 Book a Free Consultation <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -460,7 +460,7 @@ const Faq = ({ tel, phone }: { tel: string; phone: string }) => {
               <ul className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
                 {FAQ_GROUPS.map(g => (
                   <li key={g.id} className="shrink-0">
-                    <a href={`#${g.id}`} className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-surface hover:text-foreground transition-colors whitespace-nowrap">
+                    <a href={`#${g.id}`} className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors whitespace-nowrap">
                       {g.title} <span className="text-xs text-muted-foreground">{g.items.length}</span>
                     </a>
                   </li>
@@ -558,7 +558,7 @@ const ChecklistCard = ({ c }: { c: Checklist }) => {
                 const checked = ticks.includes(item);
                 return (
                   <li key={item}>
-                    <label className={`flex items-start gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition-colors ${checked ? "bg-accent/50" : "hover:bg-surface"}`}>
+                    <label className={`flex items-start gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition-colors ${checked ? "bg-accent/50" : ""}`}>
                       <input type="checkbox" checked={checked} onChange={() => toggle(item)}
                         className="mt-0.5 h-5 w-5 shrink-0 rounded border-border accent-[hsl(var(--foreground))] cursor-pointer" />
                       <span className={`leading-snug ${checked ? "text-muted-foreground line-through" : "text-foreground/85"}`}>{item}</span>
@@ -581,7 +581,7 @@ const ChecklistCard = ({ c }: { c: Checklist }) => {
           </button>
         )}
         {c.related && (
-          <Link to={c.related.to} className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary ml-auto hover:gap-2.5 transition-all">
+          <Link to={c.related.to} className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground ml-auto transition-all">
             {c.related.label} <ArrowRight className="h-4 w-4" />
           </Link>
         )}
@@ -602,7 +602,7 @@ const Guides = ({ tel, phone }: { tel: string; phone: string }) => (
       </p>
       <div className="flex flex-wrap gap-2">
         {CHECKLISTS.map(c => (
-          <a key={c.id} href={`#${c.id}`} className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-foreground bg-background border border-border hover:bg-foreground hover:text-background hover:border-foreground transition-colors">
+          <a key={c.id} href={`#${c.id}`} className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-foreground bg-background border border-border transition-colors">
             <c.icon className="h-4 w-4" /> {c.title}
           </a>
         ))}

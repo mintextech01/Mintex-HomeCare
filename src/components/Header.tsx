@@ -39,7 +39,7 @@ const RESOURCE_LINKS = [
 const CONSULTATION_HREF = "/free-consultation";
 
 // Solid ink pill (redesign palette) — used for every "Free Consultation" button in the header.
-const INK_BTN = "bg-foreground text-background hover:bg-foreground/85 transition-colors";
+const INK_BTN = "bg-foreground text-background transition-colors";
 // Promo card in the mega menus.
 const PROMO_CARD = "relative rounded-2xl p-6 overflow-hidden bg-foreground text-background flex flex-col";
 
@@ -56,12 +56,12 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
         <ul className="space-y-0.5">
           {SERVICE_INDEX.filter(s => s.group === group).map(s => (
             <li key={s.slug}>
-              <Link to={`/services/${s.slug}`} className="group flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-surface transition-colors">
-                <span className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0 group-hover:bg-foreground transition-colors">
-                  <s.icon className="w-[18px] h-[18px] text-accent-foreground group-hover:text-background transition-colors" />
+              <Link to={`/services/${s.slug}`} className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors">
+                <span className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0 transition-colors">
+                  <s.icon className="w-[18px] h-[18px] text-accent-foreground transition-colors" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{s.name}</span>
+                  <span className="block text-sm font-semibold text-foreground transition-colors">{s.name}</span>
                   <span className="text-xs text-muted-foreground leading-snug line-clamp-1">{s.short}</span>
                 </span>
               </Link>
@@ -74,19 +74,19 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Not sure what you need?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Talk to a care coordinator. It's free.</p>
       <div className="relative mt-auto space-y-2">
-        <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
+        <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
           Free Consultation <ArrowRight className="h-4 w-4" />
         </Link>
-        <a href={`tel:+1${tel}`} className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 bg-background/15 hover:bg-background/25 transition-colors">
+        <a href={`tel:+1${tel}`} className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 bg-background/15 transition-colors">
           <Phone className="h-4 w-4" /> {phone}
         </a>
       </div>
     </div>
     <div className="col-span-3 flex items-center justify-between border-t border-border pt-4 -mb-1 text-sm">
-      <Link to="/services" className="inline-flex items-center gap-2 font-semibold text-primary hover:gap-3 transition-all">
+      <Link to="/services" className="inline-flex items-center gap-2 font-semibold text-primary transition-all">
         View all care services <ArrowRight className="h-4 w-4" />
       </Link>
-      <Link to="/facility-staffing" className="inline-flex items-center gap-2 font-medium text-muted-foreground hover:text-primary transition-colors">
+      <Link to="/facility-staffing" className="inline-flex items-center gap-2 font-medium text-muted-foreground transition-colors">
         <Building2 className="h-4 w-4" /> Staffing for care facilities
       </Link>
     </div>
@@ -101,7 +101,7 @@ const AreasPanel = () => (
         <ul className="space-y-0.5">
           {COUNTIES.filter(c => c.region === region).map(c => (
             <li key={c.slug}>
-              <Link to={`/areas-we-serve/${c.slug}`} className="group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground hover:bg-surface hover:text-primary transition-colors">
+              <Link to={`/areas-we-serve/${c.slug}`} className="group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-colors">
                 <MapPin className="h-4 w-4 text-primary shrink-0" /> {c.name} County
               </Link>
             </li>
@@ -112,7 +112,7 @@ const AreasPanel = () => (
     <div className={PROMO_CARD}>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">12 NJ counties</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Is my town covered?</p>
-      <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
+      <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
         <Search className="h-4 w-4" /> Find your town
       </Link>
     </div>
@@ -128,18 +128,18 @@ const COST_LINKS = [
 const CostsPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
     {COST_LINKS.map(({ to, icon: I, title, text }) => (
-      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-foreground/15 hover:bg-surface transition-colors">
-        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-foreground transition-colors">
-          <I className="w-5 h-5 text-accent-foreground group-hover:text-background transition-colors" />
+      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 transition-colors">
+        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors">
+          <I className="w-5 h-5 text-accent-foreground transition-colors" />
         </span>
-        <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{title}</span>
+        <span className="font-semibold text-foreground transition-colors">{title}</span>
         <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
       </Link>
     ))}
     <div className={PROMO_CARD}>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Free, no obligation</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Get a clear, written quote</p>
-      <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
+      <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
         Get a Free Quote <ArrowRight className="h-4 w-4" />
       </Link>
     </div>
@@ -155,11 +155,11 @@ const ABOUT_LINKS = [
 const AboutPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
     {ABOUT_LINKS.map(({ to, icon: I, title, text }) => (
-      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 hover:border-foreground/15 hover:bg-surface transition-colors">
-        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 group-hover:bg-foreground transition-colors">
-          <I className="w-5 h-5 text-accent-foreground group-hover:text-background transition-colors" />
+      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 transition-colors">
+        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors">
+          <I className="w-5 h-5 text-accent-foreground transition-colors" />
         </span>
-        <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{title}</span>
+        <span className="font-semibold text-foreground transition-colors">{title}</span>
         <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
       </Link>
     ))}
@@ -175,12 +175,12 @@ const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="grid grid-cols-[1fr_280px] gap-5">
     <div className="grid grid-cols-3 gap-3">
       {RESOURCE_LINKS.map(({ to, icon: I, title, text }) => (
-        <Link key={to} to={to} className="group flex items-start gap-3 rounded-2xl border border-border p-4 hover:border-foreground/15 hover:bg-surface transition-colors">
-          <span className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0 group-hover:bg-foreground transition-colors">
-            <I className="w-5 h-5 text-accent-foreground group-hover:text-background transition-colors" />
+        <Link key={to} to={to} className="group flex items-start gap-3 rounded-2xl border border-border p-4 transition-colors">
+          <span className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0 transition-colors">
+            <I className="w-5 h-5 text-accent-foreground transition-colors" />
           </span>
           <span className="min-w-0">
-            <span className="block font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{title}</span>
+            <span className="block font-semibold text-sm text-foreground transition-colors">{title}</span>
             <span className="block text-xs text-muted-foreground mt-0.5 leading-snug">{text}</span>
           </span>
         </Link>
@@ -189,7 +189,7 @@ const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
     <div className={PROMO_CARD}>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Still have questions?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">We're here 24/7</p>
-      <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
+      <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
         <Phone className="h-4 w-4" /> {phone}
       </a>
     </div>
@@ -202,7 +202,7 @@ const DrawerSection = ({ label, open, onToggle, children, isDark }: {
 }) => (
   <div className="mb-1">
     <button type="button" onClick={onToggle} aria-expanded={open}
-      className={`w-full flex items-center justify-between text-sm font-medium px-4 py-3.5 rounded-xl transition-colors ${open ? "bg-surface" : "hover:bg-surface"}`}>
+      className={`w-full flex items-center justify-between text-sm font-medium px-4 py-3.5 rounded-xl transition-colors ${open ? "bg-surface" : ""}`}>
       {label}
       <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
     </button>
@@ -287,23 +287,23 @@ const Header = () => {
           style={{ maxHeight: scrolled ? 0 : 36 }}
         >
           <div className="container mx-auto px-4 h-9 flex items-center justify-between text-xs font-medium text-foreground/75">
-            <Link to="/areas-we-serve" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+            <Link to="/areas-we-serve" className="flex items-center gap-1.5 transition-colors">
               <MapPin className="h-3.5 w-3.5" /> Serving 12 NJ counties
             </Link>
             <div className="flex items-center gap-5">
-              <a href={`tel:+1${phoneLink}`} className="flex items-center gap-1.5 font-semibold text-foreground hover:text-primary transition-colors">
+              <a href={`tel:+1${phoneLink}`} className="flex items-center gap-1.5 font-semibold text-foreground transition-colors">
                 <Clock className="h-3.5 w-3.5" /> 24/7: {contactInfo.phone}
               </a>
               <span className="h-3.5 w-px bg-border" />
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 transition-colors">
                 <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
               </a>
               <span className="h-3.5 w-px bg-border" />
-              <Link to="/careers/jobs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Link to="/careers/jobs" className="flex items-center gap-1.5 transition-colors">
                 <Briefcase className="h-3.5 w-3.5" /> Caregiver Jobs
               </Link>
               <span className="h-3.5 w-px bg-border" />
-              <Link to="/contact" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Link to="/contact" className="flex items-center gap-1.5 transition-colors">
                 <Mail className="h-3.5 w-3.5" /> Contact
               </Link>
               <ThemeToggle compact />
@@ -323,7 +323,7 @@ const Header = () => {
               {navItems.map(item => {
                 const active = isActive(location.pathname, item.href);
                 const cls = `relative flex items-center gap-1 whitespace-nowrap text-[13px] min-[1400px]:text-sm font-medium px-1.5 min-[1400px]:px-3 py-2 rounded-full transition-colors duration-200 ${
-                  active ? "text-foreground font-semibold" : "text-foreground/70 hover:text-foreground"
+                  active ? "text-foreground font-semibold" : "text-foreground/70"
                 }`;
                 if (!item.menu) {
                   return (
@@ -347,7 +347,7 @@ const Header = () => {
                     </Link>
                     <button type="button"
                       className={`h-7 w-6 flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
-                        open || active ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                        open || active ? "text-foreground" : "text-foreground/70"
                       }`}
                       aria-label={`${open ? "Hide" : "Show"} ${item.label} menu`}
                       aria-expanded={open} aria-controls={`mega-${item.menu}`}
@@ -364,7 +364,7 @@ const Header = () => {
               {/* The light/dark switch is in the utility bar on desktop, to keep this row on one line. */}
               {/* Compact call button (the full number is in the utility bar), so the row never overflows. */}
               <a href={`tel:+1${phoneLink}`} aria-label={`Call MintexCare at ${contactInfo.phone}`} title={contactInfo.phone}
-                className="hidden xl:flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground hover:bg-surface transition-colors">
+                className="hidden xl:flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors">
                 <Phone className="h-4 w-4" />
               </a>
               <Link to={CONSULTATION_HREF} className={`inline-flex items-center rounded-full px-4 xl:px-6 py-2.5 text-[13px] xl:text-sm font-semibold whitespace-nowrap ${INK_BTN}`}>
@@ -383,7 +383,7 @@ const Header = () => {
               </a>
               <ThemeToggle />
               <button
-                className="h-11 w-11 flex items-center justify-center rounded-full border border-border bg-background hover:bg-surface transition-colors duration-200 flex-shrink-0"
+                className="h-11 w-11 flex items-center justify-center rounded-full border border-border bg-background transition-colors duration-200 flex-shrink-0"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={mobileOpen}
@@ -462,7 +462,7 @@ const Header = () => {
           </Link>
           <button
             onClick={() => setMobileOpen(false)}
-            className="h-10 w-10 flex items-center justify-center rounded-full bg-surface hover:bg-accent transition-colors"
+            className="h-10 w-10 flex items-center justify-center rounded-full bg-surface transition-colors"
             aria-label="Close menu"
           >
             <X className="h-5 w-5 text-foreground" />
@@ -483,7 +483,7 @@ const Header = () => {
                     <div key={group} className="mb-2">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-primary px-3 py-1.5">{SERVICE_GROUP_LABEL[group]}</p>
                       {SERVICE_INDEX.filter(s => s.group === group).map(s => (
-                        <Link key={s.slug} to={`/services/${s.slug}`} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                        <Link key={s.slug} to={`/services/${s.slug}`} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg">
                           <s.icon className="h-4 w-4 text-primary shrink-0" /> {s.name}
                         </Link>
                       ))}
@@ -501,7 +501,7 @@ const Header = () => {
                   open={drawerSection === "areas"} onToggle={() => setDrawerSection(s => (s === "areas" ? null : "areas"))}>
                   <div className="grid grid-cols-2 gap-x-1">
                     {COUNTIES.map(c => (
-                      <Link key={c.slug} to={`/areas-we-serve/${c.slug}`} className="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                      <Link key={c.slug} to={`/areas-we-serve/${c.slug}`} className="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-lg">
                         <MapPin className="h-3.5 w-3.5 text-primary shrink-0" /> {c.name}
                       </Link>
                     ))}
@@ -517,7 +517,7 @@ const Header = () => {
                 <DrawerSection key={item.label} label={item.label} isDark={isDark}
                   open={drawerSection === "about"} onToggle={() => setDrawerSection(s => (s === "about" ? null : "about"))}>
                   {ABOUT_LINKS.map(({ to, icon: I, title }) => (
-                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg">
                       <I className="h-4 w-4 text-primary shrink-0" /> {title}
                     </Link>
                   ))}
@@ -529,7 +529,7 @@ const Header = () => {
                 <DrawerSection key={item.label} label={item.label} isDark={isDark}
                   open={drawerSection === "costs"} onToggle={() => setDrawerSection(s => (s === "costs" ? null : "costs"))}>
                   {COST_LINKS.map(({ to, icon: I, title }) => (
-                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg">
                       <I className="h-4 w-4 text-primary shrink-0" /> {title}
                     </Link>
                   ))}
@@ -541,7 +541,7 @@ const Header = () => {
                 <DrawerSection key={item.label} label={item.label} isDark={isDark}
                   open={drawerSection === "resources"} onToggle={() => setDrawerSection(s => (s === "resources" ? null : "resources"))}>
                   {RESOURCE_LINKS.map(({ to, icon: I, title }) => (
-                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg hover:bg-surface">
+                    <Link key={to} to={to} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg">
                       <I className="h-4 w-4 text-primary shrink-0" /> {title}
                     </Link>
                   ))}
@@ -554,7 +554,7 @@ const Header = () => {
                 key={item.label}
                 to={item.href}
                 className={`flex items-center text-sm px-4 py-3.5 rounded-xl mb-1 transition-colors duration-200 ${
-                  active ? "bg-surface font-semibold" : "font-medium hover:bg-surface"
+                  active ? "bg-surface font-semibold" : "font-medium"
                 }`}
               >
                 {item.label}

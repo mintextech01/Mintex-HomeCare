@@ -40,7 +40,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -79,7 +79,7 @@ const Hero = ({ trail, pill, pillIcon, title, highlight, intro, children }: {
 const HeroButtons = ({ tel, phone, primary = "Get a Free Quote" }: { tel: string; phone: string; primary?: string }) => (
   <div className="flex flex-wrap gap-3">
     <Link to="/free-consultation" className="el-btn-primary group">
-      {primary} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+      {primary} <ArrowRight className="h-4 w-4 transition-transform" />
     </Link>
     <a href={`tel:+1${tel}`} className="el-btn-soft">
       <Phone className="h-4 w-4" /> Call {phone}
@@ -143,10 +143,10 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
               <Link to="/free-consultation" className="el-btn-primary whitespace-nowrap">
                 Get a Free Quote <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
+              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground whitespace-nowrap">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
+              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
@@ -165,7 +165,7 @@ const LinkBanner = ({ to, icon: I, title, text }: { to: string; icon: typeof Dol
       <span className="block font-bold">{title}</span>
       <span className="block text-sm text-background/70">{text}</span>
     </span>
-    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+    <ArrowRight className="h-5 w-5 transition-transform" />
   </Link>
 );
 
@@ -203,14 +203,14 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
             { to: "/paying-for-care/private-pay", icon: Wallet, title: "Private Pay", text: "How paying directly works, the payment methods we accept, and what to expect." },
           ].map(({ to, icon: I, title, text }, i) => (
             <AnimatedSection key={to} delay={i * 0.06} className="h-full">
-              <Link to={to} className="group h-full flex flex-col bg-background rounded-[28px] p-8 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 bg-accent transition-colors duration-300 group-hover:bg-foreground">
-                  <I className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+              <Link to={to} className="group h-full flex flex-col bg-background rounded-[28px] p-8 transition-shadow duration-300">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 bg-accent transition-colors duration-300">
+                  <I className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
                 </div>
                 <h2 className="text-2xl font-bold text-foreground mb-2">{title}</h2>
                 <p className="text-muted-foreground leading-relaxed flex-1">{text}</p>
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-6">
-                  Read more <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
+                  Read more <ArrowRight className="h-4 w-4 transition-transform" />
                 </span>
               </Link>
             </AnimatedSection>
@@ -226,7 +226,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
               <p className="font-bold">Have insurance or other benefits?</p>
               <p className="text-sm text-background/70">Tell us about any coverage during your free consultation and we'll talk through your situation honestly.</p>
             </div>
-            <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 h-11 whitespace-nowrap">
+            <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground h-11 whitespace-nowrap">
               <Phone className="h-4 w-4" /> {phone}
             </a>
           </div>
@@ -335,7 +335,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
                           {money(item.amount)} <span className="text-sm font-semibold text-muted-foreground">{item.unit}</span>
                         </p>
                       ) : (
-                        <Link to="/free-consultation" className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary whitespace-nowrap hover:gap-2.5 transition-all">
+                        <Link to="/free-consultation" className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground whitespace-nowrap transition-all">
                           Call for a free quote <ArrowRight className="h-4 w-4" />
                         </Link>
                       )}

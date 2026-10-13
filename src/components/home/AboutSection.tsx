@@ -104,7 +104,7 @@ const AboutSection = () => {
             </div>
 
             <Link to="/about" className="el-btn-soft group">
-              Learn More About Us <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              Learn More About Us <ArrowRight className="h-4 w-4 transition-transform" />
             </Link>
 
           </AnimatedSection>

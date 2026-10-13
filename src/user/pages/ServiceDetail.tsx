@@ -102,9 +102,9 @@ const ServiceDetail = () => {
               {/* Text */}
               <AnimatedSection>
                 <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground mb-8 flex flex-wrap items-center gap-2">
-                  <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                  <Link to="/" className="transition-colors">Home</Link>
                   <span className="text-foreground/30">/</span>
-                  <Link to="/services" className="hover:text-foreground transition-colors">Services</Link>
+                  <Link to="/services" className="transition-colors">Services</Link>
                   <span className="text-foreground/30">/</span>
                   <span className="text-foreground font-semibold" aria-current="page">{svc.name}</span>
                 </nav>
@@ -123,7 +123,7 @@ const ServiceDetail = () => {
 
                 <div className="flex flex-wrap gap-3 mb-9">
                   <Link to={`/free-consultation?service=${svc.slug}`} className="el-btn-primary group">
-                    Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Free Consultation <ArrowRight className="h-4 w-4 transition-transform" />
                   </Link>
                   <a href={`tel:+1${tel}`} className="el-btn-soft">
                     <Phone className="h-4 w-4" /> Call {contactInfo.phone}
@@ -259,7 +259,7 @@ const ServiceDetail = () => {
                     ))}
                   </ul>
                   <Link to={`/free-consultation?service=${svc.slug}`}
-                    className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+                    className="el-btn bg-accent text-accent-foreground w-full">
                     Book a Free Consultation <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -377,7 +377,7 @@ const ServiceDetail = () => {
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground">Often combined with</h2>
               </div>
               <Link to="/services" className="el-btn-outline group self-start md:self-auto">
-                View all services <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                View all services <ArrowRight className="h-4 w-4 transition-transform" />
               </Link>
             </AnimatedSection>
 
@@ -387,15 +387,15 @@ const ServiceDetail = () => {
                 return (
                   <AnimatedSection key={r.slug} delay={i * 0.06} className="h-full">
                     <Link to={`/services/${r.slug}`}
-                      className="group h-full flex flex-col el-card rounded-[24px] p-7 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
-                      <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-6 transition-colors duration-300 group-hover:bg-foreground">
-                        <RIcon className="w-6 h-6 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+                      className="group h-full flex flex-col el-card rounded-[24px] p-7 transition-shadow duration-300">
+                      <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-6 transition-colors duration-300">
+                        <RIcon className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
                       </div>
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">{SERVICE_GROUP_LABEL[r.group]}</p>
                       <h3 className="text-xl font-bold text-foreground mb-2">{r.name}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed flex-1">{r.short}</p>
-                      <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-6">
-                        Learn more <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
+                        Learn more <ArrowRight className="h-4 w-4 transition-transform" />
                       </span>
                     </Link>
                   </AnimatedSection>
@@ -428,11 +428,11 @@ const ServiceDetail = () => {
                       <Phone className="h-4 w-4" /> Call {contactInfo.phone}
                     </a>
                     <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
-                      className="el-btn bg-background text-foreground hover:bg-background/80">
+                      className="el-btn bg-background text-foreground">
                       <MessageCircle className="h-4 w-4" /> WhatsApp Us
                     </a>
                     <Link to={`/free-consultation?service=${svc.slug}`}
-                      className="el-btn bg-background text-foreground hover:bg-background/80">
+                      className="el-btn bg-background text-foreground">
                       Free Consultation <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>

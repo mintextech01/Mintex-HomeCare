@@ -35,7 +35,7 @@ const CareersSection = () => {
               ))}
             </ul>
             <Link to="/careers" className="el-btn-primary group">
-              Apply Now <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              Apply Now <ArrowRight className="h-4 w-4 transition-transform" />
             </Link>
           </div>
         </div>

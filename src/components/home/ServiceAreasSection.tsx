@@ -17,10 +17,10 @@ const ServiceAreasSection = () => (
           <Link
             key={c.slug}
             to={`/areas-we-serve/${c.slug}`}
-            className="group inline-flex items-center gap-2 rounded-full bg-background border border-border px-5 py-3 transition-colors duration-200 hover:bg-foreground hover:border-foreground"
+            className="group inline-flex items-center gap-2 rounded-full bg-background border border-border px-5 py-3 transition-colors duration-200"
           >
-            <MapPin className="h-4 w-4 text-primary shrink-0 transition-colors duration-200 group-hover:text-background" />
-            <span className="text-sm font-semibold text-foreground font-sans transition-colors duration-200 group-hover:text-background">
+            <MapPin className="h-4 w-4 text-primary shrink-0 transition-colors duration-200" />
+            <span className="text-sm font-semibold text-foreground font-sans transition-colors duration-200">
               {c.name} County
             </span>
           </Link>
@@ -29,13 +29,13 @@ const ServiceAreasSection = () => (
 
       <AnimatedSection delay={0.2} className="text-center mt-10">
         <Link to="/areas-we-serve" className="el-btn-primary group">
-          Find your town <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          Find your town <ArrowRight className="h-4 w-4 transition-transform" />
         </Link>
         <p className="text-sm text-muted-foreground font-sans mt-5">
           Don't see your area?{" "}
           <Link
             to="/contact"
-            className="text-foreground font-semibold underline underline-offset-4 decoration-primary/50 transition-colors hover:text-primary"
+            className="text-foreground font-semibold underline underline-offset-4 decoration-primary/50 transition-colors"
           >
             Contact us
           </Link>

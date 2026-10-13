@@ -47,7 +47,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -57,7 +57,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
 const HeroCtas = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="flex flex-wrap gap-3">
     <Link to="/free-consultation" className="el-btn-primary group">
-      Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+      Free Consultation <ArrowRight className="h-4 w-4 transition-transform" />
     </Link>
     <a href={`tel:+1${tel}`} className="el-btn-soft">
       <Phone className="h-4 w-4" /> Call {phone}
@@ -102,7 +102,7 @@ const PlaceCard = ({ name, facts, cta }: {
         </div>
       ))}
     </dl>
-    <a href={cta.href} className="el-btn bg-accent text-accent-foreground hover:bg-accent/80 w-full">
+    <a href={cta.href} className="el-btn bg-accent text-accent-foreground w-full">
       {cta.label} <ArrowRight className="h-4 w-4" />
     </a>
   </div>
@@ -125,10 +125,10 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
               <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
-                className="el-btn bg-background text-foreground hover:bg-background/80">
+                className="el-btn bg-background text-foreground">
                 <MessageCircle className="h-4 w-4" /> WhatsApp Us
               </a>
-              <Link to="/free-consultation" className="el-btn bg-background text-foreground hover:bg-background/80">
+              <Link to="/free-consultation" className="el-btn bg-background text-foreground">
                 Free Consultation <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -143,17 +143,17 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
 const CountyCard = ({ c, i, onSurface = false }: { c: CountyArea; i: number; onSurface?: boolean }) => (
   <AnimatedSection delay={Math.min(i, 5) * 0.05} className="h-full">
     <Link to={`/areas-we-serve/${c.slug}`}
-      className={`group h-full flex flex-col rounded-[24px] p-6 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] ${onSurface ? "bg-background" : "bg-surface"}`}>
+      className={`group h-full flex flex-col rounded-[24px] p-6 transition-shadow duration-300 ${onSurface ? "bg-background" : "bg-surface"}`}>
       <div className="flex items-start justify-between gap-3 mb-5">
-        <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300 group-hover:bg-foreground">
-          <MapPin className="w-5 h-5 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+        <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300">
+          <MapPin className="w-5 h-5 text-accent-foreground transition-colors duration-300" />
         </div>
         <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest text-right leading-tight">Seat: {c.seat}</span>
       </div>
       <h3 className="text-lg font-bold text-foreground mb-2">{c.name} County</h3>
       <p className="text-sm text-muted-foreground leading-relaxed flex-1">{c.towns.slice(0, 4).join(", ")} and more</p>
-      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-5">
-        Home care in {c.name} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors mt-5">
+        Home care in {c.name} <ArrowRight className="h-4 w-4 transition-transform" />
       </span>
     </Link>
   </AnimatedSection>
@@ -231,7 +231,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                     placeholder="e.g. Woodbridge, Toms River…"
                     className="w-full h-14 rounded-2xl pl-12 pr-11 bg-background text-foreground placeholder:text-muted-foreground outline-none focus:ring-4 focus:ring-accent/60 [&::-webkit-search-cancel-button]:appearance-none" />
                   {query && (
-                    <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-muted-foreground hover:text-foreground">
+                    <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-muted-foreground">
                       <X className="h-4 w-4" />
                     </button>
                   )}
@@ -241,7 +241,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                     <ul className="rounded-2xl overflow-hidden shadow-xl bg-background text-foreground">
                       {matches.map(({ town, county, to }) => (
                         <li key={`${county.slug}-${town}`}>
-                          <Link to={to} className="flex items-center justify-between gap-3 px-4 py-3 text-sm hover:bg-surface transition-colors">
+                          <Link to={to} className="flex items-center justify-between gap-3 px-4 py-3 text-sm transition-colors">
                             <span className="flex items-center gap-2 font-semibold"><MapPin className="h-4 w-4 text-primary" /> {town}</span>
                             <span className="text-xs text-muted-foreground">
                               {town === `${county.name} County` ? "County page" : `${county.name} County`} <ChevronRight className="inline h-3.5 w-3.5" />
@@ -342,15 +342,15 @@ const ServicesInArea = ({ place }: { place: string }) => (
               <ul className="space-y-2">
                 {SERVICE_INDEX.filter(s => s.group === group).map(s => (
                   <li key={s.slug}>
-                    <Link to={`/services/${s.slug}`} className="group flex items-center gap-4 rounded-2xl bg-background p-4 transition-shadow hover:shadow-md">
-                      <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center shrink-0 transition-colors group-hover:bg-foreground">
-                        <s.icon className="w-5 h-5 text-accent-foreground transition-colors group-hover:text-background" />
+                    <Link to={`/services/${s.slug}`} className="group flex items-center gap-4 rounded-2xl bg-background p-4 transition-shadow">
+                      <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center shrink-0 transition-colors">
+                        <s.icon className="w-5 h-5 text-accent-foreground transition-colors" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-foreground group-hover:text-primary transition-colors">{s.name}</p>
+                        <p className="font-bold text-foreground transition-colors">{s.name}</p>
                         <p className="text-sm text-muted-foreground leading-snug">{s.short}</p>
                       </div>
-                      <ChevronRight className="h-5 w-5 text-foreground/30 group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
+                      <ChevronRight className="h-5 w-5 text-foreground/30 transition-all shrink-0" />
                     </Link>
                   </li>
                 ))}
@@ -368,7 +368,7 @@ const ServicesInArea = ({ place }: { place: string }) => (
             <p className="font-bold">Run a care facility in {place}?</p>
             <p className="text-sm text-background/70">We also provide HHAs, CNAs, LPNs and RNs to nursing homes, assisted living and rehab facilities.</p>
           </div>
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold group-hover:gap-2.5 transition-all">Facility staffing <ArrowRight className="h-4 w-4" /></span>
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold transition-all">Facility staffing <ArrowRight className="h-4 w-4" /></span>
         </Link>
       </AnimatedSection>
     </div>
@@ -453,7 +453,7 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
                 const page = townPageFor(t);
                 return page ? (
                   <li key={t}>
-                    <Link to={`/areas-we-serve/${page.slug}`} className="flex items-center gap-2 bg-accent rounded-full pl-3 pr-4 py-2.5 text-sm font-semibold text-accent-foreground hover:bg-foreground hover:text-background transition-colors">
+                    <Link to={`/areas-we-serve/${page.slug}`} className="flex items-center gap-2 bg-accent rounded-full pl-3 pr-4 py-2.5 text-sm font-semibold text-accent-foreground transition-colors">
                       <MapPin className="h-4 w-4" /> {t} <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </li>
@@ -466,7 +466,7 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
             </ul>
             <p className="text-center text-sm text-muted-foreground mt-8">
               Don't see your town? We serve all of {c.name} County.{" "}
-              <a href={`tel:+1${tel}`} className="text-foreground font-semibold underline underline-offset-4 hover:text-primary">Call {phone}</a> to confirm.
+              <a href={`tel:+1${tel}`} className="text-foreground font-semibold underline underline-offset-4">Call {phone}</a> to confirm.
             </p>
           </AnimatedSection>
         </div>
@@ -504,7 +504,7 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
               <h2 className="text-3xl md:text-4xl font-bold text-foreground">Neighboring counties we serve</h2>
             </div>
             <Link to="/areas-we-serve" className="el-btn-outline group self-start md:self-auto">
-              All 12 counties <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              All 12 counties <ArrowRight className="h-4 w-4 transition-transform" />
             </Link>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -619,7 +619,7 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
             </ul>
             <p className="text-center text-sm text-muted-foreground mt-8">
               ZIP {t.zips.length > 1 ? "codes" : "code"}: <span className="font-semibold text-foreground">{t.zips.join(", ")}</span>
-              {" · "}Part of <Link to={`/areas-we-serve/${county.slug}`} className="text-foreground font-semibold underline underline-offset-4 hover:text-primary">{county.name} County</Link>
+              {" · "}Part of <Link to={`/areas-we-serve/${county.slug}`} className="text-foreground font-semibold underline underline-offset-4">{county.name} County</Link>
             </p>
           </AnimatedSection>
         </div>
@@ -656,21 +656,21 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground">Nearby towns we serve</h2>
             </div>
             <Link to={`/areas-we-serve/${county.slug}`} className="el-btn-outline group self-start md:self-auto">
-              All of {county.name} County <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              All of {county.name} County <ArrowRight className="h-4 w-4 transition-transform" />
             </Link>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {nearby.map((n, i) => (
               <AnimatedSection key={n.slug} delay={i * 0.05} className="h-full">
                 <Link to={`/areas-we-serve/${n.slug}`}
-                  className="group h-full flex flex-col el-card rounded-[24px] p-6 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
-                  <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center mb-5 transition-colors duration-300 group-hover:bg-foreground">
-                    <MapPin className="w-5 h-5 text-accent-foreground transition-colors duration-300 group-hover:text-background" />
+                  className="group h-full flex flex-col el-card rounded-[24px] p-6 transition-shadow duration-300">
+                  <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center mb-5 transition-colors duration-300">
+                    <MapPin className="w-5 h-5 text-accent-foreground transition-colors duration-300" />
                   </div>
                   <h3 className="text-lg font-bold text-foreground mb-1">{n.name}, NJ</h3>
                   <p className="text-sm text-muted-foreground flex-1">{n.kind} · ZIP {n.zips[0]}</p>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground group-hover:text-primary transition-colors mt-5">
-                    Home care in {n.name} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors mt-5">
+                    Home care in {n.name} <ArrowRight className="h-4 w-4 transition-transform" />
                   </span>
                 </Link>
               </AnimatedSection>

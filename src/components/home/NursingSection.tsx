@@ -284,7 +284,7 @@ const NursingSection = () => {
               <AnimatedSection key={card.title} delay={idx * 0.05} className="h-full">
                 <Link
                   to="/services"
-                  className="group el-card flex items-stretch gap-4 h-full p-3 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]"
+                  className="group el-card flex items-stretch gap-4 h-full p-3 transition-shadow duration-300"
                 >
                   {/* Illustration tile */}
                   <div className="relative w-28 sm:w-32 shrink-0 rounded-2xl overflow-hidden bg-background min-h-[128px]">
@@ -303,7 +303,7 @@ const NursingSection = () => {
                       <span className="font-sans font-bold text-base text-foreground leading-snug">
                         {card.title}
                       </span>
-                      <ArrowRight className="h-[18px] w-[18px] text-foreground/40 flex-shrink-0 mt-0.5 group-hover:translate-x-1 group-hover:text-primary transition-all duration-200" />
+                      <ArrowRight className="h-[18px] w-[18px] text-foreground/40 flex-shrink-0 mt-0.5 transition-all duration-200" />
                     </div>
                     <p className="text-sm text-muted-foreground font-sans leading-relaxed">
                       {card.description}
@@ -318,7 +318,7 @@ const NursingSection = () => {
         {/* CTA */}
         <AnimatedSection className="text-center mt-12" delay={0.1}>
           <Link to="/services" className="el-btn-soft group">
-            View All Services <ArrowRight className="h-4 w-4 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+            View All Services <ArrowRight className="h-4 w-4 flex-shrink-0 transition-transform" />
           </Link>
         </AnimatedSection>
       </div>

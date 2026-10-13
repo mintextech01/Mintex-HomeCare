@@ -41,7 +41,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -71,7 +71,7 @@ const HiringStepsCard = ({ tel, phone }: { tel: string; phone: string }) => (
     </ol>
     <div className="pt-5 border-t border-background/15">
       <p className="text-background/60 text-xs mb-1">Questions? Call our hiring team</p>
-      <a href={`tel:+1${tel}`} className="text-lg font-bold hover:underline">{phone}</a>
+      <a href={`tel:+1${tel}`} className="text-lg font-bold">{phone}</a>
     </div>
   </div>
 );
@@ -107,7 +107,7 @@ const OpenPositions = () => {
                 <MapPin className="h-4 w-4 text-primary" /> Edison office · Clients across NJ
               </span>
               <Link to="/careers/apply" className="el-btn-primary h-11 group">
-                Apply Online <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Apply Online <ArrowRight className="h-4 w-4 transition-transform" />
               </Link>
             </div>
           </AnimatedSection>
@@ -125,7 +125,7 @@ const OpenPositions = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-foreground">What you can expect</h2>
             </div>
             <Link to="/careers" className="el-btn-outline group self-start md:self-auto">
-              Why work with us <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              Why work with us <ArrowRight className="h-4 w-4 transition-transform" />
             </Link>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
@@ -263,7 +263,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
             <p className="text-muted-foreground mb-8">MintexCare · Posted {posted}</p>
             <div className="flex flex-wrap gap-3">
               <Link to={applyUrl(match.slug)} className="el-btn-primary group">
-                Apply for this job <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Apply for this job <ArrowRight className="h-4 w-4 transition-transform" />
               </Link>
               <a href={`tel:+1${tel}`} className="el-btn-soft">
                 <Phone className="h-4 w-4" /> Call {phone}
@@ -355,18 +355,18 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
             <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">Other open positions</h2>
               <Link to="/careers/jobs" className="el-btn-outline group self-start md:self-auto">
-                All open positions <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                All open positions <ArrowRight className="h-4 w-4 transition-transform" />
               </Link>
             </AnimatedSection>
             <div className="grid md:grid-cols-3 gap-5">
               {others.map(({ position: o, slug: s }, i) => (
                 <AnimatedSection key={s} delay={i * 0.06} className="h-full">
-                  <Link to={jobUrl(s)} className="group h-full flex flex-col el-card rounded-[24px] p-6 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
+                  <Link to={jobUrl(s)} className="group h-full flex flex-col el-card rounded-[24px] p-6 transition-shadow duration-300">
                     <span className="self-start text-xs font-semibold bg-accent text-accent-foreground rounded-full px-3 py-1 mb-4">{o.type}</span>
-                    <span className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{o.title}</span>
+                    <span className="text-lg font-bold text-foreground mb-2 transition-colors">{o.title}</span>
                     <span className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">{o.description}</span>
                     <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground mt-5">
-                      View job <ChevronRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                      View job <ChevronRight className="h-4 w-4 transition-transform" />
                     </span>
                   </Link>
                 </AnimatedSection>
@@ -423,7 +423,7 @@ const Apply = ({ tel, phone }: { tel: string; phone: string }) => {
             </AnimatedSection>
             <aside className="space-y-4 lg:sticky lg:top-32">
               <HiringStepsCard tel={tel} phone={phone} />
-              <Link to="/careers/jobs" className="flex items-center justify-between gap-3 el-card rounded-2xl px-5 py-4 hover:bg-accent transition-colors text-sm font-semibold text-foreground">
+              <Link to="/careers/jobs" className="flex items-center justify-between gap-3 el-card rounded-2xl px-5 py-4 transition-colors text-sm font-semibold text-foreground">
                 <span className="flex items-center gap-2"><Briefcase className="h-4 w-4" /> See all open positions</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -479,7 +479,7 @@ const Thanks = ({ tel, phone }: { tel: string; phone: string }) => {
               <Link to="/careers/jobs" className="el-btn-primary">
                 <Users className="h-4 w-4" /> See other openings
               </Link>
-              <Link to="/" className="el-btn bg-background text-foreground hover:bg-background/80">
+              <Link to="/" className="el-btn bg-background text-foreground">
                 <Home className="h-4 w-4" /> Back to home
               </Link>
             </div>

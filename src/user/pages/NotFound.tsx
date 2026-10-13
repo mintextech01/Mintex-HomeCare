@@ -34,9 +34,9 @@ const NotFound = () => {
 
           <div className="grid sm:grid-cols-3 gap-4 mb-10 text-left">
             {LINKS.map(({ to, icon: I, label, text }) => (
-              <Link key={to} to={to} className="group el-card p-5 transition-shadow hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
-                <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors group-hover:bg-foreground">
-                  <I className="w-5 h-5 text-accent-foreground transition-colors group-hover:text-background" />
+              <Link key={to} to={to} className="group el-card p-5 transition-shadow">
+                <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors">
+                  <I className="w-5 h-5 text-accent-foreground transition-colors" />
                 </span>
                 <span className="block font-bold text-foreground mb-1">{label}</span>
                 <span className="block text-sm text-muted-foreground leading-snug">{text}</span>
@@ -51,7 +51,7 @@ const NotFound = () => {
             <a href={`tel:+1${tel}`} className="el-btn-soft">
               <Phone className="h-4 w-4" /> Call {contactInfo.phone}
             </a>
-            <Link to="/contact" className="el-btn text-foreground hover:text-primary">
+            <Link to="/contact" className="el-btn text-foreground">
               Contact us <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

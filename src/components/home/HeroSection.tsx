@@ -45,7 +45,7 @@ const BandPhoto = ({ src, alt }: { src: string; alt: string }) => (
     <img
       src={PENDING_IMAGE}
       alt={alt}
-      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+      className="w-full h-full object-cover transition-transform duration-700 ease-out"
       width={600}
       height={320}
       loading="lazy"
@@ -123,7 +123,7 @@ const HeroSection = () => {
             >
               <Link to="/free-consultation" className="el-btn-primary group w-full sm:w-auto">
                 Request a Free Consultation
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 transition-transform" />
               </Link>
               <a href="tel:+17322685112" className="el-btn-soft w-full sm:w-auto">
                 <Phone className="h-4 w-4" />

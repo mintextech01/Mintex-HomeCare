@@ -92,11 +92,11 @@ const ContactSection = () => {
               <ul className="space-y-6 font-sans text-background/75">
                 <li className="flex items-start gap-4">
                   <span className="h-11 w-11 rounded-full bg-accent flex items-center justify-center shrink-0"><Phone className="h-5 w-5 text-accent-foreground" /></span>
-                  <div className="pt-0.5"><a href={`tel:+1${phoneLink}`} className="text-background font-semibold hover:underline underline-offset-4">{contactInfo.phone}</a><br /><span className="text-sm">Fax: {contactInfo.fax}</span></div>
+                  <div className="pt-0.5"><a href={`tel:+1${phoneLink}`} className="text-background font-semibold underline-offset-4">{contactInfo.phone}</a><br /><span className="text-sm">Fax: {contactInfo.fax}</span></div>
                 </li>
                 <li className="flex items-center gap-4">
                   <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><Mail className="h-5 w-5 text-background" /></span>
-                  <a href={`mailto:${contactInfo.email}`} className="break-all hover:text-background hover:underline underline-offset-4 transition-colors">{contactInfo.email}</a>
+                  <a href={`mailto:${contactInfo.email}`} className="break-all underline-offset-4 transition-colors">{contactInfo.email}</a>
                 </li>
                 <li className="flex items-center gap-4">
                   <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><MapPin className="h-5 w-5 text-background" /></span>
@@ -110,8 +110,8 @@ const ContactSection = () => {
               <div className="mt-auto pt-10">
                 <h3 className="font-serif text-xl font-semibold mb-4">Follow Us</h3>
                 <div className="flex gap-3">
-                  <a href={contactInfo.facebookUrl || "https://www.facebook.com/profile.php?id=61566851474928"} target="_blank" rel="noopener noreferrer" className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
-                  <a href={contactInfo.instagramUrl || "https://www.instagram.com/mintexhomecare/"} target="_blank" rel="noopener noreferrer" className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>
+                  <a href={contactInfo.facebookUrl || "https://www.facebook.com/profile.php?id=61566851474928"} target="_blank" rel="noopener noreferrer" className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center transition-colors" aria-label="Facebook"><Facebook className="h-5 w-5" /></a>
+                  <a href={contactInfo.instagramUrl || "https://www.instagram.com/mintexhomecare/"} target="_blank" rel="noopener noreferrer" className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center transition-colors" aria-label="Instagram"><Instagram className="h-5 w-5" /></a>
                 </div>
               </div>
             </div>

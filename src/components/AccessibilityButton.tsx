@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import {
   Accessibility, ZoomIn, ZoomOut, RotateCcw, X,
-  Sun, Eye, Type, Link, AlignJustify, MoveHorizontal, Pause, MousePointer2,
+  Sun, Eye, Type, Link, AlignJustify, MoveHorizontal, MousePointer2,
 } from "lucide-react";
 
 type A11yState = {
@@ -13,7 +13,6 @@ type A11yState = {
   letterSpacing: boolean;
   lineHeight: boolean;
   highlightLinks: boolean;
-  pauseAnimations: boolean;
   bigCursor: boolean;
 };
 
@@ -25,7 +24,6 @@ const DEFAULT: A11yState = {
   letterSpacing: false,
   lineHeight: false,
   highlightLinks: false,
-  pauseAnimations: false,
   bigCursor: false,
 };
 
@@ -36,7 +34,6 @@ const CSS_CLASS: Partial<Record<keyof A11yState, string>> = {
   letterSpacing:   "extra-spacing",
   lineHeight:      "large-line-height",
   highlightLinks:  "highlight-links",
-  pauseAnimations: "pause-animations",
   bigCursor:       "big-text-cursor",
 };
 
@@ -58,7 +55,7 @@ function ToggleRow({
       className={`w-full flex items-center justify-between text-sm font-sans px-3 py-2.5 rounded-xl transition-all ${
         active
           ? "bg-primary text-primary-foreground shadow-sm"
-          : "bg-muted/60 hover:bg-muted text-foreground"
+          : "bg-muted/60 text-foreground"
       }`}
     >
       <span className="flex items-center gap-2.5">
@@ -132,7 +129,7 @@ export default function AccessibilityButton() {
   const activeCount =
     (s.fontSize !== 100 ? 1 : 0) +
     [s.highContrast, s.grayscale, s.dyslexiaFont, s.letterSpacing,
-     s.lineHeight, s.highlightLinks, s.pauseAnimations, s.bigCursor]
+     s.lineHeight, s.highlightLinks, s.bigCursor]
       .filter(Boolean).length;
 
   return (
@@ -151,7 +148,7 @@ export default function AccessibilityButton() {
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="h-6 w-6 rounded-lg flex items-center justify-center hover:bg-muted transition-colors"
+              className="h-6 w-6 rounded-lg flex items-center justify-center transition-colors"
               aria-label="Close accessibility panel"
             >
               <X className="h-3.5 w-3.5 text-muted-foreground" />
@@ -176,7 +173,7 @@ export default function AccessibilityButton() {
                     <button
                       onClick={() => changeFontSize(-10)}
                       disabled={s.fontSize <= 80}
-                      className="h-6 w-6 rounded-lg bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="h-6 w-6 rounded-lg bg-background border border-border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                       aria-label="Decrease text size"
                     >
                       <ZoomOut className="h-3 w-3" />
@@ -187,7 +184,7 @@ export default function AccessibilityButton() {
                     <button
                       onClick={() => changeFontSize(10)}
                       disabled={s.fontSize >= 130}
-                      className="h-6 w-6 rounded-lg bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="h-6 w-6 rounded-lg bg-background border border-border flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                       aria-label="Increase text size"
                     >
                       <ZoomIn className="h-3 w-3" />
@@ -241,16 +238,10 @@ export default function AccessibilityButton() {
               </div>
             </div>
 
-            {/* ── Motion & Interaction ── */}
+            {/* ── Interaction ── (no "Pause Animations": the site has no animations) */}
             <div>
-              <SectionLabel>Motion &amp; Interaction</SectionLabel>
+              <SectionLabel>Interaction</SectionLabel>
               <div className="space-y-1.5">
-                <ToggleRow
-                  label="Pause Animations"
-                  active={s.pauseAnimations}
-                  onClick={() => toggle("pauseAnimations")}
-                  icon={<Pause className="h-4 w-4" />}
-                />
                 <ToggleRow
                   label="Large Cursor"
                   active={s.bigCursor}
@@ -267,7 +258,7 @@ export default function AccessibilityButton() {
             <button
               onClick={reset}
               disabled={activeCount === 0}
-              className="w-full flex items-center justify-center gap-2 text-sm font-sans px-3 py-2 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive transition-colors disabled:opacity-35 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 text-sm font-sans px-3 py-2 rounded-xl bg-destructive/10 text-destructive transition-colors disabled:opacity-35 disabled:cursor-not-allowed"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Reset All
@@ -279,7 +270,7 @@ export default function AccessibilityButton() {
       {/* ── Trigger button ── */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="relative h-12 w-12 md:h-14 md:w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform animate-fade-in"
+        className="relative h-12 w-12 md:h-14 md:w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-transform animate-fade-in"
         aria-label="Accessibility options"
         aria-expanded={open}
         aria-haspopup="dialog"

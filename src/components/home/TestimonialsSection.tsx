@@ -57,7 +57,7 @@ const TestimonialsSection = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => go(current - 1)}
-                className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-colors duration-200"
+                className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground transition-colors duration-200"
                 aria-label="Previous"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -67,7 +67,7 @@ const TestimonialsSection = () => {
               </span>
               <button
                 onClick={() => go(current + 1)}
-                className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-colors duration-200"
+                className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground transition-colors duration-200"
                 aria-label="Next"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -142,7 +142,7 @@ const TestimonialsSection = () => {
                       className={`block h-1.5 rounded-full transition-all duration-300 ${
                         i === current
                           ? "bg-foreground w-8"
-                          : "bg-foreground/15 w-1.5 group-hover/dot:bg-foreground/40"
+                          : "bg-foreground/15 w-1.5"
                       }`}
                     />
                   </button>

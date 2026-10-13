@@ -13,7 +13,7 @@ const ThemeToggle = ({ compact = false }: { compact?: boolean }) => {
     <button
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className={`relative flex items-center justify-center rounded-full border border-border bg-background hover:bg-surface transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+      className={`relative flex items-center justify-center rounded-full border border-border bg-background transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
         compact ? "w-7 h-7 [&>svg]:!w-[15px] [&>svg]:!h-[15px]" : "w-11 h-11"
       }`}
     >

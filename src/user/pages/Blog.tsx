@@ -24,7 +24,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold line-clamp-1" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -41,7 +41,7 @@ const Meta = ({ post }: { post: BlogPost }) => (
 const PostCard = ({ post, i, big = false }: { post: BlogPost; i: number; big?: boolean }) => (
   <AnimatedSection delay={Math.min(i, 3) * 0.06} className="h-full">
     <Link to={`/blog/${post.slug}`}
-      className="group h-full flex flex-col bg-background rounded-[24px] p-3 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
+      className="group h-full flex flex-col bg-background rounded-[24px] p-3 transition-shadow duration-300">
       {/* Designed cover (no stock photos) */}
       <div className={`relative overflow-hidden rounded-[18px] bg-accent ${big ? "h-56 md:h-72" : "h-40"}`}>
         <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full border border-accent-foreground/10" />
@@ -49,14 +49,14 @@ const PostCard = ({ post, i, big = false }: { post: BlogPost; i: number; big?: b
         <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-foreground bg-background rounded-full px-3 py-1.5">
           <Newspaper className="h-3.5 w-3.5" /> {post.category}
         </span>
-        <Newspaper className="absolute bottom-5 right-6 w-12 h-12 text-accent-foreground/40 group-hover:scale-110 transition-transform" />
+        <Newspaper className="absolute bottom-5 right-6 w-12 h-12 text-accent-foreground/40 transition-transform" />
       </div>
       <div className="px-3 pt-5 pb-3 flex flex-col flex-1">
         <Meta post={post} />
-        <h2 className={`font-bold text-foreground group-hover:text-primary transition-colors mt-3 mb-2 leading-snug ${big ? "text-2xl" : "text-lg"}`}>{post.title}</h2>
+        <h2 className={`font-bold text-foreground transition-colors mt-3 mb-2 leading-snug ${big ? "text-2xl" : "text-lg"}`}>{post.title}</h2>
         <p className="text-sm text-muted-foreground leading-relaxed flex-1">{post.description}</p>
         <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground mt-5">
-          Read article <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          Read article <ArrowRight className="h-4 w-4 transition-transform" />
         </span>
       </div>
     </Link>
@@ -72,10 +72,10 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
         <Link to="/free-consultation" className="el-btn-primary whitespace-nowrap">
           Free Consultation <ArrowRight className="h-4 w-4" />
         </Link>
-        <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
+        <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground whitespace-nowrap">
           <Phone className="h-4 w-4" /> {phone}
         </a>
-        <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
+        <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
           <MessageCircle className="h-4 w-4" /> WhatsApp
         </a>
       </div>
@@ -124,7 +124,7 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
                 <span className="block font-bold">Family Guides & Checklists</span>
                 <span className="block text-sm text-background/70">Printable checklists for home safety, hospital discharge and choosing a home care agency.</span>
               </span>
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-5 w-5 transition-transform" />
             </Link>
           </AnimatedSection>
         </div>
@@ -207,7 +207,7 @@ const Article = ({ post, tel, phone }: { post: BlogPost; tel: string; phone: str
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">Related</p>
               <div className="flex flex-wrap gap-3">
                 {post.related.map(r => (
-                  <Link key={r.to} to={r.to} className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-foreground bg-background border border-border hover:bg-foreground hover:text-background hover:border-foreground transition-colors">
+                  <Link key={r.to} to={r.to} className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-foreground bg-background border border-border transition-colors">
                     {r.label} <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 ))}

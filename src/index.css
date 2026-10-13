@@ -304,13 +304,6 @@
     inset 0 1px 0 rgba(255,255,255,0.6);
   transition: all 0.2s ease;
 }
-.glass-btn:hover {
-  background: linear-gradient(160deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.18) 100%);
-  box-shadow:
-    0 4px 16px rgba(38, 104, 188, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.7);
-  transform: translateY(-1px);
-}
 
 /* — Ambient floating orbs — */
 .glass-orb {
@@ -376,9 +369,9 @@
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
   /* primary = solid ink pill, soft = lavender pill (both as in the reference design) */
-  .el-btn-primary { @apply el-btn bg-foreground text-background shadow-sm hover:bg-foreground/85; }
-  .el-btn-soft    { @apply el-btn bg-accent text-accent-foreground hover:bg-accent/75; }
-  .el-btn-outline { @apply el-btn border border-border bg-background text-foreground hover:border-primary/50 hover:text-primary; }
+  .el-btn-primary { @apply el-btn bg-foreground text-background shadow-sm; }
+  .el-btn-soft    { @apply el-btn bg-accent text-accent-foreground; }
+  .el-btn-outline { @apply el-btn border border-border bg-background text-foreground; }
   .el-card        { @apply rounded-[20px] bg-surface; }
   .el-chip {
     @apply flex items-center gap-2.5 rounded-2xl bg-background/95 px-3.5 py-2.5 shadow-lg border border-border/60;
@@ -389,7 +382,7 @@
    UTILITIES
    ════════════════════════════════════════ */
 @layer utilities {
-  .hover-scale { @apply transition-transform duration-200 hover:scale-105; }
+  .hover-scale { }
   .text-balance { text-wrap: balance; }
 }
 
@@ -437,19 +430,11 @@ a, button {
               box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   will-change: transform;
 }
-.card-3d:hover {
-  transform: perspective(800px) rotateX(-2deg) rotateY(3deg) translateZ(20px) scale(1.02);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12),
-              0 0 30px rgba(38, 104, 188, 0.08);
-}
 
 /* — 3D Card inner (for children pushed forward in Z) — */
 .card-3d-inner {
   transform: translateZ(30px);
   transition: transform 0.4s ease;
-}
-.card-3d:hover .card-3d-inner {
-  transform: translateZ(50px);
 }
 
 /* — Smooth text reveal mask — */
@@ -597,11 +582,6 @@ a, button {
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
               box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.hover-lift-3d:hover {
-  transform: perspective(600px) translateY(-8px) translateZ(20px) rotateX(-2deg);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
-              0 0 20px rgba(38, 104, 188, 0.06);
-}
 
 /* ════════════════════════════════════════
    SERVICE CARDS — Glass morphism remaster
@@ -643,14 +623,6 @@ a, button {
   transition: transform 0.4s cubic-bezier(0.25, 1.2, 0.5, 1),
               box-shadow 0.4s ease;
 }
-.svc-card-wrapper:hover .svc-card {
-  transform: translateY(-10px);
-  box-shadow:
-    0 28px 56px rgba(38,104,188,0.14),
-    0 8px  16px rgba(38,104,188,0.08),
-    inset 0 2px 0 rgba(255,255,255,1),
-    inset 0 -1px 0 rgba(38,104,188,0.06);
-}
 
 /* Icon box */
 .svc-icon-box {
@@ -678,9 +650,6 @@ a, button {
               height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
 }
-.svc-card-wrapper:hover .svc-icon-box::before {
-  width: 220%; height: 220%;
-}
 
 /* Icon */
 .svc-icon-box .icon-svg {
@@ -688,18 +657,10 @@ a, button {
   transition: color 0.25s ease 0.1s,
               transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.svc-card-wrapper:hover .svc-icon-box .icon-svg {
-  color: #ffffff !important;
-  transform: translateY(-3px) scale(1.1);
-}
 
 /* card-hover utility */
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 48px rgba(38, 104, 188, 0.15);
 }
 
 /* Section background deco */
@@ -754,13 +715,27 @@ html.high-contrast    { filter: contrast(1.6) brightness(1.1); }
 html.grayscale-mode   { filter: grayscale(1); }
 html.high-contrast.grayscale-mode { filter: grayscale(1) contrast(1.6) brightness(1.1); }
 
-html.pause-animations *,
-html.pause-animations *::before,
-html.pause-animations *::after {
-  animation-duration:       0.001ms !important;
-  animation-iteration-count: 1      !important;
-  transition-duration:      0.001ms !important;
+/* ── Animations are off site-wide ──
+   No CSS animation or transition plays: each one finishes instantly in its end state. Durations
+   are near-zero rather than `animation: none` so elements still end where they should and
+   components that wait for animationend/transitionend (Radix menus, dialogs, accordions, toasts)
+   keep opening and closing normally. Framer Motion is turned off in src/user/main.tsx.
+   (Replaces the old opt-in "Pause Animations" accessibility class.) */
+*,
+*::before,
+*::after {
+  animation-duration:        0.001ms !important;
+  animation-iteration-count: 1       !important;
+  animation-delay:           0s      !important;
+  transition-duration:       0.001ms !important;
+  transition-delay:          0s      !important;
 }
+/* Loading spinners keep spinning: they show something is happening. */
+.animate-spin {
+  animation-duration:        1s       !important;
+  animation-iteration-count: infinite !important;
+}
+/* Hover effects were removed from the website as well (no hover: classes or :hover rules). */
 
 html.dyslexia-font,
 html.dyslexia-font * {
@@ -847,12 +822,6 @@ html.big-text-cursor * {
     0 2px 8px  rgba(0, 0, 0, 0.20),
     inset 0 1px 0 rgba(255,255,255,0.04);
 }
-.dark .glass-btn:hover {
-  background: linear-gradient(160deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-}
 
 /* --- Base glass (dark) --- */
 .dark .glass {
@@ -889,12 +858,6 @@ html.big-text-cursor * {
   box-shadow:
     0 4px 20px rgba(0,0,0,0.25),
     inset 0 1px 0 rgba(255,255,255,0.04);
-}
-.dark .svc-card-wrapper:hover .svc-card {
-  box-shadow:
-    0 28px 56px rgba(0,0,0,0.35),
-    0 8px  16px rgba(0,0,0,0.20),
-    inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 /* --- Service icon box (dark) --- */

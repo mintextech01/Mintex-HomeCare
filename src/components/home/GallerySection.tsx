@@ -23,7 +23,7 @@ const GallerySection = () => {
                   <img
                     src={img.url}
                     alt={img.caption || "Gallery image"}
-                    className="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    className="w-full object-cover transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
                 </div>

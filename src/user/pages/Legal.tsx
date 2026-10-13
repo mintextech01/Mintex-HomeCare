@@ -44,7 +44,7 @@ const List = ({ items }: { items: ReactNode[] }) => (
 );
 
 const A = ({ href, children }: { href: string; children: ReactNode }) => (
-  <a href={href} className="text-foreground font-semibold underline decoration-primary/40 underline-offset-2 hover:decoration-primary">{children}</a>
+  <a href={href} className="text-foreground font-semibold underline decoration-primary/40 underline-offset-2">{children}</a>
 );
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -68,7 +68,7 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
         This Privacy Policy explains how MintexCare ("we", "us") collects, uses and protects information
         when you visit mintexcare.com, contact us, request care or apply for a job. Health information we
         receive while providing care is also protected under our{" "}
-        <Link to="/hipaa-notice" className="text-foreground font-semibold underline decoration-primary/40 underline-offset-2 hover:decoration-primary">HIPAA Notice of Privacy Practices</Link>.
+        <Link to="/hipaa-notice" className="text-foreground font-semibold underline decoration-primary/40 underline-offset-2">HIPAA Notice of Privacy Practices</Link>.
       </P>
     ),
     sections: [
@@ -489,7 +489,7 @@ const Legal = () => {
             <div className="grid lg:grid-cols-[1fr_auto] gap-12 items-center">
               <AnimatedSection>
                 <p className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
-                  <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                  <Link to="/" className="transition-colors">Home</Link>
                   <span className="text-foreground/30">/</span>
                   <span className="text-foreground font-semibold">{doc.crumb}</span>
                 </p>
@@ -551,7 +551,7 @@ const Legal = () => {
                 return (
                   <Link key={path} to={path} aria-current={active ? "page" : undefined}
                     className={`shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      active ? "bg-foreground text-background" : "text-foreground/70 hover:text-foreground hover:bg-background"
+                      active ? "bg-foreground text-background" : "text-foreground/70"
                     }`}>
                     <Icon className="h-4 w-4" />
                     {label}
@@ -580,7 +580,7 @@ const Legal = () => {
                         <li key={s.heading}>
                           <a href={`#${ids[i]}`}
                             className={`flex items-start gap-3 rounded-xl px-3 py-2 text-sm leading-snug transition-colors ${
-                              active ? "bg-accent text-accent-foreground font-semibold" : "text-foreground/70 hover:text-foreground hover:bg-surface"
+                              active ? "bg-accent text-accent-foreground font-semibold" : "text-foreground/70"
                             }`}>
                             <span className={`text-xs font-bold mt-0.5 ${active ? "text-accent-foreground" : "text-muted-foreground"}`}>{String(i + 1).padStart(2, "0")}</span>
                             {s.heading}
@@ -594,10 +594,10 @@ const Legal = () => {
                 <div className="rounded-[24px] p-5 bg-foreground text-background">
                   <p className="font-bold text-lg mb-1">Have a question?</p>
                   <p className="text-background/70 text-sm mb-4">Our team is available 24/7.</p>
-                  <a href={`tel:+1${tel}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 mb-2 bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
+                  <a href={`tel:+1${tel}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 mb-2 bg-accent text-accent-foreground transition-colors">
                     <Phone className="h-4 w-4" /> {contactInfo.phone}
                   </a>
-                  <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 break-all bg-background/10 hover:bg-background/20 transition-colors">
+                  <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 break-all bg-background/10 transition-colors">
                     <Mail className="h-4 w-4 shrink-0" /> {contactInfo.email}
                   </a>
                 </div>
@@ -651,7 +651,7 @@ const Legal = () => {
                       );
                       const cls = "block bg-background rounded-[20px] p-5 transition-shadow";
                       return href
-                        ? <a key={label} href={href} className={`${cls} hover:shadow-md`}>{body}</a>
+                        ? <a key={label} href={href} className={`${cls}`}>{body}</a>
                         : <div key={label} className={cls}>{body}</div>;
                     })}
                   </div>
@@ -682,7 +682,7 @@ const Legal = () => {
                     </p>
                   </div>
                   <Link to="/free-consultation" className="el-btn-primary group shrink-0 whitespace-nowrap">
-                    Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Free Consultation <ArrowRight className="h-4 w-4 transition-transform" />
                   </Link>
                 </div>
               </div>

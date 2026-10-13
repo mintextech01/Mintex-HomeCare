@@ -23,7 +23,7 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
       className="md:col-span-2 lg:col-span-2"
     >
       <Card
-        className="h-full overflow-hidden rounded-[28px] border-0 shadow-none bg-accent hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)] transition-shadow duration-300 cursor-pointer"
+        className="h-full overflow-hidden rounded-[28px] border-0 shadow-none bg-accent transition-shadow duration-300 cursor-pointer"
         onClick={() => onDetailsClick(job)}
       >
         <div className="grid md:grid-cols-2 gap-6 p-6 md:p-8">
@@ -32,13 +32,13 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Star className="h-5 w-5 text-foreground fill-foreground" />
-                <Badge className="text-xs px-3 py-1 rounded-full bg-background text-foreground border-transparent hover:bg-background">
+                <Badge className="text-xs px-3 py-1 rounded-full bg-background text-foreground border-transparent">
                   {job.employmentType}
                 </Badge>
               </div>
               <CardTitle className="text-2xl md:text-3xl leading-tight mb-3 text-foreground">
                 {job.slug
-                  ? <Link to={jobUrl(job.slug)} onClick={e => e.stopPropagation()} className="hover:text-primary transition-colors">{job.title}</Link>
+                  ? <Link to={jobUrl(job.slug)} onClick={e => e.stopPropagation()} className="transition-colors">{job.title}</Link>
                   : job.title}
               </CardTitle>
               <CardDescription className="text-base text-accent-foreground/75 line-clamp-4 mb-4">
@@ -79,10 +79,10 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
 
             {/* CTA Buttons */}
             <div className="flex gap-3">
-              <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <motion.div className="flex-1">
                 <Button
                   size="lg"
-                  className="w-full rounded-full font-semibold text-base bg-foreground text-background hover:bg-foreground/85"
+                  className="w-full rounded-full font-semibold text-base bg-foreground text-background"
                   onClick={(e) => {
                     e.stopPropagation();
                     onApplyClick(job);
@@ -91,10 +91,10 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
                   Apply Now
                 </Button>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <motion.div>
                 <Button
                   size="lg"
-                  className="rounded-full font-medium bg-background text-foreground hover:bg-background/80 transition-colors"
+                  className="rounded-full font-medium bg-background text-foreground transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     onDetailsClick(job);

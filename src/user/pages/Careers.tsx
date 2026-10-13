@@ -40,7 +40,7 @@ const Careers = () => {
               {/* Left */}
               <AnimatedSection className="flex-1 max-w-xl">
                 <p className="text-sm text-muted-foreground font-sans mb-6 flex items-center gap-2">
-                  <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                  <Link to="/" className="transition-colors">Home</Link>
                   <span className="text-foreground/30">/</span>
                   <span className="text-foreground font-semibold">Careers</span>
                 </p>
@@ -166,7 +166,7 @@ const Careers = () => {
                 </div>
 
                 <a href="#apply-section" className="el-btn-primary group">
-                  Learn More <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  Learn More <ArrowRight className="h-4 w-4 transition-transform" />
                 </a>
               </AnimatedSection>
 

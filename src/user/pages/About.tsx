@@ -48,7 +48,7 @@ const About = () => {
               {/* LEFT: Text */}
               <AnimatedSection>
                 <p className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
-                  <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+                  <Link to="/" className="transition-colors">Home</Link>
                   <span className="text-foreground/30">/</span>
                   <span className="text-foreground font-semibold">About Us</span>
                 </p>
@@ -69,7 +69,7 @@ const About = () => {
 
                 <div className="flex flex-wrap gap-3 mb-10">
                   <Link to="/contact" className="el-btn-primary group">
-                    Get in Touch <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Get in Touch <ArrowRight className="h-4 w-4 transition-transform" />
                   </Link>
                   <Link to="/services" className="el-btn-soft">
                     Our Services
@@ -351,12 +351,12 @@ const About = () => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
                 {teamMembers.map((m, i) => (
                   <AnimatedSection key={m.id} delay={i * 0.08} className="h-full">
-                    <div className="group h-full rounded-[24px] bg-background p-3 transition-shadow duration-300 hover:shadow-[0_18px_40px_-12px_rgba(0,0,0,0.15)]">
+                    <div className="group h-full rounded-[24px] bg-background p-3 transition-shadow duration-300">
                       <div className="relative overflow-hidden h-64 rounded-[18px]">
                         <img
                           src={m.photoUrl}
                           alt={m.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="w-full h-full object-cover transition-transform duration-700"
                           loading="lazy"
                         />
                       </div>
@@ -394,7 +394,7 @@ const About = () => {
                     </p>
                   </div>
                   <Link to="/contact" className="el-btn-primary group shrink-0 whitespace-nowrap">
-                    Get in Touch <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Get in Touch <ArrowRight className="h-4 w-4 transition-transform" />
                   </Link>
                 </div>
               </div>

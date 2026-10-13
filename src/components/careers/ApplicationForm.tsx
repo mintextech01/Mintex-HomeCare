@@ -151,7 +151,7 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
           Resume <span className="normal-case tracking-normal font-normal text-muted-foreground">(optional, speeds up your application)</span>
         </label>
         <label htmlFor={id("resume")}
-          className="flex items-center gap-3 rounded-xl border border-dashed border-foreground/25 bg-background px-4 py-3.5 cursor-pointer hover:border-foreground/50 transition-colors">
+          className="flex items-center gap-3 rounded-xl border border-dashed border-foreground/25 bg-background px-4 py-3.5 cursor-pointer transition-colors">
           <span className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0">
             <Paperclip className="h-4 w-4 text-accent-foreground" />
           </span>
@@ -180,7 +180,7 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
         </button>
         <p className="text-center text-xs text-muted-foreground font-sans mt-3">
           We respond to all applications within 3–5 business days. See our{" "}
-          <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy Policy</Link>.
+          <Link to="/privacy-policy" className="underline">Privacy Policy</Link>.
         </p>
       </div>
     </form>

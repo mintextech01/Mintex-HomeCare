@@ -34,7 +34,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
       <React.Fragment key={c.label}>
         {i > 0 && <span className="text-foreground/30">/</span>}
         {c.to
-          ? <Link to={c.to} className="hover:text-foreground transition-colors">{c.label}</Link>
+          ? <Link to={c.to} className="transition-colors">{c.label}</Link>
           : <span className="text-foreground font-semibold" aria-current="page">{c.label}</span>}
       </React.Fragment>
     ))}
@@ -90,10 +90,10 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
               <Link to="/free-consultation" className="el-btn-primary whitespace-nowrap">
                 Free Consultation <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
+              <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground whitespace-nowrap">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground hover:bg-background/80 whitespace-nowrap">
+              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
@@ -165,7 +165,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/free-consultation" className="el-btn-primary group">
-                  Free Consultation <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  Free Consultation <ArrowRight className="h-4 w-4 transition-transform" />
                 </Link>
                 <a href={`tel:+1${tel}`} className="el-btn-soft">
                   <Phone className="h-4 w-4" /> Call {phone}
@@ -306,7 +306,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
                   ))}
                 </ul>
                 <div className="rounded-[22px] bg-surface px-7 py-5">
-                  <Link to="/resources/guides#agency-questions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary hover:gap-2.5 transition-all">
+                  <Link to="/resources/guides#agency-questions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-all">
                     Printable: questions to ask any agency <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -443,17 +443,17 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
               {pages > 1 && (
                 <div className="flex items-center justify-center gap-4 mt-10">
                   <button type="button" onClick={() => go(page - 1)} aria-label="Previous testimonials"
-                    className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-colors">
+                    className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground transition-colors">
                     <ChevronLeft className="h-5 w-5" />
                   </button>
                   <div className="flex gap-1.5">
                     {Array.from({ length: pages }).map((_, i) => (
                       <button key={i} type="button" onClick={() => go(i)} aria-label={`Show testimonials page ${i + 1}`}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${i === page ? "bg-foreground w-8" : "bg-foreground/15 w-1.5 hover:bg-foreground/40"}`} />
+                        className={`h-1.5 rounded-full transition-all duration-300 ${i === page ? "bg-foreground w-8" : "bg-foreground/15 w-1.5"}`} />
                     ))}
                   </div>
                   <button type="button" onClick={() => go(page + 1)} aria-label="Next testimonials"
-                    className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-colors">
+                    className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground transition-colors">
                     <ChevronRight className="h-5 w-5" />
                   </button>
                 </div>
@@ -468,7 +468,7 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
                 <span className="block font-bold">Why families trust MintexCare</span>
                 <span className="block text-sm text-background/70">State licensing, nurse supervision and our 7-step caregiver screening.</span>
               </span>
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-5 w-5 transition-transform" />
             </Link>
           </AnimatedSection>
         </div>

@@ -6,6 +6,11 @@ import "../index.css";
 
 const container = document.getElementById("root")!;
 
+// The website has no motion animations: every Framer Motion animation (entrance fades, slide-ins,
+// page transitions, carousel slides) jumps straight to its end state. CSS animations are turned
+// off in index.css ("Animations are off site-wide").
+MotionGlobalConfig.skipAnimations = true;
+
 const start = async () => {
   if (isPrerendered) {
     // Let the browser paint the prerendered page first. When the scripts arrive quickly, Chrome
@@ -16,12 +21,8 @@ const start = async () => {
       await new Promise<void>(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
     }
     // Load this page's code before rendering so the prerendered content is replaced by the
-    // identical live page in one step (no empty loading state in between)...
+    // identical live page in one step (no empty loading state in between).
     await preloadPage(window.location.pathname).catch(() => {});
-    // ...and finish entrance animations instantly for that takeover, so content that is already
-    // on screen doesn't disappear and fade back in. Animations work normally afterwards.
-    MotionGlobalConfig.skipAnimations = true;
-    setTimeout(() => { MotionGlobalConfig.skipAnimations = false; }, 1000);
   }
   createRoot(container).render(<App />);
 };
