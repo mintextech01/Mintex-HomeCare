@@ -14,7 +14,7 @@ const ScrollToTop = () => {
 
   return (
     <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={() => window.scrollTo(0, 0)}
       // Hidden on phones: a third floating bubble there covers page content (WhatsApp and
       // accessibility buttons stay). Desktop keeps it at a 44px tap size.
       className="theme-el fixed bottom-44 right-4 md:right-6 z-40 h-11 w-11 rounded-full bg-foreground text-background shadow-lg hidden md:flex items-center justify-center transition-all animate-fade-in"

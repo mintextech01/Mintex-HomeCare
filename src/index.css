@@ -220,7 +220,7 @@
      narrower (and shift right-anchored elements) when content grows tall enough to scroll. */
   /* overflow-x: clip (with hidden as the fallback for old browsers) stops sideways scrolling
      without turning html/body into scroll containers, which would break position: sticky. */
-  html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; scrollbar-gutter: stable; }
+  html { overflow-x: hidden; overflow-x: clip; scrollbar-gutter: stable; }
 
   body {
     overflow-x: hidden;

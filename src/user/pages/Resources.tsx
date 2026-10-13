@@ -640,7 +640,7 @@ const Resources = () => {
   // App scrolls to the top on route change; then jump to a #topic if the link had one.
   useEffect(() => {
     if (!hash) return;
-    const t = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" }), 450);
+    const t = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView(), 450);
     return () => clearTimeout(t);
   }, [pathname, hash]);
 

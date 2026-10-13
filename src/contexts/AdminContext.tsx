@@ -5,6 +5,7 @@ import { db, getAppAuth } from "@/lib/firebase";
 // Public site: Firestore Lite (one-time reads + form submissions). Admin-only work (listeners,
 // writes) goes through loadFull(), so the full SDK is never part of the public bundle.
 import { doc, collection, getDoc, addDoc } from "firebase/firestore/lite";
+import { sendSubmissionEmail } from "@/lib/emailAlert";
 
 /**
  * siteImageData/{key} -> its `fp` field (null if it has none), from one small REST request that
@@ -584,6 +585,8 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
       setTimeout(() => reject(new Error("Firestore timeout — check your connection")), 10000)
     );
     const ref = await Promise.race([addDoc(collection(db, "submissions"), newSub), timeout]);
+    // Email alert (does not hold up the visitor; the message is already saved for Admin).
+    sendSubmissionEmail({ ...sub, type: newSub.type }).catch(err => console.debug("[AdminContext] email alert:", err));
     return ref.id;
   };
 

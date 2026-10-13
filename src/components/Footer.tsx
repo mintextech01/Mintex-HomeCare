@@ -14,7 +14,9 @@ const Footer = () => {
       <div className="container mx-auto px-6 md:px-10 py-14 md:py-20 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] gap-10">
           <div>
-            <img src={logo} alt="MintexCare" className="h-20 md:h-28 w-auto object-contain transform scale-110 origin-left mb-4" />
+            <Link to="/" onClick={() => window.scrollTo(0, 0)} className="inline-block mb-4" aria-label="MintexCare home">
+              <img src={logo} alt="MintexCare" className="h-20 md:h-28 w-auto object-contain transform scale-110 origin-left" />
+            </Link>
             <p className="text-sm italic mb-4 text-muted-foreground">Care you can believe in</p>
             <p className="text-sm text-foreground/75 leading-relaxed">MintexCare is a trusted home healthcare agency based in New Jersey, providing compassionate, high-quality care to individuals in the comfort of their own homes.</p>
             <Link to="/about/why-mintexcare" className="mt-5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold bg-background border border-border text-foreground transition-colors">
