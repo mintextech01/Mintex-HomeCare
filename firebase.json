@@ -1,8 +1,7 @@
 {
   "firestore": {
     "rules": "firestore.rules"
-  },
-  "hosting": [
+  },  "hosting": [
     {
       "target": "user",
       "public": "dist",

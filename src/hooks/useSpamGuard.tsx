@@ -23,13 +23,18 @@ export const useSpamGuard = () => {
 
   const honeypotField = (
     <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: 1, height: 1, overflow: "hidden" }}>
+      {/* Name/label chosen so browser autofill and password managers never fill it in for real
+          visitors (a filled field silently drops the message). Was "company_website". */}
       <label>
-        Website
+        Leave this field empty
         <input
           type="text"
-          name="company_website"
+          name="hp_field_check"
           tabIndex={-1}
           autoComplete="off"
+          data-1p-ignore=""
+          data-lpignore="true"
+          data-form-type="other"
           value={honeypot}
           onChange={e => setHoneypot(e.target.value)}
         />

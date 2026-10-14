@@ -5,8 +5,7 @@ import { db, getAppAuth } from "@/lib/firebase";
 // Public site: Firestore Lite (one-time reads + form submissions). Admin-only work (listeners,
 // writes) goes through loadFull(), so the full SDK is never part of the public bundle.
 import { doc, collection, getDoc, addDoc } from "firebase/firestore/lite";
-import { sendSubmissionEmail } from "@/lib/emailAlert";
-
+import { sendSubmissionEmail, type ResumeFile } from "@/lib/emailAlert";
 /**
  * siteImageData/{key} -> its `fp` field (null if it has none), from one small REST request that
  * reads only that field (Firestore Lite can't limit fields). Runs once, 2 s after the page has
@@ -143,7 +142,8 @@ interface AdminContextType {
   setServices: React.Dispatch<React.SetStateAction<ServiceItem[]>>;
   submissions: ContactSubmission[];
   setSubmissions: React.Dispatch<React.SetStateAction<ContactSubmission[]>>;
-  addSubmission: (sub: NewSubmission) => Promise<string>;
+  /** resume: the job applicant's file, attached to the email alert (it is saved separately). */
+  addSubmission: (sub: NewSubmission, resume?: ResumeFile) => Promise<string>;
   updateSubmission: (id: string, updates: Partial<ContactSubmission>) => Promise<void>;
   deleteSubmission: (id: string) => Promise<void>;
   jobPositions: JobPosition[];
@@ -577,7 +577,7 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     await signOut(await getAppAuth());
   };
 
-  const addSubmission = async (sub: NewSubmission): Promise<string> => {
+  const addSubmission = async (sub: NewSubmission, resume?: ResumeFile): Promise<string> => {
     // Firestore rejects undefined values (e.g. resumeName when no resume is attached), so drop them.
     const fields = Object.fromEntries(Object.entries(sub).filter(([, v]) => v !== undefined));
     const newSub = { ...fields, type: sub.type ?? "contact", date: new Date().toISOString(), read: false, status: "new" as const };
@@ -586,7 +586,8 @@ export const AdminProvider = ({ children, mode = "admin" }: { children: ReactNod
     );
     const ref = await Promise.race([addDoc(collection(db, "submissions"), newSub), timeout]);
     // Email alert (does not hold up the visitor; the message is already saved for Admin).
-    sendSubmissionEmail({ ...sub, type: newSub.type }).catch(err => console.debug("[AdminContext] email alert:", err));
+    sendSubmissionEmail({ ...sub, type: newSub.type, date: newSub.date }, resume)
+      .catch(err => console.debug("[AdminContext] email alert:", err));
     return ref.id;
   };
 

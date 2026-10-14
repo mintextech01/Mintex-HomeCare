@@ -71,6 +71,7 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
     try {
       let resumeName: string | undefined;
       let resumeDataId: string | undefined;
+      let resumeBase64: string | undefined;
 
       if (resumeFile) {
         const base64 = await new Promise<string>((resolve, reject) => {
@@ -86,6 +87,7 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
         });
         resumeName = resumeFile.name;
         resumeDataId = resumeDoc.id;
+        resumeBase64 = base64;
       }
 
       await addSubmission({
@@ -99,7 +101,7 @@ export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { in
         coverLetter: form.coverLetter,
         resumeName,
         resumeDataId,
-      });
+      }, resumeName && resumeBase64 ? { fileName: resumeName, base64: resumeBase64 } : undefined);
       trackLead("application", { position: form.position });
       spamGuard.reset();
       navigate("/careers/thank-you", { state: { name: form.name.trim().split(" ")[0], position: form.position } });
