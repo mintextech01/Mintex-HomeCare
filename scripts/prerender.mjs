@@ -65,7 +65,8 @@ const ROUTES = [
   { path: "/thank-you", file: "thank-you.html", title: "Thank You", minWords: 30 },
   // Any unknown path renders the 404 page; Firebase Hosting serves dist/404.html for missing URLs.
   { path: "/this-page-does-not-exist", file: "404.html", title: "Page Not Found", minWords: 30 },
-  // Careers flow. Job pages (/careers/jobs/{slug}) are live data and use dist/spa.html instead.
+  // Careers flow. The open job pages (/careers/jobs/{slug}) are found on /careers/jobs and
+  // prerendered after it (see jobRoute); jobs added in Admin after the build use dist/spa.html.
   { path: "/careers/jobs", file: "careers/jobs.html", title: "Open Positions" },
   { path: "/careers/apply", file: "careers/apply.html", title: "Apply Online" },
   { path: "/careers/thank-you", file: "careers/thank-you.html", title: "Application Received", minWords: 30 },
@@ -89,6 +90,19 @@ const ROUTES = [
     ["home-care-or-assisted-living", "Home Care or Assisted Living"],
   ].map(([slug, title]) => ({ path: `/blog/${slug}`, file: `blog/${slug}.html`, title })),
 ];
+
+/**
+ * A job page's title comes from Admin data, so it is checked by its canonical instead. Saved as
+ * careers/jobs/{slug}/index.html: Firebase Hosting serves a folder's index.html at /careers/jobs/{slug}
+ * before the spa.html rewrite applies. `optional`: a job that fails to render keeps using spa.html
+ * instead of cancelling the whole prerender.
+ */
+const jobRoute = (jobPath) => ({
+  path: jobPath,
+  file: `${jobPath.slice(1)}/index.html`,
+  canonical: `https://mintexcare.com${jobPath}`,
+  optional: true,
+});
 
 // Same 1x1 placeholder the app uses while an admin-uploaded image loads (see siteImageConfig.ts).
 // Uploaded images are base64 data URIs; inlining them would make each HTML file ~1 MB.
@@ -212,8 +226,8 @@ const withFastStart = async (html) => {
 };
 
 /**
- * dist/spa.html: the plain app shell (no prerendered content) for pages whose content is live data
- * and can't be prerendered — the job pages at /careers/jobs/{slug} (see firebase.json). Written
+ * dist/spa.html: the plain app shell (no prerendered content) for job pages at /careers/jobs/{slug}
+ * that have no prerendered file — jobs added in Admin after the build (see firebase.json). Written
  * first, from Vite's untouched index.html, so it exists even if prerendering below fails. The
  * homepage's canonical/og:url are removed; the job page sets its own when it renders.
  */
@@ -255,63 +269,80 @@ const main = async () => {
   let jobPaths = [];
   try {
     browser = await chromium.launch();
-    for (const route of ROUTES) {
+    // Job pages are appended once /careers/jobs has rendered and listed them.
+    const queue = [...ROUTES];
+    for (const route of queue) {
       const page = await browser.newPage({ viewport: { width: 1350, height: 900 } });
-      const errors = [];
-      page.on("pageerror", (e) => errors.push(e.message));
-      await page.route(BLOCKED_HOSTS, (r) => r.abort());
-      await page.goto(baseUrl + route.path, { waitUntil: "load", timeout: 60000 });
-      await page.waitForFunction((t) => document.title.startsWith(t), route.title, { timeout: 30000 });
-      // Let Firestore content (contact info, services, jobs, testimonials) arrive.
-      await page.waitForTimeout(3500);
-      // Scroll through the page so scroll-triggered sections render their content visibly,
-      // then return to the top so scroll-linked effects are at their initial position.
-      await page.evaluate(async () => {
-        for (let y = 0; y < document.body.scrollHeight; y += 600) {
-          window.scrollTo(0, y);
-          await new Promise((r) => setTimeout(r, 150));
+      try {
+        const errors = [];
+        page.on("pageerror", (e) => errors.push(e.message));
+        await page.route(BLOCKED_HOSTS, (r) => r.abort());
+        await page.goto(baseUrl + route.path, { waitUntil: "load", timeout: 60000 });
+        if (route.canonical) {
+          // Indexable with its own canonical = the job was found and its tags are set (CareersFlow.tsx).
+          await page.waitForFunction((c) =>
+            document.querySelector('link[rel="canonical"]')?.getAttribute("href") === c &&
+            !document.querySelector('meta[name="robots"]')?.getAttribute("content")?.includes("noindex") &&
+            document.getElementById("job-schema"), route.canonical, { timeout: 30000 });
+        } else {
+          await page.waitForFunction((t) => document.title.startsWith(t), route.title, { timeout: 30000 });
         }
-        window.scrollTo(0, 0);
-      });
-      await page.waitForTimeout(1500);
-      if (errors.length) throw new Error(`${route.path}: ${errors[0]}`);
+        // Let Firestore content (contact info, services, jobs, testimonials) arrive.
+        await page.waitForTimeout(3500);
+        // Scroll through the page so scroll-triggered sections render their content visibly,
+        // then return to the top so scroll-linked effects are at their initial position.
+        await page.evaluate(async () => {
+          for (let y = 0; y < document.body.scrollHeight; y += 600) {
+            window.scrollTo(0, y);
+            await new Promise((r) => setTimeout(r, 150));
+          }
+          window.scrollTo(0, 0);
+        });
+        await page.waitForTimeout(1500);
+        if (errors.length) throw new Error(`${route.path}: ${errors[0]}`);
 
-      const siteData = await page.evaluate(() => window.__SITE_DATA_SNAPSHOT__ ?? null);
-      const html = await page.evaluate(() => {
-        // React takes over (hydrates) this HTML in the browser, and it expects each piece of text
-        // it rendered as its own text node. Saved HTML merges neighbouring text nodes ("500" + "+"
-        // -> "500+"), so separate them with an empty comment, as React's own server rendering does.
-        const root = document.getElementById("root");
-        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-        const texts = [];
-        while (walker.nextNode()) texts.push(walker.currentNode);
-        for (const t of texts) {
-          if (t.previousSibling?.nodeType === Node.TEXT_NODE) t.parentNode.insertBefore(document.createComment(" "), t);
+        const siteData = await page.evaluate(() => window.__SITE_DATA_SNAPSHOT__ ?? null);
+        const html = await page.evaluate(() => {
+          // React takes over (hydrates) this HTML in the browser, and it expects each piece of text
+          // it rendered as its own text node. Saved HTML merges neighbouring text nodes ("500" + "+"
+          // -> "500+"), so separate them with an empty comment, as React's own server rendering does.
+          const root = document.getElementById("root");
+          const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+          const texts = [];
+          while (walker.nextNode()) texts.push(walker.currentNode);
+          for (const t of texts) {
+            if (t.previousSibling?.nodeType === Node.TEXT_NODE) t.parentNode.insertBefore(document.createComment(" "), t);
+          }
+          // Dropdowns (Radix Select) keep a hidden native <select> for forms whose <option>s are only
+          // added after the first render; save it empty, as React first renders it.
+          root.querySelectorAll('select[aria-hidden="true"]').forEach((s) => s.replaceChildren());
+          // The page sits inside <Suspense> (src/user/App.tsx); React needs its boundary markers.
+          const pageEl = root.querySelector("[data-page]");
+          pageEl?.before(document.createComment("$"));
+          pageEl?.after(document.createComment("/$"));
+          // Scripts added at runtime by tag managers (blocked above, but their tags may still be inserted).
+          document.querySelectorAll('script[src*="googletagmanager.com"], script[src*="google-analytics.com"]').forEach((s) => s.remove());
+          // Non-blocking stylesheets already switched to rel="stylesheet" in this browser; restore
+          // rel="preload" so the saved page loads them without blocking the first paint again.
+          document.querySelectorAll("link[data-async-css]").forEach((l) => { l.rel = "preload"; });
+          return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        });
+        const words = await page.evaluate(() => document.querySelector("main")?.innerText.split(/\s+/).length ?? 0);
+        if (!html.includes('<div id="root"><') || words < (route.minWords ?? 50)) throw new Error(`${route.path}: page did not render (${words} words)`);
+        const swapImages = (s) => s.replace(DATA_IMAGE, (uri) => byDataUri.get(uri) ?? PENDING_IMAGE);
+        const finalHtml = await withFastStart(withSiteData(withSiteImages(swapImages(html), manifest), siteData && swapImages(JSON.stringify(siteData))));
+        pages.push({ ...route, html: finalHtml, words });
+        if (route.path === "/careers/jobs") {
+          jobPaths = await page.evaluate(() =>
+            [...new Set([...document.querySelectorAll('main a[href^="/careers/jobs/"]')].map((a) => a.getAttribute("href")))]);
+          queue.push(...jobPaths.filter((p) => /^\/careers\/jobs\/[a-z0-9-]+$/.test(p)).map(jobRoute));
         }
-        // Dropdowns (Radix Select) keep a hidden native <select> for forms whose <option>s are only
-        // added after the first render; save it empty, as React first renders it.
-        root.querySelectorAll('select[aria-hidden="true"]').forEach((s) => s.replaceChildren());
-        // The page sits inside <Suspense> (src/user/App.tsx); React needs its boundary markers.
-        const pageEl = root.querySelector("[data-page]");
-        pageEl?.before(document.createComment("$"));
-        pageEl?.after(document.createComment("/$"));
-        // Scripts added at runtime by tag managers (blocked above, but their tags may still be inserted).
-        document.querySelectorAll('script[src*="googletagmanager.com"], script[src*="google-analytics.com"]').forEach((s) => s.remove());
-        // Non-blocking stylesheets already switched to rel="stylesheet" in this browser; restore
-        // rel="preload" so the saved page loads them without blocking the first paint again.
-        document.querySelectorAll("link[data-async-css]").forEach((l) => { l.rel = "preload"; });
-        return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      });
-      const words = await page.evaluate(() => document.querySelector("main")?.innerText.split(/\s+/).length ?? 0);
-      if (!html.includes('<div id="root"><') || words < (route.minWords ?? 50)) throw new Error(`${route.path}: page did not render (${words} words)`);
-      const swapImages = (s) => s.replace(DATA_IMAGE, (uri) => byDataUri.get(uri) ?? PENDING_IMAGE);
-      const finalHtml = await withFastStart(withSiteData(withSiteImages(swapImages(html), manifest), siteData && swapImages(JSON.stringify(siteData))));
-      pages.push({ ...route, html: finalHtml, words });
-      if (route.path === "/careers/jobs") {
-        jobPaths = await page.evaluate(() =>
-          [...new Set([...document.querySelectorAll('main a[href^="/careers/jobs/"]')].map((a) => a.getAttribute("href")))]);
+      } catch (err) {
+        if (!route.optional) throw err;
+        console.warn(`\n⚠  prerender: skipped ${route.path} (${err.message}); it is served by dist/spa.html.\n`);
+      } finally {
+        await page.close();
       }
-      await page.close();
     }
   } catch (err) {
     warn(err.message);
