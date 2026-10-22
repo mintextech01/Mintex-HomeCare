@@ -1,9 +1,125 @@
 /**
- * Branded email for a new website submission, styled like mintexcare.com (ink headings, indigo
- * highlights, lavender pill buttons, light-grey cards, Poppins / Montserrat).
+ * MintexCare form emails — Google Apps Script web app (free, runs on MintexCare's Google account).
  *
- * Email clients only support simple HTML: tables for layout, inline styles, no SVG, no CSS
- * variables. Web fonts load in Apple Mail / iOS / Outlook.com; Gmail falls back to Arial.
+ * The website saves every form submission to Firestore, then POSTs the same data here. This script
+ * builds the branded email (same design as before) and sends it from the Google account that
+ * deployed it, with the logo embedded and the resume attached for job applications.
+ *
+ * Setup: see email-script/README.md. Paste this file as Code.gs and Logo.gs next to it.
+ */
+
+// Where alerts go. Empty = the Google account that deployed this script.
+// Several addresses: "a@example.com, b@example.com".
+const MAIL_TO = "";
+
+const SITE_URL = "https://mintexcare.com";
+const MAX_PER_HOUR = 30;              // flood limit for the whole script
+const MAX_RESUME_BASE64 = 1000000;   // ~700 KB file, same limit as the site
+
+/* ── Web app entry points ─────────────────────────────────────────── */
+
+function doGet() {
+  return ContentService.createTextOutput("MintexCare email script is running.");
+}
+
+function doPost(e) {
+  let d = {};
+  try { d = JSON.parse((e && e.postData && e.postData.contents) || "{}") || {}; } catch (err) { d = {}; }
+
+  const str = (v, max) => String(v == null ? "" : v).slice(0, max);
+  const sub = {
+    type: d.type === "career" ? "career" : "contact",
+    name: str(d.name, 100).trim(),
+    email: str(d.email, 200).trim(),
+    phone: str(d.phone, 40).trim(),
+    service: str(d.service, 100),
+    message: str(d.message, 5000),
+    position: str(d.position, 100),
+    coverLetter: str(d.coverLetter, 5000),
+    resumeName: str(d.resumeName, 255),
+    date: str(d.date, 40),
+  };
+  if (!sub.name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(sub.email) || sub.phone.replace(/\D/g, "").length < 7) {
+    return json({ ok: false, error: "invalid" });
+  }
+  if (!underHourlyLimit()) return json({ ok: false, error: "limit" });
+
+  const receivedAt = sub.date && !isNaN(new Date(sub.date)) ? new Date(sub.date) : new Date();
+  const mail = renderEmail(sub, { siteUrl: SITE_URL, logoSrc: "cid:mintexcarelogo", receivedAt: receivedAt });
+
+  const attachments = [];
+  const resume = d.resume || {};
+  if (sub.type === "career" && resume.base64 && String(resume.base64).length <= MAX_RESUME_BASE64) {
+    const fileName = str(resume.fileName || sub.resumeName || "resume.pdf", 255);
+    try {
+      attachments.push(Utilities.newBlob(Utilities.base64Decode(String(resume.base64)), mimeFor(fileName), fileName));
+    } catch (err) {
+      console.error("Resume could not be decoded: " + err);
+    }
+  }
+
+  try {
+    MailApp.sendEmail({
+      to: MAIL_TO || Session.getEffectiveUser().getEmail(),
+      name: "MintexCare Website",
+      replyTo: sub.email,
+      subject: mail.subject,
+      body: mail.text,
+      htmlBody: mail.html,
+      inlineImages: { mintexcarelogo: Utilities.newBlob(Utilities.base64Decode(LOGO_PNG_BASE64), "image/png", "mintexcare-logo.png") },
+      attachments: attachments,
+    });
+    return json({ ok: true });
+  } catch (err) {
+    console.error("Send failed: " + err);
+    return json({ ok: false, error: "send" });
+  }
+}
+
+/** Run this once from the editor (Run ▸ testSend) to approve permissions and get a sample email. */
+function testSend() {
+  doPost({ postData: { contents: JSON.stringify({
+    type: "contact", name: "Test Visitor", email: "test@example.com", phone: "(732) 555-0100",
+    service: "Personal Care", message: "This is a test message from the MintexCare email script.",
+    date: new Date().toISOString(),
+  }) } });
+}
+
+/* ── Helpers ──────────────────────────────────────────────────────── */
+
+const json = (o) => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+
+function underHourlyLimit() {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(5000);
+  try {
+    const cache = CacheService.getScriptCache();
+    const key = "sent-" + Math.floor(Date.now() / 3600000);
+    const count = Number(cache.get(key) || 0);
+    if (count >= MAX_PER_HOUR) return false;
+    cache.put(key, String(count + 1), 3600);
+    return true;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function mimeFor(fileName) {
+  const ext = String(fileName).toLowerCase().split(".").pop();
+  return ({
+    pdf: "application/pdf",
+    doc: "application/msword",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    txt: "text/plain",
+    rtf: "application/rtf",
+    jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png",
+  })[ext] || "application/octet-stream";
+}
+
+/* ── Email design (ported from the old email-api/lib/template.js) ─── */
+/*
+ * Styled like mintexcare.com (ink headings, indigo highlights, lavender pill buttons, light-grey
+ * cards). Email clients only support simple HTML: tables for layout, inline styles, no SVG.
  */
 
 const C = {
@@ -19,7 +135,7 @@ const C = {
 const HEAD = "'Poppins', 'Montserrat', Arial, Helvetica, sans-serif";
 const BODY = "'Montserrat', Arial, Helvetica, sans-serif";
 
-const esc = (s) => String(s ?? "")
+const esc = (s) => String(s == null ? "" : s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const nl2br = (s) => esc(s).replace(/\r?\n/g, "<br>");
@@ -54,7 +170,7 @@ const parseMessage = (sub, kind) => {
   return { rows, notes: notes.join("\n").trim(), notesLabel: "Notes" };
 };
 
-const row = (label, valueHtml, last = false) => `
+const row = (label, valueHtml, last) => `
   <tr>
     <td style="padding:14px 20px;${last ? "" : `border-bottom:1px solid ${C.border};`}font-family:${BODY};font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${C.muted};width:38%;vertical-align:top;">${esc(label)}</td>
     <td style="padding:14px 20px;${last ? "" : `border-bottom:1px solid ${C.border};`}font-family:${BODY};font-size:15px;line-height:1.5;color:${C.ink};font-weight:600;vertical-align:top;">${valueHtml}</td>
@@ -65,15 +181,14 @@ const button = (href, label, dark) => `
     <a href="${esc(href)}" style="display:inline-block;padding:12px 20px;border-radius:999px;font-family:${BODY};font-size:14px;font-weight:700;text-decoration:none;${dark ? `background:${C.ink};color:#ffffff;` : `background:${C.lavender};color:${C.ink};`}">${label}</a>
   </td>`;
 
-/** logoSrc: image address for the logo, e.g. "cid:mintexcare-logo" (embedded in the email). */
-export const renderEmail = (sub, { siteUrl, logoSrc, receivedAt = new Date() }) => {
+/** logoSrc: image address for the logo, e.g. "cid:mintexcarelogo" (embedded in the email). */
+function renderEmail(sub, opts) {
+  const siteUrl = opts.siteUrl, logoSrc = opts.logoSrc, receivedAt = opts.receivedAt || new Date();
   const kind = kindOf(sub);
-  const { rows: extraRows, notes, notesLabel } = parseMessage(sub, kind);
+  const parsed = parseMessage(sub, kind);
+  const notes = parsed.notes, notesLabel = parsed.notesLabel;
   const firstName = String(sub.name || "").trim().split(/\s+/)[0] || "them";
-  const when = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York", weekday: "short", month: "short", day: "numeric",
-    year: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short",
-  }).format(receivedAt);
+  const when = Utilities.formatDate(receivedAt, "America/New_York", "EEE, MMM d, yyyy, h:mm a z");
 
   const rows = [
     ["Name", esc(sub.name)],
@@ -83,7 +198,7 @@ export const renderEmail = (sub, { siteUrl, logoSrc, receivedAt = new Date() }) 
   if (kind.key === "career") rows.push(["Position", esc(sub.position || sub.service)]);
   else if (kind.key === "staffing") rows.push(["Roles needed", esc(String(sub.service).replace(/^Facility Staffing:\s*/, ""))]);
   else if (sub.service) rows.push([kind.key === "consultation" ? "Type of care" : "Service", esc(sub.service)]);
-  for (const [k, v] of extraRows) if (!(kind.key === "staffing" && k === "Roles needed")) rows.push([k, esc(v)]);
+  for (const [k, v] of parsed.rows) if (!(kind.key === "staffing" && k === "Roles needed")) rows.push([k, esc(v)]);
   if (kind.key === "career") rows.push(["Resume", sub.resumeName ? `${esc(sub.resumeName)} <span style="color:${C.muted};font-weight:400;">(attached)</span>` : `<span style="color:${C.muted};font-weight:400;">Not provided</span>`]);
 
   const replySubject = kind.key === "career" ? "Your application to MintexCare" : "Your request to MintexCare";
@@ -175,5 +290,5 @@ export const renderEmail = (sub, { siteUrl, logoSrc, receivedAt = new Date() }) 
     ...(notes ? ["", `${notesLabel}:`, notes] : []),
   ].join("\n");
 
-  return { subject, html, text };
-};
+  return { subject: subject, html: html, text: text };
+}
