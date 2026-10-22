@@ -160,7 +160,7 @@ const HeroSection = () => {
             className="relative hidden lg:block"
           >
             <div className="el-card p-3">
-              <div className="relative rounded-[16px] overflow-hidden aspect-[4/5] max-h-[560px]">
+              <div className="relative rounded-[16px] overflow-hidden w-full h-[560px]">
                 {/* Desktop LCP image. <picture> + media: the card is hidden below lg, so smaller
                     screens get the 1x1 placeholder instead of downloading the photo. */}
                 <picture>

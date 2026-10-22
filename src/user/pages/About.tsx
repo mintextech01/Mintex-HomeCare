@@ -93,7 +93,7 @@ const About = () => {
               {/* RIGHT: Image card with info chips */}
               <AnimatedSection delay={0.1} className="relative">
                 <div className="el-card p-3">
-                  <div className="relative rounded-[16px] overflow-hidden" style={{ aspectRatio: "4/5", maxHeight: 560 }}>
+                  <div className="relative rounded-[16px] overflow-hidden aspect-[4/5] max-h-[560px] lg:aspect-auto lg:h-[560px]">
                     <img
                       src={siteImages.aboutPageHero}
                       alt="MintexCare caregiver with patient"

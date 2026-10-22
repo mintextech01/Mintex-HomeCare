@@ -27,10 +27,7 @@ const AboutSection = () => {
 
           {/* ── LEFT: Image ── */}
           <AnimatedSection className="relative order-2 lg:order-1">
-            <div
-              className="relative rounded-[28px] overflow-hidden"
-              style={{ aspectRatio: "4/5", maxHeight: 600 }}
-            >
+            <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] max-h-[600px] lg:aspect-auto lg:h-[600px]">
               <img
                 src={siteImages.about}
                 alt="Caregiver providing compassionate home care"

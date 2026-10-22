@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Star, ChevronLeft, ChevronRight, Users, Award, ThumbsUp, Clock, Quote } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Star, ChevronLeft, ChevronRight, Users, Award, ThumbsUp, Clock, Quote, ArrowRight } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
 import { motion, AnimatePresence } from "@/lib/motion";
+import { storyLabel, displayName, byline } from "@/lib/testimonials";
 
 const stats = [
   { icon: Clock,    value: "24",   unit: "/7", label: "Care Available"   },
@@ -21,8 +23,8 @@ const TestimonialsSection = () => {
     setCurrent((next + testimonials.length) % testimonials.length);
   };
 
-  if (testimonials.length === 0) return null;
-  const t = testimonials[current];
+  // With no reviews yet the section still shows, with a "coming soon" card in place of the carousel.
+  const t = testimonials[Math.min(current, testimonials.length - 1)];
 
   return (
     <section className="py-20 md:py-28 overflow-hidden">
@@ -54,7 +56,7 @@ const TestimonialsSection = () => {
             </div>
 
             {/* Navigation */}
-            <div className="flex items-center gap-4">
+            {t && <div className="flex items-center gap-4">
               <button
                 onClick={() => go(current - 1)}
                 className="h-12 w-12 rounded-full border border-border bg-background flex items-center justify-center text-foreground transition-colors duration-200"
@@ -72,15 +74,35 @@ const TestimonialsSection = () => {
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
-            </div>
+            </div>}
+
+            <Link to="/reviews" className={`el-btn-soft group ${t ? "mt-8" : ""}`}>
+              Read All Reviews <ArrowRight className="h-4 w-4 flex-shrink-0 transition-transform" />
+            </Link>
           </AnimatedSection>
 
           {/* ── RIGHT: testimonial card ── */}
           <AnimatedSection delay={0.1}>
+            {!t ? (
+              <div className="el-card rounded-[28px] p-8 md:p-12 text-center">
+                <div className="h-14 w-14 rounded-full bg-accent flex items-center justify-center mx-auto mb-5">
+                  <Quote className="h-6 w-6 text-accent-foreground" />
+                </div>
+                <p className="text-xl font-serif font-bold text-foreground mb-2">Family stories are on their way</p>
+                <p className="text-muted-foreground font-sans leading-relaxed max-w-md mx-auto">
+                  We're gathering reviews from the families we care for. Until then, see why families trust MintexCare.
+                </p>
+                <Link to="/about/why-mintexcare" className="el-btn-soft group mt-6">
+                  Why Families Trust Us <ArrowRight className="h-4 w-4 flex-shrink-0 transition-transform" />
+                </Link>
+              </div>
+            ) : (
             <div className="relative el-card rounded-[28px] p-8 md:p-12 overflow-hidden">
 
               <div className="flex items-center justify-between mb-8">
-                <div className="flex gap-1">
+                <div className="flex items-center gap-3">
+                <span className="text-xs font-sans font-bold uppercase tracking-wider text-primary">{storyLabel(t)}</span>
+                <div className="flex gap-1" aria-label={`${t.rating} out of 5 stars`}>
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
@@ -90,7 +112,8 @@ const TestimonialsSection = () => {
                     />
                   ))}
                 </div>
-                <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center">
+                </div>
+                <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center shrink-0">
                   <Quote className="h-5 w-5 text-accent-foreground" />
                 </div>
               </div>
@@ -111,11 +134,11 @@ const TestimonialsSection = () => {
                     <div className="h-12 w-12 rounded-full bg-foreground flex items-center justify-center flex-shrink-0 text-background font-serif font-bold text-xl">
                       {t.name.charAt(0)}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <p className="font-serif font-semibold text-foreground text-base leading-none mb-1">
-                        {t.name}
+                        {displayName(t)}
                       </p>
-                      <p className="text-sm text-muted-foreground font-sans">{t.location}</p>
+                      <p className="text-sm text-muted-foreground font-sans">{byline(t)}</p>
                     </div>
                     <div className="flex items-center gap-1.5 bg-background text-foreground text-xs font-sans font-semibold px-3 py-1.5 rounded-full">
                       <svg viewBox="0 0 12 12" className="h-3 w-3 flex-shrink-0" fill="none">
@@ -149,6 +172,7 @@ const TestimonialsSection = () => {
                 ))}
               </div>
             </div>
+            )}
           </AnimatedSection>
 
         </div>

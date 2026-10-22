@@ -3,13 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram, ArrowRight } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
 import { useSpamGuard } from "@/hooks/useSpamGuard";
 import { CONTACT_SERVICE_OPTIONS as serviceOptions } from "@/data/serviceIndex";
 import { trackLead, type LeadSource } from "@/lib/leads";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ContactSection = () => {
   const { addSubmission, contactInfo } = useAdmin();
@@ -107,6 +107,9 @@ const ContactSection = () => {
                   {contactInfo.hours}
                 </li>
               </ul>
+              <Link to="/contact" className="mt-8 inline-flex items-center gap-2 font-sans font-semibold text-background underline underline-offset-4">
+                More ways to reach us <ArrowRight className="h-4 w-4" />
+              </Link>
               <div className="mt-auto pt-10">
                 <h3 className="font-serif text-xl font-semibold mb-4">Follow Us</h3>
                 <div className="flex gap-3">

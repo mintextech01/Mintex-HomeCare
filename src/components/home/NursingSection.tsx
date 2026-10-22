@@ -10,6 +10,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 const cards = [
   {
     title: "Physical Therapy",
+    link: "/services/therapy-support",
     description:
       "Personalized therapy programs to restore strength, balance, and mobility in the comfort of your home.",
     bg: "#ddeeff",
@@ -42,6 +43,7 @@ const cards = [
   },
   {
     title: "Occupational Therapy",
+    link: "/services/therapy-support",
     description:
       "Helping patients rebuild daily living skills and regain independence through tailored therapy sessions.",
     bg: "#fde8f0",
@@ -91,6 +93,7 @@ const cards = [
   },
   {
     title: "Speech Therapy",
+    link: "/services/therapy-support",
     description:
       "Expert speech and language therapy to improve communication and swallowing with compassionate care.",
     bg: "#ede8ff",
@@ -123,6 +126,7 @@ const cards = [
   },
   {
     title: "IV Therapy",
+    link: "/services/wound-care-iv-therapy",
     description:
       "Safe, professional intravenous therapy administered by licensed nurses in the comfort of your home.",
     bg: "#d8f5f0",
@@ -169,6 +173,7 @@ const cards = [
   },
   {
     title: "Wound Care",
+    link: "/services/wound-care-iv-therapy",
     description:
       "Advanced wound assessment, dressing changes, and treatment to ensure safe, effective healing.",
     bg: "#e8fbff",
@@ -209,6 +214,7 @@ const cards = [
   },
   {
     title: "Medication Management",
+    link: "/services/medication-management",
     description:
       "Ensuring correct, timely medication routines with professional oversight from skilled nurses.",
     bg: "#fff4de",
@@ -283,7 +289,7 @@ const NursingSection = () => {
             return (
               <AnimatedSection key={card.title} delay={idx * 0.05} className="h-full">
                 <Link
-                  to="/services"
+                  to={card.link}
                   className="group el-card flex items-stretch gap-4 h-full p-3 transition-shadow duration-300"
                 >
                   {/* Illustration tile */}

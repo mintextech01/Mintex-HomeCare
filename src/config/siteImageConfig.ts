@@ -62,7 +62,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
   {
     key: "aboutAvatar1",
-    defaultUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&q=80",
+    defaultUrl: "/site-images/client-avatar-1.webp",
     label: "Family Badge — Avatar 1",
     description: "First small circular avatar in the floating 'Happy Families' badge",
     page: "Homepage — About Section",
@@ -70,7 +70,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
   {
     key: "aboutAvatar2",
-    defaultUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&h=60&fit=crop&q=80",
+    defaultUrl: "/site-images/client-avatar-2.webp",
     label: "Family Badge — Avatar 2",
     description: "Second small circular avatar in the floating 'Happy Families' badge",
     page: "Homepage — About Section",
@@ -78,7 +78,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
   {
     key: "aboutAvatar3",
-    defaultUrl: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=60&h=60&fit=crop&q=80",
+    defaultUrl: "/site-images/client-avatar-3.webp",
     label: "Family Badge — Avatar 3",
     description: "Third small circular avatar in the floating 'Happy Families' badge",
     page: "Homepage — About Section",
@@ -164,7 +164,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
   {
     key: "aboutPageAvatar1",
-    defaultUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&q=80",
+    defaultUrl: "/site-images/client-avatar-1.webp",
     label: "Family Badge — Avatar 1",
     description: "First avatar in the floating 'Happy Families' badge on the About Us page",
     page: "About Us Page",
@@ -172,7 +172,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
   {
     key: "aboutPageAvatar2",
-    defaultUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&h=60&fit=crop&q=80",
+    defaultUrl: "/site-images/client-avatar-2.webp",
     label: "Family Badge — Avatar 2",
     description: "Second avatar in the floating 'Happy Families' badge on the About Us page",
     page: "About Us Page",
@@ -180,7 +180,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
   {
     key: "aboutPageAvatar3",
-    defaultUrl: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=60&h=60&fit=crop&q=80",
+    defaultUrl: "/site-images/client-avatar-3.webp",
     label: "Family Badge — Avatar 3",
     description: "Third avatar in the floating 'Happy Families' badge on the About Us page",
     page: "About Us Page",

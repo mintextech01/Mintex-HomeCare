@@ -8,14 +8,15 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: { "2xl": "1400px" },
+      // Wide enough that pages fill large (1920px) screens instead of sitting in a narrow centre column.
+      screens: { "2xl": "1760px" },
     },
     extend: {
       fontFamily: {
-        sans: ["Montserrat", "Montserrat Fallback", "sans-serif"],
-        serif: ["Poppins", "Poppins Fallback", "sans-serif"],
-        heading: ["Poppins", "Poppins Fallback", "sans-serif"],
-        body: ["Montserrat", "Montserrat Fallback", "sans-serif"],
+        sans: ["Nunito Sans", "Nunito Sans Fallback", "sans-serif"],
+        serif: ["Nunito", "Nunito Fallback", "sans-serif"],
+        heading: ["Nunito", "Nunito Fallback", "sans-serif"],
+        body: ["Nunito Sans", "Nunito Sans Fallback", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -72,6 +73,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontSize: {
+        // Style tile: body text is 18px minimum.
+        base: ["1.125rem", { lineHeight: "1.75rem" }],
         "heading-h1": ["clamp(2rem, 5vw, 3.5rem)", { lineHeight: "1.1", fontWeight: "700", letterSpacing: "-0.01em" }],
         "heading-h2": ["clamp(1.75rem, 4vw, 3rem)", { lineHeight: "1.1", fontWeight: "600", letterSpacing: "-0.01em" }],
         "heading-h3": ["clamp(1.25rem, 3vw, 2rem)", { lineHeight: "1.2", fontWeight: "600", letterSpacing: "-0.01em" }],
@@ -80,7 +83,7 @@ export default {
       letterSpacing: {
         "label": "0.22em",
         "heading": "-0.01em",
-        "body": "0.04em",
+        "body": "0",
       },
       opacity: {
         "subtle": "0.05",

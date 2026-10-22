@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, Menu, X, ChevronDown, MessageCircle, Briefcase, MapPin, ArrowRight, Clock, Building2, Search, ListChecks, HelpCircle, Mail, ClipboardList, Newspaper, Calculator, Wallet, Receipt, Heart, ShieldCheck, Quote } from "lucide-react";
-import logo from "@/assets/Artboard 133 copy (1).svg";
+import logo from "@/assets/Mintex-care-logo.svg";
 import { motion } from "@/lib/motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -38,8 +38,8 @@ const RESOURCE_LINKS = [
 
 const CONSULTATION_HREF = "/free-consultation";
 
-// Solid ink pill (redesign palette) — used for every "Free Consultation" button in the header.
-const INK_BTN = "bg-foreground text-background transition-colors";
+// Solid Mintex blue (style tile) — used for every "Free Consultation" button in the header.
+const INK_BTN = "bg-primary text-primary-foreground hover:bg-primary/90 transition-colors";
 // Promo card in the mega menus.
 const PROMO_CARD = "relative rounded-2xl p-6 overflow-hidden bg-foreground text-background flex flex-col";
 
@@ -74,7 +74,7 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Not sure what you need?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Talk to a care coordinator. It's free.</p>
       <div className="relative mt-auto space-y-2">
-        <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
+        <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
           Free Consultation <ArrowRight className="h-4 w-4" />
         </Link>
         <a href={`tel:+1${tel}`} className="flex items-center justify-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 bg-background/15 transition-colors">
@@ -112,7 +112,7 @@ const AreasPanel = () => (
     <div className={PROMO_CARD}>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">12 NJ counties</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Is my town covered?</p>
-      <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
+      <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         <Search className="h-4 w-4" /> Find your town
       </Link>
     </div>
@@ -139,7 +139,7 @@ const CostsPanel = () => (
     <div className={PROMO_CARD}>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Free, no obligation</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Get a clear, written quote</p>
-      <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
+      <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         Get a Free Quote <ArrowRight className="h-4 w-4" />
       </Link>
     </div>
@@ -189,7 +189,7 @@ const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
     <div className={PROMO_CARD}>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Still have questions?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">We're here 24/7</p>
-      <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-full px-4 py-2.5 bg-accent text-accent-foreground transition-colors">
+      <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         <Phone className="h-4 w-4" /> {phone}
       </a>
     </div>
@@ -367,7 +367,7 @@ const Header = () => {
                 className="hidden xl:flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors">
                 <Phone className="h-4 w-4" />
               </a>
-              <Link to={CONSULTATION_HREF} className={`inline-flex items-center rounded-full px-4 xl:px-6 py-2.5 text-[13px] xl:text-sm font-semibold whitespace-nowrap ${INK_BTN}`}>
+              <Link to={CONSULTATION_HREF} className={`inline-flex items-center rounded-xl px-4 xl:px-6 h-12 text-[13px] xl:text-sm font-bold whitespace-nowrap ${INK_BTN}`}>
                 Free Consultation
               </Link>
             </div>
@@ -426,7 +426,7 @@ const Header = () => {
           <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-full text-[13px] font-semibold text-foreground border border-border bg-background">
             <MessageCircle className="h-4 w-4 text-primary" /> <span className="hidden min-[420px]:inline">WhatsApp</span>
           </a>
-          <Link to={CONSULTATION_HREF} className={`flex items-center justify-center gap-1.5 h-11 px-3 rounded-full text-[13px] font-bold whitespace-nowrap ${INK_BTN}`}>
+          <Link to={CONSULTATION_HREF} className={`flex items-center justify-center gap-1.5 h-12 px-3 rounded-xl text-[13px] font-bold whitespace-nowrap ${INK_BTN}`}>
             Free Consultation
           </Link>
         </div>
@@ -587,7 +587,7 @@ const Header = () => {
 
         {/* Bottom CTA */}
         <div className="flex-shrink-0 px-4 pb-8 pt-3 border-t border-border">
-          <Link to={CONSULTATION_HREF} className={`flex items-center justify-center w-full rounded-full font-semibold h-12 text-sm ${INK_BTN}`}>
+          <Link to={CONSULTATION_HREF} className={`flex items-center justify-center w-full rounded-xl font-bold h-12 text-base ${INK_BTN}`}>
             Free Consultation
           </Link>
         </div>

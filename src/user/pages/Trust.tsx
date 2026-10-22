@@ -7,6 +7,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
+import { storyLabel, initials, displayName, byline } from "@/lib/testimonials";
 import {
   ArrowRight, Phone, MessageCircle, ShieldCheck, HeartPulse, UserCheck, ClipboardList, Clock, MapPin, Award,
   FileSearch, Users, BadgeCheck, FlaskConical, Stethoscope, GraduationCap, MessagesSquare, Check, ChevronLeft,
@@ -357,9 +358,6 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
    /reviews — testimonial carousel (same pattern as Mintex Staffing)
    ════════════════════════════════════════════ */
 
-const initials = (name: string) =>
-  name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]!.toUpperCase()).join("") || "?";
-
 const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
   const { testimonials } = useAdmin();
   const [start, setStart] = useState(0);
@@ -423,17 +421,23 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
               <div className={`grid gap-5 ${perView === 3 ? "lg:grid-cols-3" : perView === 2 ? "sm:grid-cols-2" : ""}`}>
                 {visible.map(t => (
                   <article key={t.id} className="h-full flex flex-col bg-background rounded-[28px] p-7 md:p-8">
-                    <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center mb-6">
-                      <Quote className="w-5 h-5 text-accent-foreground" />
+                    <div className="flex items-center justify-between gap-3 mb-6">
+                      <span className="text-xs font-bold uppercase tracking-wider text-primary">{storyLabel(t)}</span>
+                      <div className="flex gap-0.5" aria-label={`${t.rating} out of 5 stars`}>
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "fill-border text-border"}`} />
+                        ))}
+                      </div>
                     </div>
+                    <Quote className="w-6 h-6 text-primary/30 mb-3" />
                     <p className="text-foreground/85 leading-relaxed flex-1 mb-7">"{t.text}"</p>
                     <div className="flex items-center gap-3 pt-5 border-t border-border">
                       <span className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-foreground text-background font-bold">
                         {initials(t.name)}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-bold text-foreground leading-tight truncate">{t.name}</p>
-                        {t.location && <p className="text-sm text-muted-foreground flex items-center gap-1"><MapPin className="h-3.5 w-3.5 shrink-0" /> {t.location}</p>}
+                        <p className="font-bold text-foreground leading-tight truncate">{displayName(t)}</p>
+                        {byline(t) && <p className="text-sm text-muted-foreground">{byline(t)}</p>}
                       </div>
                     </div>
                   </article>

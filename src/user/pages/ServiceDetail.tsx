@@ -423,7 +423,9 @@ const ServiceDetail = () => {
                   <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">
                     A care coordinator will answer your questions and arrange a free in-home assessment, with no obligation.
                   </p>
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+                </div>
+                {/* Buttons sit outside the narrow text column so their labels stay on one line. */}
+                <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3 [&>*]:whitespace-nowrap">
                     <a href={`tel:+1${tel}`} className="el-btn-primary">
                       <Phone className="h-4 w-4" /> Call {contactInfo.phone}
                     </a>
@@ -435,7 +437,6 @@ const ServiceDetail = () => {
                       className="el-btn bg-background text-foreground">
                       Free Consultation <ArrowRight className="h-4 w-4" />
                     </Link>
-                  </div>
                 </div>
               </div>
             </AnimatedSection>

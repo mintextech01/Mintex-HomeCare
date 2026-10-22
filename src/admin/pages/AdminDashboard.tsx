@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { useAdmin, type JobPosition, type ContactInfo, type Pricing, type PriceItem } from "@/contexts/AdminContext";
+import { useAdmin, type JobPosition, type ContactInfo, type Pricing, type PriceItem, type TestimonialCategory } from "@/contexts/AdminContext";
+import { STORY_LABELS, storyLabel, displayName } from "@/lib/testimonials";
 import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS, imageFingerprint } from "@/config/siteImageConfig";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -122,35 +123,58 @@ const DashboardTab = ({ submissions, teamMembers, testimonials, jobPositions }: 
 );
 
 /* ── Testimonials ── */
+const emptyTestimonialForm = { name: "", text: "", rating: "5", location: "", category: "family" as TestimonialCategory, relationship: "", initialsOnly: false };
+
 const TestimonialsTab = ({ testimonials, setTestimonials, toast }: any) => {
-  const [form, setForm] = useState({ name: "", text: "", rating: "5", location: "" });
+  const [form, setForm] = useState(emptyTestimonialForm);
   const [editing, setEditing] = useState<string | null>(null);
   const save = () => {
     if (!form.name || !form.text) return;
+    const rating = Math.min(5, Math.max(1, parseInt(form.rating) || 5));
     if (editing) {
-      setTestimonials((prev: any[]) => prev.map((t: any) => t.id === editing ? { ...t, ...form, rating: parseInt(form.rating) } : t));
+      setTestimonials((prev: any[]) => prev.map((t: any) => t.id === editing ? { ...t, ...form, rating } : t));
       setEditing(null); toast({ title: "Updated" });
     } else {
-      setTestimonials((prev: any[]) => [...prev, { id: Date.now().toString(), ...form, rating: parseInt(form.rating) }]);
+      setTestimonials((prev: any[]) => [...prev, { id: Date.now().toString(), ...form, rating }]);
       toast({ title: "Added" });
     }
-    setForm({ name: "", text: "", rating: "5", location: "" });
+    setForm(emptyTestimonialForm);
   };
-  const startEdit = (t: any) => { setEditing(t.id); setForm({ name: t.name, text: t.text, rating: t.rating.toString(), location: t.location }); };
+  const startEdit = (t: any) => {
+    setEditing(t.id);
+    setForm({ name: t.name, text: t.text, rating: t.rating.toString(), location: t.location ?? "", category: t.category ?? "family", relationship: t.relationship ?? "", initialsOnly: !!t.initialsOnly });
+  };
   const remove = (id: string) => { setTestimonials((prev: any[]) => prev.filter((t: any) => t.id !== id)); toast({ title: "Deleted" }); };
 
   return (
     <div>
       <h1 className="text-2xl font-serif font-bold text-foreground mb-6">Testimonials</h1>
       <Card className="mb-6 shadow-sm"><CardContent className="pt-6 space-y-3">
-        <div className="grid sm:grid-cols-2 gap-3"><Input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="font-sans" /><Input placeholder="Location" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="font-sans" /></div>
+        <div className="grid sm:grid-cols-2 gap-3"><Input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="font-sans" /><Input placeholder="Location (e.g. Edison, NJ)" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="font-sans" /></div>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <Select value={form.category} onValueChange={v => setForm({ ...form, category: v as TestimonialCategory })}>
+            <SelectTrigger className="font-sans"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {(Object.keys(STORY_LABELS) as TestimonialCategory[]).map(c => <SelectItem key={c} value={c} className="font-sans">{STORY_LABELS[c]}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Input placeholder="Relationship (e.g. Daughter of client)" value={form.relationship} onChange={e => setForm({ ...form, relationship: e.target.value })} className="font-sans" />
+        </div>
         <Textarea placeholder="Testimonial text" value={form.text} onChange={e => setForm({ ...form, text: e.target.value })} className="font-sans" />
-        <div className="flex flex-wrap gap-3 items-center"><Input type="number" min="1" max="5" placeholder="Rating" value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} className="w-32 font-sans" /><Button onClick={save} className="font-sans"><Plus className="h-4 w-4 mr-1" /> {editing ? "Update" : "Add"}</Button>{editing && <Button variant="outline" onClick={() => { setEditing(null); setForm({ name: "", text: "", rating: "5", location: "" }); }} className="font-sans">Cancel</Button>}</div>
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-border px-4 py-3">
+          <div>
+            <p className="font-medium text-foreground font-sans">Show initials only</p>
+            <p className="text-xs text-muted-foreground">The site shows "{form.name.trim() ? displayName({ ...form, id: "", rating: 5, initialsOnly: true }) : "S.K."}" instead of the full name.</p>
+          </div>
+          <Switch checked={form.initialsOnly} onCheckedChange={v => setForm({ ...form, initialsOnly: v })} />
+        </div>
+        <p className="text-xs text-muted-foreground font-sans">Only post real reviews, with the client's or family's permission.</p>
+        <div className="flex flex-wrap gap-3 items-center"><Input type="number" min="1" max="5" placeholder="Rating" value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} className="w-32 font-sans" /><Button onClick={save} className="font-sans"><Plus className="h-4 w-4 mr-1" /> {editing ? "Update" : "Add"}</Button>{editing && <Button variant="outline" onClick={() => { setEditing(null); setForm(emptyTestimonialForm); }} className="font-sans">Cancel</Button>}</div>
       </CardContent></Card>
       <Card className="shadow-sm overflow-hidden"><div className="overflow-x-auto"><Table>
-        <TableHeader><TableRow><TableHead>Name</TableHead><TableHead className="hidden sm:table-cell">Text</TableHead><TableHead>Rating</TableHead><TableHead className="hidden md:table-cell">Location</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
+        <TableHeader><TableRow><TableHead>Name</TableHead><TableHead className="hidden lg:table-cell">Type</TableHead><TableHead className="hidden sm:table-cell">Text</TableHead><TableHead>Rating</TableHead><TableHead className="hidden md:table-cell">Location</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
         <TableBody>{testimonials.map((t: any) => (
-          <TableRow key={t.id}><TableCell className="font-sans font-medium">{t.name}</TableCell><TableCell className="font-sans max-w-xs truncate hidden sm:table-cell">{t.text}</TableCell><TableCell><div className="flex">{Array.from({ length: t.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />)}</div></TableCell><TableCell className="font-sans hidden md:table-cell">{t.location}</TableCell><TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(t)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(t.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell></TableRow>
+          <TableRow key={t.id}><TableCell className="font-sans font-medium">{displayName(t)}{t.initialsOnly && <span className="block text-xs text-muted-foreground font-normal">{t.name}</span>}</TableCell><TableCell className="font-sans hidden lg:table-cell">{storyLabel(t)}</TableCell><TableCell className="font-sans max-w-xs truncate hidden sm:table-cell">{t.text}</TableCell><TableCell><div className="flex">{Array.from({ length: t.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />)}</div></TableCell><TableCell className="font-sans hidden md:table-cell">{t.location}</TableCell><TableCell><div className="flex gap-1"><Button size="icon" variant="ghost" onClick={() => startEdit(t)}><Edit className="h-4 w-4" /></Button><Button size="icon" variant="ghost" onClick={() => remove(t.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button></div></TableCell></TableRow>
         ))}</TableBody>
       </Table></div></Card>
     </div>

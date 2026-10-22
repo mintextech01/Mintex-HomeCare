@@ -2,42 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Web fonts, self-hosted (Latin set, same files Google Fonts serves). Montserrat is one variable
-   file covering weights 300-700. */
+/* Web fonts, self-hosted (Latin set, same files Google Fonts serves), per the style tile:
+   Nunito for headings (variable, 600-800), Nunito Sans for body text (variable, 400-700). */
 @font-face {
-  font-family: "Montserrat";
+  font-family: "Nunito";
   font-style: normal;
-  font-weight: 300 700;
+  font-weight: 600 800;
   font-display: swap;
-  src: url("/fonts/montserrat-latin-var.woff2") format("woff2");
+  src: url("/fonts/nunito-latin-var.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Poppins";
+  font-family: "Nunito Sans";
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400 700;
   font-display: swap;
-  src: url("/fonts/poppins-latin-700.woff2") format("woff2");
+  src: url("/fonts/nunito-sans-latin-var.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Metric-matched fallbacks: while Poppins / Montserrat download, text is drawn in a local
+/* Metric-matched fallbacks: while Nunito / Nunito Sans download, text is drawn in a local
    font scaled to the same size, so headings don't re-wrap and push the page down (CLS)
    when the web fonts swap in. */
 @font-face {
-  font-family: "Poppins Fallback";
+  font-family: "Nunito Fallback";
   src: local("Arial");
-  size-adjust: 112.16%;
-  ascent-override: 93.62%;
-  descent-override: 31.21%;
-  line-gap-override: 8.92%;
+  size-adjust: 104.21%;
+  ascent-override: 97.02%;
+  descent-override: 33.88%;
+  line-gap-override: 0%;
 }
 @font-face {
-  font-family: "Montserrat Fallback";
+  font-family: "Nunito Sans Fallback";
   src: local("Arial");
-  size-adjust: 113.95%;
-  ascent-override: 84.95%;
-  descent-override: 22.03%;
+  size-adjust: 100.44%;
+  ascent-override: 100.65%;
+  descent-override: 35.14%;
   line-gap-override: 0%;
 }
 
@@ -151,62 +151,69 @@
 }
 
 /* ════════════════════════════════════════
-   REDESIGN PALETTE (Eldera-style)
-   Applied only inside .theme-el, so each page switches over when it is redesigned.
-   Ink headings, lavender soft accents, neutral light-grey surfaces.
+   SITE PALETTE (style tile): one blue, whites, soft greys
+   Applied inside .theme-el (every public page, header, footer, and <body> for pop-ups).
    ════════════════════════════════════════ */
 @layer base {
   .theme-el {
+    /* White #FFFFFF: main ground. Charcoal #22272E: headings, body text, footer text */
     --background: 0 0% 100%;
-    --foreground: 240 12% 10%;
+    --foreground: 215 15% 16%;
     --card: 0 0% 100%;
-    --card-foreground: 240 12% 10%;
+    --card-foreground: 215 15% 16%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 12% 10%;
+    --popover-foreground: 215 15% 16%;
 
-    /* Indigo-lavender: icons, links, highlights (≈5.3:1 on white) */
-    --primary: 238 47% 55%;
+    /* Mintex blue #2A66B0: buttons, links, icons (≈6:1 on white) */
+    --primary: 213 61% 43%;
     --primary-foreground: 0 0% 100%;
 
-    /* Soft lavender: pill buttons and tints, always with ink text on top */
-    --accent: 236 78% 89%;
-    --accent-foreground: 240 12% 10%;
+    /* Mist blue #EEF3FA: icon tiles, highlights. Text on it stays charcoal; icons on it are
+       Mintex blue (see the svg rule below the palette). */
+    --accent: 215 55% 96%;
+    --accent-foreground: 215 15% 16%;
 
-    --secondary: 240 5% 94%;
-    --secondary-foreground: 240 12% 10%;
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 5% 36%;
+    --secondary: 216 45% 98%;
+    --secondary-foreground: 215 15% 16%;
+    --muted: 216 45% 98%;
+    /* Soft grey #5B6470: supporting text (≈6:1 on white, above 4.5:1) */
+    --muted-foreground: 214 10% 40%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 88%;
-    --ring: 238 47% 55%;
+    --border: 216 22% 91%;
+    --input: 216 18% 86%;
+    --ring: 213 61% 43%;
 
-    --surface: 240 5% 96%;
+    /* Soft white #F7F9FC: alternate sections */
+    --surface: 216 45% 98%;
   }
+  /* Style tile: icons are Mintex blue, including the ones sitting on mist-blue tiles. */
+  /* (Attribute selector, so Tailwind doesn't treat it as the text-accent-foreground utility.) */
+  .theme-el svg[class~="text-accent-foreground"] { color: hsl(var(--primary)); }
   /* page wrappers (<main>) also take the page background + ink text */
   main.theme-el {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
+  /* Dark mode: the same blue family on charcoal grounds */
   .dark .theme-el {
-    --background: 240 8% 7%;
-    --foreground: 240 10% 95%;
-    --card: 240 7% 11%;
-    --card-foreground: 240 10% 95%;
-    --popover: 240 7% 11%;
-    --popover-foreground: 240 10% 95%;
-    --primary: 236 75% 78%;
-    --primary-foreground: 240 12% 10%;
-    --accent: 238 30% 26%;
-    --accent-foreground: 240 10% 95%;
-    --secondary: 240 6% 16%;
-    --secondary-foreground: 240 10% 95%;
-    --muted: 240 6% 14%;
-    --muted-foreground: 240 6% 68%;
-    --border: 240 6% 20%;
-    --input: 240 6% 22%;
-    --ring: 236 75% 78%;
-    --surface: 240 7% 12%;
+    --background: 215 18% 9%;
+    --foreground: 214 25% 95%;
+    --card: 215 16% 12%;
+    --card-foreground: 214 25% 95%;
+    --popover: 215 16% 12%;
+    --popover-foreground: 214 25% 95%;
+    --primary: 213 75% 70%;
+    --primary-foreground: 215 18% 9%;
+    --accent: 213 35% 20%;
+    --accent-foreground: 214 25% 95%;
+    --secondary: 215 14% 16%;
+    --secondary-foreground: 214 25% 95%;
+    --muted: 215 14% 14%;
+    --muted-foreground: 214 12% 70%;
+    --border: 215 14% 21%;
+    --input: 215 14% 24%;
+    --ring: 213 75% 70%;
+    --surface: 215 16% 12%;
   }
 }
 
@@ -226,8 +233,8 @@
     overflow-x: hidden;
     overflow-x: clip;
     @apply text-foreground font-sans;
-    font-weight: 300;
-    letter-spacing: 0.035em;
+    font-weight: 400;
+    font-size: 1.125rem;
     /* Ambient gradient base — gives glass something to blur against */
     background-color: hsl(var(--background));
     background-image:
@@ -236,27 +243,31 @@
       radial-gradient(ellipse 60% 40% at 50%  50%,  rgba(38, 188, 156, 0.030) 0%, transparent 70%);
   }
 
+  /* Style tile: Nunito headings (soft, rounded, warm), Nunito Sans body text. */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', 'Poppins Fallback', sans-serif;
-    font-weight: 600;
+    font-family: 'Nunito', 'Nunito Fallback', sans-serif;
+    font-weight: 800;
     letter-spacing: -0.01em;
-    line-height: 1.1;
+    line-height: 1.15;
   }
   h1 { font-size: clamp(2.5rem,  5vw,  4.25rem); }
   h2 { font-size: clamp(2rem,    3.5vw, 3rem);   }
-  h3 { font-size: clamp(1.4rem,  2.5vw, 2rem);   }
+  h3 { font-size: clamp(1.4rem,  2.5vw, 2rem);   font-weight: 700; }
 
   p, li {
-    font-family: 'Montserrat', 'Montserrat Fallback', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    line-height: 1.8;
+    font-family: 'Nunito Sans', 'Nunito Sans Fallback', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.7;
+  }
+  /* Supporting text is never below 16px. */
+  /* (Paragraphs that grow on larger screens, e.g. "text-sm md:text-base", keep that behaviour.) */
+  p.text-sm:not([class*=":text-base"]):not([class*=":text-lg"]):not([class*=":text-xl"]) {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
-  strong, b, .font-semibold, .font-bold {
-    font-family: 'Montserrat', 'Montserrat Fallback', sans-serif;
-    font-weight: 700;
-  }
+  strong, b { font-weight: 700; }
 }
 
 /* ════════════════════════════════════════
@@ -382,16 +393,18 @@
     @apply inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface
            px-3.5 py-1.5 text-xs font-semibold font-sans text-foreground/80;
   }
+  /* Style tile buttons: rounded rectangles, 48px minimum height. */
   .el-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full h-12 px-7 text-sm font-semibold font-sans
+    @apply inline-flex items-center justify-center gap-2 rounded-xl min-h-12 px-7 text-base font-bold font-sans
            transition-colors duration-200
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
-  /* primary = solid ink pill, soft = lavender pill (both as in the reference design) */
-  .el-btn-primary { @apply el-btn bg-foreground text-background shadow-sm; }
-  .el-btn-soft    { @apply el-btn bg-accent text-accent-foreground; }
-  .el-btn-outline { @apply el-btn border border-border bg-background text-foreground; }
-  .el-card        { @apply rounded-[20px] bg-surface; }
+  /* primary = solid Mintex blue, outline = blue border + blue text, soft = mist blue + blue text */
+  .el-btn-primary { @apply el-btn bg-primary text-primary-foreground hover:bg-primary/90; }
+  .el-btn-soft    { @apply el-btn bg-accent text-primary; }
+  .el-btn-outline { @apply el-btn border-2 border-primary bg-background text-primary; }
+  /* Style tile card: white, hairline border, soft rounded corners */
+  .el-card        { @apply rounded-[20px] bg-card border border-border; }
   .el-chip {
     @apply flex items-center gap-2.5 rounded-2xl bg-background/95 px-3.5 py-2.5 shadow-lg border border-border/60;
   }

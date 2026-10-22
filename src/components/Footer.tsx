@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock, ShieldCheck } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
-import logo from "@/assets/Artboard 133 copy (1).svg";
+import logo from "@/assets/Mintex-care-logo.svg";
 import { serviceBySlug } from "@/data/serviceIndex";
 import { COUNTIES } from "@/data/areas";
 

@@ -1,6 +1,7 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { motion, useInView } from "@/lib/motion";
-import { PhoneCall, ClipboardCheck, FileText, HeartPulse } from "lucide-react";
+import { PhoneCall, ClipboardCheck, FileText, HeartPulse, ArrowRight } from "lucide-react";
 
 const steps = [
   {
@@ -85,6 +86,13 @@ const HowItWorksSection = () => {
               </motion.div>
             );
           })}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-12">
+          <Link to="/how-it-works" className="el-btn-soft group">
+            See How Home Care Works <ArrowRight className="h-4 w-4 flex-shrink-0 transition-transform" />
+          </Link>
         </div>
       </div>
     </section>

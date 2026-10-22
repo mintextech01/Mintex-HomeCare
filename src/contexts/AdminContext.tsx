@@ -35,7 +35,15 @@ export interface Testimonial {
   text: string;
   rating: number;
   location: string;
+  /** Card label. Older testimonials have none and show as a family story. */
+  category?: TestimonialCategory;
+  /** Who wrote it, e.g. "Daughter of client" or "Home health aide, 3 years". */
+  relationship?: string;
+  /** Show the name as initials ("S.K.") for families who don't want their full name public. */
+  initialsOnly?: boolean;
 }
+
+export type TestimonialCategory = "family" | "client" | "caregiver";
 
 /** One line of the price table on /paying-for-care/cost (amount is free text such as "32" or "30–35"). */
 export interface PriceItem {
@@ -231,8 +239,8 @@ const defaultServices: ServiceItem[] = [
 
 // ── Row mappers (DB snake_case ↔ TS camelCase) ────────────────────────────────
 
-const fromTestimonialRow = (r: any): Testimonial => ({ id: r.id, name: r.name, text: r.text, rating: r.rating, location: r.location });
-const toTestimonialRow = (t: Testimonial) => ({ id: t.id, name: t.name, text: t.text, rating: t.rating, location: t.location });
+const fromTestimonialRow = (r: any): Testimonial => ({ id: r.id, name: r.name, text: r.text, rating: r.rating, location: r.location, category: r.category, relationship: r.relationship, initialsOnly: r.initials_only });
+const toTestimonialRow = (t: Testimonial) => ({ id: t.id, name: t.name, text: t.text, rating: t.rating, location: t.location, category: t.category, relationship: t.relationship, initials_only: t.initialsOnly });
 
 const fromTeamMemberRow = (r: any): TeamMember => ({ id: r.id, name: r.name, role: r.role, photoUrl: r.photo_url, bio: r.bio });
 const toTeamMemberRow = (m: TeamMember) => ({ id: m.id, name: m.name, role: m.role, photo_url: m.photoUrl, bio: m.bio });
