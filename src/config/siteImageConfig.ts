@@ -7,6 +7,25 @@
  *  3. Done — it automatically appears in Admin → Site Images with no other changes needed.
  */
 
+/**
+ * The box an image is shown in on the live site. Every slot renders with object-fit: cover, so
+ * uploads are cropped to this shape in Admin — what the admin sees in the cropper is exactly
+ * what visitors see, instead of the browser silently cutting off heads or edges.
+ */
+export interface ImageFrame {
+  /** Width ÷ height of the on-page box (desktop, where it is largest) */
+  aspect: number;
+  /** "4:3"-style label shown to admins */
+  ratio: string;
+  /** Width uploads are saved at: ~2× the largest on-screen width, so photos stay sharp on retina screens */
+  width: number;
+}
+
+const frame = (w: number, h: number, width: number): ImageFrame => ({ aspect: w / h, ratio: `${w}:${h}`, width });
+
+/** Team member cards on the About page (4:5 portraits, 3 per row) */
+export const TEAM_PHOTO_FRAME = frame(4, 5, 800);
+
 export interface SiteImageEntry {
   key: string;
   defaultUrl: string;
@@ -14,6 +33,7 @@ export interface SiteImageEntry {
   description: string;
   page: string;
   pageUrl: string;
+  frame: ImageFrame;
 }
 
 export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
@@ -25,6 +45,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Small photo in the top-left corner of the hero image mosaic",
     page: "Homepage — Hero Section",
     pageUrl: "/",
+    frame: frame(9, 4, 1600),
   },
   {
     key: "heroBottomLeft",
@@ -33,6 +54,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Small photo in the bottom-left corner of the hero image mosaic",
     page: "Homepage — Hero Section",
     pageUrl: "/",
+    frame: frame(1, 1, 800),
   },
   {
     key: "heroLargeCenter",
@@ -41,6 +63,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "The main large photo in the center of the hero mosaic (most prominent)",
     page: "Homepage — Hero Section",
     pageUrl: "/",
+    frame: frame(1, 1, 1300),
   },
   {
     key: "heroBottomRight",
@@ -49,6 +72,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Floating photo overlaid at the bottom-right of the hero mosaic",
     page: "Homepage — Hero Section",
     pageUrl: "/",
+    frame: frame(1, 1, 800),
   },
 
   // ── About Section (homepage) ──────────────────────────────────────────────
@@ -59,6 +83,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Primary photo in the About / 'Built on Compassion' section",
     page: "Homepage — About Section",
     pageUrl: "/#about",
+    frame: frame(1, 1, 1300),
   },
   {
     key: "aboutAvatar1",
@@ -67,6 +92,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "First small circular avatar in the floating 'Happy Families' badge",
     page: "Homepage — About Section",
     pageUrl: "/#about",
+    frame: frame(1, 1, 160),
   },
   {
     key: "aboutAvatar2",
@@ -75,6 +101,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Second small circular avatar in the floating 'Happy Families' badge",
     page: "Homepage — About Section",
     pageUrl: "/#about",
+    frame: frame(1, 1, 160),
   },
   {
     key: "aboutAvatar3",
@@ -83,6 +110,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Third small circular avatar in the floating 'Happy Families' badge",
     page: "Homepage — About Section",
     pageUrl: "/#about",
+    frame: frame(1, 1, 160),
   },
 
   // ── Services Section ──────────────────────────────────────────────────────
@@ -93,6 +121,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Background image for the Hourly Care service card",
     page: "Homepage — Services Section",
     pageUrl: "/#services",
+    frame: frame(16, 9, 1100),
   },
   {
     key: "serviceCard2",
@@ -101,6 +130,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Background image for the Live-In Care service card",
     page: "Homepage — Services Section",
     pageUrl: "/#services",
+    frame: frame(16, 9, 1100),
   },
   {
     key: "serviceCard3",
@@ -109,6 +139,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Background image for the Post-Surgery Recovery service card",
     page: "Homepage — Services Section",
     pageUrl: "/#services",
+    frame: frame(16, 9, 1100),
   },
   {
     key: "serviceCard4",
@@ -117,6 +148,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Background image for the Skilled Nursing service card",
     page: "Homepage — Services Section",
     pageUrl: "/#services",
+    frame: frame(16, 9, 1100),
   },
   {
     key: "serviceCard5",
@@ -125,6 +157,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Background image for the Rehab Support service card",
     page: "Homepage — Services Section",
     pageUrl: "/#services",
+    frame: frame(16, 9, 1100),
   },
   {
     key: "serviceCard6",
@@ -133,6 +166,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Background image for the Facility Staffing service card",
     page: "Homepage — Services Section",
     pageUrl: "/#services",
+    frame: frame(16, 9, 1100),
   },
 
   // ── Careers Teaser (homepage) ─────────────────────────────────────────────
@@ -143,6 +177,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Photo in the 'Join the MintexCare Team' teaser section on the homepage",
     page: "Homepage — Careers Teaser",
     pageUrl: "/",
+    frame: frame(3, 2, 1300),
   },
 
   // ── About Us Page ─────────────────────────────────────────────────────────
@@ -153,6 +188,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Main photo in the 'Who We Are' hero section at the top of the About Us page",
     page: "About Us Page",
     pageUrl: "/about",
+    frame: frame(1, 1, 1300),
   },
   {
     key: "aboutPageStory",
@@ -161,6 +197,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Large photo in the story section on the About Us page",
     page: "About Us Page",
     pageUrl: "/about",
+    frame: frame(5, 4, 1400),
   },
   {
     key: "aboutPageAvatar1",
@@ -169,6 +206,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "First avatar in the floating 'Happy Families' badge on the About Us page",
     page: "About Us Page",
     pageUrl: "/about",
+    frame: frame(1, 1, 160),
   },
   {
     key: "aboutPageAvatar2",
@@ -177,6 +215,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Second avatar in the floating 'Happy Families' badge on the About Us page",
     page: "About Us Page",
     pageUrl: "/about",
+    frame: frame(1, 1, 160),
   },
   {
     key: "aboutPageAvatar3",
@@ -185,6 +224,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Third avatar in the floating 'Happy Families' badge on the About Us page",
     page: "About Us Page",
     pageUrl: "/about",
+    frame: frame(1, 1, 160),
   },
 
   // ── Specialized Care Section (Nursing) ────────────────────────────────────
@@ -195,6 +235,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Image for the Physical Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
     page: "Homepage — Specialized Care Section",
     pageUrl: "/#specialized-care",
+    frame: frame(1, 1, 400),
   },
   {
     key: "nursingCard2",
@@ -203,6 +244,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Image for the Occupational Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
     page: "Homepage — Specialized Care Section",
     pageUrl: "/#specialized-care",
+    frame: frame(1, 1, 400),
   },
   {
     key: "nursingCard3",
@@ -211,6 +253,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Image for the Speech Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
     page: "Homepage — Specialized Care Section",
     pageUrl: "/#specialized-care",
+    frame: frame(1, 1, 400),
   },
   {
     key: "nursingCard4",
@@ -219,6 +262,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Image for the IV Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
     page: "Homepage — Specialized Care Section",
     pageUrl: "/#specialized-care",
+    frame: frame(1, 1, 400),
   },
   {
     key: "nursingCard5",
@@ -227,6 +271,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Image for the Wound Care card in the Specialized Care section. Leave blank to use the default SVG illustration.",
     page: "Homepage — Specialized Care Section",
     pageUrl: "/#specialized-care",
+    frame: frame(1, 1, 400),
   },
   {
     key: "nursingCard6",
@@ -235,6 +280,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Image for the Medication Management card in the Specialized Care section. Leave blank to use the default SVG illustration.",
     page: "Homepage — Specialized Care Section",
     pageUrl: "/#specialized-care",
+    frame: frame(1, 1, 400),
   },
 
   // ── Individual Service Pages ──────────────────────────────────────────────
@@ -258,6 +304,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: `Photo at the top of the ${name} page. Leave blank to use the designed illustration.`,
     page: "Service Pages",
     pageUrl: `/services/${slug}`,
+    frame: frame(20, 21, 1000),
   })),
 
   // ── Facility Staffing ─────────────────────────────────────────────────────
@@ -268,6 +315,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Photo at the top of the Facility Staffing page. Leave blank to use the designed illustration.",
     page: "Facility Staffing Page",
     pageUrl: "/facility-staffing",
+    frame: frame(20, 21, 1000),
   },
 
   // ── Careers Page ──────────────────────────────────────────────────────────
@@ -278,6 +326,7 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
     description: "Wide banner photo in the 'Why Work With MintexCare?' section on the Careers page",
     page: "Careers Page",
     pageUrl: "/careers",
+    frame: frame(5, 4, 1400),
   },
 ];
 
@@ -331,7 +380,7 @@ export const siteImageKeysForPage = (path: string): SiteImageKey[] =>
 export interface SiteImageGroup {
   page: string;
   pageUrl: string;
-  fields: { key: SiteImageKey; label: string; description: string }[];
+  fields: { key: SiteImageKey; label: string; description: string; frame: ImageFrame }[];
 }
 
 export const SITE_IMAGE_GROUPS: SiteImageGroup[] = (() => {
@@ -344,6 +393,7 @@ export const SITE_IMAGE_GROUPS: SiteImageGroup[] = (() => {
       key: entry.key as SiteImageKey,
       label: entry.label,
       description: entry.description,
+      frame: entry.frame,
     });
   }
   return Array.from(map.values());

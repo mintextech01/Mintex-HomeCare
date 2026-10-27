@@ -10,7 +10,7 @@
 
 // Where alerts go. Empty = the Google account that deployed this script.
 // Several addresses: "a@example.com, b@example.com".
-const MAIL_TO = "";
+const MAIL_TO = "s.goswami@plentycart.com, info@mintexcare.com";
 
 const SITE_URL = "https://mintexcare.com";
 const MAX_PER_HOUR = 30;              // flood limit for the whole script
@@ -118,22 +118,23 @@ function mimeFor(fileName) {
 
 /* ── Email design (ported from the old email-api/lib/template.js) ─── */
 /*
- * Styled like mintexcare.com (ink headings, indigo highlights, lavender pill buttons, light-grey
- * cards). Email clients only support simple HTML: tables for layout, inline styles, no SVG.
+ * Styled like mintexcare.com's style tile (Mintex blue, charcoal text, mist-blue soft buttons,
+ * soft-white cards, Nunito). Email clients only support simple HTML: tables for layout, inline
+ * styles, no SVG.
  */
 
 const C = {
-  ink: "#16161d",        // headings, dark header card
-  text: "#3b3b46",
-  muted: "#6b6b78",
-  indigo: "#5558c4",     // links, highlights
-  lavender: "#d5d8fa",   // soft pill buttons
-  surface: "#f4f4f6",    // cards
-  border: "#e6e6ec",
-  page: "#eef0f5",
+  ink: "#22272E",        // charcoal: headings, values
+  text: "#22272E",
+  muted: "#5B6470",      // soft grey: labels, supporting text
+  blue: "#2A66B0",       // Mintex blue: header card, links, primary button
+  mist: "#EEF3FA",       // soft buttons
+  surface: "#F7F9FC",    // soft white cards
+  border: "#E3E8F0",
+  page: "#EEF3FA",
 };
-const HEAD = "'Poppins', 'Montserrat', Arial, Helvetica, sans-serif";
-const BODY = "'Montserrat', Arial, Helvetica, sans-serif";
+const HEAD = "'Nunito', Arial, Helvetica, sans-serif";
+const BODY = "'Nunito Sans', 'Nunito', Arial, Helvetica, sans-serif";
 
 const esc = (s) => String(s == null ? "" : s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -173,12 +174,12 @@ const parseMessage = (sub, kind) => {
 const row = (label, valueHtml, last) => `
   <tr>
     <td style="padding:14px 20px;${last ? "" : `border-bottom:1px solid ${C.border};`}font-family:${BODY};font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${C.muted};width:38%;vertical-align:top;">${esc(label)}</td>
-    <td style="padding:14px 20px;${last ? "" : `border-bottom:1px solid ${C.border};`}font-family:${BODY};font-size:15px;line-height:1.5;color:${C.ink};font-weight:600;vertical-align:top;">${valueHtml}</td>
+    <td style="padding:14px 20px;${last ? "" : `border-bottom:1px solid ${C.border};`}font-family:${BODY};font-size:16px;line-height:1.5;color:${C.ink};font-weight:600;vertical-align:top;">${valueHtml}</td>
   </tr>`;
 
-const button = (href, label, dark) => `
+const button = (href, label, primary) => `
   <td style="padding:0 8px 10px 0;">
-    <a href="${esc(href)}" style="display:inline-block;padding:12px 20px;border-radius:999px;font-family:${BODY};font-size:14px;font-weight:700;text-decoration:none;${dark ? `background:${C.ink};color:#ffffff;` : `background:${C.lavender};color:${C.ink};`}">${label}</a>
+    <a href="${esc(href)}" style="display:inline-block;padding:13px 22px;border-radius:12px;font-family:${BODY};font-size:15px;font-weight:700;text-decoration:none;${primary ? `background:${C.blue};color:#ffffff;border:1px solid ${C.blue};` : `background:${C.mist};color:${C.blue};border:1px solid ${C.mist};`}">${label}</a>
   </td>`;
 
 /** logoSrc: image address for the logo, e.g. "cid:mintexcarelogo" (embedded in the email). */
@@ -192,8 +193,8 @@ function renderEmail(sub, opts) {
 
   const rows = [
     ["Name", esc(sub.name)],
-    ["Phone", `<a href="${esc(telHref(sub.phone))}" style="color:${C.indigo};text-decoration:none;">${esc(sub.phone)}</a>`],
-    ["Email", `<a href="mailto:${esc(sub.email)}" style="color:${C.indigo};text-decoration:none;word-break:break-all;">${esc(sub.email)}</a>`],
+    ["Phone", `<a href="${esc(telHref(sub.phone))}" style="color:${C.blue};text-decoration:none;">${esc(sub.phone)}</a>`],
+    ["Email", `<a href="mailto:${esc(sub.email)}" style="color:${C.blue};text-decoration:none;word-break:break-all;">${esc(sub.email)}</a>`],
   ];
   if (kind.key === "career") rows.push(["Position", esc(sub.position || sub.service)]);
   else if (kind.key === "staffing") rows.push(["Roles needed", esc(String(sub.service).replace(/^Facility Staffing:\s*/, ""))]);
@@ -214,7 +215,7 @@ function renderEmail(sub, opts) {
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
 <title>${esc(subject)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   @media (max-width: 620px) {
     .container { width: 100% !important; }
@@ -228,20 +229,20 @@ function renderEmail(sub, opts) {
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(kind.eyebrow)} from ${esc(sub.name)} · ${esc(sub.phone)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.page};">
   <tr><td align="center" style="padding:28px 12px;">
-    <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#ffffff;border-radius:24px;overflow:hidden;">
+    <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#ffffff;border:1px solid ${C.border};border-radius:20px;overflow:hidden;">
 
       <!-- Logo -->
       <tr><td class="px" style="padding:24px 32px 8px;">
         <a href="${esc(siteUrl)}" style="text-decoration:none;"><img src="${esc(logoSrc)}" width="150" alt="MintexCare" style="display:block;width:150px;height:auto;border:0;"></a>
       </td></tr>
 
-      <!-- Header card (like the site's "Tell us how we can help" box) -->
+      <!-- Header card (Mintex blue) -->
       <tr><td class="px" style="padding:12px 24px 0;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.ink};border-radius:20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.blue};border-radius:16px;">
           <tr><td style="padding:26px 28px;">
-            <div style="font-family:${BODY};font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#b9bcf3;">${esc(kind.eyebrow)}</div>
-            <div class="h1" style="font-family:${HEAD};font-size:28px;line-height:1.2;font-weight:700;color:#ffffff;margin-top:8px;">${esc(kind.title)}</div>
-            <div style="font-family:${BODY};font-size:14px;line-height:1.6;color:#c9c9d3;margin-top:8px;">From <strong style="color:#ffffff;">${esc(sub.name)}</strong> · ${esc(when)}</div>
+            <div style="font-family:${BODY};font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#D6E3F5;">${esc(kind.eyebrow)}</div>
+            <div class="h1" style="font-family:${HEAD};font-size:28px;line-height:1.25;font-weight:800;color:#ffffff;margin-top:8px;">${esc(kind.title)}</div>
+            <div style="font-family:${BODY};font-size:15px;line-height:1.6;color:#E6EEF9;margin-top:8px;">From <strong style="color:#ffffff;">${esc(sub.name)}</strong> · ${esc(when)}</div>
           </td></tr>
         </table>
       </td></tr>
@@ -255,8 +256,8 @@ function renderEmail(sub, opts) {
 
       <!-- Details -->
       <tr><td class="px" style="padding:10px 32px 0;">
-        <div style="font-family:${HEAD};font-size:16px;font-weight:700;color:${C.ink};margin:0 0 10px;">Details</div>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.surface};border-radius:16px;">
+        <div style="font-family:${HEAD};font-size:18px;font-weight:800;color:${C.ink};margin:0 0 10px;">Details</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.surface};border:1px solid ${C.border};border-radius:12px;">
           ${rows.map(([k, v], i) => row(k, v, i === rows.length - 1)).join("")}
         </table>
       </td></tr>
@@ -264,14 +265,14 @@ function renderEmail(sub, opts) {
       ${notes ? `
       <!-- Message / notes -->
       <tr><td class="px" style="padding:24px 32px 0;">
-        <div style="font-family:${HEAD};font-size:16px;font-weight:700;color:${C.ink};margin:0 0 10px;">${esc(notesLabel)}</div>
-        <div style="background:${C.surface};border-radius:16px;border-left:4px solid ${C.indigo};padding:18px 20px;font-family:${BODY};font-size:15px;line-height:1.65;color:${C.text};">${nl2br(notes)}</div>
+        <div style="font-family:${HEAD};font-size:18px;font-weight:800;color:${C.ink};margin:0 0 10px;">${esc(notesLabel)}</div>
+        <div style="background:${C.surface};border:1px solid ${C.border};border-left:4px solid ${C.blue};border-radius:12px;padding:18px 20px;font-family:${BODY};font-size:16px;line-height:1.65;color:${C.text};">${nl2br(notes)}</div>
       </td></tr>` : ""}
 
       <!-- Footer -->
       <tr><td class="px" style="padding:28px 32px 30px;">
         <div style="border-top:1px solid ${C.border};padding-top:18px;font-family:${BODY};font-size:12px;line-height:1.6;color:${C.muted};">
-          Sent automatically by <a href="${esc(siteUrl)}" style="color:${C.indigo};text-decoration:none;font-weight:600;">mintexcare.com</a>.<br>
+          Sent automatically by <a href="${esc(siteUrl)}" style="color:${C.blue};text-decoration:none;font-weight:600;">mintexcare.com</a>.<br>
           This email contains personal information. Please keep it within MintexCare.
         </div>
       </td></tr>

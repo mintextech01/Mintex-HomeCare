@@ -348,25 +348,42 @@ const About = () => {
                 </div>
               </AnimatedSection>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
-                {teamMembers.map((m, i) => (
-                  <AnimatedSection key={m.id} delay={i * 0.08} className="h-full">
-                    <div className="group h-full rounded-[24px] bg-background p-3 transition-shadow duration-300">
-                      <div className="relative overflow-hidden h-64 rounded-[18px]">
-                        <img
-                          src={m.photoUrl}
-                          alt={m.name}
-                          className="w-full h-full object-cover transition-transform duration-700"
-                          loading="lazy"
-                        />
+              {/* items-start: opening one long bio grows only that card, not the whole row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-start gap-6 max-w-5xl mx-auto">
+                {teamMembers.map(m => (
+                  <div key={m.id}>
+                    <div className="flex flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-sm">
+                      <div className="relative aspect-[4/5] w-full bg-muted">
+                        {m.photoUrl ? (
+                          <img
+                            src={m.photoUrl}
+                            alt={m.role ? `${m.name}, ${m.role} at MintexCare` : m.name}
+                            className="absolute inset-0 w-full h-full object-cover object-top"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className="flex h-full w-full items-center justify-center text-3xl font-semibold text-muted-foreground">
+                            {m.name.split(/\s+/).map(p => p[0]).slice(0, 2).join("").toUpperCase()}
+                          </span>
+                        )}
                       </div>
-                      <div className="px-3 pt-5 pb-3">
-                        <h3 className="font-bold text-foreground text-lg leading-snug">{m.name}</h3>
-                        <p className="text-sm text-primary font-semibold mb-3">{m.role}</p>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{m.bio}</p>
+                      <div className="flex flex-1 flex-col p-6">
+                        <h3 className="text-lg font-bold text-foreground leading-snug">{m.name}</h3>
+                        <p className="text-sm font-semibold text-primary">{m.role}</p>
+                        {m.bio && (
+                          <details className="group mt-3">
+                            <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                              <span className="line-clamp-4 text-[15px] leading-relaxed text-muted-foreground group-open:line-clamp-none">
+                                {m.bio}
+                              </span>
+                              <span className="mt-1.5 block text-[13.5px] font-semibold text-primary group-open:hidden">Read more</span>
+                              <span className="mt-1.5 hidden text-[13.5px] font-semibold text-primary group-open:block">Read less</span>
+                            </summary>
+                          </details>
+                        )}
                       </div>
                     </div>
-                  </AnimatedSection>
+                  </div>
                 ))}
               </div>
             </div>

@@ -315,7 +315,7 @@ const Header = () => {
           <div className="container mx-auto px-4 flex items-center justify-between h-20 md:h-28 lg:h-24">
             {/* Logo */}
             <Link to="/" onClick={() => window.scrollTo(0, 0)} className="flex items-center flex-shrink-0" aria-label="MintexCare home">
-              <img src={logo} alt="MintexCare" className="h-20 md:h-28 lg:h-16 xl:h-24 w-auto object-contain" />
+              <img src={logo} alt="MintexCare" className="h-11 md:h-14 lg:h-12 xl:h-14 w-auto object-contain" />
             </Link>
 
             {/* Desktop nav */}
@@ -458,7 +458,7 @@ const Header = () => {
         {/* Drawer header: logo + close */}
         <div className="flex items-center justify-between px-5 py-4 flex-shrink-0 border-b border-border">
           <Link to="/" onClick={() => { setMobileOpen(false); window.scrollTo(0, 0); }} aria-label="MintexCare home">
-            <img src={logo} alt="MintexCare" className="h-12 w-auto object-contain" />
+            <img src={logo} alt="MintexCare" className="h-10 w-auto object-contain" />
           </Link>
           <button
             onClick={() => setMobileOpen(false)}

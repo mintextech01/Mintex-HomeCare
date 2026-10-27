@@ -1,7 +1,22 @@
 ﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import type { Plugin } from "vite";
 
+// In production the admin panel is its own Firebase site (target "admin") that rewrites every URL
+// to admin.html. The dev server only has the public site's fallback, so /dashboard would 404 —
+// send the admin's routes to admin.html here too. Dev login: http://localhost:8080/admin
+const adminDevRoutes = (): Plugin => ({
+  name: "admin-dev-routes",
+  apply: "serve",
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      const pathname = (req.url ?? "").split("?")[0];
+      if (pathname === "/dashboard" || pathname === "/admin" || pathname.startsWith("/admin/")) req.url = "/admin.html";
+      next();
+    });
+  },
+});
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -12,7 +27,7 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react()],
+  plugins: [react(), adminDevRoutes()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

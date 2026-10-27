@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdmin, type JobPosition, type ContactInfo, type Pricing, type PriceItem, type TestimonialCategory } from "@/contexts/AdminContext";
 import { STORY_LABELS, storyLabel, displayName } from "@/lib/testimonials";
-import { type SiteImages, type SiteImageKey, type SiteImageGroup, SITE_IMAGE_GROUPS, imageFingerprint } from "@/config/siteImageConfig";
+import { type SiteImages, type SiteImageKey, type SiteImageGroup, type ImageFrame, SITE_IMAGE_GROUPS, TEAM_PHOTO_FRAME, imageFingerprint } from "@/config/siteImageConfig";
+import { FramedImageCropper, FitBadge } from "@/admin/components/FramedImageCropper";
+import { fitQuality, minSizeFor, idealSizeFor, loadImageFile, assertFitsFrame } from "@/admin/components/imageFit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +16,9 @@ import { LayoutDashboard, MessageSquare, Users, Image, LogOut, Mail, Star, Trash
 import { useToast } from "@/hooks/use-toast";
 import { fullDb as db } from "@/lib/firestoreFull";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+
+// The admin is its own site in production, so links to public pages need the public domain.
+const PUBLIC_SITE = import.meta.env.DEV ? "" : "https://mintexcare.com";
 
 type Tab = "dashboard" | "testimonials" | "team" | "gallery" | "site-images" | "submissions" | "applications" | "positions" | "contact-info" | "pricing";
 
@@ -186,6 +191,7 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
   const [form, setForm] = useState({ name: "", role: "", photoUrl: "", bio: "" });
   const [editing, setEditing] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [cropSource, setCropSource] = useState<HTMLImageElement | null>(null);
   const teamFileRef = useRef<HTMLInputElement>(null);
   const save = () => {
     if (!form.name || !form.role) return;
@@ -200,10 +206,12 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
     if (!file) return;
     setUploading(true);
     try {
-      const dataUrl = await uploadImage(file);
-      setForm(f => ({ ...f, photoUrl: dataUrl }));
-      toast({ title: "Photo uploaded" });
-    } catch { toast({ title: "Upload failed", variant: "destructive" }); }
+      const img = await loadImageFile(file);
+      assertFitsFrame(img, TEAM_PHOTO_FRAME);
+      setCropSource(img);
+    } catch (err) {
+      toast({ title: "Image not accepted", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
+    }
     finally { setUploading(false); if (teamFileRef.current) teamFileRef.current.value = ""; }
   };
 
@@ -218,8 +226,17 @@ const TeamTab = ({ teamMembers, setTeamMembers, toast }: any) => {
             <Upload className="h-4 w-4" /> {uploading ? "Processing…" : "Upload from PC"}
             <input ref={teamFileRef} type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handlePhotoFile} />
           </label>
-          {form.photoUrl && <img src={form.photoUrl} alt="Preview" className="h-10 w-10 rounded-full object-cover border border-border" />}
+          {form.photoUrl && <img src={form.photoUrl} alt="Preview" className="h-10 w-12 rounded-md object-cover border border-border" />}
         </div>
+        {cropSource && (
+          <FramedImageCropper
+            image={cropSource}
+            frame={TEAM_PHOTO_FRAME}
+            onApply={url => { setForm(f => ({ ...f, photoUrl: url })); setCropSource(null); toast({ title: "Photo cropped to fit" }); }}
+            onCancel={() => setCropSource(null)}
+            onError={message => { setCropSource(null); toast({ title: "Image not accepted", description: message, variant: "destructive" }); }}
+          />
+        )}
         <Textarea placeholder="Bio" value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} className="font-sans" />
         <div className="flex flex-wrap gap-3"><Button onClick={save} className="font-sans"><Plus className="h-4 w-4 mr-1" /> {editing ? "Update" : "Add"}</Button>{editing && <Button variant="outline" onClick={() => { setEditing(null); setForm({ name: "", role: "", photoUrl: "", bio: "" }); }} className="font-sans">Cancel</Button>}</div>
       </CardContent></Card>
@@ -1071,27 +1088,193 @@ const uploadImage = async (file: File): Promise<string> => {
 
 /* ── Site Images ── */
 
-const ImageField = ({
-  imgKey, label, description, siteImages, setSiteImages, toast,
+/**
+ * Shared editor for any image shown in a fixed frame on the site. Uploaded files go through
+ * FramedImageCropper so they're cut to the frame's exact shape; pasted URLs are previewed in the
+ * frame's shape and refused if they don't load or are too small to look sharp.
+ */
+const FramedImageEditor = ({
+  title, description, current, frame, emptyLabel, placeholder, onSave, toast,
 }: {
-  imgKey: SiteImageKey; label: string; description: string;
-  siteImages: SiteImages; setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>; toast: any;
+  title: string; description: string; current: string; frame: ImageFrame;
+  emptyLabel: string; placeholder: string;
+  onSave: (url: string) => Promise<void> | void; toast: any;
 }) => {
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [fileReady, setFileReady] = useState(false);
-  const current = siteImages[imgKey];
   const [draft, setDraft] = useState(current);
+  const [cropSource, setCropSource] = useState<HTMLImageElement | null>(null);
+  const [error, setError] = useState("");
+  // Real pixel size of whatever is in the preview (null while loading, "broken" if it didn't load)
+  const [previewSize, setPreviewSize] = useState<{ w: number; h: number } | "broken" | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const previewSrc = editing ? (draft || current) : current;
+  useEffect(() => { setPreviewSize(null); }, [previewSrc]);
+
+  const changed = editing && draft.trim() !== "" && draft.trim() !== current;
+  const draftSize = changed && previewSize && previewSize !== "broken" ? previewSize : null;
+  // The width of the part of the image that stays visible once cover-cropped into the frame
+  const draftVisibleWidth = draftSize ? Math.min(draftSize.w, draftSize.h * frame.aspect) : 0;
+  const draftQuality = draftSize ? fitQuality(draftVisibleWidth, frame) : null;
+  const draftShapeOff = draftSize ? Math.abs(draftSize.w / draftSize.h / frame.aspect - 1) > 0.08 : false;
+  const draftBroken = changed && previewSize === "broken";
+  const blockSave = !changed || draftBroken || draftQuality === "too-small" || !draftSize;
+
+  const reset = () => { setDraft(current); setFileReady(false); setCropSource(null); setError(""); };
+
   const save = async () => {
-    const newUrl = draft.trim();
-    if (!newUrl) return;
+    if (blockSave) return;
     setSaving(true);
-    setSiteImages(prev => ({ ...prev, [imgKey]: newUrl })); // optimistic local update
-    setEditing(false);
+    try {
+      await onSave(draft.trim());
+      setEditing(false);
+      setFileReady(false);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
     setFileReady(false);
+    setError("");
+    try {
+      const img = await loadImageFile(file);
+      assertFitsFrame(img, frame);
+      setCropSource(img);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Could not open the image.";
+      setError(message);
+      toast({ title: "Image not accepted", description: message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const ideal = idealSizeFor(frame);
+  const min = minSizeFor(frame);
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
+      <div className="shrink-0 w-full sm:w-44">
+        {/* Same shape and cover-crop as the live site, so this is what visitors see */}
+        <div className="relative w-full rounded-xl border border-border bg-muted overflow-hidden" style={{ aspectRatio: String(frame.aspect) }}>
+          {previewSrc && previewSize !== "broken" ? (
+            <img
+              src={previewSrc}
+              alt={title}
+              className="absolute inset-0 w-full h-full object-cover"
+              onLoad={e => setPreviewSize({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+              onError={() => setPreviewSize("broken")}
+            />
+          ) : (
+            <span className="absolute inset-0 flex items-center justify-center text-[11px] font-sans text-muted-foreground text-center px-2">
+              {previewSrc ? "Image failed to load" : "No image"}
+            </span>
+          )}
+        </div>
+        <p className="mt-1 text-[10px] font-sans text-muted-foreground leading-snug">
+          Frame {frame.ratio} · best {ideal.w}×{ideal.h}px
+        </p>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-sans font-semibold text-foreground text-sm">{title}</p>
+        <p className="font-sans text-xs text-muted-foreground mb-2 leading-snug">{description}</p>
+        {editing ? (
+          <div className="space-y-2">
+            {cropSource ? (
+              <FramedImageCropper
+                image={cropSource}
+                frame={frame}
+                onApply={url => { setDraft(url); setFileReady(true); setCropSource(null); }}
+                onCancel={() => setCropSource(null)}
+                onError={message => { setError(message); setCropSource(null); toast({ title: "Image not accepted", description: message, variant: "destructive" }); }}
+              />
+            ) : (
+              <>
+                <Input
+                  value={fileReady ? "" : (draft.startsWith("data:") ? "" : draft)}
+                  onChange={e => { setDraft(e.target.value); setFileReady(false); setError(""); }}
+                  placeholder={placeholder}
+                  className="font-sans text-sm"
+                />
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-[11px] font-sans">or upload from PC (recommended — you can crop it to fit)</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+                <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
+                  ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
+                  <Upload className="h-4 w-4 shrink-0" />
+                  {uploading ? "Opening…" : fileReady ? "Choose a different file" : "Choose file  (JPG, PNG, WEBP…)"}
+                  <input ref={fileRef} type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleFile} />
+                </label>
+                <p className="text-[11px] font-sans text-muted-foreground">
+                  Needs at least {min.w}×{min.h}px · {ideal.w}×{ideal.h}px or larger looks sharpest
+                </p>
+              </>
+            )}
+
+            {error && <p className="text-[11px] font-sans text-destructive">{error}</p>}
+            {!cropSource && draftBroken && (
+              <p className="text-[11px] font-sans text-destructive">This link doesn't open an image. Check the URL, or upload the file instead.</p>
+            )}
+            {!cropSource && draftSize && draftQuality && (
+              fileReady
+                ? <FitBadge quality={draftQuality} width={draftSize.w} height={draftSize.h} />
+                : <>
+                    <FitBadge quality={draftQuality} width={draftSize.w} height={draftSize.h} />
+                    {draftShapeOff && (
+                      <p className="text-[11px] font-sans text-amber-700 dark:text-amber-400">
+                        This image is a different shape than the frame — the edges will be cut off as shown in the preview. Upload the file instead to choose the crop yourself.
+                      </p>
+                    )}
+                  </>
+            )}
+            {fileReady && !cropSource && (
+              <p className="text-[11px] text-primary font-sans">✓ Cropped to fit — click Save to apply</p>
+            )}
+
+            {!cropSource && (
+              <div className="flex gap-2 pt-1">
+                <Button size="sm" onClick={save} disabled={uploading || saving || blockSave} className="font-sans">
+                  {saving ? "Saving…" : "Save"}
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => { reset(); setEditing(false); }} disabled={saving} className="font-sans">Cancel</Button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <p className="font-sans text-xs text-muted-foreground truncate flex-1">
+              {current.includes("firebasestorage") || current.startsWith("data:") ? "📁 Uploaded file" : (current || emptyLabel)}
+            </p>
+            <Button size="sm" variant="outline" onClick={() => { reset(); setEditing(true); }} className="font-sans shrink-0">
+              <Edit className="h-3 w-3 mr-1" /> Change
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ImageField = ({
+  imgKey, label, description, frame, siteImages, setSiteImages, toast,
+}: {
+  imgKey: SiteImageKey; label: string; description: string; frame: ImageFrame;
+  siteImages: SiteImages; setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>; toast: any;
+}) => {
+  const current = siteImages[imgKey];
+
+  const save = async (newUrl: string) => {
+    setSiteImages(prev => ({ ...prev, [imgKey]: newUrl })); // optimistic local update
     try {
       // Each image is its own Firestore document — no 1MB size limit issue.
       // fp lets the public site check whether its build-time copy is still current without
@@ -1102,96 +1285,21 @@ const ImageField = ({
       console.error("Failed to save site image:", err);
       toast({ title: "Save failed", description: "Could not save to database. Please try again.", variant: "destructive" });
       setSiteImages(prev => ({ ...prev, [imgKey]: current })); // revert on failure
-    } finally {
-      setSaving(false);
+      throw err;
     }
   };
-  const cancel = () => { setDraft(current); setEditing(false); setFileReady(false); };
-
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setFileReady(false);
-    try {
-      const url = await uploadImage(file);
-      setDraft(url);
-      setFileReady(true);
-    } catch {
-      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
-    } finally {
-      setUploading(false);
-      if (fileRef.current) fileRef.current.value = "";
-    }
-  };
-
-  const previewSrc = editing ? (draft || current) : current;
-  const isUploaded = current.includes("firebasestorage") || current.startsWith("data:");
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
-      <div className="shrink-0">
-        <img
-          src={previewSrc}
-          alt={label}
-          className="w-full sm:w-36 h-24 object-cover rounded-xl border border-border bg-muted"
-          onError={e => { (e.target as HTMLImageElement).src = "https://placehold.co/144x96?text=No+Image"; }}
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-sans font-semibold text-foreground text-sm">{label}</p>
-        <p className="font-sans text-xs text-muted-foreground mb-2 leading-snug">{description}</p>
-        {editing ? (
-          <div className="space-y-2">
-            {/* URL input */}
-            <Input
-              value={fileReady ? "" : (draft.startsWith("data:") ? "" : draft)}
-              onChange={e => { setDraft(e.target.value); setFileReady(false); }}
-              placeholder="Paste image URL here…"
-              className="font-sans text-sm"
-            />
-            {/* Divider */}
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <div className="flex-1 h-px bg-border" />
-              <span className="text-[11px] font-sans">or upload from PC</span>
-              <div className="flex-1 h-px bg-border" />
-            </div>
-            {/* Upload button */}
-            <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
-              ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
-              <Upload className="h-4 w-4 shrink-0" />
-              {uploading ? "Uploading…" : fileReady ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                disabled={uploading}
-                onChange={handleFile}
-              />
-            </label>
-            {fileReady && (
-              <p className="text-[11px] text-primary font-sans">✓ Image uploaded — click Save to apply</p>
-            )}
-            <div className="flex gap-2 pt-1">
-              <Button size="sm" onClick={save} disabled={uploading || saving} className="font-sans">
-                {saving ? "Saving…" : "Save"}
-              </Button>
-              <Button size="sm" variant="outline" onClick={cancel} disabled={saving} className="font-sans">Cancel</Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <p className="font-sans text-xs text-muted-foreground truncate flex-1">
-              {isUploaded ? "📁 Uploaded file" : (current || "Using default image")}
-            </p>
-            <Button size="sm" variant="outline" onClick={() => { setDraft(current); setEditing(true); }} className="font-sans shrink-0">
-              <Edit className="h-3 w-3 mr-1" /> Change
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
+    <FramedImageEditor
+      title={label}
+      description={description}
+      current={current}
+      frame={frame}
+      emptyLabel="Using default image"
+      placeholder="Paste image URL here…"
+      onSave={save}
+      toast={toast}
+    />
   );
 };
 
@@ -1204,109 +1312,23 @@ const TeamMemberPhotoField = ({
   setTeamMembers: React.Dispatch<React.SetStateAction<any[]>>;
   toast: any;
 }) => {
-  const [editing, setEditing] = React.useState(false);
-  const [uploading, setUploading] = React.useState(false);
-  const [saving, setSaving] = React.useState(false);
-  const [fileReady, setFileReady] = React.useState(false);
-  const [draft, setDraft] = React.useState(member.photoUrl);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const save = async () => {
-    const newUrl = draft.trim();
-    if (!newUrl) return;
-    setSaving(true);
-    const updatedMember = { ...member, photoUrl: newUrl };
-    setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === member.id ? updatedMember : m));
-    setEditing(false);
-    setFileReady(false);
+  const save = (newUrl: string) => {
     // The setTeamMembers wrapped setter writes teamMembers to Firestore via AdminContext.
-    // Give it a moment to compute the new full list, then verify with a small delay toast.
+    setTeamMembers((prev: any[]) => prev.map((m: any) => m.id === member.id ? { ...member, photoUrl: newUrl } : m));
     toast({ title: "Photo saved", description: member.name + "'s photo is now live." });
-    setSaving(false);
   };
-  const cancel = () => { setDraft(member.photoUrl); setEditing(false); setFileReady(false); };
-
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setFileReady(false);
-    try {
-      const url = await uploadImage(file);
-      setDraft(url);
-      setFileReady(true);
-    } catch {
-      toast({ title: "Upload failed", description: "Could not upload the image.", variant: "destructive" });
-    } finally {
-      setUploading(false);
-      if (fileRef.current) fileRef.current.value = "";
-    }
-  };
-
-  const previewSrc = editing ? (draft || member.photoUrl) : member.photoUrl;
-  const isUploaded = member.photoUrl.includes("firebasestorage") || member.photoUrl.startsWith("data:");
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-border last:border-0">
-      <div className="shrink-0">
-        <img
-          src={previewSrc}
-          alt={member.name}
-          className="w-full sm:w-36 h-24 object-cover rounded-xl border border-border bg-muted"
-          onError={e => { (e.target as HTMLImageElement).src = "https://placehold.co/144x96?text=No+Photo"; }}
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-sans font-semibold text-foreground text-sm">{member.name}</p>
-        <p className="font-sans text-xs text-muted-foreground mb-2 leading-snug">{member.role} — photo shown in the Meet Our Team section</p>
-        {editing ? (
-          <div className="space-y-2">
-            <Input
-              value={fileReady ? "" : (draft.startsWith("data:") ? "" : draft)}
-              onChange={e => { setDraft(e.target.value); setFileReady(false); }}
-              placeholder="Paste photo URL here…"
-              className="font-sans text-sm"
-            />
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <div className="flex-1 h-px bg-border" />
-              <span className="text-[11px] font-sans">or upload from PC</span>
-              <div className="flex-1 h-px bg-border" />
-            </div>
-            <label className={`flex items-center justify-center gap-2 w-full border-2 border-dashed rounded-lg px-4 py-3 cursor-pointer transition-colors font-sans text-sm
-              ${uploading ? "border-border text-muted-foreground cursor-not-allowed" : "border-primary/40 text-primary hover:bg-primary/5 hover:border-primary"}`}>
-              <Upload className="h-4 w-4 shrink-0" />
-              {uploading ? "Uploading…" : fileReady ? "Change file" : "Choose file  (PNG, JPG, SVG, WEBP…)"}
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                disabled={uploading}
-                onChange={handleFile}
-              />
-            </label>
-            {fileReady && (
-              <p className="text-[11px] text-primary font-sans">✓ Image uploaded — click Save to apply</p>
-            )}
-            <div className="flex gap-2 pt-1">
-              <Button size="sm" onClick={save} disabled={uploading || saving} className="font-sans">
-                {saving ? "Saving…" : "Save"}
-              </Button>
-              <Button size="sm" variant="outline" onClick={cancel} disabled={saving} className="font-sans">Cancel</Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <p className="font-sans text-xs text-muted-foreground truncate flex-1">
-              {isUploaded ? "📁 Uploaded file" : member.photoUrl}
-            </p>
-            <Button size="sm" variant="outline" onClick={() => { setDraft(member.photoUrl); setEditing(true); }} className="font-sans shrink-0">
-              <Edit className="h-3 w-3 mr-1" /> Change
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
+    <FramedImageEditor
+      title={member.name}
+      description={`${member.role} — photo shown in the Meet Our Team section`}
+      current={member.photoUrl}
+      frame={TEAM_PHOTO_FRAME}
+      emptyLabel="No photo"
+      placeholder="Paste photo URL here…"
+      onSave={save}
+      toast={toast}
+    />
   );
 };
 
@@ -1317,7 +1339,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
   <div>
     <div className="flex items-center justify-between mb-2">
       <h1 className="text-2xl font-serif font-bold text-foreground">Site Images</h1>
-      <a href="/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-sans text-primary hover:underline">
+      <a href={`${PUBLIC_SITE}/`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-sans text-primary hover:underline">
         <Eye className="h-4 w-4" /> View Website
       </a>
     </div>
@@ -1330,7 +1352,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
           <CardHeader className="pb-1">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-serif">{group.page}</CardTitle>
-              <a href={group.pageUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
+              <a href={`${PUBLIC_SITE}${group.pageUrl}`} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
                 <Eye className="h-3 w-3" /> View section
               </a>
             </div>
@@ -1342,6 +1364,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
                 imgKey={f.key}
                 label={f.label}
                 description={f.description}
+                frame={f.frame}
                 siteImages={siteImages}
                 setSiteImages={setSiteImages}
                 toast={toast}
@@ -1356,7 +1379,7 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
           <CardHeader className="pb-1">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-serif">About Us Page — Meet Our Team</CardTitle>
-              <a href="/about" target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
+              <a href={`${PUBLIC_SITE}/about`} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-sans hover:underline flex items-center gap-1 shrink-0 ml-2">
                 <Eye className="h-3 w-3" /> View section
               </a>
             </div>
