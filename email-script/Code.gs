@@ -141,6 +141,8 @@ const esc = (s) => String(s == null ? "" : s)
   .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const nl2br = (s) => esc(s).replace(/\r?\n/g, "<br>");
 const telHref = (p) => "tel:" + String(p || "").replace(/[^\d+]/g, "");
+/** Name titles skipped when picking a first name for the "Call ..." button. */
+const TITLES = /^(mr|mrs|ms|mx|miss|dr|prof|sir|madam|shri|smt|sri|kumari)\.?$/i;
 
 /** What kind of form this came from, and how to title it. */
 const kindOf = (sub) => {
@@ -188,7 +190,7 @@ function renderEmail(sub, opts) {
   const kind = kindOf(sub);
   const parsed = parseMessage(sub, kind);
   const notes = parsed.notes, notesLabel = parsed.notesLabel;
-  const firstName = String(sub.name || "").trim().split(/\s+/)[0] || "them";
+  const firstName = String(sub.name || "").trim().split(/\s+/).filter((w) => !TITLES.test(w))[0] || "";
   const when = Utilities.formatDate(receivedAt, "America/New_York", "EEE, MMM d, yyyy, h:mm a z");
 
   const rows = [
@@ -250,7 +252,7 @@ function renderEmail(sub, opts) {
       <!-- Actions -->
       <tr><td class="px" style="padding:20px 32px 6px;">
         <table role="presentation" cellpadding="0" cellspacing="0" class="stack"><tr>
-          ${button(telHref(sub.phone), `Call ${esc(firstName)}`, true)}
+          ${button(telHref(sub.phone), firstName ? `Call ${esc(firstName)}` : "Call now", true)}
           ${button(`mailto:${sub.email}?subject=${encodeURIComponent(replySubject)}`, "Reply by email", false)}        </tr></table>
       </td></tr>
 

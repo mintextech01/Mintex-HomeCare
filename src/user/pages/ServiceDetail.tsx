@@ -8,7 +8,7 @@ import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePageImages } from "@/hooks/usePageImages";
-import { PENDING_IMAGE } from "@/config/siteImageConfig";
+import { PENDING_IMAGE, resolveSiteImage, siteImageFallbackKey } from "@/config/siteImageConfig";
 import { SERVICE_INDEX, SERVICE_GROUP_LABEL, serviceBySlug } from "@/data/serviceIndex";
 import { SERVICE_PAGES } from "@/data/servicePages";
 import {
@@ -45,8 +45,10 @@ const ServiceDetail = () => {
 
   const { contactInfo, siteImages } = useAdmin();
   const tel = contactInfo.phone.replace(/[^\d+]/g, "");
-  usePageImages(pathname, [page.imageKey]);
-  const photo = siteImages[page.imageKey];
+  // A blank page photo falls back to the matching homepage card image (see siteImageConfig).
+  const fallbackKey = siteImageFallbackKey(page.imageKey);
+  usePageImages(pathname, fallbackKey ? [page.imageKey, fallbackKey] : [page.imageKey]);
+  const photo = resolveSiteImage(siteImages, page.imageKey);
   const hasPhoto = !!photo && photo !== PENDING_IMAGE;
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);

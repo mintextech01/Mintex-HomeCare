@@ -1094,11 +1094,19 @@ const uploadImage = async (file: File): Promise<string> => {
  * frame's shape and refused if they don't load or are too small to look sharp.
  */
 const FramedImageEditor = ({
-  title, description, current, frame, emptyLabel, placeholder, onSave, toast,
+  title, description, current, frame, emptyLabel, placeholder, onSave, toast, fallbackSrc, fallbackBadge, onClear, clearHint,
 }: {
   title: string; description: string; current: string; frame: ImageFrame;
   emptyLabel: string; placeholder: string;
   onSave: (url: string) => Promise<void> | void; toast: any;
+  /** Shows a Remove button that empties the slot (only for slots that work blank) */
+  onClear?: () => Promise<void> | void;
+  /** What the site shows after removing, e.g. "The built-in drawing will show again." */
+  clearHint?: string;
+  /** Image the site shows while this slot is blank (e.g. a homepage card reused on a service page) */
+  fallbackSrc?: string;
+  /** Short label drawn over the preview when the fallback image is what's showing */
+  fallbackBadge?: string;
 }) => {
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -1173,6 +1181,15 @@ const FramedImageEditor = ({
               onLoad={e => setPreviewSize({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
               onError={() => setPreviewSize("broken")}
             />
+          ) : !previewSrc && fallbackSrc ? (
+            <>
+              <img src={fallbackSrc} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              {fallbackBadge && (
+                <span className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-background/90 px-1.5 py-1 text-[10px] font-sans font-semibold text-foreground text-center leading-tight">
+                  {fallbackBadge}
+                </span>
+              )}
+            </>
           ) : (
             <span className="absolute inset-0 flex items-center justify-center text-[11px] font-sans text-muted-foreground text-center px-2">
               {previewSrc ? "Image failed to load" : "No image"}
@@ -1252,12 +1269,25 @@ const FramedImageEditor = ({
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <p className="font-sans text-xs text-muted-foreground truncate flex-1">
-              {current.includes("firebasestorage") || current.startsWith("data:") ? "📁 Uploaded file" : (current || emptyLabel)}
+            <p className="font-sans text-xs text-muted-foreground truncate flex-1" title={current || emptyLabel}>
+              {current.includes("firebasestorage") || current.startsWith("data:") ? "✓ Your uploaded image" : (current || emptyLabel)}
             </p>
             <Button size="sm" variant="outline" onClick={() => { reset(); setEditing(true); }} className="font-sans shrink-0">
-              <Edit className="h-3 w-3 mr-1" /> Change
+              <Edit className="h-3 w-3 mr-1" /> {current ? "Change" : "Add image"}
             </Button>
+            {current && onClear && (
+              <Button
+                size="sm" variant="outline" disabled={saving} title={clearHint}
+                className="font-sans shrink-0 text-destructive hover:text-destructive"
+                onClick={async () => {
+                  if (!window.confirm(`Remove this image?\n\n${clearHint}`)) return;
+                  setSaving(true);
+                  try { await onClear(); } finally { setSaving(false); }
+                }}
+              >
+                <Trash2 className="h-3 w-3 mr-1" /> Remove
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -1266,12 +1296,21 @@ const FramedImageEditor = ({
 };
 
 const ImageField = ({
-  imgKey, label, description, frame, siteImages, setSiteImages, toast,
+  imgKey, label, description, frame, hasDefaultUrl, fallbackKey, fallbackLabel, siteImages, setSiteImages, toast,
 }: {
   imgKey: SiteImageKey; label: string; description: string; frame: ImageFrame;
+  hasDefaultUrl: boolean; fallbackKey?: SiteImageKey; fallbackLabel?: string;
   siteImages: SiteImages; setSiteImages: React.Dispatch<React.SetStateAction<SiteImages>>; toast: any;
 }) => {
   const current = siteImages[imgKey];
+  const fallbackSrc = fallbackKey ? siteImages[fallbackKey] : "";
+  const cardName = fallbackLabel?.replace(/ — Card Image$/, "");
+  // Say plainly what visitors see while this slot is blank
+  const emptyLabel = fallbackKey
+    ? (fallbackSrc
+        ? `Not set — showing the homepage "${cardName}" card image`
+        : `Not set — showing an icon (upload a "${cardName}" card image above, or a photo here)`)
+    : hasDefaultUrl ? "Using the built-in stock photo" : "Not set — showing the built-in drawing";
 
   const save = async (newUrl: string) => {
     setSiteImages(prev => ({ ...prev, [imgKey]: newUrl })); // optimistic local update
@@ -1280,7 +1319,9 @@ const ImageField = ({
       // fp lets the public site check whether its build-time copy is still current without
       // downloading the image (see requestSiteImages in AdminContext).
       await setDoc(doc(db, "siteImageData", imgKey), { url: newUrl, fp: imageFingerprint(newUrl) });
-      toast({ title: "Image saved", description: label + " is now live on the website." });
+      toast(newUrl
+        ? { title: "Image saved", description: label + " is now live on the website." }
+        : { title: "Image removed", description: label + " is back to its default." });
     } catch (err) {
       console.error("Failed to save site image:", err);
       toast({ title: "Save failed", description: "Could not save to database. Please try again.", variant: "destructive" });
@@ -1295,10 +1336,16 @@ const ImageField = ({
       description={description}
       current={current}
       frame={frame}
-      emptyLabel="Using default image"
+      emptyLabel={emptyLabel}
       placeholder="Paste image URL here…"
       onSave={save}
       toast={toast}
+      fallbackSrc={fallbackSrc}
+      fallbackBadge={cardName ? `From "${cardName}" card` : undefined}
+      onClear={hasDefaultUrl ? undefined : () => save("")}
+      clearHint={fallbackKey
+        ? `The page will show the homepage "${cardName}" card image again.`
+        : "The website will go back to its built-in drawing/icon."}
     />
   );
 };
@@ -1365,6 +1412,9 @@ const SiteImagesTab = ({ siteImages, setSiteImages, teamMembers, setTeamMembers,
                 label={f.label}
                 description={f.description}
                 frame={f.frame}
+                hasDefaultUrl={f.hasDefaultUrl}
+                fallbackKey={f.fallbackKey}
+                fallbackLabel={f.fallbackLabel}
                 siteImages={siteImages}
                 setSiteImages={setSiteImages}
                 toast={toast}

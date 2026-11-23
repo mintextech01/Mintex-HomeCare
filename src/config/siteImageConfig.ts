@@ -34,7 +34,35 @@ export interface SiteImageEntry {
   page: string;
   pageUrl: string;
   frame: ImageFrame;
+  /** When this slot is left blank, show the image from this other slot instead (see resolveSiteImage). */
+  fallbackKey?: string;
 }
+
+/**
+ * Service pages that reuse a homepage "Specialized Care" card image until they get their own photo.
+ * Several cards open the same page, so each page borrows the card that best matches it.
+ */
+const SERVICE_PAGE_FALLBACK: Record<string, string> = {
+  svcTherapySupport:       "nursingCard1", // Physical Therapy card
+  svcWoundCareIv:          "nursingCard5", // Wound Care card
+  svcMedicationManagement: "nursingCard6", // Medication Management card
+};
+
+/** Card image slots: square, saved large enough to be reused as a service page photo. */
+const NURSING_CARD_FRAME = frame(1, 1, 800);
+
+const nursingCard = (key: string, name: string, servicePage: string) => ({
+  key,
+  defaultUrl: "",
+  label: `${name} — Card Image`,
+  description:
+    `Square picture on the ${name} card in the homepage "Skilled nursing for every stage of life" section. ` +
+    `Blank = the built-in drawing.` +
+    (servicePage ? ` Also shown at the top of the ${servicePage} page, unless that page has its own photo below.` : ""),
+  page: "Homepage — Specialized Care Section",
+  pageUrl: "/#specialized-care",
+  frame: NURSING_CARD_FRAME,
+});
 
 export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   // ── Hero Section ──────────────────────────────────────────────────────────
@@ -228,60 +256,12 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   },
 
   // ── Specialized Care Section (Nursing) ────────────────────────────────────
-  {
-    key: "nursingCard1",
-    defaultUrl: "",
-    label: "Physical Therapy — Card Image",
-    description: "Image for the Physical Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
-    page: "Homepage — Specialized Care Section",
-    pageUrl: "/#specialized-care",
-    frame: frame(1, 1, 400),
-  },
-  {
-    key: "nursingCard2",
-    defaultUrl: "",
-    label: "Occupational Therapy — Card Image",
-    description: "Image for the Occupational Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
-    page: "Homepage — Specialized Care Section",
-    pageUrl: "/#specialized-care",
-    frame: frame(1, 1, 400),
-  },
-  {
-    key: "nursingCard3",
-    defaultUrl: "",
-    label: "Speech Therapy — Card Image",
-    description: "Image for the Speech Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
-    page: "Homepage — Specialized Care Section",
-    pageUrl: "/#specialized-care",
-    frame: frame(1, 1, 400),
-  },
-  {
-    key: "nursingCard4",
-    defaultUrl: "",
-    label: "IV Therapy — Card Image",
-    description: "Image for the IV Therapy card in the Specialized Care section. Leave blank to use the default SVG illustration.",
-    page: "Homepage — Specialized Care Section",
-    pageUrl: "/#specialized-care",
-    frame: frame(1, 1, 400),
-  },
-  {
-    key: "nursingCard5",
-    defaultUrl: "",
-    label: "Wound Care — Card Image",
-    description: "Image for the Wound Care card in the Specialized Care section. Leave blank to use the default SVG illustration.",
-    page: "Homepage — Specialized Care Section",
-    pageUrl: "/#specialized-care",
-    frame: frame(1, 1, 400),
-  },
-  {
-    key: "nursingCard6",
-    defaultUrl: "",
-    label: "Medication Management — Card Image",
-    description: "Image for the Medication Management card in the Specialized Care section. Leave blank to use the default SVG illustration.",
-    page: "Homepage — Specialized Care Section",
-    pageUrl: "/#specialized-care",
-    frame: frame(1, 1, 400),
-  },
+  nursingCard("nursingCard1", "Physical Therapy",      "Rehab & Therapy Support"),
+  nursingCard("nursingCard2", "Occupational Therapy",  ""),
+  nursingCard("nursingCard3", "Speech Therapy",        ""),
+  nursingCard("nursingCard4", "IV Therapy",            ""),
+  nursingCard("nursingCard5", "Wound Care",            "Wound Care & IV Therapy"),
+  nursingCard("nursingCard6", "Medication Management", "Medication Management"),
 
   // ── Individual Service Pages ──────────────────────────────────────────────
   // Blank by default: the page shows a designed illustration until a real photo is uploaded.
@@ -300,11 +280,14 @@ export const SITE_IMAGE_REGISTRY: SiteImageEntry[] = [
   ] as const).map(([key, slug, name]) => ({
     key,
     defaultUrl: "",
-    label: `${name} — Hero Photo`,
-    description: `Photo at the top of the ${name} page. Leave blank to use the designed illustration.`,
+    label: `${name} — Page Photo`,
+    description: SERVICE_PAGE_FALLBACK[key]
+      ? `Big photo at the top of the ${name} page. Blank = reuses the homepage card image shown here.`
+      : `Big photo at the top of the ${name} page. Blank = a simple icon is shown instead.`,
     page: "Service Pages",
     pageUrl: `/services/${slug}`,
     frame: frame(20, 21, 1000),
+    fallbackKey: SERVICE_PAGE_FALLBACK[key],
   })),
 
   // ── Facility Staffing ─────────────────────────────────────────────────────
@@ -376,11 +359,32 @@ export const siteImageKeysForPage = (path: string): SiteImageKey[] =>
     .filter((e) => (e.pageUrl.split("#")[0] || "/") === path)
     .map((e) => e.key as SiteImageKey);
 
+/** The slot a blank slot borrows its image from, if any. */
+export const siteImageFallbackKey = (key: SiteImageKey): SiteImageKey | undefined =>
+  SITE_IMAGE_REGISTRY.find((e) => e.key === key)?.fallbackKey as SiteImageKey | undefined;
+
+/**
+ * The image to show for a slot: its own image, or — when it is blank — its fallback slot's image.
+ * Returns PENDING_IMAGE while either one is still loading, and "" when there is nothing to show.
+ */
+export const resolveSiteImage = (images: SiteImages, key: SiteImageKey): string => {
+  const own = images[key];
+  if (own) return own;
+  const fb = siteImageFallbackKey(key);
+  return fb ? images[fb] || "" : "";
+};
+
 /** Groups for the admin Site Images tab — auto-generated, always in sync */
 export interface SiteImageGroup {
   page: string;
   pageUrl: string;
-  fields: { key: SiteImageKey; label: string; description: string; frame: ImageFrame }[];
+  fields: {
+    key: SiteImageKey; label: string; description: string; frame: ImageFrame;
+    /** Built-in fallback when blank: a drawing/icon (no defaultUrl) or a stock photo */
+    hasDefaultUrl: boolean;
+    fallbackKey?: SiteImageKey;
+    fallbackLabel?: string;
+  }[];
 }
 
 export const SITE_IMAGE_GROUPS: SiteImageGroup[] = (() => {
@@ -394,6 +398,9 @@ export const SITE_IMAGE_GROUPS: SiteImageGroup[] = (() => {
       label: entry.label,
       description: entry.description,
       frame: entry.frame,
+      hasDefaultUrl: !!entry.defaultUrl,
+      fallbackKey: entry.fallbackKey as SiteImageKey | undefined,
+      fallbackLabel: SITE_IMAGE_REGISTRY.find((e) => e.key === entry.fallbackKey)?.label,
     });
   }
   return Array.from(map.values());
