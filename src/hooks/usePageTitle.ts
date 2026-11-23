@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { SERVICE_INDEX } from "@/data/serviceIndex";
+import { ALL_SERVICES } from "@/data/serviceIndex";
 import { COUNTIES, TOWNS } from "@/data/areas";
 import { BLOG_POSTS } from "@/data/blog";
 
@@ -261,7 +261,7 @@ const pageMeta: Record<string, PageMeta> = {
       ],
     }];
   })),
-  ...Object.fromEntries(SERVICE_INDEX.map(s => [`/services/${s.slug}`, {
+  ...Object.fromEntries(ALL_SERVICES.map(s => [`/services/${s.slug}`, {
     title: s.metaTitle,
     description: s.metaDescription,
     canonical: `https://mintexcare.com/services/${s.slug}`,

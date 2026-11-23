@@ -45,6 +45,12 @@ const ROUTES = [
     ["wound-care-iv-therapy", "Wound Care & IV"],
     ["medication-management", "Medication Management"],
     ["dementia-care", "Alzheimer's & Dementia Care"],
+    // Sub-pages opened from the homepage "Specialized Care" cards
+    ["physical-therapy", "Physical Therapy Support"],
+    ["occupational-therapy", "Occupational Therapy Support"],
+    ["speech-therapy", "Speech Therapy Support"],
+    ["iv-therapy", "IV Therapy at Home"],
+    ["wound-care", "Wound Care at Home"],
   ].map(([slug, title]) => ({ path: `/services/${slug}`, file: `services/${slug}.html`, title })),
   { path: "/facility-staffing", file: "facility-staffing.html", title: "Healthcare Facility Staffing" },
   { path: "/facility-staffing/roles", file: "facility-staffing/roles.html", title: "HHA, CNA, LPN & RN" },

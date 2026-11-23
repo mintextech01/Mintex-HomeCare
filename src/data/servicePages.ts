@@ -341,6 +341,175 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     related: ["skilled-nursing", "post-surgery-care", "medication-management"],
   },
 
+  // ── Sub-pages opened from the homepage "Specialized Care" cards ──────────────
+  // Same conservative wording as therapy-support / wound-care-iv-therapy above.
+
+  "physical-therapy": {
+    heading: ["Physical Therapy", "Support at Home"],
+    intro:
+      "Rebuilding strength, balance and mobility takes regular practice, not just a session or two a week. Our team helps your loved one follow the home exercise plan from their licensed physical therapist safely, so progress continues every day.",
+    imageKey: "svcPhysicalTherapy",
+    highlights: [
+      { title: "Daily practice", text: "Exercises done safely between therapy sessions." },
+      { title: "Safer mobility", text: "Walking practice and fall prevention at home." },
+      { title: "Therapist's plan", text: "We follow the plan from your licensed therapist." },
+    ],
+    included: [
+      "Help with the home exercise program from the physical therapist",
+      "Walking practice and safe use of walkers or canes",
+      "Help getting in and out of bed, chairs and the shower safely",
+      "Home safety and fall-prevention checks",
+      "Encouragement and motivation to keep going",
+      "Progress updates for family and the care team",
+    ],
+    rightFor: [
+      "Recovery after a joint replacement, fracture or surgery",
+      "Weakness after a hospital stay or long illness",
+      "Recovery after a stroke",
+      "Parkinson's, MS or another condition affecting movement",
+      "Fear of falling that limits daily life",
+    ],
+    faqs: [
+      { q: "Do you provide physical therapy?", a: "We support physical therapy goals at home and work alongside licensed physical therapists. Contact us to discuss what your loved one needs and how we can help." },
+      { q: "Do I need a therapist's plan?", a: "Yes. Exercises should follow a plan from a licensed physical therapist or physician. We help your loved one follow that plan safely between sessions." },
+      { q: "Can this be combined with other care?", a: "Yes. It is often combined with personal care, post-surgery care or skilled nursing in one care plan." },
+      { q: "How do we know it's working?", a: "We track progress such as walking distance, balance and confidence moving around, and share updates with you and the care team." },
+    ],
+    related: ["therapy-support", "post-surgery-care", "personal-care"],
+  },
+
+  "occupational-therapy": {
+    heading: ["Occupational Therapy", "Support at Home"],
+    intro:
+      "After an illness, injury or stroke, everyday tasks like dressing, bathing and cooking can feel hard again. Our team helps your loved one practice these daily skills at home, following the plan from their licensed occupational therapist, so they can do more for themselves.",
+    imageKey: "svcOccupationalTherapy",
+    highlights: [
+      { title: "More independence", text: "Practice with the tasks of everyday life." },
+      { title: "Real routines", text: "Skills practiced in your own home." },
+      { title: "Therapist's plan", text: "We follow the plan from your licensed therapist." },
+    ],
+    included: [
+      "Practicing dressing, grooming and bathing",
+      "Practicing simple cooking and kitchen tasks safely",
+      "Help using adaptive equipment the therapist recommends",
+      "Setting up the home to make daily tasks easier and safer",
+      "Encouragement to keep routines going between sessions",
+      "Progress updates for family and the care team",
+    ],
+    rightFor: [
+      "Difficulty with dressing, bathing or eating after an illness or injury",
+      "Recovery after a stroke",
+      "Arthritis or weakness in the hands and arms",
+      "Memory changes that make daily routines harder",
+      "Wanting to stay independent at home for longer",
+    ],
+    faqs: [
+      { q: "Do you provide occupational therapy?", a: "We support occupational therapy goals at home and work alongside licensed occupational therapists. Contact us to discuss what your loved one needs and how we can help." },
+      { q: "Do I need a therapist's plan?", a: "Yes. Activities should follow a plan from a licensed occupational therapist or physician. We help your loved one practice that plan safely between sessions." },
+      { q: "Can this be combined with other care?", a: "Yes. It is often combined with personal care, companion care or post-surgery care in one care plan." },
+      { q: "How do we know it's working?", a: "We track how independently your loved one manages daily tasks and share updates with you and the care team." },
+    ],
+    related: ["therapy-support", "personal-care", "post-surgery-care"],
+  },
+
+  "speech-therapy": {
+    heading: ["Speech Therapy", "Support at Home"],
+    intro:
+      "Speaking, understanding and swallowing can be affected by a stroke, Parkinson's or other conditions. Our team helps your loved one practice the exercises from their licensed speech-language pathologist at home, with patience and encouragement.",
+    imageKey: "svcSpeechTherapy",
+    highlights: [
+      { title: "Patient practice", text: "Exercises at a calm, comfortable pace." },
+      { title: "Safer meals", text: "Following swallowing guidance at mealtimes." },
+      { title: "Therapist's plan", text: "We follow the plan from your licensed therapist." },
+    ],
+    included: [
+      "Help practicing speech and communication exercises",
+      "Support with swallowing exercises, as instructed",
+      "Following diet and mealtime guidance from the care team",
+      "Patient, encouraging conversation every day",
+      "Progress updates for family and the care team",
+    ],
+    rightFor: [
+      "Speech or language changes after a stroke",
+      "Parkinson's or another condition affecting speech",
+      "Difficulty swallowing",
+      "Losing confidence talking with family and friends",
+    ],
+    faqs: [
+      { q: "Do you provide speech therapy?", a: "We support speech therapy goals at home and work alongside licensed speech-language pathologists. Contact us to discuss what your loved one needs and how we can help." },
+      { q: "Do I need a therapist's plan?", a: "Yes. Exercises and swallowing guidance should come from a licensed speech-language pathologist or physician. We help your loved one follow that plan between sessions." },
+      { q: "Can this be combined with other care?", a: "Yes. It is often combined with personal care, companion care or skilled nursing in one care plan." },
+      { q: "How do we know it's working?", a: "We note changes in communication, confidence and mealtimes, and share updates with you and the care team." },
+    ],
+    related: ["therapy-support", "companion-care", "skilled-nursing"],
+  },
+
+  "iv-therapy": {
+    heading: ["IV Therapy", "at Home"],
+    intro:
+      "IV treatments no longer have to mean long stays in a hospital or trips to an infusion clinic. Our licensed nurses provide IV therapy at home, following your physician's orders and watching closely for any signs of complications.",
+    imageKey: "svcIvTherapy",
+    highlights: [
+      { title: "Licensed nurses", text: "Every treatment by an RN or LPN." },
+      { title: "Doctor's orders", text: "Care follows your physician's treatment plan." },
+      { title: "Fewer trips", text: "Treatment at home instead of the clinic." },
+    ],
+    included: [
+      "IV antibiotics, as ordered",
+      "IV hydration, as ordered",
+      "IV line and PICC line care and flushing",
+      "Injections, as ordered",
+      "Monitoring for signs of infection or line problems",
+      "Teaching patients and families what to watch for",
+    ],
+    rightFor: [
+      "IV antibiotics or hydration prescribed after discharge",
+      "A PICC line or IV line that needs regular care",
+      "Frequent trips to an infusion clinic that are hard to manage",
+      "Someone who would rather recover at home",
+    ],
+    faqs: [
+      { q: "Do I need a doctor's order for IV therapy?", a: "Yes. IV therapy is provided under a physician's order. We can help coordinate with your doctor or the discharge team." },
+      { q: "Who provides the care?", a: "IV therapy is provided by our licensed nurses (RNs and LPNs), not by aides." },
+      { q: "What happens if there's a problem with the IV line?", a: "Nurses watch for warning signs such as redness, swelling, fever or line problems, and contact your physician when needed. In an emergency, call 911." },
+      { q: "Can caregivers help between nurse visits?", a: "Yes. Caregivers can help with personal care and mobility and report any concerns to the nurse, while the nurse handles all IV treatment." },
+    ],
+    related: ["wound-care-iv-therapy", "skilled-nursing", "post-surgery-care"],
+  },
+
+  "wound-care": {
+    heading: ["Wound Care", "at Home"],
+    intro:
+      "Healing wounds need regular, careful attention. Our licensed nurses provide wound assessment, dressing changes and treatment at home, following your physician's orders and watching closely for any signs of infection.",
+    imageKey: "svcWoundCare",
+    highlights: [
+      { title: "Licensed nurses", text: "Every treatment by an RN or LPN." },
+      { title: "Doctor's orders", text: "Care follows your physician's treatment plan." },
+      { title: "Fewer trips", text: "Treatment at home instead of the clinic." },
+    ],
+    included: [
+      "Surgical wound care and dressing changes",
+      "Pressure injury (bedsore) care and prevention",
+      "Diabetic and other chronic wound care",
+      "Monitoring for signs of infection",
+      "Repositioning and skin checks to prevent new wounds",
+      "Teaching patients and families how to protect healing wounds",
+    ],
+    rightFor: [
+      "A surgical wound that needs regular dressing changes",
+      "Pressure sores or slow-healing diabetic wounds",
+      "Frequent trips to a wound clinic that are hard to manage",
+      "Someone with limited mobility who is at risk of skin breakdown",
+    ],
+    faqs: [
+      { q: "Do I need a doctor's order for wound care?", a: "Yes. Wound treatments are provided under a physician's order. We can help coordinate with your doctor or the discharge team." },
+      { q: "Who provides the care?", a: "Wound care is provided by our licensed nurses (RNs and LPNs), not by aides." },
+      { q: "What happens if the wound gets worse?", a: "Nurses watch for warning signs such as redness, swelling, drainage or fever, and contact your physician when needed. In an emergency, call 911." },
+      { q: "Can caregivers help between nurse visits?", a: "Yes. Caregivers can help with personal care, repositioning and mobility and report any concerns to the nurse, while the nurse handles all wound treatment." },
+    ],
+    related: ["wound-care-iv-therapy", "skilled-nursing", "post-surgery-care"],
+  },
+
   "dementia-care": {
     heading: ["Alzheimer's & Dementia", "Care at Home"],
     intro:

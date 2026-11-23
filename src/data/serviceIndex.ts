@@ -1,5 +1,6 @@
 import {
   Bath, HeartHandshake, Clock, Home, Coffee, Activity, Stethoscope, Dumbbell, Bandage, Pill, Brain,
+  Hand, MessagesSquare, Syringe,
   type LucideIcon,
 } from "lucide-react";
 
@@ -19,6 +20,11 @@ export interface ServiceIndexEntry {
   icon: LucideIcon;
   metaTitle: string;
   metaDescription: string;
+  /**
+   * Set on focused sub-pages (e.g. Physical Therapy under Rehab & Therapy Support). They have their
+   * own URL and page but are left out of menus, the Services hub and form dropdowns, which use the parent.
+   */
+  parent?: string;
 }
 
 export const SERVICE_GROUP_LABEL: Record<ServiceGroup, string> = {
@@ -26,7 +32,8 @@ export const SERVICE_GROUP_LABEL: Record<ServiceGroup, string> = {
   clinical: "Specialized & Clinical",
 };
 
-export const SERVICE_INDEX: ServiceIndexEntry[] = [
+/** Every service page, including the sub-pages opened from the homepage "Specialized Care" cards. */
+export const ALL_SERVICES: ServiceIndexEntry[] = [
   {
     slug: "personal-care",
     name: "Personal Care",
@@ -126,11 +133,66 @@ export const SERVICE_INDEX: ServiceIndexEntry[] = [
     metaTitle: "Medication Management at Home in NJ | MintexCare",
     metaDescription: "In-home medication management in New Jersey: nurse medication reviews, pill organizers, reminders and monitoring to keep medicines safe and on schedule.",
   },
+
+  // ── Sub-pages opened from the homepage "Specialized Care" cards (not in menus) ──
+  {
+    slug: "physical-therapy",
+    name: "Physical Therapy Support",
+    short: "Help following the physical therapist's home exercise plan to rebuild strength, balance and mobility.",
+    group: "clinical",
+    icon: Dumbbell,
+    metaTitle: "Physical Therapy Support at Home in NJ | MintexCare",
+    metaDescription: "In-home physical therapy support in New Jersey: help with home exercise programs, walking practice and fall prevention, alongside your licensed physical therapist.",
+    parent: "therapy-support",
+  },
+  {
+    slug: "occupational-therapy",
+    name: "Occupational Therapy Support",
+    short: "Practice with dressing, bathing, cooking and other daily tasks to regain independence at home.",
+    group: "clinical",
+    icon: Hand,
+    metaTitle: "Occupational Therapy Support at Home in NJ | MintexCare",
+    metaDescription: "In-home occupational therapy support in New Jersey: practicing dressing, bathing, cooking and daily routines safely, alongside your licensed occupational therapist.",
+    parent: "therapy-support",
+  },
+  {
+    slug: "speech-therapy",
+    name: "Speech Therapy Support",
+    short: "Support with speech, communication and swallowing exercises between therapy sessions.",
+    group: "clinical",
+    icon: MessagesSquare,
+    metaTitle: "Speech Therapy Support at Home in NJ | MintexCare",
+    metaDescription: "In-home speech therapy support in New Jersey: help practicing speech, communication and swallowing exercises, alongside your licensed speech-language pathologist.",
+    parent: "therapy-support",
+  },
+  {
+    slug: "iv-therapy",
+    name: "IV Therapy at Home",
+    short: "IV infusion at home by licensed nurses, following your physician's orders.",
+    group: "clinical",
+    icon: Syringe,
+    metaTitle: "IV Therapy at Home in NJ | Licensed Nurses | MintexCare",
+    metaDescription: "In-home IV therapy in New Jersey by licensed nurses: IV antibiotics and hydration, IV and PICC line care, as ordered by your doctor.",
+    parent: "wound-care-iv-therapy",
+  },
+  {
+    slug: "wound-care",
+    name: "Wound Care at Home",
+    short: "Nurse-led wound assessment, dressing changes and treatment at home, following your physician's orders.",
+    group: "clinical",
+    icon: Bandage,
+    metaTitle: "Wound Care at Home in NJ | Licensed Nurses | MintexCare",
+    metaDescription: "In-home wound care in New Jersey by licensed nurses: surgical wound care, dressing changes, pressure and diabetic wound care, as ordered by your doctor.",
+    parent: "wound-care-iv-therapy",
+  },
 ];
+
+/** The main service pages: menus, Services hub, footer and form dropdowns. */
+export const SERVICE_INDEX: ServiceIndexEntry[] = ALL_SERVICES.filter(s => !s.parent);
 
 /** "Service needed" options for the contact forms: the same names as the service pages. */
 export const CONTACT_SERVICE_OPTIONS = [...SERVICE_INDEX.map(s => s.name), "Facility Staffing", "Not sure / Other"];
 
-export const SERVICE_PATHS =SERVICE_INDEX.map(s => `/services/${s.slug}`);
+export const SERVICE_PATHS = ALL_SERVICES.map(s => `/services/${s.slug}`);
 
-export const serviceBySlug = (slug: string) => SERVICE_INDEX.find(s => s.slug === slug);
+export const serviceBySlug = (slug: string) => ALL_SERVICES.find(s => s.slug === slug);

@@ -50,7 +50,9 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   // Service pages link here with ?service={slug} so the care type is already chosen.
-  const preset = serviceBySlug(params.get("service") ?? "")?.name ?? "";
+  // Sub-pages (e.g. physical-therapy) preselect their main service, which is what the dropdown lists.
+  const presetSvc = serviceBySlug(params.get("service") ?? "");
+  const preset = (presetSvc?.parent ? serviceBySlug(presetSvc.parent) : presetSvc)?.name ?? "";
   const [form, setForm] = useState({ ...EMPTY, careType: preset });
   const [submitting, setSubmitting] = useState(false);
 

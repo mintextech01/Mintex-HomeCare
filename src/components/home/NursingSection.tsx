@@ -10,7 +10,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 const cards = [
   {
     title: "Physical Therapy",
-    link: "/services/therapy-support",
+    link: "/services/physical-therapy",
     description:
       "Personalized therapy programs to restore strength, balance, and mobility in the comfort of your home.",
     bg: "#ddeeff",
@@ -43,7 +43,7 @@ const cards = [
   },
   {
     title: "Occupational Therapy",
-    link: "/services/therapy-support",
+    link: "/services/occupational-therapy",
     description:
       "Helping patients rebuild daily living skills and regain independence through tailored therapy sessions.",
     bg: "#fde8f0",
@@ -93,7 +93,7 @@ const cards = [
   },
   {
     title: "Speech Therapy",
-    link: "/services/therapy-support",
+    link: "/services/speech-therapy",
     description:
       "Expert speech and language therapy to improve communication and swallowing with compassionate care.",
     bg: "#ede8ff",
@@ -126,7 +126,7 @@ const cards = [
   },
   {
     title: "IV Therapy",
-    link: "/services/wound-care-iv-therapy",
+    link: "/services/iv-therapy",
     description:
       "Safe, professional intravenous therapy administered by licensed nurses in the comfort of your home.",
     bg: "#d8f5f0",
@@ -173,7 +173,7 @@ const cards = [
   },
   {
     title: "Wound Care",
-    link: "/services/wound-care-iv-therapy",
+    link: "/services/wound-care",
     description:
       "Advanced wound assessment, dressing changes, and treatment to ensure safe, effective healing.",
     bg: "#e8fbff",
