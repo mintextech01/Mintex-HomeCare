@@ -9,18 +9,18 @@ interface BenefitsSectionProps {
 }
 
 export function BenefitsSection({
-  title = "Why Work With",
+  title = "Why work with",
   subtitle = "MintexCare?",
   description = "Join a team that values compassion, dedication, and professional growth. At MintexCare, you'll make a meaningful difference in people's lives every day.",
 }: BenefitsSectionProps) {
   return (
-    <section className="py-20 md:py-28 bg-surface">
+    <section className="py-14 md:py-20 bg-surface">
       <div className="container mx-auto px-6 md:px-10">
         {/* Header */}
         <AnimatedSection className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <div className="el-eyebrow bg-background mb-5">Why Join Us</div>
+          <div className="el-eyebrow mb-3">Why Join Us</div>
           <h2 className="heading-h2 mb-4 text-balance">
-            {title} <span className="text-primary">{subtitle}</span>
+            {title} {subtitle}
           </h2>
           <p className="body-text text-muted-foreground">
             {description}

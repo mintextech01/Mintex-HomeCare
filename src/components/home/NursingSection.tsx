@@ -271,14 +271,14 @@ const NursingSection = () => {
   const { siteImages } = useAdmin();
 
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
 
         {/* Heading */}
         <AnimatedSection className="text-center mb-12 max-w-2xl mx-auto">
-          <div className="el-eyebrow mb-5">Specialized Care</div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground leading-tight">
-            Skilled nursing for every stage of life
+          <div className="el-eyebrow mb-3">Specialized Care</div>
+          <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
+            Nursing care at home
           </h2>
         </AnimatedSection>
 

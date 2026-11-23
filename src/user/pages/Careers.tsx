@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -33,7 +34,7 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="pt-32 lg:pt-40 pb-16 md:pb-20">
+        <section className="pt-32 lg:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="flex flex-col lg:flex-row lg:items-center gap-12">
 
@@ -108,7 +109,7 @@ const Careers = () => {
         ══════════════════════════════════════ */}
         <div id="positions" className="py-4 md:py-8">
           <JobsSection
-            title="Join Our Healthcare Team"
+            title="Join our healthcare team"
             subtitle="Explore rewarding nursing and care positions in New Jersey"
           />
         </div>
@@ -116,7 +117,7 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             YOUR LIFE AT MINTEXCARE
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-28 bg-surface">
+        <section className="py-14 md:py-20 bg-surface">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
@@ -139,9 +140,9 @@ const Careers = () => {
 
               {/* Right: text */}
               <AnimatedSection delay={0.1}>
-                <div className="el-eyebrow bg-background mb-5">Our Culture</div>
-                <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6 leading-tight">
-                  Your Life At <span className="text-primary">MintexCare</span>
+                <div className="el-eyebrow mb-3">Our Culture</div>
+                <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-6 leading-tight">
+                  Working at MintexCare
                 </h2>
                 <p className="text-muted-foreground font-sans leading-relaxed mb-4">
                   At MintexCare we believe in working together and working hard. With our compassionate team
@@ -177,13 +178,13 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             RECRUITMENT PROCESS
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-28">
+        <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
 
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow mb-5">Hiring Steps</div>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
-                Learn Our <span className="text-primary">Recruitment</span> Process
+              <div className="el-eyebrow mb-3">Hiring Steps</div>
+              <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
+                How hiring works
               </h2>
             </AnimatedSection>
 
@@ -194,12 +195,8 @@ const Careers = () => {
                   <AnimatedSection key={step.label} delay={i * 0.08} className="h-full">
                     <div className="el-card h-full p-6 md:p-7">
                       <div className="flex items-center justify-between mb-10">
-                        <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center">
-                          <SIcon className="h-6 w-6 text-accent-foreground" />
-                        </div>
-                        <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
+                        <FeatureIcon icon={SIcon} />
+                        <span className="text-sm font-bold text-primary">Step {i + 1}</span>
                       </div>
                       <h3 className="font-serif font-semibold text-foreground text-lg leading-snug">{step.label}</h3>
                     </div>
@@ -214,13 +211,13 @@ const Careers = () => {
         {/* ══════════════════════════════════════
             APPLY FORM
         ══════════════════════════════════════ */}
-        <section id="apply-section" className="py-20 md:py-28 bg-surface">
+        <section id="apply-section" className="py-14 md:py-20 bg-surface">
           <div className="container mx-auto px-6 md:px-10">
 
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow bg-background mb-5">Apply Now</div>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
-                Start Your Journey <span className="text-primary">With Us</span>
+              <div className="el-eyebrow mb-3">Apply Now</div>
+              <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">
+                Apply now
               </h2>
               <p className="text-muted-foreground font-sans max-w-md mx-auto">
                 Fill out the form and we'll review your application within 3–5 business days.
@@ -232,9 +229,7 @@ const Careers = () => {
               {/* Left: info panel */}
               <AnimatedSection className="lg:sticky lg:top-28">
                 <div className="rounded-[28px] bg-foreground text-background p-7">
-                  <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mb-6">
-                    <Briefcase className="h-6 w-6 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Briefcase} size="md" onDark className="mb-6" />
                   <h3 className="text-2xl font-serif font-bold mb-3 leading-snug">
                     Ready to Make<br />a Difference?
                   </h3>
@@ -266,7 +261,7 @@ const Careers = () => {
               <AnimatedSection delay={0.1}>
                 <div className="bg-background rounded-[28px] p-7 md:p-10">
                   <div className="mb-7">
-                    <div className="el-eyebrow mb-4">Application Form</div>
+                    <div className="el-eyebrow mb-3">Application Form</div>
                     <h3 className="text-2xl font-serif font-bold text-foreground">Tell Us About Yourself</h3>
                   </div>
 

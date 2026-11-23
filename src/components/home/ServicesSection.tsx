@@ -17,15 +17,15 @@ const ServicesSection = () => {
   const { siteImages } = useAdmin();
   const services = SERVICE_META.map(s => ({ ...s, image: siteImages[s.imgKey] }));
   return (
-    <section id="services" className="py-20 md:py-24 bg-surface">
+    <section id="services" className="py-14 md:py-20 bg-surface">
       <div className="container mx-auto px-6 md:px-10">
 
         {/* Heading — left, with "View all" on the right */}
         <AnimatedSection className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div className="max-w-2xl">
-            <div className="el-eyebrow bg-background mb-5">What We Offer</div>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
-              Our Home Care Services
+            <div className="el-eyebrow mb-3">What We Offer</div>
+            <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">
+              Our home care services
             </h2>
             <p className="text-muted-foreground text-base font-sans">
               Comprehensive care solutions designed to improve your general health and well-being

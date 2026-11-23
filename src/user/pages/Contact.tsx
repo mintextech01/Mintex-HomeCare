@@ -104,13 +104,13 @@ const Contact = () => {
         {/* ════════════════════════════════════════
             HERO
             ════════════════════════════════════════ */}
-        <section className="pt-36 lg:pt-44 pb-16 md:pb-20">
+        <section className="pt-36 lg:pt-44 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
 
               {/* LEFT — heading + badges */}
               <AnimatedSection>
-                <div className="el-eyebrow mb-6">
+                <div className="el-eyebrow mb-3">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                   We're here for you
                 </div>
@@ -146,7 +146,7 @@ const Contact = () => {
                           <Phone className="h-5 w-5 text-accent-foreground" />
                         </div>
                         <div>
-                          <p className="text-background/55 text-xs font-sans uppercase tracking-wider">Phone</p>
+                          <p className="text-background/55 text-sm font-sans">Phone</p>
                           <p className="font-semibold font-sans underline-offset-4">{contactInfo.phone}</p>
                         </div>
                         <ArrowRight className="h-4 w-4 text-background/30 ml-auto transition-colors" />
@@ -159,7 +159,7 @@ const Contact = () => {
                           <Mail className="h-5 w-5" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-background/55 text-xs font-sans uppercase tracking-wider">Email</p>
+                          <p className="text-background/55 text-sm font-sans">Email</p>
                           <p className="font-semibold font-sans break-all underline-offset-4">{contactInfo.email}</p>
                         </div>
                         <ArrowRight className="h-4 w-4 text-background/30 ml-auto transition-colors shrink-0" />
@@ -172,7 +172,7 @@ const Contact = () => {
                           <MapPin className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="text-background/55 text-xs font-sans uppercase tracking-wider">Address</p>
+                          <p className="text-background/55 text-sm font-sans">Address</p>
                           <p className="font-semibold font-sans text-sm leading-relaxed">{contactInfo.address}</p>
                         </div>
                       </div>
@@ -184,7 +184,7 @@ const Contact = () => {
                           <Clock className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="text-background/55 text-xs font-sans uppercase tracking-wider">Hours</p>
+                          <p className="text-background/55 text-sm font-sans">Hours</p>
                           <p className="font-semibold font-sans">{contactInfo.hours}</p>
                         </div>
                       </div>
@@ -199,7 +199,7 @@ const Contact = () => {
         {/* ════════════════════════════════════════
             FORM + MAP
             ════════════════════════════════════════ */}
-        <section className="py-16 md:py-20 bg-surface">
+        <section className="py-12 md:py-16 bg-surface">
           <div className="container mx-auto px-6 md:px-10 max-w-6xl">
             <div className="grid lg:grid-cols-[3fr_2fr] gap-5 items-stretch">
 
@@ -207,8 +207,8 @@ const Contact = () => {
               <AnimatedSection>
                 <div className="rounded-[28px] bg-background p-7 md:p-10 h-full">
                   <div className="mb-8">
-                    <div className="el-eyebrow mb-4">Send a Message</div>
-                    <h2 className="text-3xl font-serif font-bold text-foreground">
+                    <div className="el-eyebrow mb-3">Send a Message</div>
+                    <h2 className="text-3xl font-serif font-bold text-foreground leading-tight">
                       How can we help you?
                     </h2>
                     <p className="text-muted-foreground font-sans text-sm mt-2">
@@ -314,7 +314,7 @@ const Contact = () => {
                     <Phone className="h-5 w-5 text-accent-foreground" />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground font-sans uppercase tracking-wider">Fax</p>
+                    <p className="text-sm text-muted-foreground font-sans">Fax</p>
                     <p className="font-sans font-semibold text-foreground text-sm">{contactInfo.fax}</p>
                   </div>
                 </div>
@@ -327,12 +327,12 @@ const Contact = () => {
         {/* ════════════════════════════════════════
             FAQ
             ════════════════════════════════════════ */}
-        <section className="py-20 md:py-28">
+        <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10 max-w-4xl">
-            <AnimatedSection className="text-center mb-14">
-              <div className="el-eyebrow mb-5">Got Questions?</div>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
-                Frequently Asked<br />Questions
+            <AnimatedSection className="text-center mb-10">
+              <div className="el-eyebrow mb-3">Got Questions?</div>
+              <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
+                Frequently asked<br />questions
               </h2>
               <p className="text-muted-foreground font-sans text-base mt-4 max-w-lg mx-auto leading-relaxed">
                 Can't find what you're looking for? Feel free to reach out — we're happy to help.
@@ -364,13 +364,13 @@ const Contact = () => {
         {/* ════════════════════════════════════════
             BOTTOM CTA STRIP
             ════════════════════════════════════════ */}
-        <section className="pb-20">
+        <section className="pb-14 md:pb-16">
           <div className="container mx-auto px-6 md:px-10 max-w-5xl">
             <AnimatedSection>
               <div className="rounded-[32px] bg-accent px-8 py-12">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                   <div>
-                    <div className="el-eyebrow bg-background border-transparent mb-4">Still have questions?</div>
+                    <div className="el-eyebrow mb-3">Still have questions?</div>
                     <h3 className="text-2xl md:text-3xl font-serif font-bold text-accent-foreground mb-2">
                       Our care specialists are ready.
                     </h3>

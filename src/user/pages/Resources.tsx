@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -40,7 +41,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
 );
 
 const Pill = ({ icon: Icon, children }: { icon: typeof BookOpen; children: ReactNode }) => (
-  <div className="el-eyebrow mb-6">
+  <div className="el-eyebrow mb-3">
     <Icon className="w-3.5 h-3.5 text-primary" />
     {children}
   </div>
@@ -49,7 +50,7 @@ const Pill = ({ icon: Icon, children }: { icon: typeof BookOpen; children: React
 const PageHero = ({ trail, pill, pillIcon, children }: {
   trail: { label: string; to?: string }[]; pill: string; pillIcon: typeof BookOpen; children: ReactNode;
 }) => (
-  <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+  <section className="pt-32 md:pt-40 pb-12 md:pb-14">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection className="max-w-3xl">
         <Breadcrumb trail={trail} />
@@ -61,16 +62,16 @@ const PageHero = ({ trail, pill, pillIcon, children }: {
 );
 
 const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-16 md:py-20">
+  <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
         <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="el-eyebrow bg-background border-transparent mb-5">
+            <div className="el-eyebrow mb-3">
               <Clock className="w-3.5 h-3.5 text-primary" />
               We're here 24/7
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
           </div>
           {/* Buttons sit outside the narrow text column so their labels stay on one line. */}
@@ -95,7 +96,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
 /** Ink panel linking to a related page. */
 const LinkBanner = ({ to, icon: I, title, text }: { to: string; icon: typeof BookOpen; title: string; text: string }) => (
   <Link to={to} className="group flex items-center gap-4 rounded-[24px] bg-foreground text-background p-6">
-    <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent"><I className="w-6 h-6 text-accent-foreground" /></span>
+    <FeatureIcon icon={I} size="md" onDark />
     <span className="flex-1"><span className="block font-bold">{title}</span><span className="block text-sm text-background/70">{text}</span></span>
     <ArrowRight className="h-5 w-5 transition-transform" />
   </Link>
@@ -196,7 +197,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
 
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl mx-auto text-center">
             <div className="flex justify-center"><Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Resources" }]} /></div>
@@ -235,7 +236,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                                 <span className="block font-semibold text-foreground truncate">{r.title}</span>
                                 <span className="block text-xs text-muted-foreground truncate">{r.text}</span>
                               </span>
-                              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">{r.kind}</span>
+                              <span className="text-xs font-bold text-muted-foreground shrink-0">{r.kind}</span>
                             </Link>
                           </li>
                         ))}
@@ -264,15 +265,13 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
         </div>
       </section>
 
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {HUB_CARDS.map(({ to, icon: I, title, text }, i) => (
               <AnimatedSection key={to} delay={i * 0.05} className="h-full">
                 <Link to={to} className="group h-full flex flex-col bg-background rounded-[24px] p-7 transition-shadow duration-300">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-7 bg-accent transition-colors duration-300">
-                    <I className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
-                  </div>
+                  <FeatureIcon icon={I} className="mb-7" />
                   <h2 className="text-lg font-bold text-foreground mb-2">{title}</h2>
                   <p className="text-sm text-muted-foreground leading-relaxed flex-1">{text}</p>
                   <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
@@ -286,7 +285,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
           {/* Popular questions */}
           <AnimatedSection className="mt-14">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Popular questions</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">Popular questions</h2>
               <Link to="/faq" className="el-btn-outline group self-start md:self-auto">All FAQs <ArrowRight className="h-4 w-4 transition-transform" /></Link>
             </div>
             <div className="grid md:grid-cols-2 gap-3">
@@ -348,20 +347,18 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
     </PageHero>
 
     {/* Steps */}
-    <section className="py-20 md:py-24 bg-surface">
+    <section className="py-14 md:py-20 bg-surface">
       <div className="container mx-auto px-6 md:px-10">
         <ol className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-5xl mx-auto">
           {STEPS.map(({ icon: I, title, time, text }, i) => (
             <AnimatedSection key={title} delay={i * 0.06} className="h-full">
               <li className="h-full bg-background rounded-[28px] p-7 md:p-8 list-none">
                 <div className="flex items-start justify-between mb-8">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-accent">
-                    <I className="w-6 h-6 text-accent-foreground" />
-                  </div>
-                  <span className="text-5xl font-serif font-bold text-foreground/15 leading-none">{String(i + 1).padStart(2, "0")}</span>
+                  <FeatureIcon icon={I} />
+                  
                 </div>
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</span>
+                  <span className="text-sm font-bold text-primary">Step {i + 1}</span>
                   <span className="text-[11px] font-semibold text-foreground bg-surface rounded-full px-2.5 py-0.5">{time}</span>
                 </div>
                 <h2 className="text-xl font-bold text-foreground mb-2">{title}</h2>
@@ -374,12 +371,12 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
     </section>
 
     {/* Prepare + promises */}
-    <section className="py-20 md:py-24">
+    <section className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
           <AnimatedSection>
             <Pill icon={ListChecks}>Before the Assessment</Pill>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">What to <span className="text-primary">have ready</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">What to have ready</h2>
             <p className="text-muted-foreground leading-relaxed mb-8">You don't need everything, but these help us build an accurate plan at the first visit.</p>
             <ul className="grid sm:grid-cols-2 gap-3">
               {PREPARE.map(({ icon: I, text }) => (
@@ -392,9 +389,7 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
             <div className="rounded-[28px] p-8 bg-foreground text-background">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
-                <Sparkles className="w-6 h-6 text-accent-foreground" />
-              </div>
+              <FeatureIcon icon={Sparkles} size="md" onDark className="mb-6" />
               <h3 className="text-xl font-bold mb-6">Our promise to your family</h3>
               <ul className="space-y-3.5 mb-8">
                 {[
@@ -405,7 +400,7 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
                   "Change hours or services any time",
                   "Someone to talk to 24/7",
                 ].map(t => (
-                  <li key={t} className="flex items-start gap-3 text-sm text-background/85">
+                  <li key={t} className="flex items-start gap-3 text-base text-background/85">
                     <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0 mt-0.5">
                       <Check className="w-3 h-3 text-accent-foreground" strokeWidth={3} />
                     </span>
@@ -452,12 +447,12 @@ const Faq = ({ tel, phone }: { tel: string; phone: string }) => {
         </p>
       </PageHero>
 
-      <section className="py-14 md:py-20 bg-surface">
+      <section className="py-12 md:py-16 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[260px_1fr] gap-8 lg:gap-10 items-start max-w-6xl mx-auto">
             {/* Topic list */}
             <nav aria-label="FAQ topics" className="lg:sticky lg:top-32 bg-background rounded-[24px] p-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 px-3 pt-1">Topics</p>
+              <p className="text-sm font-semibold text-muted-foreground mb-3 px-3 pt-1">Topics</p>
               <ul className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
                 {FAQ_GROUPS.map(g => (
                   <li key={g.id} className="shrink-0">
@@ -533,9 +528,7 @@ const ChecklistCard = ({ c }: { c: Checklist }) => {
     <article id={c.id} className="scroll-mt-32 bg-background rounded-[28px] p-2">
       <div className="rounded-[22px] px-6 md:px-9 py-7 bg-foreground text-background">
         <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
-            <Icon className="w-7 h-7 text-accent-foreground" />
-          </div>
+          <FeatureIcon icon={Icon} onDark />
           <div className="flex-1">
             <h2 className="text-xl md:text-2xl font-bold">{c.title}</h2>
             <p className="text-background/70 text-sm mt-1 leading-relaxed">{c.intro}</p>
@@ -553,7 +546,7 @@ const ChecklistCard = ({ c }: { c: Checklist }) => {
       <div className="p-5 md:p-8 grid md:grid-cols-2 gap-x-10 gap-y-7">
         {c.groups.map(g => (
           <div key={g.heading}>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">{g.heading}</h3>
+            <h3 className="text-sm font-bold text-muted-foreground mb-3">{g.heading}</h3>
             <ul className="space-y-1.5">
               {g.items.map(item => {
                 const checked = ticks.includes(item);
@@ -610,7 +603,7 @@ const Guides = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     </PageHero>
 
-    <section className="py-14 md:py-20 bg-surface">
+    <section className="py-12 md:py-16 bg-surface">
       <div className="container mx-auto px-6 md:px-10 max-w-5xl space-y-5">
         {CHECKLISTS.map(c => (
           <AnimatedSection key={c.id}><ChecklistCard c={c} /></AnimatedSection>

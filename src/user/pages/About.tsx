@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -41,7 +42,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="pt-32 lg:pt-40 pb-16 md:pb-20">
+        <section className="pt-32 lg:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 xl:gap-16 items-center">
 
@@ -53,7 +54,7 @@ const About = () => {
                   <span className="text-foreground font-semibold">About Us</span>
                 </p>
 
-                <div className="el-eyebrow mb-6">Who We Are</div>
+                <div className="el-eyebrow mb-3">Who We Are</div>
 
                 <h1 className="font-bold text-foreground leading-[1.07] mb-6"
                   style={{ fontSize: "clamp(2.4rem, 5vw, 3.5rem)" }}>
@@ -101,7 +102,7 @@ const About = () => {
                       loading="eager"
                     />
                     <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 p-5">
-                      <p className="text-muted-foreground text-xs uppercase tracking-widest mb-1 font-semibold">Our Promise</p>
+                      <p className="text-muted-foreground text-sm mb-1 font-semibold">Our Promise</p>
                       <p className="text-foreground font-bold text-lg leading-snug">
                         Dignified, personalized care<br />in the comfort of home.
                       </p>
@@ -149,7 +150,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             STATS
         ══════════════════════════════════════ */}
-        <section className="pb-16 md:pb-20">
+        <section className="pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
               {stats.map(({ value, label, icon: Icon }, i) => (
@@ -172,7 +173,7 @@ const About = () => {
         {/* ══════════════════════════════════════
             OUR STORY
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-28 bg-surface">
+        <section className="py-14 md:py-20 bg-surface">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
 
@@ -194,7 +195,7 @@ const About = () => {
                       ].map(({ v, l }) => (
                         <div key={l} className="text-center bg-background/95 rounded-2xl py-3 px-2">
                           <p className="text-lg font-bold text-foreground">{v}</p>
-                          <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">{l}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{l}</p>
                         </div>
                       ))}
                     </div>
@@ -214,11 +215,10 @@ const About = () => {
 
               {/* Text */}
               <AnimatedSection delay={0.1}>
-                <div className="el-eyebrow bg-background mb-6">Our Story</div>
+                <div className="el-eyebrow mb-3">Our Story</div>
 
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-7">
-                  Care You Can<br />
-                  <span className="text-primary">Believe In</span>
+                  Who we are
                 </h2>
 
                 <div className="space-y-4 text-muted-foreground leading-relaxed text-sm md:text-base mb-8">
@@ -240,7 +240,7 @@ const About = () => {
 
                 <div className="inline-flex items-center gap-3 rounded-full bg-background px-5 py-3">
                   <Heart className="h-4 w-4 text-primary" />
-                  <span className="text-xs font-semibold text-foreground uppercase tracking-widest">
+                  <span className="text-sm font-semibold text-foreground">
                     Trusted by NJ Families Since 2014
                   </span>
                 </div>
@@ -253,15 +253,15 @@ const About = () => {
         {/* ══════════════════════════════════════
             MISSION · VISION · VALUES
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-28">
+        <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
 
             <AnimatedSection className="mb-12 md:mb-14">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div>
-                  <div className="el-eyebrow mb-5">What Drives Us</div>
+                  <div className="el-eyebrow mb-3">What Drives Us</div>
                   <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                    Mission, Vision<br className="hidden md:block" /> & Values
+                    Mission, vision<br className="hidden md:block" /> & values
                   </h2>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed max-w-xs md:text-right">
@@ -275,9 +275,7 @@ const About = () => {
               {/* Mission */}
               <AnimatedSection delay={0} className="h-full">
                 <div className="el-card h-full flex flex-col p-7 md:p-8">
-                  <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-8">
-                    <Target className="w-6 h-6 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Target} className="mb-8" />
                   <h3 className="font-bold text-foreground text-xl leading-snug mb-3">Mission</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed flex-1">
                     To deliver exceptional, client-centered home care services that promote independence,
@@ -289,9 +287,7 @@ const About = () => {
               {/* Vision */}
               <AnimatedSection delay={0.08} className="h-full">
                 <div className="el-card h-full flex flex-col p-7 md:p-8">
-                  <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-8">
-                    <Eye className="w-6 h-6 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Eye} className="mb-8" />
                   <h3 className="font-bold text-foreground text-xl leading-snug mb-3">Vision</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed flex-1">
                     To be the most trusted home care provider in New Jersey, known for compassion,
@@ -303,9 +299,7 @@ const About = () => {
               {/* Values */}
               <AnimatedSection delay={0.16} className="h-full">
                 <div className="h-full flex flex-col rounded-[20px] bg-foreground text-background p-7 md:p-8">
-                  <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-8">
-                    <Heart className="w-6 h-6 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Heart} onDark className="mb-8" />
                   <h3 className="font-bold text-xl leading-snug mb-5">Values</h3>
                   <div className="space-y-3 flex-1">
                     {values.map(({ label, desc }) => (
@@ -331,15 +325,15 @@ const About = () => {
             MEET OUR TEAM
         ══════════════════════════════════════ */}
         {teamMembers.length > 0 && (
-          <section className="py-20 md:py-28 bg-surface">
+          <section className="py-14 md:py-20 bg-surface">
             <div className="container mx-auto px-6 md:px-10">
 
               <AnimatedSection className="mb-12 md:mb-14">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                   <div>
-                    <div className="el-eyebrow bg-background mb-5">The People</div>
+                    <div className="el-eyebrow mb-3">The People</div>
                     <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                      Meet Our Team
+                      Meet our team
                     </h2>
                   </div>
                   <p className="text-muted-foreground text-sm leading-relaxed max-w-xs md:text-right">
@@ -393,18 +387,18 @@ const About = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="py-16 md:py-20">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
               <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                   <div>
-                    <div className="el-eyebrow bg-background border-transparent mb-5">
+                    <div className="el-eyebrow mb-3">
                       <Award className="w-3.5 h-3.5 text-primary" />
                       Licensed & Insured
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground leading-snug mb-3">
-                      Ready to Experience the<br className="hidden md:block" /> MintexCare Difference?
+                      Talk to our care team
                     </h2>
                     <p className="text-accent-foreground/75 text-sm max-w-md leading-relaxed">
                       Our care coordinators are ready to build a personalized plan for your loved one — at no obligation.

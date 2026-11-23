@@ -46,7 +46,7 @@ export function JobFilters({
 
       {/* Employment Type Filters */}
       <div>
-        <p className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+        <p className="text-sm font-semibold text-muted-foreground mb-3">
           Filter by type
         </p>
         <Tabs value={selectedFilter} onValueChange={(value) => onFilterChange(value as FilterOption)}>

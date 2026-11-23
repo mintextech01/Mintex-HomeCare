@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -14,6 +15,7 @@ import { SERVICE_INDEX, SERVICE_GROUP_LABEL, type ServiceGroup } from "@/data/se
 import {
   ArrowRight, Phone, MessageCircle, MapPin, Search, ShieldCheck, Clock, Award, Building2, Landmark,
   ChevronRight, ChevronDown, Navigation, HeartPulse, UserCheck, Home, X,
+  CheckCircle2,
 } from "lucide-react";
 import React from "react";
 
@@ -31,14 +33,14 @@ const PROMISES = [
    ════════════════════════════════════════════ */
 
 const Pill = ({ icon: Icon, children }: { icon: typeof MapPin; children: ReactNode }) => (
-  <div className="el-eyebrow mb-6">
+  <div className="el-eyebrow mb-3">
     <Icon className="w-3.5 h-3.5 text-primary" />
     {children}
   </div>
 );
 
 const Eyebrow = ({ children, onSurface = false }: { children: ReactNode; onSurface?: boolean }) => (
-  <div className={`el-eyebrow mb-5 ${onSurface ? "bg-background" : ""}`}>{children}</div>
+  <div className={`el-eyebrow mb-3`}>{children}</div>
 );
 
 const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
@@ -85,11 +87,9 @@ const PlaceCard = ({ name, facts, cta }: {
 }) => (
   <div className="rounded-[28px] p-7 sm:p-9 bg-foreground text-background">
     <div className="flex items-center gap-4 mb-7">
-      <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
-        <MapPin className="w-8 h-8 text-accent-foreground" />
-      </div>
+      <FeatureIcon icon={MapPin} onDark />
       <div>
-        <p className="text-xs uppercase tracking-widest text-background/60 font-semibold">MintexCare serves</p>
+        <p className="text-sm text-background/60 font-semibold">MintexCare serves</p>
         <p className="text-2xl font-bold leading-tight">{name}</p>
       </div>
     </div>
@@ -97,7 +97,7 @@ const PlaceCard = ({ name, facts, cta }: {
       {facts.map(({ icon: I, k, v }) => (
         <div key={k} className="rounded-2xl p-4 bg-background/10">
           <I className="w-4 h-4 text-background/70 mb-2" />
-          <dt className="text-[11px] uppercase tracking-widest text-background/60">{k}</dt>
+          <dt className="text-sm text-background/60">{k}</dt>
           <dd className="font-bold leading-snug">{v}</dd>
         </div>
       ))}
@@ -109,16 +109,16 @@ const PlaceCard = ({ name, facts, cta }: {
 );
 
 const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-16 md:py-20">
+  <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
         <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="el-eyebrow bg-background border-transparent mb-5">
+            <div className="el-eyebrow mb-3">
               <Clock className="w-3.5 h-3.5 text-primary" />
               We're here 24/7
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
           </div>
           {/* Buttons sit outside the narrow text column so their labels stay on one line. */}
@@ -146,10 +146,8 @@ const CountyCard = ({ c, i, onSurface = false }: { c: CountyArea; i: number; onS
     <Link to={`/areas-we-serve/${c.slug}`}
       className={`group h-full flex flex-col rounded-[24px] p-6 transition-shadow duration-300 ${onSurface ? "bg-background" : "bg-surface"}`}>
       <div className="flex items-start justify-between gap-3 mb-5">
-        <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300">
-          <MapPin className="w-5 h-5 text-accent-foreground transition-colors duration-300" />
-        </div>
-        <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest text-right leading-tight">Seat: {c.seat}</span>
+        <FeatureIcon icon={MapPin} size="md" />
+        <span className="text-xs font-semibold text-muted-foreground text-right leading-tight">Seat: {c.seat}</span>
       </div>
       <h3 className="text-lg font-bold text-foreground mb-2">{c.name} County</h3>
       <p className="text-sm text-muted-foreground leading-relaxed flex-1">{c.towns.slice(0, 4).join(", ")} and more</p>
@@ -201,7 +199,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
 
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 xl:gap-16 items-center">
             <AnimatedSection>
@@ -220,9 +218,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
             {/* Town finder */}
             <AnimatedSection delay={0.1} className="relative max-w-[520px] w-full mx-auto lg:mx-0 lg:justify-self-end">
               <div className="rounded-[28px] p-7 sm:p-9 bg-foreground text-background">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-accent">
-                  <Navigation className="w-7 h-7 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={Navigation} onDark className="mb-6" />
                 <h2 className="text-2xl font-bold mb-2">Is my town covered?</h2>
                 <p className="text-background/70 text-sm mb-6">Type your town or county to see the page for your area.</p>
                 <label htmlFor="town-search" className="sr-only">Search for your town or county</label>
@@ -271,17 +267,17 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* COUNTIES BY REGION */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow onSurface>Our Counties</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Choose Your <span className="text-primary">County</span></h2>
-            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">See the towns we serve and the care available near you</p>
+            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Choose your county</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">See the towns we serve and the care available near you</p>
           </AnimatedSection>
           {regions.map(region => (
             <div key={region} className="mb-12 last:mb-0">
               <AnimatedSection className="flex items-center gap-4 mb-6">
-                <h3 className="text-sm font-bold uppercase tracking-widest whitespace-nowrap text-foreground">{AREA_REGION_LABEL[region]}</h3>
+                <h3 className="text-sm font-bold whitespace-nowrap text-foreground">{AREA_REGION_LABEL[region]}</h3>
                 <span className="h-px flex-1 bg-border" />
               </AnimatedSection>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -293,19 +289,17 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* WHY */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow>Wherever You Are</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">The same standard of care <span className="text-primary">in every county</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">The same standard of care in every county</h2>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {PROMISES.map(({ icon: I, title, text }, i) => (
               <AnimatedSection key={title} delay={i * 0.06} className="h-full">
                 <div className="h-full el-card p-6 md:p-7">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8 bg-accent">
-                    <I className="w-5 h-5 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={I} size="md" className="mb-8" />
                   <p className="font-bold text-foreground text-lg mb-1">{title}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                 </div>
@@ -328,18 +322,18 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
 
 /** All 10 services as a two-column linked list, plus the facility staffing note. */
 const ServicesInArea = ({ place }: { place: string }) => (
-  <section className="py-20 md:py-24">
+  <section className="py-14 md:py-20">
     <div className="container mx-auto px-6 md:px-10">
-      <AnimatedSection className="text-center mb-14">
+      <AnimatedSection className="text-center mb-10">
         <Eyebrow>Care Available</Eyebrow>
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Our services in <span className="text-primary">{place}</span></h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 leading-tight">Our services in {place}</h2>
         <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">Every MintexCare service is available to families in {place}</p>
       </AnimatedSection>
       <div className="grid lg:grid-cols-2 gap-5">
         {(["in-home", "clinical"] as ServiceGroup[]).map(group => (
           <AnimatedSection key={group}>
             <div className="el-card rounded-[28px] p-6 md:p-8 h-full">
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">{SERVICE_GROUP_LABEL[group]}</p>
+              <p className="text-sm font-bold text-muted-foreground mb-4">{SERVICE_GROUP_LABEL[group]}</p>
               <ul className="space-y-2">
                 {SERVICE_INDEX.filter(s => s.group === group).map(s => (
                   <li key={s.slug}>
@@ -362,9 +356,7 @@ const ServicesInArea = ({ place }: { place: string }) => (
       </div>
       <AnimatedSection className="mt-5">
         <Link to="/facility-staffing" className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
-            <Building2 className="w-6 h-6 text-accent-foreground" />
-          </div>
+          <FeatureIcon icon={Building2} size="md" onDark />
           <div className="flex-1">
             <p className="font-bold">Run a care facility in {place}?</p>
             <p className="text-sm text-background/70">We also provide HHAs, CNAs, LPNs and RNs to nursing homes, assisted living and rehab facilities.</p>
@@ -409,7 +401,7 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
 
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.15fr_1fr] gap-12 xl:gap-16 items-center">
             <AnimatedSection>
@@ -441,11 +433,11 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
       </section>
 
       {/* TOWNS */}
-      <section id="towns" className="py-16 md:py-20 bg-surface scroll-mt-24">
+      <section id="towns" className="py-12 md:py-16 bg-surface scroll-mt-24">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
             <Eyebrow onSurface>Towns We Serve</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Communities in <span className="text-primary">{c.name} County</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Communities in {c.name} County</h2>
           </AnimatedSection>
           <AnimatedSection>
             <ul className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
@@ -476,20 +468,20 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
       <ServicesInArea place={`${c.name} County`} />
 
       {/* WHY + FAQ */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10 xl:gap-14 items-start">
             <AnimatedSection>
               <Eyebrow onSurface>Why MintexCare</Eyebrow>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-8">
-                Care {c.name} County <span className="text-primary">families trust</span>
+                Care {c.name} County families trust
               </h2>
               <PromiseList />
             </AnimatedSection>
 
             <AnimatedSection delay={0.1}>
               <Eyebrow onSurface>FAQ</Eyebrow>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">Home care in {c.name} County</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">Home care in {c.name} County</h2>
               <AreaFaqList key={c.slug} faqs={countyFaqs(c)} />
             </AnimatedSection>
           </div>
@@ -497,12 +489,12 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
       </section>
 
       {/* NEARBY COUNTIES */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
               <Eyebrow>Nearby</Eyebrow>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Neighboring counties we serve</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Neighboring counties we serve</h2>
             </div>
             <Link to="/areas-we-serve" className="el-btn-outline group self-start md:self-auto">
               All 12 counties <ArrowRight className="h-4 w-4 transition-transform" />
@@ -548,7 +540,7 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
 
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.15fr_1fr] gap-12 xl:gap-16 items-center">
             <AnimatedSection>
@@ -585,15 +577,13 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
       </section>
 
       {/* LOCAL NOTES */}
-      <section className="pb-16 md:pb-20">
+      <section className="pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid md:grid-cols-3 gap-4 md:gap-5">
             {t.notes.map((n, i) => (
               <AnimatedSection key={n.title} delay={i * 0.06} className="h-full">
                 <div className="el-card h-full p-6 md:p-7">
-                  <p className="text-4xl font-serif font-bold text-foreground/15 leading-none mb-6">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
+                  <CheckCircle2 className="w-7 h-7 text-primary mb-5" strokeWidth={2} aria-hidden="true" />
                   <p className="font-bold text-foreground text-lg leading-snug">{n.title}</p>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{n.text}</p>
                 </div>
@@ -604,11 +594,11 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
       </section>
 
       {/* SECTIONS + ZIPS */}
-      <section id="local-area" className="py-16 md:py-20 bg-surface scroll-mt-24">
+      <section id="local-area" className="py-12 md:py-16 bg-surface scroll-mt-24">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
             <Eyebrow onSurface>Where We Help</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Home care across <span className="text-primary">{t.name}</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Home care across {t.name}</h2>
           </AnimatedSection>
           <AnimatedSection>
             <ul className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
@@ -629,19 +619,19 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
       <ServicesInArea place={t.name} />
 
       {/* WHY + FAQ */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10 xl:gap-14 items-start">
             <AnimatedSection>
               <Eyebrow onSurface>Why MintexCare</Eyebrow>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-8">
-                Care {t.name} <span className="text-primary">families trust</span>
+                Care {t.name} families trust
               </h2>
               <PromiseList />
             </AnimatedSection>
             <AnimatedSection delay={0.1}>
               <Eyebrow onSurface>FAQ</Eyebrow>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">Home care in {t.name}</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">Home care in {t.name}</h2>
               <AreaFaqList key={t.slug} faqs={townFaqs(t)} />
             </AnimatedSection>
           </div>
@@ -649,12 +639,12 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
       </section>
 
       {/* NEARBY TOWNS */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
               <Eyebrow>Nearby</Eyebrow>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Nearby towns we serve</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Nearby towns we serve</h2>
             </div>
             <Link to={`/areas-we-serve/${county.slug}`} className="el-btn-outline group self-start md:self-auto">
               All of {county.name} County <ArrowRight className="h-4 w-4 transition-transform" />
@@ -665,9 +655,7 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
               <AnimatedSection key={n.slug} delay={i * 0.05} className="h-full">
                 <Link to={`/areas-we-serve/${n.slug}`}
                   className="group h-full flex flex-col el-card rounded-[24px] p-6 transition-shadow duration-300">
-                  <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center mb-5 transition-colors duration-300">
-                    <MapPin className="w-5 h-5 text-accent-foreground transition-colors duration-300" />
-                  </div>
+                  <FeatureIcon icon={MapPin} size="md" className="mb-5" />
                   <h3 className="text-lg font-bold text-foreground mb-1">{n.name}, NJ</h3>
                   <p className="text-sm text-muted-foreground flex-1">{n.kind} · ZIP {n.zips[0]}</p>
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors mt-5">

@@ -12,7 +12,7 @@ const features = [
 ];
 
 const WhyChooseUsSection = () => (
-  <section id="why-choose-us" className="relative py-16 md:py-24 overflow-hidden">
+  <section id="why-choose-us" className="relative py-12 md:py-16 overflow-hidden">
 
     {/* Subtle dot-grid background */}
     <div
@@ -35,11 +35,11 @@ const WhyChooseUsSection = () => (
       <AnimatedSection className="mb-14">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <p className="text-xs font-sans font-semibold text-accent uppercase tracking-[0.22em] mb-3">
+            <p className="text-sm font-sans font-semibold text-accent mb-3">
               Why Us
             </p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
-              Why Families Trust<br className="hidden md:block" /> MintexCare
+            <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
+              Why families choose MintexCare
             </h2>
           </div>
           <p className="text-muted-foreground font-sans text-base leading-relaxed max-w-xs md:text-right">

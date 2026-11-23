@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -49,7 +50,7 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
 );
 
 const Pill = ({ icon: Icon, children }: { icon: typeof Briefcase; children: ReactNode }) => (
-  <div className="el-eyebrow mb-6">
+  <div className="el-eyebrow mb-3">
     <Icon className="w-3.5 h-3.5 text-primary" />
     {children}
   </div>
@@ -57,13 +58,11 @@ const Pill = ({ icon: Icon, children }: { icon: typeof Briefcase; children: Reac
 
 const HiringStepsCard = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="rounded-[28px] p-7 bg-foreground text-background">
-    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
-      <Briefcase className="h-6 w-6 text-accent-foreground" />
-    </div>
+    <FeatureIcon icon={Briefcase} size="md" onDark className="mb-6" />
     <h3 className="text-xl font-bold mb-5 leading-snug">Our hiring process</h3>
     <ol className="space-y-3.5 mb-7">
       {HIRING_STEPS.map(({ icon: I, label }, i) => (
-        <li key={label} className="flex items-center gap-3 text-sm text-background/85">
+        <li key={label} className="flex items-center gap-3 text-base text-background/85">
           <span className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold bg-background/15">{i + 1}</span>
           <I className="w-4 h-4 shrink-0" /> {label}
         </li>
@@ -114,15 +113,15 @@ const OpenPositions = () => {
         </div>
       </section>
 
-      <JobsSection title="Current Openings" subtitle="Search by role or filter by schedule, then open a job to see the details" />
+      <JobsSection title="Current openings" subtitle="Search by role or filter by schedule, then open a job to see the details" />
 
       {/* Why join */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
-              <div className="el-eyebrow bg-background mb-4">Why MintexCare</div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">What you can expect</h2>
+              <div className="el-eyebrow mb-3">Why MintexCare</div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">What you can expect</h2>
             </div>
             <Link to="/careers" className="el-btn-outline group self-start md:self-auto">
               Why work with us <ArrowRight className="h-4 w-4 transition-transform" />
@@ -205,7 +204,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
 
   if (!match) {
     return (
-      <section className="pt-32 md:pt-40 pb-24 min-h-[70svh]">
+      <section className="pt-32 md:pt-40 pb-16 md:pb-20 min-h-[70svh]">
         <div className="container mx-auto px-6 md:px-10 max-w-3xl text-center">
           <div className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-accent">
             <Search className="w-9 h-9 text-accent-foreground" />
@@ -242,7 +241,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
   return (
     <>
       {/* HERO */}
-      <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-10 md:pb-12">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-4xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Careers", to: "/careers" }, { label: "Open Positions", to: "/careers/jobs" }, { label: p.title }]} />
@@ -274,7 +273,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* BODY */}
-      <section className="py-14 md:py-20 bg-surface">
+      <section className="py-12 md:py-16 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1fr_360px] gap-5 xl:gap-8 items-start">
             <div className="space-y-4 min-w-0">
@@ -322,7 +321,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
             {/* Sticky summary */}
             <aside className="space-y-4 lg:sticky lg:top-32">
               <div className="bg-background rounded-[28px] p-6">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">Job summary</p>
+                <p className="text-sm font-semibold text-muted-foreground mb-1">Job summary</p>
                 <p className="text-lg font-bold text-foreground mb-5 leading-snug">{p.title}</p>
                 <dl className="space-y-4 mb-6">
                   {facts.map(({ icon: I, label, value }) => (
@@ -331,7 +330,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
                         <I className="w-4 h-4 text-primary" />
                       </div>
                       <div>
-                        <dt className="text-[11px] uppercase tracking-widest text-muted-foreground">{label}</dt>
+                        <dt className="text-sm text-muted-foreground">{label}</dt>
                         <dd className="text-sm font-semibold text-foreground">{value}</dd>
                       </div>
                     </div>
@@ -350,10 +349,10 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
 
       {/* OTHER OPENINGS */}
       {others.length > 0 && (
-        <section className="py-16 md:py-20">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Other open positions</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">Other open positions</h2>
               <Link to="/careers/jobs" className="el-btn-outline group self-start md:self-auto">
                 All open positions <ArrowRight className="h-4 w-4 transition-transform" />
               </Link>
@@ -408,12 +407,12 @@ const Apply = ({ tel, phone }: { tel: string; phone: string }) => {
         </div>
       </section>
 
-      <section className="pb-24">
+      <section className="pb-16 md:pb-20">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1fr_340px] gap-5 lg:gap-8 items-start max-w-6xl mx-auto">
             <AnimatedSection>
               <div className="el-card rounded-[28px] p-6 sm:p-8 md:p-10">
-                <div className="el-eyebrow bg-background mb-4">Application form</div>
+                <div className="el-eyebrow mb-3">Application form</div>
                 <h2 className="text-2xl font-bold text-foreground mb-7">Tell us about yourself</h2>
                 {/* Wait for the live job list so a ?position= link selects the right job. */}
                 {jobsLoaded
@@ -444,7 +443,7 @@ const Thanks = ({ tel, phone }: { tel: string; phone: string }) => {
   const position = state?.position && state.position !== GENERAL_APPLICATION ? state.position : null;
 
   return (
-    <section className="pt-32 md:pt-40 pb-24 min-h-[80svh]">
+    <section className="pt-32 md:pt-40 pb-16 md:pb-20 min-h-[80svh]">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-2xl mx-auto">
           <div className="el-card rounded-[32px] text-center px-6 sm:px-12 py-12 sm:py-14">
@@ -454,7 +453,7 @@ const Thanks = ({ tel, phone }: { tel: string; phone: string }) => {
                 <Check className="w-11 h-11 text-background" strokeWidth={3} />
               </div>
             </div>
-            <div className="el-eyebrow bg-background mb-4">Thank you{state?.name ? `, ${state.name}` : ""}</div>
+            <div className="el-eyebrow mb-3">Thank you{state?.name ? `, ${state.name}` : ""}</div>
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Application received</h1>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-md mx-auto">
               {position ? <>Thanks for applying for <strong className="text-foreground">{position}</strong>. </> : "Thanks for applying. "}
@@ -462,7 +461,7 @@ const Thanks = ({ tel, phone }: { tel: string; phone: string }) => {
             </p>
 
             <div className="text-left rounded-2xl bg-background p-5 sm:p-6 mb-8">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">What happens next</p>
+              <p className="text-sm font-semibold text-muted-foreground mb-4">What happens next</p>
               <ol className="grid sm:grid-cols-3 gap-4">
                 {HIRING_STEPS.slice(1).map(({ icon: I, label }, i) => (
                   <li key={label} className="flex sm:flex-col items-center sm:items-start gap-3">

@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "@/lib/motion";
@@ -31,7 +32,7 @@ const HowItWorksSection = () => {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-20 md:py-28 bg-surface">
+    <section ref={ref} className="py-14 md:py-20 bg-surface">
       <div className="container mx-auto px-6 md:px-10">
 
         {/* ── Header ── */}
@@ -41,11 +42,9 @@ const HowItWorksSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.65 }}
           >
-            <div className="el-eyebrow bg-background mb-5">Our Process</div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight">
-              Getting Started<br />
-              is{" "}
-              <span className="text-primary">Easy</span>
+            <div className="el-eyebrow mb-3">Our Process</div>
+            <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
+              How to get started
             </h2>
           </motion.div>
           {/* Decorative watermark. Drawn by CSS (::before) rather than as text, so it isn't treated as
@@ -64,18 +63,14 @@ const HowItWorksSection = () => {
             return (
               <motion.div
                 key={step.title}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.15 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="rounded-[24px] bg-background p-6 md:p-7"
               >
                 <div className="flex items-center justify-between mb-8">
-                  <div className="h-14 w-14 rounded-2xl bg-accent flex items-center justify-center">
-                    <Icon className="h-6 w-6 text-accent-foreground" />
-                  </div>
-                  <span className="text-xs font-bold font-sans tracking-[0.2em] uppercase text-muted-foreground">
-                    Step {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <FeatureIcon icon={Icon} />
+                  <span className="text-sm font-bold text-primary">Step {i + 1}</span>
                 </div>
                 <h3 className="font-serif font-bold text-foreground text-xl mb-2 leading-snug">
                   {step.title}

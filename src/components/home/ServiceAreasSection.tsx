@@ -4,11 +4,11 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { COUNTIES } from "@/data/areas";
 
 const ServiceAreasSection = () => (
-  <section className="py-20 md:py-24 bg-surface">
+  <section className="py-14 md:py-20 bg-surface">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection className="text-center mb-12 max-w-3xl mx-auto">
-        <div className="el-eyebrow bg-background mb-5">Coverage</div>
-        <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">Proudly Serving Communities Across New Jersey</h2>
+        <div className="el-eyebrow mb-3">Coverage</div>
+        <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">Areas we serve in New Jersey</h2>
         <p className="text-base text-muted-foreground font-sans">MintexCare provides home care across 12 New Jersey counties. Choose yours to see the towns we serve:</p>
       </AnimatedSection>
 

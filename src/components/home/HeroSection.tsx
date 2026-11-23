@@ -75,7 +75,8 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-10 pt-32 lg:pt-36 pb-14 md:pb-20">
-        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 xl:gap-16 items-center">
+        {/* 2xl: equal columns so the photo sits closer to the text on wide screens (no empty band in between). */}
+        <div className="grid lg:grid-cols-[1.15fr_0.85fr] 2xl:grid-cols-2 gap-10 xl:gap-16 items-center">
 
           {/* ── LEFT: Text ── */}
           <div>
@@ -83,7 +84,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.05, ease }}
-              className="el-eyebrow mb-6"
+              className="el-pill mb-6"
             >
               <HeartPulse className="w-4 h-4 text-primary" />
               Trusted Home Care · Edison, NJ
@@ -160,7 +161,7 @@ const HeroSection = () => {
             className="relative hidden lg:block"
           >
             <div className="el-card p-3">
-              <div className="relative rounded-[16px] overflow-hidden w-full h-[560px]">
+              <div className="relative rounded-[16px] overflow-hidden w-full h-[560px] 2xl:h-[600px]">
                 {/* Desktop LCP image. <picture> + media: the card is hidden below lg, so smaller
                     screens get the 1x1 placeholder instead of downloading the photo. */}
                 <picture>

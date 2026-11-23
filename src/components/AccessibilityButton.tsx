@@ -81,7 +81,7 @@ function ToggleRow({
 /* ── Section label ── */
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 px-1">
+    <p className="text-sm font-semibold text-muted-foreground mb-1.5 px-1">
       {children}
     </p>
   );

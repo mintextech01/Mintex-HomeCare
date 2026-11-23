@@ -484,7 +484,7 @@ const Legal = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+        <section className="pt-32 md:pt-40 pb-10 md:pb-12">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-[1fr_auto] gap-12 items-center">
               <AnimatedSection>
@@ -494,7 +494,7 @@ const Legal = () => {
                   <span className="text-foreground font-semibold">{doc.crumb}</span>
                 </p>
 
-                <div className="el-eyebrow mb-6">Legal &amp; Compliance</div>
+                <div className="el-eyebrow mb-3">Legal &amp; Compliance</div>
 
                 <h1 className="font-bold text-foreground leading-[1.08] mb-6" style={{ fontSize: "clamp(2.2rem, 5vw, 3.5rem)" }}>
                   {titleStart && <>{titleStart} </>}
@@ -565,14 +565,14 @@ const Legal = () => {
         {/* ══════════════════════════════════════
             CONTENT
         ══════════════════════════════════════ */}
-        <section className="py-14 md:py-20 bg-surface">
+        <section className="py-12 md:py-16 bg-surface">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-[280px_1fr] gap-8 xl:gap-12 items-start max-w-6xl mx-auto">
 
               {/* Sidebar: on-this-page + contact (sticky on desktop) */}
               <aside className="hidden lg:block sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto space-y-4 pb-1" style={{ scrollbarWidth: "thin" }}>
                 <div className="bg-background rounded-[24px] p-4">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 px-3 pt-1">On this page</p>
+                  <p className="text-sm font-semibold text-muted-foreground mb-3 px-3 pt-1">On this page</p>
                   <ol className="space-y-0.5">
                     {doc.sections.map((s, i) => {
                       const active = activeId === ids[i];
@@ -645,7 +645,7 @@ const Legal = () => {
                           <div className="w-11 h-11 rounded-full bg-accent flex items-center justify-center mb-4">
                             <Icon className="w-5 h-5 text-accent-foreground" />
                           </div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">{label}</p>
+                          <p className="text-sm font-semibold text-muted-foreground mb-1">{label}</p>
                           <p className="text-sm font-semibold text-foreground break-words">{value}</p>
                         </>
                       );
@@ -664,18 +664,18 @@ const Legal = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="py-16 md:py-20">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
               <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16 max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
                   <div>
-                    <div className="el-eyebrow bg-background border-transparent mb-4">
+                    <div className="el-eyebrow mb-3">
                       <ShieldCheck className="w-3.5 h-3.5 text-primary" />
                       Licensed &amp; Insured
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground leading-snug mb-3">
-                      Care you can trust, from people who respect your privacy.
+                      Questions about this policy?
                     </h2>
                     <p className="text-accent-foreground/75 text-sm max-w-md leading-relaxed">
                       Talk to a care coordinator about a personalized plan for your loved one, with no obligation.

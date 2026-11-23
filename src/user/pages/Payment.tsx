@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -48,20 +49,20 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
 );
 
 const Pill = ({ icon: Icon, children, onSurface = false }: { icon: typeof DollarSign; children: ReactNode; onSurface?: boolean }) => (
-  <div className={`el-eyebrow mb-6 ${onSurface ? "bg-background" : ""}`}>
+  <div className={`el-eyebrow mb-3`}>
     <Icon className="w-3.5 h-3.5 text-primary" />
     {children}
   </div>
 );
 
 const Eyebrow = ({ children, onSurface = false }: { children: ReactNode; onSurface?: boolean }) => (
-  <div className={`el-eyebrow mb-5 ${onSurface ? "bg-background" : ""}`}>{children}</div>
+  <div className={`el-eyebrow mb-3`}>{children}</div>
 );
 
 const Hero = ({ trail, pill, pillIcon, title, highlight, intro, children }: {
   trail: { label: string; to?: string }[]; pill: string; pillIcon: typeof DollarSign; title: string; highlight: string; intro: string; children?: ReactNode;
 }) => (
-  <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+  <section className="pt-32 md:pt-40 pb-12 md:pb-14">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection className="max-w-3xl">
         <Breadcrumb trail={trail} />
@@ -116,11 +117,11 @@ const FaqList = ({ faqs }: { faqs: { q: string; a: string }[] }) => {
 };
 
 const FaqSection = ({ title, faqs }: { title: string; faqs: { q: string; a: string }[] }) => (
-  <section className="py-20 md:py-24 bg-surface">
+  <section className="py-14 md:py-20 bg-surface">
     <div className="container mx-auto px-6 md:px-10 max-w-4xl">
       <AnimatedSection className="text-center mb-12">
         <Eyebrow onSurface>FAQ</Eyebrow>
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground">{title}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">{title}</h2>
       </AnimatedSection>
       <AnimatedSection><FaqList faqs={faqs} /></AnimatedSection>
     </div>
@@ -128,16 +129,16 @@ const FaqSection = ({ title, faqs }: { title: string; faqs: { q: string; a: stri
 );
 
 const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-16 md:py-20">
+  <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
         <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="el-eyebrow bg-background border-transparent mb-5">
+            <div className="el-eyebrow mb-3">
               <Receipt className="w-3.5 h-3.5 text-primary" />
               Free, no-obligation quote
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3">
               <Link to="/free-consultation" className="el-btn-primary whitespace-nowrap">
@@ -160,7 +161,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
 /** Ink panel with a link that sends readers to a related page. */
 const LinkBanner = ({ to, icon: I, title, text }: { to: string; icon: typeof DollarSign; title: string; text: string }) => (
   <Link to={to} className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
-    <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent"><I className="w-6 h-6 text-accent-foreground" /></span>
+    <FeatureIcon icon={I} size="md" onDark />
     <span className="flex-1">
       <span className="block font-bold">{title}</span>
       <span className="block text-sm text-background/70">{text}</span>
@@ -195,7 +196,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
       <HeroButtons tel={tel} phone={phone} />
     </Hero>
 
-    <section className="py-20 md:py-24 bg-surface">
+    <section className="py-14 md:py-20 bg-surface">
       <div className="container mx-auto px-6 md:px-10 max-w-5xl">
         <div className="grid md:grid-cols-2 gap-5">
           {[
@@ -204,9 +205,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
           ].map(({ to, icon: I, title, text }, i) => (
             <AnimatedSection key={to} delay={i * 0.06} className="h-full">
               <Link to={to} className="group h-full flex flex-col bg-background rounded-[28px] p-8 transition-shadow duration-300">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 bg-accent transition-colors duration-300">
-                  <I className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
-                </div>
+                <FeatureIcon icon={I} className="mb-8" />
                 <h2 className="text-2xl font-bold text-foreground mb-2">{title}</h2>
                 <p className="text-muted-foreground leading-relaxed flex-1">{text}</p>
                 <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
@@ -219,9 +218,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
 
         <AnimatedSection className="mt-5">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
-              <Info className="w-6 h-6 text-accent-foreground" />
-            </div>
+            <FeatureIcon icon={Info} size="md" onDark />
             <div className="flex-1">
               <p className="font-bold">Have insurance or other benefits?</p>
               <p className="text-sm text-background/70">Tell us about any coverage during your free consultation and we'll talk through your situation honestly.</p>
@@ -234,21 +231,19 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     </section>
 
-    <section className="py-20 md:py-24">
+    <section className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
-        <AnimatedSection className="text-center mb-14">
+        <AnimatedSection className="text-center mb-10">
           <Eyebrow>How Pricing Works</Eyebrow>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">From first call to <span className="text-primary">a clear quote</span></h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">How pricing works</h2>
         </AnimatedSection>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           {QUOTE_STEPS.map(({ icon: I, title, text }, i) => (
             <AnimatedSection key={title} delay={i * 0.06} className="h-full">
               <div className="h-full el-card p-6 md:p-7">
                 <div className="flex items-start justify-between mb-8">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-accent">
-                    <I className="w-5 h-5 text-accent-foreground" />
-                  </div>
-                  <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">{String(i + 1).padStart(2, "0")}</span>
+                  <FeatureIcon icon={I} size="md" />
+                  <span className="text-sm font-bold text-primary">Step {i + 1}</span>
                 </div>
                 <p className="font-bold text-foreground mb-1">{title}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
@@ -306,15 +301,13 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       </Hero>
 
       {/* PRICES */}
-      <section className="py-16 md:py-20 bg-surface">
+      <section className="py-12 md:py-16 bg-surface">
         <div className="container mx-auto px-6 md:px-10 max-w-5xl">
           <AnimatedSection>
             <div className="bg-background rounded-[28px] p-2">
               <div className="rounded-[22px] px-6 md:px-9 py-7 bg-foreground text-background">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent">
-                    <DollarSign className="w-6 h-6 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={DollarSign} size="md" onDark />
                   <div>
                     <h2 className="text-xl md:text-2xl font-bold">{showTable ? "Our rates" : "Get your price"}</h2>
                     <p className="text-background/70 text-sm">{showTable ? "Starting rates. Your exact rate is confirmed in writing after your free assessment." : "Prices depend on your care plan. Call or request a free quote and we'll give you clear pricing."}</p>
@@ -355,11 +348,11 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* FACTORS */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow>What Affects the Cost</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Six things that <span className="text-primary">shape your price</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">What affects the cost of care</h2>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {COST_FACTORS.map(({ icon: I, title, text }, i) => (
@@ -380,17 +373,17 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* EXAMPLE PLANS */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow onSurface>Typical Care Plans</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Examples of <span className="text-primary">how families use care</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Examples of how families use care</h2>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {EXAMPLE_PLANS.map((p, i) => (
               <AnimatedSection key={p.title} delay={i * 0.06} className="h-full">
                 <div className="h-full flex flex-col bg-background rounded-[24px] p-6">
-                  <span className="self-start text-[11px] font-bold tracking-[0.15em] bg-accent text-accent-foreground rounded-full px-3 py-1 mb-5">PLAN {i + 1}</span>
+                  <span className="self-start text-sm font-bold text-primary mb-3">Plan {i + 1}</span>
                   <p className="font-bold text-foreground mb-2 leading-snug">{p.title}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed flex-1">{p.text}</p>
                   <p className="text-xs text-foreground font-semibold mt-5 pt-4 border-t border-border flex items-start gap-1.5"><Users className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" /> {p.for}</p>
@@ -402,12 +395,12 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* QUOTE STEPS + TIPS */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 items-start">
             <AnimatedSection>
               <Pill icon={Receipt}>Your Quote</Pill>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-8">How you get <span className="text-primary">a clear price</span></h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-8">How you get a clear price</h2>
               <ol className="space-y-3">
                 {QUOTE_STEPS.map(({ icon: I, title, text }, i) => (
                   <li key={title} className="flex gap-4 el-card p-5">
@@ -415,7 +408,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
                       <I className="w-5 h-5 text-accent-foreground" />
                     </div>
                     <div>
-                      <p className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</p>
+                      <p className="text-sm font-bold text-primary">Step {i + 1}</p>
                       <p className="font-bold text-foreground">{title}</p>
                       <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                     </div>
@@ -425,9 +418,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
             </AnimatedSection>
             <AnimatedSection delay={0.1}>
               <div className="rounded-[28px] p-8 bg-foreground text-background">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
-                  <PiggyBank className="w-6 h-6 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={PiggyBank} size="md" onDark className="mb-6" />
                 <h3 className="text-xl font-bold mb-6">Tips for planning your budget</h3>
                 <ul className="space-y-3.5">
                   {[
@@ -437,7 +428,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
                     "Review the plan every few months as needs change",
                     "Ask what's included so you can compare fairly",
                   ].map(t => (
-                    <li key={t} className="flex items-start gap-3 text-sm text-background/85">
+                    <li key={t} className="flex items-start gap-3 text-base text-background/85">
                       <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0 mt-0.5">
                         <Check className="w-3 h-3 text-accent-foreground" strokeWidth={3} />
                       </span>
@@ -482,15 +473,13 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
       <HeroButtons tel={tel} phone={phone} />
     </Hero>
 
-    <section className="pb-16 md:pb-20">
+    <section className="pb-12 md:pb-14">
       <div className="container mx-auto px-6 md:px-10">
         <div className="grid md:grid-cols-3 gap-4 md:gap-5">
           {PRIVATE_BENEFITS.map(({ icon: I, title, text }, i) => (
             <AnimatedSection key={title} delay={i * 0.06} className="h-full">
               <div className="h-full el-card p-7">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8 bg-accent">
-                  <I className="w-5 h-5 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={I} size="md" className="mb-8" />
                 <p className="font-bold text-foreground text-lg mb-1">{title}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
               </div>
@@ -500,12 +489,12 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     </section>
 
-    <section className="pt-4 pb-20 md:pb-24">
+    <section className="pt-4 pb-14 md:pb-16">
       <div className="container mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           <AnimatedSection>
             <Pill icon={CreditCard}>Payment Methods</Pill>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">Ways you <span className="text-primary">can pay</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">Ways you can pay</h2>
             <p className="text-muted-foreground leading-relaxed mb-8">Pay the way that's easiest for your family.</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {PAYMENT_METHODS.map(({ icon: I, label }) => (
@@ -518,8 +507,8 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
             <div className="el-card rounded-[28px] p-7 md:p-9">
-              <div className="el-eyebrow bg-background mb-4">How It Works</div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">Simple from the start</h2>
+              <div className="el-eyebrow mb-3">How It Works</div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8 leading-tight">How payment works</h2>
               <ol className="space-y-3">
                 {[
                   { icon: Phone, title: "Free consultation", text: "Talk to a care coordinator about what your loved one needs." },
@@ -532,7 +521,7 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
                       <I className="w-5 h-5 text-accent-foreground" />
                     </div>
                     <div>
-                      <p className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</p>
+                      <p className="text-sm font-bold text-primary">Step {i + 1}</p>
                       <p className="font-bold text-foreground">{title}</p>
                       <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                     </div>

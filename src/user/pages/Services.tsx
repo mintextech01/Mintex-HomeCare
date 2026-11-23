@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -27,9 +28,7 @@ const ServiceCard = ({ s, i, onSurface }: { s: ServiceIndexEntry; i: number; onS
           onSurface ? "bg-background" : "bg-surface"
         }`}
       >
-        <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-7 transition-colors duration-300">
-          <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
-        </div>
+        <FeatureIcon icon={Icon} className="mb-7" />
         <h3 className="font-bold text-foreground text-lg leading-snug mb-2">{s.name}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed flex-1">{s.short}</p>
         <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground mt-6 transition-colors">
@@ -95,10 +94,10 @@ const Services = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="pt-32 lg:pt-40 pb-16 md:pb-20">
+        <section className="pt-32 lg:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="text-center max-w-3xl mx-auto">
-              <div className="el-eyebrow mb-8">Our Services</div>
+              <div className="el-eyebrow mb-3">Our Services</div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.05] tracking-tight mb-6">
                 Home Care Services<br />
                 <span className="text-primary">in Edison &amp; Central&nbsp;NJ</span>
@@ -137,14 +136,14 @@ const Services = () => {
         {/* ══════════════════════════════════════
             IN-HOME CARE SERVICES
         ══════════════════════════════════════ */}
-        <section id="in-home-care" className="py-20 md:py-28 bg-surface">
+        <section id="in-home-care" className="py-14 md:py-20 bg-surface">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow bg-background mb-5">{SERVICE_GROUP_LABEL["in-home"]}</div>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Home Care <span className="text-primary">Services</span>
+              <div className="el-eyebrow mb-3">{SERVICE_GROUP_LABEL["in-home"]}</div>
+              <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">
+                Home care services
               </h2>
-              <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
                 Everyday support at home, from a few hours a week to around-the-clock care
               </p>
             </AnimatedSection>
@@ -155,14 +154,14 @@ const Services = () => {
         {/* ══════════════════════════════════════
             SPECIALIZED & CLINICAL SERVICES
         ══════════════════════════════════════ */}
-        <section id="specialized-care" className="py-20 md:py-28">
+        <section id="specialized-care" className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow mb-5">Specialized Care</div>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Specialized &amp; <span className="text-primary">Clinical Services</span>
+              <div className="el-eyebrow mb-3">Specialized Care</div>
+              <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">
+                Specialized &amp; clinical services
               </h2>
-              <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
                 Nursing and recovery care at home from licensed RNs and LPNs, following your physician's orders
               </p>
             </AnimatedSection>
@@ -200,13 +199,13 @@ const Services = () => {
         {/* ══════════════════════════════════════
             CTA BANNER
         ══════════════════════════════════════ */}
-        <section className="py-16 md:py-20">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
               <div className="rounded-[32px] bg-accent px-6 py-14 md:px-16 text-center">
-                <div className="el-eyebrow bg-background border-transparent mb-5">Let Us Help</div>
+                <div className="el-eyebrow mb-3">Let Us Help</div>
                 <h2 className="text-3xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">
-                  Need Help Choosing a Service?
+                  Need help choosing a service?
                 </h2>
                 <p className="text-accent-foreground/75 text-sm mb-8 max-w-md mx-auto leading-relaxed">
                   Our care coordinators are ready to help you find the right service for your loved one — at no obligation.

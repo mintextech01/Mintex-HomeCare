@@ -52,7 +52,7 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="grid grid-cols-[1fr_1fr_280px] gap-8">
     {(["in-home", "clinical"] as ServiceGroup[]).map(group => (
       <div key={group}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3 px-3">{SERVICE_GROUP_LABEL[group]}</p>
+        <p className="text-sm font-bold text-primary mb-3 px-3">{SERVICE_GROUP_LABEL[group]}</p>
         <ul className="space-y-0.5">
           {SERVICE_INDEX.filter(s => s.group === group).map(s => (
             <li key={s.slug}>
@@ -71,7 +71,7 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     ))}
     <div className={PROMO_CARD}>
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Not sure what you need?</p>
+      <p className="relative text-sm font-semibold text-background/70 mb-2">Not sure what you need?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Talk to a care coordinator. It's free.</p>
       <div className="relative mt-auto space-y-2">
         <Link to={CONSULTATION_HREF} className="flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
@@ -97,7 +97,7 @@ const AreasPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-8">
     {(["central", "north", "shore"] as AreaRegion[]).map(region => (
       <div key={region}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3 px-3">{AREA_REGION_LABEL[region]}</p>
+        <p className="text-sm font-bold text-primary mb-3 px-3">{AREA_REGION_LABEL[region]}</p>
         <ul className="space-y-0.5">
           {COUNTIES.filter(c => c.region === region).map(c => (
             <li key={c.slug}>
@@ -110,7 +110,7 @@ const AreasPanel = () => (
       </div>
     ))}
     <div className={PROMO_CARD}>
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">12 NJ counties</p>
+      <p className="relative text-sm font-semibold text-background/70 mb-2">12 NJ counties</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Is my town covered?</p>
       <Link to="/areas-we-serve" className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         <Search className="h-4 w-4" /> Find your town
@@ -137,7 +137,7 @@ const CostsPanel = () => (
       </Link>
     ))}
     <div className={PROMO_CARD}>
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Free, no obligation</p>
+      <p className="relative text-sm font-semibold text-background/70 mb-2">Free, no obligation</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Get a clear, written quote</p>
       <Link to={CONSULTATION_HREF} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         Get a Free Quote <ArrowRight className="h-4 w-4" />
@@ -187,7 +187,7 @@ const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
       ))}
     </div>
     <div className={PROMO_CARD}>
-      <p className="relative text-xs font-semibold uppercase tracking-widest text-background/70 mb-2">Still have questions?</p>
+      <p className="relative text-sm font-semibold text-background/70 mb-2">Still have questions?</p>
       <p className="relative text-lg font-bold leading-snug mb-4">We're here 24/7</p>
       <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         <Phone className="h-4 w-4" /> {phone}
@@ -481,7 +481,7 @@ const Header = () => {
                   open={drawerSection === "services"} onToggle={() => setDrawerSection(s => (s === "services" ? null : "services"))}>
                   {(["in-home", "clinical"] as ServiceGroup[]).map(group => (
                     <div key={group} className="mb-2">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary px-3 py-1.5">{SERVICE_GROUP_LABEL[group]}</p>
+                      <p className="text-sm font-bold text-primary px-3 py-1.5">{SERVICE_GROUP_LABEL[group]}</p>
                       {SERVICE_INDEX.filter(s => s.group === group).map(s => (
                         <Link key={s.slug} to={`/services/${s.slug}`} className="flex items-center gap-2.5 text-sm px-3 py-2.5 rounded-lg">
                           <s.icon className="h-4 w-4 text-primary shrink-0" /> {s.name}

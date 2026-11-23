@@ -14,13 +14,14 @@ interface JobCardProps {
   delay?: number;
 }
 
-export function JobCard({ job, onDetailsClick, onApplyClick, delay = 0 }: JobCardProps) {
+// `delay` stays in the props for callers, but cards no longer appear one by one.
+export function JobCard({ job, onDetailsClick, onApplyClick }: JobCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay, duration: 0.4 }}
+      transition={{ duration: 0.5 }}
     >
       <Card
         className="h-full flex flex-col overflow-hidden rounded-[24px] border-0 shadow-none bg-surface transition-shadow duration-300 cursor-pointer"

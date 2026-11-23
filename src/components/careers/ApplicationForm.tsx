@@ -21,7 +21,7 @@ import { trackLead } from "@/lib/leads";
 const MAX_RESUME_BYTES = 700 * 1024;
 export const GENERAL_APPLICATION = "General application (any open role)";
 
-const labelCls = "block text-xs font-semibold text-foreground/70 font-sans uppercase tracking-wider mb-1.5";
+const labelCls = "block text-sm font-semibold text-foreground/70 font-sans mb-1.5";
 const inputCls = "font-sans h-12 rounded-xl border-border bg-background";
 
 export const ApplicationForm = ({ initialPosition = "", idPrefix = "app" }: { initialPosition?: string; idPrefix?: string }) => {

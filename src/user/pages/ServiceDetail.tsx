@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
@@ -14,6 +15,7 @@ import { SERVICE_PAGES } from "@/data/servicePages";
 import {
   ArrowRight, Phone, MessageCircle, Check, ShieldCheck, Award, Clock,
   ClipboardList, UserCheck, HeartPulse, CalendarCheck, ChevronDown,
+  CheckCircle2,
 } from "lucide-react";
 
 // One template for every /services/{slug} page: content from servicePages.ts,
@@ -96,7 +98,7 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+        <section className="pt-32 md:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 xl:gap-16 items-center">
 
@@ -116,7 +118,7 @@ const ServiceDetail = () => {
                   <span className="text-foreground font-semibold" aria-current="page">{svc.name}</span>
                 </nav>
 
-                <div className="el-eyebrow mb-6">
+                <div className="el-eyebrow mb-3">
                   <Icon className="w-3.5 h-3.5 text-primary" />
                   {SERVICE_GROUP_LABEL[svc.group]}
                 </div>
@@ -167,7 +169,7 @@ const ServiceDetail = () => {
                       </div>
                     )}
                     <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 px-5 py-4">
-                      <p className="text-muted-foreground text-xs uppercase tracking-widest mb-1 font-semibold">MintexCare</p>
+                      <p className="text-muted-foreground text-sm mb-1 font-semibold">MintexCare</p>
                       <p className="text-foreground font-bold text-lg leading-snug">{svc.name}</p>
                     </div>
                   </div>
@@ -200,15 +202,13 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             HIGHLIGHTS
         ══════════════════════════════════════ */}
-        <section className="pb-16 md:pb-20">
+        <section className="pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid md:grid-cols-3 gap-4 md:gap-5">
               {page.highlights.map((h, i) => (
                 <AnimatedSection key={h.title} delay={i * 0.06} className="h-full">
                   <div className="el-card h-full p-6 md:p-7">
-                    <p className="text-4xl font-serif font-bold text-foreground/15 leading-none mb-6">
-                      {String(i + 1).padStart(2, "0")}
-                    </p>
+                    <CheckCircle2 className="w-7 h-7 text-primary mb-5" strokeWidth={2} aria-hidden="true" />
                     <p className="font-bold text-foreground text-lg leading-snug">{h.title}</p>
                     <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{h.text}</p>
                   </div>
@@ -221,14 +221,14 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             WHAT'S INCLUDED
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-24 bg-surface">
+        <section className="py-14 md:py-20 bg-surface">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-[1fr_360px] gap-10 xl:gap-14 items-start">
               <div>
                 <AnimatedSection>
-                  <div className="el-eyebrow bg-background mb-5">What's Included</div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">
-                    How we help with <span className="text-primary">{svc.name.split(" (")[0].toLowerCase()}</span>
+                  <div className="el-eyebrow mb-3">What's Included</div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">
+                    How we help with {svc.name.split(" (")[0].toLowerCase()}
                   </h2>
                   <p className="text-muted-foreground leading-relaxed mb-10 max-w-2xl">
                     Every plan is personalized. These are the most common ways we help, and we'll tailor the
@@ -253,13 +253,11 @@ const ServiceDetail = () => {
               {/* Promise card */}
               <AnimatedSection className="lg:sticky lg:top-32">
                 <div className="rounded-[28px] p-7 bg-foreground text-background">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
-                    <Icon className="w-6 h-6 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Icon} size="md" onDark className="mb-6" />
                   <h3 className="text-xl font-bold mb-6 leading-snug">Every MintexCare plan includes</h3>
                   <ul className="space-y-4 mb-8">
                     {PROMISES.map(({ icon: I, text }) => (
-                      <li key={text} className="flex items-start gap-3 text-sm text-background/85">
+                      <li key={text} className="flex items-start gap-3 text-base text-background/85">
                         <I className="w-4 h-4 mt-0.5 shrink-0" />
                         {text}
                       </li>
@@ -278,15 +276,15 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             RIGHT FOR YOU + HOW IT WORKS
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-24">
+        <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
             <div className="grid lg:grid-cols-2 gap-12 xl:gap-16">
 
               {/* Is it right for you */}
               <AnimatedSection>
-                <div className="el-eyebrow mb-5">Is It Right for You?</div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">
-                  Signs it may be <span className="text-primary">time for help</span>
+                <div className="el-eyebrow mb-3">Is It Right for You?</div>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">
+                  Signs it may be time for help
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   {svc.name} may be a good fit if any of these sound familiar. Not sure? Call us and we'll talk it
@@ -307,8 +305,8 @@ const ServiceDetail = () => {
               {/* How it works */}
               <AnimatedSection delay={0.1}>
                 <div className="el-card rounded-[28px] p-7 md:p-9 h-full">
-                  <div className="el-eyebrow bg-background mb-4">How It Works</div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight mb-8">Getting started is simple</h2>
+                  <div className="el-eyebrow mb-3">How It Works</div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight mb-8">How to get started</h2>
                   <ol className="space-y-3">
                     {STEPS.map(({ icon: I, title, text }, i) => (
                       <li key={title} className="flex gap-4 bg-background rounded-2xl p-4">
@@ -316,7 +314,7 @@ const ServiceDetail = () => {
                           <I className="w-5 h-5 text-accent-foreground" />
                         </div>
                         <div>
-                          <p className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground mb-0.5">STEP {i + 1}</p>
+                          <p className="text-sm font-bold text-primary mb-0.5">Step {i + 1}</p>
                           <p className="font-bold text-foreground mb-1">{title}</p>
                           <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
                         </div>
@@ -332,12 +330,12 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             FAQ
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-24 bg-surface">
+        <section className="py-14 md:py-20 bg-surface">
           <div className="container mx-auto px-6 md:px-10 max-w-4xl">
             <AnimatedSection className="text-center mb-12">
-              <div className="el-eyebrow bg-background mb-5">FAQ</div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                Questions about <span className="text-primary">{svc.name.split(" (")[0]}</span>
+              <div className="el-eyebrow mb-3">FAQ</div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
+                Questions about {svc.name.split(" (")[0]}
               </h2>
             </AnimatedSection>
 
@@ -376,12 +374,12 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             RELATED SERVICES
         ══════════════════════════════════════ */}
-        <section className="py-20 md:py-24">
+        <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
-                <div className="el-eyebrow mb-4">Related Services</div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">Often combined with</h2>
+                <div className="el-eyebrow mb-3">Related Services</div>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Often combined with</h2>
               </div>
               <Link to="/services" className="el-btn-outline group self-start md:self-auto">
                 View all services <ArrowRight className="h-4 w-4 transition-transform" />
@@ -395,10 +393,8 @@ const ServiceDetail = () => {
                   <AnimatedSection key={r.slug} delay={i * 0.06} className="h-full">
                     <Link to={`/services/${r.slug}`}
                       className="group h-full flex flex-col el-card rounded-[24px] p-7 transition-shadow duration-300">
-                      <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-6 transition-colors duration-300">
-                        <RIcon className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
-                      </div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">{SERVICE_GROUP_LABEL[r.group]}</p>
+                      <FeatureIcon icon={RIcon} className="mb-6" />
+                      <p className="text-sm font-semibold text-muted-foreground mb-2">{SERVICE_GROUP_LABEL[r.group]}</p>
                       <h3 className="text-xl font-bold text-foreground mb-2">{r.name}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed flex-1">{r.short}</p>
                       <span className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors mt-6">
@@ -415,16 +411,16 @@ const ServiceDetail = () => {
         {/* ══════════════════════════════════════
             CTA BLOCK (call · WhatsApp · free consultation)
         ══════════════════════════════════════ */}
-        <section className="pb-20">
+        <section className="pb-14 md:pb-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
               <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
                 <div className="max-w-2xl mx-auto">
-                  <div className="el-eyebrow bg-background border-transparent mb-5">
+                  <div className="el-eyebrow mb-3">
                     <Clock className="w-3.5 h-3.5 text-primary" />
                     We're here 24/7
                   </div>
-                  <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">
+                  <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">
                     Talk to us about {svc.name.split(" (")[0].toLowerCase()} for your loved one
                   </h2>
                   <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">

@@ -21,7 +21,7 @@ const AboutSection = () => {
   const { siteImages } = useAdmin();
 
   return (
-    <section id="about" className="py-20 md:py-28">
+    <section id="about" className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
 
@@ -61,12 +61,12 @@ const AboutSection = () => {
           {/* ── RIGHT: Text ── */}
           <AnimatedSection delay={0.1} className="order-1 lg:order-2">
 
-            <div className="el-eyebrow mb-6">About MintexCare</div>
+            <div className="el-eyebrow mb-3">About MintexCare</div>
 
             <h2 className="font-bold text-foreground leading-[1.1] mb-5"
               style={{ fontSize: "clamp(2.2rem, 3.8vw, 3.2rem)" }}>
               Trusted Home Care<br />
-              <span className="text-primary">Built on Compassion</span>
+              Built on Compassion
             </h2>
 
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-7 max-w-[520px]">

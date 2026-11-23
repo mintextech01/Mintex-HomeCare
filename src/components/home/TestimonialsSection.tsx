@@ -27,15 +27,15 @@ const TestimonialsSection = () => {
   const t = testimonials[Math.min(current, testimonials.length - 1)];
 
   return (
-    <section className="py-20 md:py-28 overflow-hidden">
+    <section className="py-14 md:py-20 overflow-hidden">
       <div className="container mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-[5fr_7fr] gap-12 lg:gap-16 items-center">
 
           {/* ── LEFT: label + heading + stats + nav ── */}
           <AnimatedSection>
-            <div className="el-eyebrow mb-5">Testimonials</div>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-snug mb-4">
-              What Families Say About Us
+            <div className="el-eyebrow mb-3">Testimonials</div>
+            <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-snug mb-3">
+              What families say about us
             </h2>
             <p className="text-base text-muted-foreground font-sans leading-relaxed mb-10 max-w-sm">
               Real stories from the families we have had the privilege of serving every day.
@@ -101,7 +101,7 @@ const TestimonialsSection = () => {
 
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
-                <span className="text-xs font-sans font-bold uppercase tracking-wider text-primary">{storyLabel(t)}</span>
+                <span className="text-sm font-sans font-bold text-primary">{storyLabel(t)}</span>
                 <div className="flex gap-1" aria-label={`${t.rating} out of 5 stars`}>
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star

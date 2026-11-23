@@ -31,7 +31,7 @@ const NEXT_STEPS = [
 ];
 
 const FieldLabel = ({ htmlFor, children, required = false, hint }: { htmlFor: string; children: ReactNode; required?: boolean; hint?: string }) => (
-  <label htmlFor={htmlFor} className="flex items-baseline justify-between gap-2 text-xs font-semibold text-foreground/70 uppercase tracking-wider mb-1.5">
+  <label htmlFor={htmlFor} className="flex items-baseline justify-between gap-2 text-sm font-semibold text-foreground/70 mb-1.5">
     <span>{children}{required && <span className="text-primary"> *</span>}</span>
     {hint && <span className="normal-case tracking-normal font-normal text-muted-foreground">{hint}</span>}
   </label>
@@ -114,7 +114,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
 
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           {/* Three blocks: intro, form, next steps. On phones the form comes straight after the intro;
               on desktop the form sits in the right column next to both. */}
@@ -127,7 +127,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
                 <span className="text-foreground/30">/</span>
                 <span className="text-foreground font-semibold" aria-current="page">Free Consultation</span>
               </nav>
-              <div className="el-eyebrow mb-6">
+              <div className="el-eyebrow mb-3">
                 <CalendarCheck className="w-3.5 h-3.5 text-primary" />
                 Free · No Obligation
               </div>
@@ -172,7 +172,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
             <AnimatedSection delay={0.1} className="row-start-2 lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <div className="el-card rounded-[28px] p-2">
                 <div className="rounded-[22px] bg-foreground text-background px-6 sm:px-8 py-6">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-background/60 mb-1">Takes about 1 minute</p>
+                  <p className="text-sm font-semibold text-background/60 mb-1">Takes about 1 minute</p>
                   <h2 className="text-xl sm:text-2xl font-bold">Tell us how we can help</h2>
                 </div>
 
@@ -249,11 +249,11 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* What we can help with */}
-      <section className="py-16 md:py-20 bg-surface">
+      <section className="py-12 md:py-16 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
-            <div className="el-eyebrow bg-background mb-4">We can help with</div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Care for every stage</h2>
+            <div className="el-eyebrow mb-3">We can help with</div>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Care for every stage</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto">
             {SERVICE_INDEX.map((s, i) => (
@@ -290,7 +290,7 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
   const urgent = source === "staffing" ? "For urgent shifts" : "If you need care urgently";
 
   return (
-    <section className="pt-32 md:pt-40 pb-24 min-h-[80svh]">
+    <section className="pt-32 md:pt-40 pb-16 md:pb-20 min-h-[80svh]">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-2xl mx-auto">
           <div className="el-card rounded-[32px] text-center px-6 sm:px-12 py-12 sm:py-14">
@@ -300,7 +300,7 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
                 <Check className="w-11 h-11 text-background" strokeWidth={3} />
               </div>
             </div>
-            <div className="el-eyebrow bg-background mb-4">
+            <div className="el-eyebrow mb-3">
               Thank you{state?.name ? `, ${state.name}` : ""}
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">{copy.title}</h1>
@@ -319,7 +319,7 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
               </a>
             </div>
 
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">While you wait</p>
+            <p className="text-sm font-semibold text-muted-foreground mb-4">While you wait</p>
             <div className="grid sm:grid-cols-3 gap-3">
               {(source === "staffing"
                 ? [

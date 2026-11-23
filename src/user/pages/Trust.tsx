@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -43,18 +44,18 @@ const Breadcrumb = ({ trail }: { trail: { label: string; to?: string }[] }) => (
 );
 
 const Pill = ({ icon: Icon, children }: { icon: typeof ShieldCheck; children: ReactNode }) => (
-  <div className="el-eyebrow mb-6">
+  <div className="el-eyebrow mb-3">
     <Icon className="w-3.5 h-3.5 text-primary" />
     {children}
   </div>
 );
 
 const Eyebrow = ({ children, onSurface = false }: { children: ReactNode; onSurface?: boolean }) => (
-  <div className={`el-eyebrow mb-5 ${onSurface ? "bg-background" : ""}`}>{children}</div>
+  <div className={`el-eyebrow mb-3`}>{children}</div>
 );
 
 const StatsStrip = () => (
-  <section className="pb-16 md:pb-20">
+  <section className="pb-12 md:pb-14">
     <div className="container mx-auto px-6 md:px-10">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
         {STATS.map(({ icon: I, value, label }, i) => (
@@ -76,16 +77,16 @@ const StatsStrip = () => (
 );
 
 const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-16 md:py-20">
+  <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
         <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="el-eyebrow bg-background border-transparent mb-5">
+            <div className="el-eyebrow mb-3">
               <ShieldCheck className="w-3.5 h-3.5 text-primary" />
               Licensed by the State of New Jersey
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3">
               <Link to="/free-consultation" className="el-btn-primary whitespace-nowrap">
@@ -151,7 +152,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.15fr_1fr] gap-12 items-center">
             <AnimatedSection>
@@ -180,11 +181,11 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
                 <div className="w-24 h-24 rounded-[1.75rem] mx-auto mb-6 flex items-center justify-center bg-accent">
                   <ShieldCheck className="w-12 h-12 text-accent-foreground" strokeWidth={1.5} />
                 </div>
-                <p className="text-xs uppercase tracking-[0.2em] text-background/60 font-semibold mb-2">MintexCare is</p>
+                <p className="text-sm text-background/60 font-semibold mb-2">MintexCare is</p>
                 <p className="text-2xl font-bold leading-snug mb-7">Licensed by the State<br />of New Jersey</p>
                 <ul className="space-y-2.5 text-left max-w-[260px] mx-auto">
                   {["Bonded & insured", "RN-supervised care plans", "7-step caregiver screening", "Available 24/7"].map(t => (
-                    <li key={t} className="flex items-center gap-2.5 text-sm text-background/85">
+                    <li key={t} className="flex items-center gap-2.5 text-base text-background/85">
                       <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0">
                         <Check className="w-3 h-3 text-accent-foreground" strokeWidth={3} />
                       </span>
@@ -201,21 +202,19 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
       <StatsStrip />
 
       {/* PILLARS */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow onSurface>Our Standards</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground">Six reasons families <span className="text-primary">choose us</span></h2>
+            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground leading-tight">Our standards of care</h2>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {PILLARS.map(({ icon: I, title, text }, i) => (
               <AnimatedSection key={title} delay={Math.min(i, 4) * 0.05} className="h-full">
                 <div className="h-full bg-background rounded-[24px] p-7">
                   <div className="flex items-start justify-between mb-8">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-accent">
-                      <I className="w-6 h-6 text-accent-foreground" />
-                    </div>
-                    <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">{String(i + 1).padStart(2, "0")}</span>
+                    <FeatureIcon icon={I} />
+                    
                   </div>
                   <h3 className="text-lg font-bold text-foreground mb-2">{title}</h3>
                   <p className="text-muted-foreground leading-relaxed text-sm">{text}</p>
@@ -227,11 +226,11 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* SCREENING */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow>Caregiver Screening</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Our <span className="text-primary">7-step screening</span></h2>
+            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Our 7-step screening</h2>
             <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">Before any caregiver meets your family, they complete every one of these steps.</p>
           </AnimatedSection>
           <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
@@ -242,7 +241,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
                     <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-accent">
                       <I className="w-5 h-5 text-accent-foreground" />
                     </div>
-                    <span className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</span>
+                    <span className="text-sm font-bold text-primary">Step {i + 1}</span>
                   </div>
                   <p className="font-bold text-foreground mb-1">{title}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
@@ -263,15 +262,15 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* NURSE OVERSIGHT + CHECKLIST */}
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-2 gap-10 items-start">
             <AnimatedSection>
-              <div className="el-eyebrow bg-background mb-6">
+              <div className="el-eyebrow mb-3">
                 <HeartPulse className="w-3.5 h-3.5 text-primary" />
                 Nurse Oversight
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-5">Registered nurses <span className="text-primary">behind every plan</span></h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-5">Nurse-supervised care</h2>
               <p className="text-muted-foreground leading-relaxed mb-8">Our RNs don't just sign off on paperwork. They stay involved in your loved one's care from the first visit.</p>
               <ul className="space-y-3">
                 {[
@@ -293,7 +292,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
             <AnimatedSection delay={0.1}>
               <div className="bg-background rounded-[28px] p-2">
                 <div className="rounded-[22px] px-7 py-6 bg-foreground text-background">
-                  <p className="text-xs uppercase tracking-widest text-background/60 font-semibold mb-1">Choosing an agency?</p>
+                  <p className="text-sm text-background/60 font-semibold mb-1">Choosing an agency?</p>
                   <h3 className="text-xl font-bold">What to look for, and what you get with MintexCare</h3>
                 </div>
                 <ul className="divide-y divide-border px-2">
@@ -318,11 +317,11 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 md:py-24">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10 max-w-4xl">
           <AnimatedSection className="text-center mb-12">
             <Eyebrow>FAQ</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Trust & safety questions</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Trust & safety questions</h2>
           </AnimatedSection>
           <div className="space-y-3">
             {WHY_FAQS.map((f, i) => {
@@ -379,7 +378,7 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
 
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-10 md:pb-12">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "About", to: "/about" }, { label: "Reviews" }]} />
@@ -396,19 +395,17 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
 
       <StatsStrip />
 
-      <section className="py-20 md:py-24 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-12">
             <Eyebrow onSurface>Testimonials</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">In their <span className="text-primary">own words</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Family reviews</h2>
           </AnimatedSection>
 
           {count === 0 ? (
             <AnimatedSection>
               <div className="max-w-2xl mx-auto text-center bg-background rounded-[28px] p-10">
-                <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center bg-accent">
-                  <Quote className="w-7 h-7 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={Quote} className="mx-auto mb-5" />
                 <p className="text-xl font-bold text-foreground mb-2">Family stories are on their way</p>
                 <p className="text-muted-foreground leading-relaxed mb-6">We're gathering testimonials from the families we care for. In the meantime, we're happy to talk about our care, our nurses and our caregivers.</p>
                 <a href={`tel:+1${tel}`} className="el-btn-primary">
@@ -422,7 +419,7 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
                 {visible.map(t => (
                   <article key={t.id} className="h-full flex flex-col bg-background rounded-[28px] p-7 md:p-8">
                     <div className="flex items-center justify-between gap-3 mb-6">
-                      <span className="text-xs font-bold uppercase tracking-wider text-primary">{storyLabel(t)}</span>
+                      <span className="text-sm font-bold text-primary">{storyLabel(t)}</span>
                       <div className="flex gap-0.5" aria-label={`${t.rating} out of 5 stars`}>
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star key={i} className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "fill-border text-border"}`} />
@@ -467,7 +464,7 @@ const Reviews = ({ tel, phone }: { tel: string; phone: string }) => {
 
           <AnimatedSection className="mt-14">
             <Link to="/about/why-mintexcare" className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8 max-w-4xl mx-auto">
-              <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent"><ShieldCheck className="w-6 h-6 text-accent-foreground" /></span>
+              <FeatureIcon icon={ShieldCheck} size="md" onDark />
               <span className="flex-1">
                 <span className="block font-bold">Why families trust MintexCare</span>
                 <span className="block text-sm text-background/70">State licensing, nurse supervision and our 7-step caregiver screening.</span>

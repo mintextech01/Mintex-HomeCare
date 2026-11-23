@@ -7,12 +7,12 @@ const GallerySection = () => {
   if (gallery.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-24">
+    <section className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="text-center mb-12">
-          <div className="el-eyebrow mb-5">Our Gallery</div>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
-            Moments of Care
+          <div className="el-eyebrow mb-3">Our Gallery</div>
+          <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
+            Our caregivers at work
           </h2>
         </AnimatedSection>
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">

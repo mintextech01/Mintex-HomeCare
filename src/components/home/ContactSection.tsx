@@ -51,11 +51,11 @@ const ContactSection = () => {
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
 
   return (
-    <section id="contact" className="py-20 md:py-28">
+    <section id="contact" className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="text-center mb-12 max-w-2xl mx-auto">
-          <div className="el-eyebrow mb-5">{contactInfo.sectionEyebrow || "Get In Touch"}</div>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">{contactInfo.sectionHeading || "Ready to Get Started?"}</h2>
+          <div className="el-eyebrow mb-3">{contactInfo.sectionEyebrow || "Get In Touch"}</div>
+          <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">{contactInfo.sectionHeading || "Ready to Get Started?"}</h2>
           <p className="text-base text-muted-foreground font-sans">{contactInfo.sectionDescription || "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare."}</p>
         </AnimatedSection>
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 max-w-6xl mx-auto">

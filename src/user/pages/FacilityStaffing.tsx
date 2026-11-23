@@ -6,6 +6,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import AccessibilityButton from "@/components/AccessibilityButton";
 import AnimatedSection from "@/components/AnimatedSection";
+import { FeatureIcon } from "@/components/Feature";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -32,11 +33,11 @@ const REQUEST_PATH = "/facility-staffing/request-staff";
    ════════════════════════════════════════════ */
 
 const Eyebrow = ({ children, onSurface = false }: { children: ReactNode; onSurface?: boolean }) => (
-  <div className={`el-eyebrow mb-5 ${onSurface ? "bg-background" : ""}`}>{children}</div>
+  <div className={`el-eyebrow mb-3`}>{children}</div>
 );
 
 const Pill = ({ icon: Icon, children, onSurface = false }: { icon?: typeof Building2; children: ReactNode; onSurface?: boolean }) => (
-  <div className={`el-eyebrow mb-6 ${onSurface ? "bg-background" : ""}`}>
+  <div className={`el-eyebrow mb-3`}>
     {Icon && <Icon className="w-3.5 h-3.5 text-primary" />}
     {children}
   </div>
@@ -62,16 +63,16 @@ const CallButton = ({ tel, phone }: { tel: string; phone: string }) => (
 );
 
 const CtaBanner = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: string }) => (
-  <section className="py-16 md:py-20">
+  <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
         <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="el-eyebrow bg-background border-transparent mb-5">
+            <div className="el-eyebrow mb-3">
               <Handshake className="w-3.5 h-3.5 text-primary" />
               Partner With MintexCare
             </div>
-            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-4">{title}</h2>
+            <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
               <Link to={REQUEST_PATH} className="el-btn-primary">
@@ -100,9 +101,7 @@ const RoleCard = ({ role, i }: { role: StaffingRole; i: number }) => {
       <Link to={`/facility-staffing/roles#${role.code.toLowerCase()}`}
         className="group h-full flex flex-col rounded-[24px] bg-background p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4">
         <div className="flex items-start justify-between mb-7">
-          <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center transition-colors duration-300">
-            <Icon className="w-6 h-6 text-accent-foreground transition-colors duration-300" />
-          </div>
+          <FeatureIcon icon={Icon} />
           <p className="text-2xl font-extrabold text-foreground">{role.code}</p>
         </div>
         <h3 className="font-bold text-foreground text-lg leading-snug mb-2">{role.title}</h3>
@@ -158,7 +157,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
   return (
     <>
       {/* HERO */}
-      <section className="pt-32 md:pt-40 pb-16 md:pb-20">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 xl:gap-16 items-center">
             <AnimatedSection>
@@ -212,7 +211,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
                     </div>
                   )}
                   <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 px-5 py-4">
-                    <p className="text-muted-foreground text-xs uppercase tracking-widest mb-1 font-semibold">MintexCare</p>
+                    <p className="text-muted-foreground text-sm mb-1 font-semibold">MintexCare</p>
                     <p className="text-foreground font-bold text-lg leading-snug">Healthcare Staffing</p>
                   </div>
                 </div>
@@ -241,31 +240,32 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* WHO WE SERVE */}
-      <section className="pb-16 md:pb-20">
+      <section className="pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
-          <p className="text-center text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-5">Facilities we staff</p>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-            {FACILITIES.map(({ icon: I, label }, i) => (
-              <AnimatedSection key={label} delay={i * 0.04} className="h-full">
-                <div className="el-card flex flex-col gap-4 px-5 py-5 h-full">
-                  <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shrink-0">
-                    <I className="w-5 h-5 text-primary" />
-                  </div>
-                  <p className="text-sm font-semibold text-foreground leading-snug">{label}</p>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-10">
+              <Eyebrow>Who We Serve</Eyebrow>
+              <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground leading-tight">Facilities we staff</h2>
+            </div>
+            <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-x-8 gap-y-10">
+              {FACILITIES.map(({ icon: I, label }) => (
+                <li key={label} className="flex flex-col items-center text-center">
+                  <FeatureIcon icon={I} className="mb-5" />
+                  <p className="text-lg font-bold text-foreground leading-snug max-w-[12rem]">{label}</p>
+                </li>
+              ))}
+            </ul>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* ROLES */}
-      <section className="py-20 md:py-28 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow onSurface>Roles We Staff</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Aides &amp; <span className="text-primary">Nurses</span></h2>
-            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">Qualified staff for every level of care on your floor</p>
+            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Home health aides, CNAs, LPNs and RNs</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">Qualified staff for every level of care on your floor</p>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {STAFFING_ROLES.map((r, i) => <RoleCard key={r.code} role={r} i={i} />)}
@@ -274,22 +274,20 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* STAFFING OPTIONS */}
-      <section className="py-20 md:py-28">
+      <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="text-center mb-10">
             <Eyebrow>Staffing Options</Eyebrow>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Coverage That <span className="text-primary">Fits</span></h2>
-            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">One shift, a few months or long term: tell us what your team needs</p>
+            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Per diem, short-term or long-term</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">One shift, a few months or long term: tell us what your team needs</p>
           </AnimatedSection>
           <div className="grid md:grid-cols-3 gap-5">
             {OPTIONS.map(({ icon: I, title, text }, i) => (
               <AnimatedSection key={title} delay={i * 0.06} className="h-full">
                 <div className="h-full el-card p-7 md:p-8">
                   <div className="flex items-start justify-between mb-8">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-accent">
-                      <I className="w-6 h-6 text-accent-foreground" />
-                    </div>
-                    <span className="text-4xl font-serif font-bold text-foreground/15 leading-none">{String(i + 1).padStart(2, "0")}</span>
+                    <FeatureIcon icon={I} />
+                    
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{text}</p>
@@ -301,22 +299,20 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* HOW IT WORKS + SCREENING */}
-      <section className="py-20 md:py-28 bg-surface">
+      <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 xl:gap-14 items-start">
             <AnimatedSection>
               <Pill onSurface>How It Works</Pill>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-10">
-                From request to <span className="text-primary">staff on the floor</span>
+                How facility staffing works
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {PROCESS.map(({ icon: I, title, text }, i) => (
                   <div key={title} className="bg-background rounded-[24px] p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-accent">
-                        <I className="w-5 h-5 text-accent-foreground" />
-                      </div>
-                      <span className="text-[11px] font-bold tracking-[0.15em] text-muted-foreground">STEP {i + 1}</span>
+                    <div className="flex items-start justify-between mb-6">
+                      <FeatureIcon icon={I} size="md" />
+                      <span className="text-sm font-bold text-primary">Step {i + 1}</span>
                     </div>
                     <p className="font-bold text-foreground mb-1">{title}</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
@@ -327,13 +323,11 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
 
             <AnimatedSection delay={0.1} className="lg:sticky lg:top-32">
               <div className="rounded-[28px] p-8 bg-foreground text-background">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-accent">
-                  <ShieldCheck className="w-6 h-6 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={ShieldCheck} size="md" onDark className="mb-6" />
                 <h3 className="text-xl font-bold mb-6 leading-snug">Every placement is screened</h3>
                 <ul className="space-y-4 mb-8">
                   {SCREENING.map(({ icon: I, text }) => (
-                    <li key={text} className="flex items-start gap-3 text-sm text-background/85">
+                    <li key={text} className="flex items-start gap-3 text-base text-background/85">
                       <I className="w-4 h-4 mt-0.5 shrink-0" />{text}
                     </li>
                   ))}
@@ -348,11 +342,11 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       </section>
 
       {/* PARTNER FAQ */}
-      <section id="faq" className="py-20 md:py-28 scroll-mt-28">
+      <section id="faq" className="py-14 md:py-20 scroll-mt-28">
         <div className="container mx-auto px-6 md:px-10 max-w-4xl">
           <AnimatedSection className="text-center mb-12">
             <Eyebrow>Partner FAQ</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Questions from <span className="text-primary">facilities</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Facility staffing FAQ</h2>
           </AnimatedSection>
           <div className="space-y-3">
             {STAFFING_FAQS.map((f, i) => {
@@ -394,7 +388,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
 
 const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
   <>
-    <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+    <section className="pt-32 md:pt-40 pb-10 md:pb-12">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-3xl">
           <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing", to: "/facility-staffing" }, { label: "Roles" }]} />
@@ -417,7 +411,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
       </div>
     </section>
 
-    <section className="py-16 md:py-20 bg-surface">
+    <section className="py-12 md:py-16 bg-surface">
       <div className="container mx-auto px-6 md:px-10 space-y-5">
         {STAFFING_ROLES.map((r) => {
           const Icon = r.icon;
@@ -425,9 +419,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
             <AnimatedSection key={r.code}>
               <article id={r.code.toLowerCase()} className="scroll-mt-32 bg-background rounded-[28px] overflow-hidden grid lg:grid-cols-[360px_1fr] p-3 gap-3">
                 <div className="rounded-[22px] p-7 md:p-9 bg-foreground text-background">
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-accent">
-                    <Icon className="w-8 h-8 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Icon} onDark className="mb-6" />
                   <p className="text-5xl font-extrabold leading-none mb-2">{r.code}</p>
                   <h2 className="text-xl font-bold mb-4">{r.title}</h2>
                   <p className="text-background/70 text-sm leading-relaxed mb-7">{r.summary}</p>
@@ -437,7 +429,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
                 </div>
                 <div className="p-5 md:p-7 grid md:grid-cols-2 gap-8">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Typical duties</p>
+                    <p className="text-sm font-semibold text-muted-foreground mb-4">Typical duties</p>
                     <ul className="space-y-3">
                       {r.duties.map(d => (
                         <li key={d} className="flex items-start gap-3 text-foreground/85 leading-snug">
@@ -451,7 +443,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
                   </div>
                   <div className="space-y-7">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Settings</p>
+                      <p className="text-sm font-semibold text-muted-foreground mb-4">Settings</p>
                       <div className="flex flex-wrap gap-2">
                         {r.settings.map(s => (
                           <span key={s} className="text-sm text-foreground/85 bg-surface rounded-full px-3.5 py-1.5">{s}</span>
@@ -462,7 +454,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
                       <div className="flex items-start gap-3">
                         <BadgeCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-xs font-semibold text-foreground uppercase tracking-widest mb-1">Credential verified</p>
+                          <p className="text-sm font-semibold text-foreground mb-1">Credential verified</p>
                           <p className="text-sm text-muted-foreground leading-snug">{r.credential}</p>
                         </div>
                       </div>
@@ -496,7 +488,7 @@ const EMPTY_FORM = {
 };
 
 const FieldLabel = ({ htmlFor, children, required = false }: { htmlFor?: string; children: ReactNode; required?: boolean }) => (
-  <label htmlFor={htmlFor} className="block text-xs font-semibold text-foreground/70 uppercase tracking-wider mb-1.5">
+  <label htmlFor={htmlFor} className="block text-sm font-semibold text-foreground/70 mb-1.5">
     {children}{required && <span className="text-primary"> *</span>}
   </label>
 );
@@ -601,7 +593,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
         </div>
       </section>
 
-      <section className="pb-24">
+      <section className="pb-16 md:pb-20">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1fr_340px] gap-5 lg:gap-8 items-start max-w-6xl mx-auto">
 
@@ -717,7 +709,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
             {/* Sidebar */}
             <aside className="space-y-4 lg:sticky lg:top-32">
               <div className="rounded-[28px] p-7 bg-foreground text-background">
-                <p className="text-xs font-semibold uppercase tracking-widest text-background/60 mb-2">Urgent shift?</p>
+                <p className="text-sm font-semibold text-background/60 mb-2">Urgent shift?</p>
                 <p className="text-xl font-bold mb-2 leading-snug">Call our staffing line</p>
                 <p className="text-background/70 text-sm mb-6">Available 24/7 for same-day and next-day coverage requests.</p>
                 <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground w-full">
@@ -725,7 +717,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                 </a>
               </div>
               <div className="el-card rounded-[28px] p-7">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-5">What happens next</p>
+                <p className="text-sm font-semibold text-muted-foreground mb-5">What happens next</p>
                 <ol className="space-y-5">
                   {PROCESS.slice(1).map(({ icon: I, title, text }) => (
                     <li key={title} className="flex gap-4">

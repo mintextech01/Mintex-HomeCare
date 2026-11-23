@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -46,7 +47,7 @@ const PostCard = ({ post, i, big = false }: { post: BlogPost; i: number; big?: b
       <div className={`relative overflow-hidden rounded-[18px] bg-accent ${big ? "h-56 md:h-72" : "h-40"}`}>
         <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full border border-accent-foreground/10" />
         <div className="absolute -bottom-4 -right-4 w-28 h-28 rounded-full border border-accent-foreground/10" />
-        <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-foreground bg-background rounded-full px-3 py-1.5">
+        <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-xs font-bold text-foreground bg-background rounded-full px-3 py-1.5">
           <Newspaper className="h-3.5 w-3.5" /> {post.category}
         </span>
         <Newspaper className="absolute bottom-5 right-6 w-12 h-12 text-accent-foreground/40 transition-transform" />
@@ -91,11 +92,11 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
   const [featured, ...rest] = BLOG_POSTS;
   return (
     <>
-      <section className="pt-32 md:pt-40 pb-14 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-10 md:pb-12">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Resources", to: "/resources" }, { label: "Care Articles" }]} />
-            <div className="el-eyebrow mb-6">
+            <div className="el-eyebrow mb-3">
               <Newspaper className="w-3.5 h-3.5 text-primary" />
               Blog
             </div>
@@ -109,7 +110,7 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
         </div>
       </section>
 
-      <section className="py-14 md:py-20 bg-surface">
+      <section className="py-12 md:py-16 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.4fr_1fr] gap-5 mb-5">
             <PostCard post={featured} i={0} big />
@@ -119,7 +120,7 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
           </div>
           <AnimatedSection className="mt-10">
             <Link to="/resources/guides" className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
-              <span className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-accent"><ListChecks className="w-6 h-6 text-accent-foreground" /></span>
+              <FeatureIcon icon={ListChecks} size="md" onDark />
               <span className="flex-1">
                 <span className="block font-bold">Family Guides & Checklists</span>
                 <span className="block text-sm text-background/70">Printable checklists for home safety, hospital discharge and choosing a home care agency.</span>
@@ -130,7 +131,7 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
         </div>
       </section>
 
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection>
             <CtaBlock tel={tel} phone={phone} title="Have a question about care?" text="Our care coordinators are happy to talk through your situation, day or night." />
@@ -154,7 +155,7 @@ const Article = ({ post, tel, phone }: { post: BlogPost; tel: string; phone: str
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl mx-auto">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Care Articles", to: "/blog" }, { label: post.title }]} />
-            <div className="el-eyebrow mb-5">
+            <div className="el-eyebrow mb-3">
               <Newspaper className="h-3.5 w-3.5 text-primary" /> {post.category}
             </div>
             <h1 className="font-bold text-foreground leading-[1.1] mb-6" style={{ fontSize: "clamp(2rem, 4.6vw, 3.2rem)" }}>{post.title}</h1>
@@ -169,7 +170,7 @@ const Article = ({ post, tel, phone }: { post: BlogPost; tel: string; phone: str
         </div>
       </section>
 
-      <section className="pb-16 md:pb-20">
+      <section className="pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
           <article className="max-w-3xl mx-auto">
             <AnimatedSection>
@@ -204,7 +205,7 @@ const Article = ({ post, tel, phone }: { post: BlogPost; tel: string; phone: str
 
             {/* Related */}
             <div className="mt-10">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">Related</p>
+              <p className="text-sm font-semibold text-muted-foreground mb-4">Related</p>
               <div className="flex flex-wrap gap-3">
                 {post.related.map(r => (
                   <Link key={r.to} to={r.to} className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-foreground bg-background border border-border transition-colors">
@@ -222,10 +223,10 @@ const Article = ({ post, tel, phone }: { post: BlogPost; tel: string; phone: str
       </section>
 
       {others.length > 0 && (
-        <section className="py-16 md:py-20 bg-surface">
+        <section className="py-12 md:py-16 bg-surface">
           <div className="container mx-auto px-6 md:px-10 max-w-5xl">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">More articles</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">More articles</h2>
               <Link to="/blog" className="el-btn-outline self-start sm:self-auto">
                 <ArrowLeft className="h-4 w-4" /> All articles
               </Link>

@@ -16,7 +16,7 @@ interface FeaturedJobCardProps {
 export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJobCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
@@ -66,10 +66,10 @@ export function FeaturedJobCard({ job, onDetailsClick, onApplyClick }: FeaturedJ
           {/* Right: Key Benefits & CTA */}
           <div className="flex flex-col justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">Key Benefits</h4>
+              <h4 className="text-sm font-semibold text-foreground mb-3">Key Benefits</h4>
               <ul className="space-y-2 mb-4">
                 {job.benefits.slice(0, 4).map((benefit, idx) => (
-                  <li key={idx} className="text-sm text-foreground/70 flex items-start gap-2">
+                  <li key={idx} className="text-base text-foreground/70 flex items-start gap-2">
                     <span className="text-foreground font-bold mt-0.5">•</span>
                     <span>{benefit}</span>
                   </li>
