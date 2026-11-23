@@ -10,7 +10,7 @@ const GallerySection = () => {
     <section className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="text-center mb-12">
-          <div className="el-eyebrow mb-3">Our Gallery</div>
+          <div className="el-eyebrow mb-3">Our gallery</div>
           <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
             Our caregivers at work
           </h2>
@@ -19,7 +19,7 @@ const GallerySection = () => {
           {gallery.map((img, i) => (
             <AnimatedSection key={img.id} delay={(i % 6) * 0.05}>
               <figure className="break-inside-avoid el-card p-2 group">
-                <div className="rounded-[14px] overflow-hidden">
+                <div className="rounded-[16px] overflow-hidden">
                   <img
                     src={img.url}
                     alt={img.caption || "Gallery image"}

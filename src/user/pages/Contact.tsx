@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -116,8 +117,8 @@ const Contact = () => {
                 </div>
 
                 <h1 className="text-5xl md:text-6xl xl:text-[4rem] font-serif font-bold text-foreground leading-[1.08] mb-6">
-                  Contact Our<br />
-                  <span className="text-primary">Edison Team</span>
+                  Contact our{" "}<br />
+                  Edison team
                 </h1>
 
                 <p className="text-muted-foreground text-lg font-sans leading-relaxed mb-8 max-w-[460px]">
@@ -142,9 +143,7 @@ const Contact = () => {
                   <ul className="space-y-5">
                     <li>
                       <a href={`tel:+1${phoneLink}`} className="flex items-center gap-4 group">
-                        <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center shrink-0">
-                          <Phone className="h-5 w-5 text-accent-foreground" />
-                        </div>
+                        <FeatureIcon icon={Phone} size="sm" onDark className="shrink-0" />
                         <div>
                           <p className="text-background/55 text-sm font-sans">Phone</p>
                           <p className="font-semibold font-sans underline-offset-4">{contactInfo.phone}</p>
@@ -207,7 +206,7 @@ const Contact = () => {
               <AnimatedSection>
                 <div className="rounded-[28px] bg-background p-7 md:p-10 h-full">
                   <div className="mb-8">
-                    <div className="el-eyebrow mb-3">Send a Message</div>
+                    <div className="el-eyebrow mb-3">Send a message</div>
                     <h2 className="text-3xl font-serif font-bold text-foreground leading-tight">
                       How can we help you?
                     </h2>
@@ -294,13 +293,13 @@ const Contact = () => {
                 </div>
 
                 {/* Map */}
-                <div className="flex-1 rounded-[24px] overflow-hidden bg-background p-2" style={{ minHeight: 260 }}>
+                <div className="flex-1 rounded-[20px] overflow-hidden bg-background p-2" style={{ minHeight: 260 }}>
                   <iframe
                     title="MintexCare Location"
                     src={mapSrc}
                     width="100%"
                     height="100%"
-                    className="rounded-[18px]"
+                    className="rounded-[16px]"
                     style={{ border: 0, minHeight: 244, display: "block" }}
                     allowFullScreen
                     loading="lazy"
@@ -310,9 +309,7 @@ const Contact = () => {
 
                 {/* Fax info */}
                 <div className="rounded-2xl bg-background px-5 py-4 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center shrink-0">
-                    <Phone className="h-5 w-5 text-accent-foreground" />
-                  </div>
+                  <FeatureIcon icon={Phone} size="sm" className="shrink-0" />
                   <div>
                     <p className="text-sm text-muted-foreground font-sans">Fax</p>
                     <p className="font-sans font-semibold text-foreground text-sm">{contactInfo.fax}</p>
@@ -330,7 +327,7 @@ const Contact = () => {
         <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10 max-w-4xl">
             <AnimatedSection className="text-center mb-10">
-              <div className="el-eyebrow mb-3">Got Questions?</div>
+              <div className="el-eyebrow mb-3">Got questions?</div>
               <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
                 Frequently asked<br />questions
               </h2>
@@ -367,7 +364,7 @@ const Contact = () => {
         <section className="pb-14 md:pb-16">
           <div className="container mx-auto px-6 md:px-10 max-w-5xl">
             <AnimatedSection>
-              <div className="rounded-[32px] bg-accent px-8 py-12">
+              <div className="rounded-[28px] bg-accent px-8 py-12">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                   <div>
                     <div className="el-eyebrow mb-3">Still have questions?</div>

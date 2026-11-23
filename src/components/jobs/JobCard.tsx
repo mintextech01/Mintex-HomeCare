@@ -24,7 +24,7 @@ export function JobCard({ job, onDetailsClick, onApplyClick }: JobCardProps) {
       transition={{ duration: 0.5 }}
     >
       <Card
-        className="h-full flex flex-col overflow-hidden rounded-[24px] border-0 shadow-none bg-surface transition-shadow duration-300 cursor-pointer"
+        className="h-full flex flex-col overflow-hidden rounded-[20px] border-0 shadow-none bg-surface transition-shadow duration-300 cursor-pointer"
         onClick={() => onDetailsClick(job)}
       >
         <CardHeader className="pb-3">

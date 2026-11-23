@@ -1,3 +1,5 @@
+import StatsRow from "@/components/StatsRow";
+import PhotoFacts from "@/components/PhotoFacts";
 import { FeatureIcon } from "@/components/Feature";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -15,10 +17,10 @@ import {
 } from "lucide-react";
 
 const stats = [
-  { value: "500+", label: "Families Served",    icon: Users       },
-  { value: "10+",  label: "Years Experience",   icon: Award       },
-  { value: "99%",  label: "Client Satisfaction",icon: Star        },
-  { value: "24/7", label: "Always Available",   icon: Clock       },
+  { value: "500+", label: "Families served",     icon: Users       },
+  { value: "10+",  label: "Years of experience", icon: Award       },
+  { value: "99%",  label: "Client satisfaction", icon: Star        },
+  { value: "24/7", label: "Always available",    icon: Clock       },
 ];
 
 const values = [
@@ -44,7 +46,7 @@ const About = () => {
         ══════════════════════════════════════ */}
         <section className="pt-32 lg:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
-            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 xl:gap-16 items-center">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr] 2xl:grid-cols-[minmax(0,680px)_minmax(0,1fr)] gap-12 xl:gap-16 items-center">
 
               {/* LEFT: Text */}
               <AnimatedSection>
@@ -54,12 +56,12 @@ const About = () => {
                   <span className="text-foreground font-semibold">About Us</span>
                 </p>
 
-                <div className="el-eyebrow mb-3">Who We Are</div>
+                <div className="el-eyebrow mb-3">Who we are</div>
 
                 <h1 className="font-bold text-foreground leading-[1.07] mb-6"
                   style={{ fontSize: "clamp(2.4rem, 5vw, 3.5rem)" }}>
-                  Caring for NJ Families<br />
-                  <span className="text-primary">Since 2014</span>
+                  Caring for NJ families{" "}<br />
+                  since 2014
                 </h1>
 
                 <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[520px]">
@@ -93,53 +95,20 @@ const About = () => {
 
               {/* RIGHT: Image card with info chips */}
               <AnimatedSection delay={0.1} className="relative">
-                <div className="el-card p-3">
-                  <div className="relative rounded-[16px] overflow-hidden aspect-[4/5] max-h-[560px] lg:aspect-auto lg:h-[560px]">
+                <div>
+                  <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] max-h-[560px] lg:aspect-auto lg:h-[560px]">
                     <img
                       src={siteImages.aboutPageHero}
                       alt="MintexCare caregiver with patient"
                       className="w-full h-full object-cover"
                       loading="eager"
                     />
-                    <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 p-5">
-                      <p className="text-muted-foreground text-sm mb-1 font-semibold">Our Promise</p>
-                      <p className="text-foreground font-bold text-lg leading-snug">
-                        Dignified, personalized care<br />in the comfort of home.
-                      </p>
-                    </div>
                   </div>
                 </div>
 
-                {/* Floating: experience badge */}
-                <div className="el-chip absolute top-6 left-2 md:-left-8 z-10 px-5 py-4">
-                  <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center flex-shrink-0">
-                    <Award className="w-5 h-5 text-accent-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-foreground leading-none">10+</p>
-                    <p className="text-xs text-muted-foreground mt-1 whitespace-nowrap">Years of Excellence</p>
-                  </div>
-                </div>
-
-                {/* Floating: families served */}
-                <div className="el-chip absolute top-32 left-2 md:-left-8 z-10 px-5 py-4 hidden sm:flex">
-                  <div className="flex -space-x-2">
-                    {[
-                      siteImages.aboutPageAvatar1,
-                      siteImages.aboutPageAvatar2,
-                      siteImages.aboutPageAvatar3,
-                    ].map((url, i) => (
-                      <img key={i} src={url} alt="Happy MintexCare family"
-                        className="w-8 h-8 rounded-full border-2 border-background object-cover" />
-                    ))}
-                    <div className="w-8 h-8 rounded-full border-2 border-background bg-foreground flex items-center justify-center">
-                      <span className="text-background text-[9px] font-bold">500+</span>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-foreground leading-none">Happy Families</p>
-                    <p className="text-xs text-muted-foreground mt-1">Across New Jersey</p>
-                  </div>
+                <div className="mt-6">
+                  <p className="text-sm font-semibold text-muted-foreground mb-1">Our promise</p>
+                  <p className="text-lg font-bold text-foreground leading-snug">Dignified, personalized care in the comfort of home.</p>
                 </div>
               </AnimatedSection>
 
@@ -152,21 +121,7 @@ const About = () => {
         ══════════════════════════════════════ */}
         <section className="pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-              {stats.map(({ value, label, icon: Icon }, i) => (
-                <AnimatedSection key={label} delay={i * 0.06}>
-                  <div className="el-card flex flex-col justify-between gap-8 p-5 md:p-7 min-h-[160px] md:min-h-[190px]">
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-4xl md:text-5xl font-serif font-bold text-foreground leading-none">{value}</p>
-                      <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-5 h-5 text-primary" />
-                      </div>
-                    </div>
-                    <p className="text-sm md:text-base font-semibold text-foreground/80">{label}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
+            <StatsRow stats={stats} />
           </div>
         </section>
 
@@ -186,36 +141,14 @@ const About = () => {
                     className="w-full h-[420px] md:h-[520px] object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-                    <div className="grid grid-cols-3 gap-2 md:gap-3">
-                      {[
-                        { v: "500+", l: "Families" },
-                        { v: "10+",  l: "Years"    },
-                        { v: "24/7", l: "Available"},
-                      ].map(({ v, l }) => (
-                        <div key={l} className="text-center bg-background/95 rounded-2xl py-3 px-2">
-                          <p className="text-lg font-bold text-foreground">{v}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{l}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
 
-                <div className="el-chip absolute top-4 right-4 md:top-6 md:-right-6 z-10 p-4">
-                  <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                    <ShieldCheck className="h-5 w-5 text-accent-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-foreground">NJ State Licensed</p>
-                    <p className="text-[10px] text-muted-foreground">Bonded & Insured</p>
-                  </div>
-                </div>
+                <PhotoFacts facts={[{ icon: ShieldCheck, title: "NJ State Licensed", text: "Bonded & insured" }]} />
               </AnimatedSection>
 
               {/* Text */}
               <AnimatedSection delay={0.1}>
-                <div className="el-eyebrow mb-3">Our Story</div>
+                <div className="el-eyebrow mb-3">Our story</div>
 
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-7">
                   Who we are
@@ -256,68 +189,51 @@ const About = () => {
         <section className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
 
-            <AnimatedSection className="mb-12 md:mb-14">
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                <div>
-                  <div className="el-eyebrow mb-3">What Drives Us</div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                    Mission, vision<br className="hidden md:block" /> & values
-                  </h2>
-                </div>
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-xs md:text-right">
-                  The principles that guide every interaction and decision at MintexCare.
-                </p>
-              </div>
+            <AnimatedSection className="text-center mb-10">
+              <div className="el-eyebrow mb-3">What drives us</div>
+              <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground leading-tight mb-3">
+                Mission, vision & values
+              </h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+                The principles that guide every interaction and decision at MintexCare.
+              </p>
             </AnimatedSection>
 
-            <div className="grid md:grid-cols-3 gap-5">
+            {/* Original 3-card layout (Mission | Vision | Values); all three light cards, no dark card. */}
+            <AnimatedSection className="grid md:grid-cols-3 gap-5">
+              <div className="el-card h-full flex flex-col p-7 md:p-8">
+                <FeatureIcon icon={Target} className="mb-8" />
+                <h3 className="font-bold text-foreground text-xl leading-snug mb-3">Mission</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  To deliver exceptional, client-centered home care services that promote independence,
+                  dignity, and peace of mind for our clients and their families.
+                </p>
+              </div>
 
-              {/* Mission */}
-              <AnimatedSection delay={0} className="h-full">
-                <div className="el-card h-full flex flex-col p-7 md:p-8">
-                  <FeatureIcon icon={Target} className="mb-8" />
-                  <h3 className="font-bold text-foreground text-xl leading-snug mb-3">Mission</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                    To deliver exceptional, client-centered home care services that promote independence,
-                    dignity, and peace of mind for our clients and their families.
-                  </p>
-                </div>
-              </AnimatedSection>
+              <div className="el-card h-full flex flex-col p-7 md:p-8">
+                <FeatureIcon icon={Eye} className="mb-8" />
+                <h3 className="font-bold text-foreground text-xl leading-snug mb-3">Vision</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  To be the most trusted home care provider in New Jersey, known for compassion,
+                  reliability, and excellence in care — transforming lives one family at a time.
+                </p>
+              </div>
 
-              {/* Vision */}
-              <AnimatedSection delay={0.08} className="h-full">
-                <div className="el-card h-full flex flex-col p-7 md:p-8">
-                  <FeatureIcon icon={Eye} className="mb-8" />
-                  <h3 className="font-bold text-foreground text-xl leading-snug mb-3">Vision</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                    To be the most trusted home care provider in New Jersey, known for compassion,
-                    reliability, and excellence in care — transforming lives one family at a time.
-                  </p>
-                </div>
-              </AnimatedSection>
-
-              {/* Values */}
-              <AnimatedSection delay={0.16} className="h-full">
-                <div className="h-full flex flex-col rounded-[20px] bg-foreground text-background p-7 md:p-8">
-                  <FeatureIcon icon={Heart} onDark className="mb-8" />
-                  <h3 className="font-bold text-xl leading-snug mb-5">Values</h3>
-                  <div className="space-y-3 flex-1">
-                    {values.map(({ label, desc }) => (
-                      <div key={label} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Check className="h-3 w-3 text-accent-foreground" strokeWidth={3} />
-                        </div>
-                        <div>
-                          <span className="text-sm font-semibold">{label} </span>
-                          <span className="text-xs text-background/70">— {desc}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </AnimatedSection>
-
-            </div>
+              <div className="el-card h-full flex flex-col p-7 md:p-8">
+                <FeatureIcon icon={Heart} className="mb-8" />
+                <h3 className="font-bold text-foreground text-xl leading-snug mb-4">Values</h3>
+                <ul className="space-y-3">
+                  {values.map(({ label, desc }) => (
+                    <li key={label} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                      <p className="text-muted-foreground leading-snug">
+                        <span className="font-bold text-foreground">{label}</span> — {desc}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </AnimatedSection>
           </div>
         </section>
 
@@ -328,18 +244,14 @@ const About = () => {
           <section className="py-14 md:py-20 bg-surface">
             <div className="container mx-auto px-6 md:px-10">
 
-              <AnimatedSection className="mb-12 md:mb-14">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                  <div>
-                    <div className="el-eyebrow mb-3">The People</div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                      Meet our team
-                    </h2>
-                  </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed max-w-xs md:text-right">
-                    Dedicated professionals who bring expertise and heart to every interaction.
-                  </p>
-                </div>
+              <AnimatedSection className="text-center mb-10">
+                <div className="el-eyebrow mb-3">The people</div>
+                <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground leading-tight mb-3">
+                  Meet our team
+                </h2>
+                <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+                  Dedicated professionals who bring expertise and heart to every interaction.
+                </p>
               </AnimatedSection>
 
               {/* items-start: opening one long bio grows only that card, not the whole row */}
@@ -390,12 +302,12 @@ const About = () => {
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
-              <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16">
+              <div className="rounded-[28px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                   <div>
                     <div className="el-eyebrow mb-3">
                       <Award className="w-3.5 h-3.5 text-primary" />
-                      Licensed & Insured
+                      Licensed & insured
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground leading-snug mb-3">
                       Talk to our care team

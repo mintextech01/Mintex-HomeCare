@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -54,8 +55,8 @@ const ContactSection = () => {
     <section id="contact" className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="text-center mb-12 max-w-2xl mx-auto">
-          <div className="el-eyebrow mb-3">{contactInfo.sectionEyebrow || "Get In Touch"}</div>
-          <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">{contactInfo.sectionHeading || "Ready to Get Started?"}</h2>
+          <div className="el-eyebrow mb-3">{contactInfo.sectionEyebrow || "Get in touch"}</div>
+          <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">{contactInfo.sectionHeading || "Ready to get started?"}</h2>
           <p className="text-base text-muted-foreground font-sans">{contactInfo.sectionDescription || "Contact us today for a free, no-obligation consultation. Let us show you why families across New Jersey trust MintexCare."}</p>
         </AnimatedSection>
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 max-w-6xl mx-auto">
@@ -91,19 +92,19 @@ const ContactSection = () => {
               <h3 className="font-serif text-2xl font-semibold mb-8">Contact Information</h3>
               <ul className="space-y-6 font-sans text-background/75">
                 <li className="flex items-start gap-4">
-                  <span className="h-11 w-11 rounded-full bg-accent flex items-center justify-center shrink-0"><Phone className="h-5 w-5 text-accent-foreground" /></span>
+                  <FeatureIcon icon={Phone} size="sm" onDark className="shrink-0" />
                   <div className="pt-0.5"><a href={`tel:+1${phoneLink}`} className="text-background font-semibold underline-offset-4">{contactInfo.phone}</a><br /><span className="text-sm">Fax: {contactInfo.fax}</span></div>
                 </li>
                 <li className="flex items-center gap-4">
-                  <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><Mail className="h-5 w-5 text-background" /></span>
+                  <FeatureIcon icon={Mail} size="sm" onDark className="shrink-0" />
                   <a href={`mailto:${contactInfo.email}`} className="break-all underline-offset-4 transition-colors">{contactInfo.email}</a>
                 </li>
                 <li className="flex items-center gap-4">
-                  <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><MapPin className="h-5 w-5 text-background" /></span>
+                  <FeatureIcon icon={MapPin} size="sm" onDark className="shrink-0" />
                   {contactInfo.address}
                 </li>
                 <li className="flex items-center gap-4">
-                  <span className="h-11 w-11 rounded-full bg-background/10 flex items-center justify-center shrink-0"><Clock className="h-5 w-5 text-background" /></span>
+                  <FeatureIcon icon={Clock} size="sm" onDark className="shrink-0" />
                   {contactInfo.hours}
                 </li>
               </ul>

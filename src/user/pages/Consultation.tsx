@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -129,10 +130,10 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
               </nav>
               <div className="el-eyebrow mb-3">
                 <CalendarCheck className="w-3.5 h-3.5 text-primary" />
-                Free · No Obligation
+                Free · no obligation
               </div>
               <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.5rem)" }}>
-                Request a Free<br /><span className="text-primary">Care Consultation</span>
+                Request a free{" "}<br />care consultation
               </h1>
               <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-[520px]">
                 Tell us a little about who needs care. A MintexCare care coordinator will call you to talk through
@@ -145,9 +146,9 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
               <ol className="space-y-3 mb-9 max-w-[520px]">
                 {NEXT_STEPS.map(({ icon: I, title, text }, i) => (
                   <li key={title} className="flex gap-4 el-card p-4">
-                    <div className="relative w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
-                      <I className="w-5 h-5 text-accent-foreground" />
-                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-foreground text-[10px] font-bold text-background flex items-center justify-center">{i + 1}</span>
+                    <div className="relative shrink-0">
+                      <FeatureIcon icon={I} size="sm" />
+                      <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-xs font-bold text-primary-foreground flex items-center justify-center">{i + 1}</span>
                     </div>
                     <div>
                       <p className="font-bold text-foreground">{title}</p>
@@ -171,7 +172,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
             {/* The form */}
             <AnimatedSection delay={0.1} className="row-start-2 lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <div className="el-card rounded-[28px] p-2">
-                <div className="rounded-[22px] bg-foreground text-background px-6 sm:px-8 py-6">
+                <div className="rounded-[20px] bg-foreground text-background px-6 sm:px-8 py-6">
                   <p className="text-sm font-semibold text-background/60 mb-1">Takes about 1 minute</p>
                   <h2 className="text-xl sm:text-2xl font-bold">Tell us how we can help</h2>
                 </div>
@@ -231,7 +232,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
                   </p>
                 </form>
 
-                <div className="rounded-[22px] bg-background px-5 sm:px-7 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+                <div className="rounded-[20px] bg-background px-5 sm:px-7 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
                   <span className="text-muted-foreground">Prefer to talk now?</span>
                   <div className="flex flex-wrap justify-center gap-2">
                     <a href={`tel:+1${tel}`} className="inline-flex items-center gap-1.5 font-semibold rounded-full px-4 py-2 bg-accent text-accent-foreground whitespace-nowrap">
@@ -259,9 +260,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
             {SERVICE_INDEX.map((s, i) => (
               <AnimatedSection key={s.slug} delay={Math.min(i, 5) * 0.04} className="h-full">
                 <Link to={`/services/${s.slug}`} className="group h-full flex flex-col items-center text-center gap-3 bg-background rounded-2xl px-3 py-5 transition-shadow">
-                  <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center transition-colors">
-                    <s.icon className="w-5 h-5 text-accent-foreground transition-colors" />
-                  </span>
+                  <FeatureIcon icon={s.icon} size="sm" />
                   <span className="text-sm font-semibold text-foreground leading-snug">{s.name}</span>
                 </Link>
               </AnimatedSection>
@@ -293,7 +292,7 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
     <section className="pt-32 md:pt-40 pb-16 md:pb-20 min-h-[80svh]">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-2xl mx-auto">
-          <div className="el-card rounded-[32px] text-center px-6 sm:px-12 py-12 sm:py-14">
+          <div className="el-card rounded-[28px] text-center px-6 sm:px-12 py-12 sm:py-14">
             <div className="relative w-24 h-24 mx-auto mb-7">
               <div className="absolute inset-0 rounded-full animate-ping opacity-30 bg-accent" />
               <div className="relative w-24 h-24 rounded-full flex items-center justify-center bg-foreground">
@@ -307,9 +306,7 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-md mx-auto">{copy.text}</p>
 
             <div className="rounded-2xl bg-background p-5 mb-8 text-left flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 bg-accent">
-                <Phone className="w-5 h-5 text-accent-foreground" />
-              </div>
+              <FeatureIcon icon={Phone} size="sm" className="shrink-0" />
               <div className="flex-1">
                 <p className="font-bold text-foreground">{urgent}, call us now</p>
                 <p className="text-sm text-muted-foreground">We're available 24 hours a day, 7 days a week.</p>

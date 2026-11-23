@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock, ShieldCheck } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -51,19 +52,19 @@ const Footer = () => {
             <h3 className="font-serif text-lg font-semibold mb-5">Contact Info</h3>
             <ul className="space-y-4 text-sm text-foreground/75">
               <li className="flex items-start gap-3">
-                <span className="h-9 w-9 rounded-full bg-accent flex items-center justify-center shrink-0"><Phone className="h-4 w-4 text-accent-foreground" /></span>
+                <FeatureIcon icon={Phone} size="xs" className="shrink-0" />
                 <div className="pt-1"><a href={`tel:+1${phoneLink}`} className="font-semibold text-foreground underline-offset-4">{contactInfo.phone}</a><br />Fax: {contactInfo.fax}</div>
               </li>
               <li className="flex items-center gap-3">
-                <span className="h-9 w-9 rounded-full bg-background flex items-center justify-center shrink-0"><Mail className="h-4 w-4" /></span>
+                <FeatureIcon icon={Mail} size="xs" className="shrink-0" />
                 <a href={`mailto:${contactInfo.email}`} className="break-all underline-offset-4">{contactInfo.email}</a>
               </li>
               <li className="flex items-center gap-3">
-                <span className="h-9 w-9 rounded-full bg-background flex items-center justify-center shrink-0"><MapPin className="h-4 w-4" /></span>
+                <FeatureIcon icon={MapPin} size="xs" className="shrink-0" />
                 {contactInfo.address}
               </li>
               <li className="flex items-center gap-3">
-                <span className="h-9 w-9 rounded-full bg-background flex items-center justify-center shrink-0"><Clock className="h-4 w-4" /></span>
+                <FeatureIcon icon={Clock} size="xs" className="shrink-0" />
                 {contactInfo.hours}
               </li>
             </ul>

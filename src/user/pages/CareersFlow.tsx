@@ -89,9 +89,9 @@ const OpenPositions = () => {
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Careers", to: "/careers" }, { label: "Open Positions" }]} />
-            <Pill icon={Briefcase}>Now Hiring</Pill>
+            <Pill icon={Briefcase}>Now hiring</Pill>
             <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-              Caregiver &amp; Nursing<br /><span className="text-primary">Jobs in New Jersey</span>
+              Caregiver &amp; nursing{" "}<br />jobs in New Jersey
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[600px]">
               Join a team that treats caregivers with respect. See our current openings for home health aides,
@@ -130,10 +130,8 @@ const OpenPositions = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {benefitsData.map(({ id, icon: I, title, description }, i) => (
               <AnimatedSection key={id} delay={Math.min(i, 4) * 0.05} className="h-full">
-                <div className="h-full flex gap-4 bg-background rounded-[24px] p-6">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
-                    <I className="w-5 h-5 text-accent-foreground" />
-                  </div>
+                <div className="h-full flex gap-4 bg-background rounded-[20px] p-6">
+                  <FeatureIcon icon={I} size="sm" className="shrink-0" />
                   <div>
                     <p className="font-bold text-foreground mb-1">{title}</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
@@ -304,9 +302,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
                   <div className="grid sm:grid-cols-2 gap-5">
                     {benefitsData.map(({ id, icon: I, title, description }) => (
                       <div key={id} className="flex gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                          <I className="w-5 h-5 text-accent-foreground" />
-                        </div>
+                        <FeatureIcon icon={I} size="sm" className="shrink-0" />
                         <div>
                           <p className="font-bold text-foreground text-sm">{title}</p>
                           <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
@@ -360,7 +356,7 @@ const JobDetail = ({ tel, phone }: { tel: string; phone: string }) => {
             <div className="grid md:grid-cols-3 gap-5">
               {others.map(({ position: o, slug: s }, i) => (
                 <AnimatedSection key={s} delay={i * 0.06} className="h-full">
-                  <Link to={jobUrl(s)} className="group h-full flex flex-col el-card rounded-[24px] p-6 transition-shadow duration-300">
+                  <Link to={jobUrl(s)} className="group h-full flex flex-col el-card rounded-[20px] p-6 transition-shadow duration-300">
                     <span className="self-start text-xs font-semibold bg-accent text-accent-foreground rounded-full px-3 py-1 mb-4">{o.type}</span>
                     <span className="text-lg font-bold text-foreground mb-2 transition-colors">{o.title}</span>
                     <span className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">{o.description}</span>
@@ -394,9 +390,9 @@ const Apply = ({ tel, phone }: { tel: string; phone: string }) => {
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Careers", to: "/careers" }, { label: "Apply Online" }]} />
-            <Pill icon={FileText}>Apply Online</Pill>
+            <Pill icon={FileText}>Apply online</Pill>
             <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.5rem)" }}>
-              Join the <span className="text-primary">MintexCare Team</span>
+              Join the MintexCare team
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-[600px]">
               {preset
@@ -446,7 +442,7 @@ const Thanks = ({ tel, phone }: { tel: string; phone: string }) => {
     <section className="pt-32 md:pt-40 pb-16 md:pb-20 min-h-[80svh]">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-2xl mx-auto">
-          <div className="el-card rounded-[32px] text-center px-6 sm:px-12 py-12 sm:py-14">
+          <div className="el-card rounded-[28px] text-center px-6 sm:px-12 py-12 sm:py-14">
             <div className="relative w-24 h-24 mx-auto mb-7">
               <div className="absolute inset-0 rounded-full animate-ping opacity-30 bg-accent" />
               <div className="relative w-24 h-24 rounded-full flex items-center justify-center bg-foreground">
@@ -465,9 +461,7 @@ const Thanks = ({ tel, phone }: { tel: string; phone: string }) => {
               <ol className="grid sm:grid-cols-3 gap-4">
                 {HIRING_STEPS.slice(1).map(({ icon: I, label }, i) => (
                   <li key={label} className="flex sm:flex-col items-center sm:items-start gap-3">
-                    <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-accent">
-                      <I className="w-5 h-5 text-accent-foreground" />
-                    </span>
+                    <FeatureIcon icon={I} size="sm" className="shrink-0" />
                     <span className="text-sm font-semibold text-foreground"><span className="text-primary">{i + 1}.</span> {label}</span>
                   </li>
                 ))}

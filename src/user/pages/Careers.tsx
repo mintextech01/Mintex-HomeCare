@@ -1,3 +1,4 @@
+import PhotoFacts from "@/components/PhotoFacts";
 import { FeatureIcon } from "@/components/Feature";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -36,22 +37,23 @@ const Careers = () => {
         ══════════════════════════════════════ */}
         <section className="pt-32 lg:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
-            <div className="flex flex-col lg:flex-row lg:items-center gap-12">
+            {/* Same hero grid as the other inner pages: text left, photo filling the right column. */}
+            <div className="grid lg:grid-cols-[1.1fr_1fr] 2xl:grid-cols-[minmax(0,680px)_minmax(0,1fr)] gap-12 xl:gap-16 items-center">
 
               {/* Left */}
-              <AnimatedSection className="flex-1 max-w-xl">
+              <AnimatedSection>
                 <p className="text-sm text-muted-foreground font-sans mb-6 flex items-center gap-2">
                   <Link to="/" className="transition-colors">Home</Link>
                   <span className="text-foreground/30">/</span>
                   <span className="text-foreground font-semibold">Careers</span>
                 </p>
 
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground leading-[1.1] mb-6">
-                  Home Care<br />Jobs in<br />
-                  <span className="text-primary">Edison, NJ</span>
+                <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
+                  Home care jobs in{" "}<br />
+                  Edison, NJ
                 </h1>
 
-                <p className="text-muted-foreground font-sans leading-relaxed mb-8 max-w-sm">
+                <p className="text-muted-foreground font-sans text-base md:text-lg leading-relaxed mb-8 max-w-[560px]">
                   Join the MintexCare team in Edison and help families across Central New Jersey
                   get compassionate care at home.
                 </p>
@@ -67,31 +69,18 @@ const Careers = () => {
               </AnimatedSection>
 
               {/* Right: image card */}
-              <AnimatedSection delay={0.1} className="flex-1 relative flex justify-center items-center">
-                <div className="relative w-full max-w-md">
-                  <div className="el-card p-3">
-                    <img
-                      src={siteImages.careersPageBanner}
-                      alt="MintexCare team"
-                      className="w-full h-72 md:h-96 object-cover rounded-[16px]"
-                    />
-                  </div>
+              <AnimatedSection delay={0.1}>
+                <div className="relative w-full">
+                  <img
+                    src={siteImages.careersPageBanner}
+                    alt="MintexCare team"
+                    className="w-full h-72 md:h-96 lg:h-[460px] 2xl:h-[520px] object-cover rounded-[28px]"
+                  />
 
-                  {/* Floating chips */}
-                  <div className="el-chip absolute bottom-6 -left-4 sm:-left-8 px-5 py-3">
-                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
-                      <Briefcase className="h-5 w-5 text-accent-foreground" />
-                    </div>
-                    <div>
-                      <p className="text-xl font-serif font-bold text-foreground leading-none">{activePositions.length}</p>
-                      <p className="text-xs text-muted-foreground font-sans mt-1">Open Positions</p>
-                    </div>
-                  </div>
-
-                  <div className="el-chip absolute top-6 -right-3 sm:-right-6 px-5 py-3">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    <p className="text-sm font-sans font-semibold text-foreground">New Jersey</p>
-                  </div>
+                  <PhotoFacts facts={[
+                    { icon: Briefcase, title: `${activePositions.length} open positions` },
+                    { icon: MapPin, title: "New Jersey" },
+                  ]} />
                 </div>
               </AnimatedSection>
 
@@ -140,7 +129,7 @@ const Careers = () => {
 
               {/* Right: text */}
               <AnimatedSection delay={0.1}>
-                <div className="el-eyebrow mb-3">Our Culture</div>
+                <div className="el-eyebrow mb-3">Our culture</div>
                 <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-6 leading-tight">
                   Working at MintexCare
                 </h2>
@@ -182,7 +171,7 @@ const Careers = () => {
           <div className="container mx-auto px-6 md:px-10">
 
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow mb-3">Hiring Steps</div>
+              <div className="el-eyebrow mb-3">Hiring steps</div>
               <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
                 How hiring works
               </h2>
@@ -194,9 +183,9 @@ const Careers = () => {
                 return (
                   <AnimatedSection key={step.label} delay={i * 0.08} className="h-full">
                     <div className="el-card h-full p-6 md:p-7">
-                      <div className="flex items-center justify-between mb-10">
+                      <div className="flex items-center justify-between gap-3 mb-6">
                         <FeatureIcon icon={SIcon} />
-                        <span className="text-sm font-bold text-primary">Step {i + 1}</span>
+                        <span className="rounded-full bg-accent px-3.5 py-1 text-sm font-bold text-primary">Step {i + 1}</span>
                       </div>
                       <h3 className="font-serif font-semibold text-foreground text-lg leading-snug">{step.label}</h3>
                     </div>
@@ -215,7 +204,7 @@ const Careers = () => {
           <div className="container mx-auto px-6 md:px-10">
 
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow mb-3">Apply Now</div>
+              <div className="el-eyebrow mb-3">Apply now</div>
               <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">
                 Apply now
               </h2>
@@ -261,7 +250,7 @@ const Careers = () => {
               <AnimatedSection delay={0.1}>
                 <div className="bg-background rounded-[28px] p-7 md:p-10">
                   <div className="mb-7">
-                    <div className="el-eyebrow mb-3">Application Form</div>
+                    <div className="el-eyebrow mb-3">Application form</div>
                     <h3 className="text-2xl font-serif font-bold text-foreground">Tell Us About Yourself</h3>
                   </div>
 

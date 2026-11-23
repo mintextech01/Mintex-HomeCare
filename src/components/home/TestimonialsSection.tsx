@@ -1,17 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Star, ChevronLeft, ChevronRight, Users, Award, ThumbsUp, Clock, Quote, ArrowRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Quote, ArrowRight } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
+import { FeatureIcon } from "@/components/Feature";
 import { useAdmin } from "@/contexts/AdminContext";
 import { motion, AnimatePresence } from "@/lib/motion";
 import { storyLabel, displayName, byline } from "@/lib/testimonials";
-
-const stats = [
-  { icon: Clock,    value: "24",   unit: "/7", label: "Care Available"   },
-  { icon: Users,    value: "500",  unit: "+", label: "Families Served"   },
-  { icon: Award,    value: "10",   unit: "+", label: "Years of Care"     },
-  { icon: ThumbsUp, value: "99",   unit: "%", label: "Client Satisfaction" },
-];
 
 const TestimonialsSection = () => {
   const { testimonials } = useAdmin();
@@ -40,20 +34,6 @@ const TestimonialsSection = () => {
             <p className="text-base text-muted-foreground font-sans leading-relaxed mb-10 max-w-sm">
               Real stories from the families we have had the privilege of serving every day.
             </p>
-
-            <div className="grid grid-cols-2 gap-3 mb-10">
-              {stats.map((s) => (
-                <div key={s.label} className="el-card px-5 py-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <s.icon className="h-4 w-4 text-primary" />
-                    <span className="text-xl font-serif font-bold text-foreground">
-                      {s.value}{s.unit}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground font-sans">{s.label}</p>
-                </div>
-              ))}
-            </div>
 
             {/* Navigation */}
             {t && <div className="flex items-center gap-4">
@@ -85,9 +65,7 @@ const TestimonialsSection = () => {
           <AnimatedSection delay={0.1}>
             {!t ? (
               <div className="el-card rounded-[28px] p-8 md:p-12 text-center">
-                <div className="h-14 w-14 rounded-full bg-accent flex items-center justify-center mx-auto mb-5">
-                  <Quote className="h-6 w-6 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={Quote} size="md" className="mx-auto mb-5" />
                 <p className="text-xl font-serif font-bold text-foreground mb-2">Family stories are on their way</p>
                 <p className="text-muted-foreground font-sans leading-relaxed max-w-md mx-auto">
                   We're gathering reviews from the families we care for. Until then, see why families trust MintexCare.
@@ -113,9 +91,7 @@ const TestimonialsSection = () => {
                   ))}
                 </div>
                 </div>
-                <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center shrink-0">
-                  <Quote className="h-5 w-5 text-accent-foreground" />
-                </div>
+                <FeatureIcon icon={Quote} size="sm" className="shrink-0" />
               </div>
 
               <AnimatePresence mode="wait" initial={false}>

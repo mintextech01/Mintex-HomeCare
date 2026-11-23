@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -494,11 +495,11 @@ const Legal = () => {
                   <span className="text-foreground font-semibold">{doc.crumb}</span>
                 </p>
 
-                <div className="el-eyebrow mb-3">Legal &amp; Compliance</div>
+                <div className="el-eyebrow mb-3">Legal &amp; compliance</div>
 
                 <h1 className="font-bold text-foreground leading-[1.08] mb-6" style={{ fontSize: "clamp(2.2rem, 5vw, 3.5rem)" }}>
                   {titleStart && <>{titleStart} </>}
-                  <span className="text-primary">{titleEnd}</span>
+                  {titleEnd}
                 </h1>
 
                 <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[600px]">{doc.subtitle}</p>
@@ -523,15 +524,6 @@ const Legal = () => {
                   <div className="absolute inset-0 rounded-[2.5rem] flex items-center justify-center bg-accent">
                     <div className="w-36 h-36 rounded-[2rem] bg-background flex items-center justify-center shadow-xl">
                       <DocIcon className="w-16 h-16 text-foreground" strokeWidth={1.4} />
-                    </div>
-                  </div>
-                  <div className="el-chip absolute -bottom-5 -left-8 px-4 py-3">
-                    <div className="w-9 h-9 rounded-xl bg-foreground flex items-center justify-center">
-                      <ShieldCheck className="w-4 h-4 text-background" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-foreground leading-none">MintexCare</p>
-                      <p className="text-xs text-muted-foreground mt-1">Care you can believe in</p>
                     </div>
                   </div>
                 </div>
@@ -571,7 +563,7 @@ const Legal = () => {
 
               {/* Sidebar: on-this-page + contact (sticky on desktop) */}
               <aside className="hidden lg:block sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto space-y-4 pb-1" style={{ scrollbarWidth: "thin" }}>
-                <div className="bg-background rounded-[24px] p-4">
+                <div className="bg-background rounded-[20px] p-4">
                   <p className="text-sm font-semibold text-muted-foreground mb-3 px-3 pt-1">On this page</p>
                   <ol className="space-y-0.5">
                     {doc.sections.map((s, i) => {
@@ -591,7 +583,7 @@ const Legal = () => {
                   </ol>
                 </div>
 
-                <div className="rounded-[24px] p-5 bg-foreground text-background">
+                <div className="rounded-[20px] p-5 bg-foreground text-background">
                   <p className="font-bold text-lg mb-1">Have a question?</p>
                   <p className="text-background/70 text-sm mb-4">Our team is available 24/7.</p>
                   <a href={`tel:+1${tel}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 mb-2 bg-accent text-accent-foreground transition-colors">
@@ -606,11 +598,9 @@ const Legal = () => {
               {/* Document */}
               <article className="min-w-0">
                 <AnimatedSection>
-                  <div className="rounded-[24px] bg-accent p-6 md:p-8 mb-5">
+                  <div className="rounded-[20px] bg-accent p-6 md:p-8 mb-5">
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shrink-0">
-                        <Info className="h-5 w-5 text-foreground" />
-                      </div>
+                      <FeatureIcon icon={Info} size="sm" className="shrink-0" />
                       <div className="min-w-0 pt-1.5 [&_p]:text-accent-foreground/85">{doc.intro}</div>
                     </div>
                   </div>
@@ -619,7 +609,7 @@ const Legal = () => {
                 <div className="space-y-4">
                   {doc.sections.map((s, i) => (
                     <AnimatedSection key={s.heading} delay={Math.min(i, 3) * 0.04}>
-                      <section id={ids[i]} className="scroll-mt-32 bg-background rounded-[24px] p-6 md:p-8">
+                      <section id={ids[i]} className="scroll-mt-32 bg-background rounded-[20px] p-6 md:p-8">
                         <div className="flex items-center gap-4 mb-5">
                           <span className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold shrink-0 bg-surface text-foreground">
                             {String(i + 1).padStart(2, "0")}
@@ -642,9 +632,7 @@ const Legal = () => {
                     ].map(({ icon: Icon, label, value, href }) => {
                       const body = (
                         <>
-                          <div className="w-11 h-11 rounded-full bg-accent flex items-center justify-center mb-4">
-                            <Icon className="w-5 h-5 text-accent-foreground" />
-                          </div>
+                          <FeatureIcon icon={Icon} size="sm" className="mb-4" />
                           <p className="text-sm font-semibold text-muted-foreground mb-1">{label}</p>
                           <p className="text-sm font-semibold text-foreground break-words">{value}</p>
                         </>
@@ -667,12 +655,12 @@ const Legal = () => {
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
-              <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16 max-w-6xl mx-auto">
+              <div className="rounded-[28px] bg-accent px-6 py-12 sm:px-10 sm:py-14 md:px-16 max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
                   <div>
                     <div className="el-eyebrow mb-3">
                       <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-                      Licensed &amp; Insured
+                      Licensed &amp; insured
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground leading-snug mb-3">
                       Questions about this policy?

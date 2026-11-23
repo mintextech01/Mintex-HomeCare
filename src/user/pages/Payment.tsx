@@ -68,7 +68,7 @@ const Hero = ({ trail, pill, pillIcon, title, highlight, intro, children }: {
         <Breadcrumb trail={trail} />
         <Pill icon={pillIcon}>{pill}</Pill>
         <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-          {title}<br /><span className="text-primary">{highlight}</span>
+          {title}{" "}<br />{highlight}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[620px]">{intro}</p>
         {children}
@@ -132,7 +132,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
   <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
-        <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
+        <div className="rounded-[28px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
             <div className="el-eyebrow mb-3">
               <Receipt className="w-3.5 h-3.5 text-primary" />
@@ -160,7 +160,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
 
 /** Ink panel with a link that sends readers to a related page. */
 const LinkBanner = ({ to, icon: I, title, text }: { to: string; icon: typeof DollarSign; title: string; text: string }) => (
-  <Link to={to} className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
+  <Link to={to} className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[20px] bg-foreground text-background p-6 md:px-8">
     <FeatureIcon icon={I} size="md" onDark />
     <span className="flex-1">
       <span className="block font-bold">{title}</span>
@@ -190,8 +190,8 @@ const HUB_FAQS = [
 
 const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
   <>
-    <Hero trail={[{ label: "Home", to: "/" }, { label: "Costs & Payment" }]} pill="Costs & Payment" pillIcon={Wallet}
-      title="Paying for" highlight="Home Care in New Jersey"
+    <Hero trail={[{ label: "Home", to: "/" }, { label: "Costs & Payment" }]} pill="Costs & payment" pillIcon={Wallet}
+      title="Paying for" highlight="home care in New Jersey"
       intro="Clear answers about what home care costs and how families pay for it. Start with a free consultation; you'll get a written quote before care begins, with no obligation.">
       <HeroButtons tel={tel} phone={phone} />
     </Hero>
@@ -217,7 +217,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
         </div>
 
         <AnimatedSection className="mt-5">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-[20px] bg-foreground text-background p-6 md:px-8">
             <FeatureIcon icon={Info} size="md" onDark />
             <div className="flex-1">
               <p className="font-bold">Have insurance or other benefits?</p>
@@ -234,16 +234,16 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => (
     <section className="py-14 md:py-20">
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="text-center mb-10">
-          <Eyebrow>How Pricing Works</Eyebrow>
+          <Eyebrow>How pricing works</Eyebrow>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">How pricing works</h2>
         </AnimatedSection>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           {QUOTE_STEPS.map(({ icon: I, title, text }, i) => (
             <AnimatedSection key={title} delay={i * 0.06} className="h-full">
               <div className="h-full el-card p-6 md:p-7">
-                <div className="flex items-start justify-between mb-8">
+                <div className="flex items-center justify-between gap-3 mb-6">
                   <FeatureIcon icon={I} size="md" />
-                  <span className="text-sm font-bold text-primary">Step {i + 1}</span>
+                  <span className="rounded-full bg-accent px-3.5 py-1 text-sm font-bold text-primary">Step {i + 1}</span>
                 </div>
                 <p className="font-bold text-foreground mb-1">{title}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
@@ -294,8 +294,8 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
 
   return (
     <>
-      <Hero trail={[{ label: "Home", to: "/" }, { label: "Costs & Payment", to: "/paying-for-care" }, { label: "Cost of Home Care" }]} pill="Cost of Care" pillIcon={Calculator}
-        title="Cost of Home Care" highlight="in New Jersey"
+      <Hero trail={[{ label: "Home", to: "/" }, { label: "Costs & Payment", to: "/paying-for-care" }, { label: "Cost of Home Care" }]} pill="Cost of care" pillIcon={Calculator}
+        title="Cost of home care" highlight="in New Jersey"
         intro="Every family's needs are different, so every care plan is too. Here's what affects the cost of home care, typical care plans, and how to get a clear price for your loved one.">
         <HeroButtons tel={tel} phone={phone} />
       </Hero>
@@ -305,7 +305,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
         <div className="container mx-auto px-6 md:px-10 max-w-5xl">
           <AnimatedSection>
             <div className="bg-background rounded-[28px] p-2">
-              <div className="rounded-[22px] px-6 md:px-9 py-7 bg-foreground text-background">
+              <div className="rounded-[20px] px-6 md:px-9 py-7 bg-foreground text-background">
                 <div className="flex items-center gap-4">
                   <FeatureIcon icon={DollarSign} size="md" onDark />
                   <div>
@@ -337,7 +337,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
                 })}
               </ul>
               {(showTable && (pricing.minimumHours || pricing.note)) && (
-                <div className="rounded-[22px] px-6 md:px-9 py-5 bg-surface text-sm text-muted-foreground space-y-1">
+                <div className="rounded-[20px] px-6 md:px-9 py-5 bg-surface text-sm text-muted-foreground space-y-1">
                   {pricing.minimumHours && <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Minimum: {pricing.minimumHours}</p>}
                   {pricing.note && <p className="flex items-start gap-2"><Info className="h-4 w-4 text-primary shrink-0 mt-0.5" /> {pricing.note}</p>}
                 </div>
@@ -351,7 +351,7 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
-            <Eyebrow>What Affects the Cost</Eyebrow>
+            <Eyebrow>What affects the cost</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">What affects the cost of care</h2>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
@@ -376,13 +376,13 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
       <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
-            <Eyebrow onSurface>Typical Care Plans</Eyebrow>
+            <Eyebrow onSurface>Typical care plans</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Examples of how families use care</h2>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {EXAMPLE_PLANS.map((p, i) => (
               <AnimatedSection key={p.title} delay={i * 0.06} className="h-full">
-                <div className="h-full flex flex-col bg-background rounded-[24px] p-6">
+                <div className="h-full flex flex-col bg-background rounded-[20px] p-6">
                   <span className="self-start text-sm font-bold text-primary mb-3">Plan {i + 1}</span>
                   <p className="font-bold text-foreground mb-2 leading-snug">{p.title}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed flex-1">{p.text}</p>
@@ -399,14 +399,12 @@ const Cost = ({ tel, phone }: { tel: string; phone: string }) => {
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 items-start">
             <AnimatedSection>
-              <Pill icon={Receipt}>Your Quote</Pill>
+              <Pill icon={Receipt}>Your quote</Pill>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-8">How you get a clear price</h2>
               <ol className="space-y-3">
                 {QUOTE_STEPS.map(({ icon: I, title, text }, i) => (
                   <li key={title} className="flex gap-4 el-card p-5">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
-                      <I className="w-5 h-5 text-accent-foreground" />
-                    </div>
+                    <FeatureIcon icon={I} size="sm" className="shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-primary">Step {i + 1}</p>
                       <p className="font-bold text-foreground">{title}</p>
@@ -467,8 +465,8 @@ const PRIVATE_FAQS = [
 
 const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
   <>
-    <Hero trail={[{ label: "Home", to: "/" }, { label: "Costs & Payment", to: "/paying-for-care" }, { label: "Private Pay" }]} pill="Private Pay" pillIcon={Wallet}
-      title="Paying Privately" highlight="for Home Care"
+    <Hero trail={[{ label: "Home", to: "/" }, { label: "Costs & Payment", to: "/paying-for-care" }, { label: "Private Pay" }]} pill="Private pay" pillIcon={Wallet}
+      title="Paying privately" highlight="for home care"
       intro="Many families pay for home care directly. Private pay is simple and flexible: you choose the care, the hours and the schedule, and you can change them as needs change.">
       <HeroButtons tel={tel} phone={phone} />
     </Hero>
@@ -493,13 +491,13 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
       <div className="container mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           <AnimatedSection>
-            <Pill icon={CreditCard}>Payment Methods</Pill>
+            <Pill icon={CreditCard}>Payment methods</Pill>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">Ways you can pay</h2>
             <p className="text-muted-foreground leading-relaxed mb-8">Pay the way that's easiest for your family.</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {PAYMENT_METHODS.map(({ icon: I, label }) => (
                 <div key={label} className="flex items-center gap-3 el-card rounded-2xl px-5 py-4">
-                  <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shrink-0"><I className="w-5 h-5 text-accent-foreground" /></span>
+                  <FeatureIcon icon={I} size="sm" className="shrink-0" />
                   <span className="font-semibold text-foreground">{label}</span>
                 </div>
               ))}
@@ -507,7 +505,7 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
             <div className="el-card rounded-[28px] p-7 md:p-9">
-              <div className="el-eyebrow mb-3">How It Works</div>
+              <div className="el-eyebrow mb-3">How it works</div>
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8 leading-tight">How payment works</h2>
               <ol className="space-y-3">
                 {[
@@ -517,9 +515,7 @@ const PrivatePay = ({ tel, phone }: { tel: string; phone: string }) => (
                   { icon: Receipt, title: "Care & invoices", text: "Care begins on the agreed day, and you receive clear invoices for the care provided." },
                 ].map(({ icon: I, title, text }, i) => (
                   <li key={title} className="flex gap-4 bg-background rounded-2xl p-4">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
-                      <I className="w-5 h-5 text-accent-foreground" />
-                    </div>
+                    <FeatureIcon icon={I} size="sm" className="shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-primary">Step {i + 1}</p>
                       <p className="font-bold text-foreground">{title}</p>

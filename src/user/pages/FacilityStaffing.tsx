@@ -1,3 +1,4 @@
+import PhotoFacts from "@/components/PhotoFacts";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
@@ -66,11 +67,11 @@ const CtaBanner = ({ tel, phone, title, text }: { tel: string; phone: string; ti
   <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
-        <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
+        <div className="rounded-[28px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
           <div className="max-w-2xl mx-auto">
             <div className="el-eyebrow mb-3">
               <Handshake className="w-3.5 h-3.5 text-primary" />
-              Partner With MintexCare
+              Partner with MintexCare
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
@@ -99,10 +100,11 @@ const RoleCard = ({ role, i }: { role: StaffingRole; i: number }) => {
   return (
     <AnimatedSection delay={i * 0.06} className="h-full">
       <Link to={`/facility-staffing/roles#${role.code.toLowerCase()}`}
-        className="group h-full flex flex-col rounded-[24px] bg-background p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4">
-        <div className="flex items-start justify-between mb-7">
+        className="group h-full flex flex-col rounded-[20px] bg-background p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4">
+        {/* Icon left, role code as a small tag on the right, vertically centred with the icon. */}
+        <div className="flex items-center justify-between gap-3 mb-6">
           <FeatureIcon icon={Icon} />
-          <p className="text-2xl font-extrabold text-foreground">{role.code}</p>
+          <span className="rounded-full bg-accent px-3.5 py-1 text-sm font-bold text-primary">{role.code}</span>
         </div>
         <h3 className="font-bold text-foreground text-lg leading-snug mb-2">{role.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed flex-1">{role.summary}</p>
@@ -159,13 +161,13 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       {/* HERO */}
       <section className="pt-32 md:pt-40 pb-12 md:pb-14">
         <div className="container mx-auto px-6 md:px-10">
-          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 xl:gap-16 items-center">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] 2xl:grid-cols-[minmax(0,680px)_minmax(0,1fr)] gap-12 xl:gap-16 items-center">
             <AnimatedSection>
               <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing" }]} />
-              <Pill icon={Building2}>Facility Staffing</Pill>
+              <Pill icon={Building2}>Facility staffing</Pill>
               <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-                Reliable Staffing for<br />
-                <span className="text-primary">NJ Care Facilities</span>
+                Reliable staffing for{" "}<br />
+                NJ care facilities
               </h1>
               <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[560px]">
                 Short-staffed? MintexCare provides screened home health aides, CNAs, LPNs and RNs to skilled nursing,
@@ -190,13 +192,13 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
               </div>
             </AnimatedSection>
 
-            <AnimatedSection delay={0.1} className="relative max-w-[520px] w-full mx-auto lg:mx-0 lg:justify-self-end">
-              <div className="el-card p-3">
-                <div className="relative rounded-[16px] overflow-hidden aspect-[4/4.2]">
+            <AnimatedSection delay={0.1} className="relative max-w-[520px] 2xl:max-w-none w-full mx-auto lg:mx-0 lg:justify-self-end">
+              <div>
+                <div className="relative rounded-[28px] overflow-hidden aspect-[4/4.2] 2xl:aspect-auto 2xl:h-[560px]">
                   {hasPhoto ? (
                     <img src={photo} alt="MintexCare nurse staffing a care facility" className="w-full h-full object-cover" loading="eager" />
                   ) : (
-                    <div className="w-full h-full relative flex items-center justify-center bg-accent pb-16">
+                    <div className="w-full h-full relative flex items-center justify-center bg-accent">
                       <div className="relative grid grid-cols-2 gap-3">
                         {STAFFING_ROLES.map(r => {
                           const I = r.icon;
@@ -210,30 +212,12 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
                       </div>
                     </div>
                   )}
-                  <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 px-5 py-4">
-                    <p className="text-muted-foreground text-sm mb-1 font-semibold">MintexCare</p>
-                    <p className="text-foreground font-bold text-lg leading-snug">Healthcare Staffing</p>
-                  </div>
                 </div>
               </div>
-              <div className="el-chip absolute top-6 -left-2 sm:-left-8 z-10 px-4 py-3">
-                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                  <CalendarDays className="w-5 h-5 text-accent-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-foreground leading-none">Per diem to long-term</p>
-                  <p className="text-xs text-muted-foreground mt-1">Flexible coverage</p>
-                </div>
-              </div>
-              <div className="el-chip absolute top-28 -left-2 sm:-left-8 z-10 px-4 py-3 hidden sm:flex">
-                <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center shrink-0">
-                  <BadgeCheck className="w-5 h-5 text-background" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-foreground leading-none">Credentials verified</p>
-                  <p className="text-xs text-muted-foreground mt-1">Before every placement</p>
-                </div>
-              </div>
+              <PhotoFacts facts={[
+                { icon: CalendarDays, title: "Per diem to long-term", text: "Flexible coverage" },
+                { icon: BadgeCheck, title: "Credentials verified", text: "Before every placement" },
+              ]} />
             </AnimatedSection>
           </div>
         </div>
@@ -244,7 +228,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection>
             <div className="text-center mb-10">
-              <Eyebrow>Who We Serve</Eyebrow>
+              <Eyebrow>Who we serve</Eyebrow>
               <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground leading-tight">Facilities we staff</h2>
             </div>
             <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-x-8 gap-y-10">
@@ -263,8 +247,8 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       <section className="py-14 md:py-20 bg-surface">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
-            <Eyebrow onSurface>Roles We Staff</Eyebrow>
-            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Home health aides, CNAs, LPNs and RNs</h2>
+            <Eyebrow onSurface>Roles we staff</Eyebrow>
+            <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Aides &amp; nurses</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">Qualified staff for every level of care on your floor</p>
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -277,7 +261,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
       <section className="py-14 md:py-20">
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="text-center mb-10">
-            <Eyebrow>Staffing Options</Eyebrow>
+            <Eyebrow>Staffing options</Eyebrow>
             <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">Per diem, short-term or long-term</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">One shift, a few months or long term: tell us what your team needs</p>
           </AnimatedSection>
@@ -285,10 +269,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
             {OPTIONS.map(({ icon: I, title, text }, i) => (
               <AnimatedSection key={title} delay={i * 0.06} className="h-full">
                 <div className="h-full el-card p-7 md:p-8">
-                  <div className="flex items-start justify-between mb-8">
-                    <FeatureIcon icon={I} />
-                    
-                  </div>
+                  <FeatureIcon icon={I} className="mb-8" />
                   <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{text}</p>
                 </div>
@@ -303,16 +284,16 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
         <div className="container mx-auto px-6 md:px-10">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 xl:gap-14 items-start">
             <AnimatedSection>
-              <Pill onSurface>How It Works</Pill>
+              <Pill onSurface>How it works</Pill>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-10">
                 How facility staffing works
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {PROCESS.map(({ icon: I, title, text }, i) => (
-                  <div key={title} className="bg-background rounded-[24px] p-6">
-                    <div className="flex items-start justify-between mb-6">
+                  <div key={title} className="bg-background rounded-[20px] p-6">
+                    <div className="flex items-center justify-between gap-3 mb-6">
                       <FeatureIcon icon={I} size="md" />
-                      <span className="text-sm font-bold text-primary">Step {i + 1}</span>
+                      <span className="rounded-full bg-accent px-3.5 py-1 text-sm font-bold text-primary">Step {i + 1}</span>
                     </div>
                     <p className="font-bold text-foreground mb-1">{title}</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
@@ -392,9 +373,9 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
       <div className="container mx-auto px-6 md:px-10">
         <AnimatedSection className="max-w-3xl">
           <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing", to: "/facility-staffing" }, { label: "Roles" }]} />
-          <Pill icon={Users}>Roles We Staff</Pill>
+          <Pill icon={Users}>Roles we staff</Pill>
           <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-            HHA, CNA, LPN &amp; RN<br /><span className="text-primary">Staffing</span>
+            HHA, CNA, LPN &amp; RN{" "}<br />staffing
           </h1>
           <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[620px]">
             See what each role covers, the settings we staff and the credentials we verify, then request the staff you need.
@@ -418,7 +399,7 @@ const Roles = ({ tel, phone }: { tel: string; phone: string }) => (
           return (
             <AnimatedSection key={r.code}>
               <article id={r.code.toLowerCase()} className="scroll-mt-32 bg-background rounded-[28px] overflow-hidden grid lg:grid-cols-[360px_1fr] p-3 gap-3">
-                <div className="rounded-[22px] p-7 md:p-9 bg-foreground text-background">
+                <div className="rounded-[20px] p-7 md:p-9 bg-foreground text-background">
                   <FeatureIcon icon={Icon} onDark className="mb-6" />
                   <p className="text-5xl font-extrabold leading-none mb-2">{r.code}</p>
                   <h2 className="text-xl font-bold mb-4">{r.title}</h2>
@@ -582,9 +563,9 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
         <div className="container mx-auto px-6 md:px-10">
           <AnimatedSection className="max-w-3xl">
             <Breadcrumb trail={[{ label: "Home", to: "/" }, { label: "Facility Staffing", to: "/facility-staffing" }, { label: "Request Staff" }]} />
-            <Pill icon={ClipboardCheck}>For Facilities</Pill>
+            <Pill icon={ClipboardCheck}>For facilities</Pill>
             <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-              Request <span className="text-primary">Facility Staff</span>
+              Request facility staff
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-[620px]">
               Tell us about the shifts you need to cover. Our staffing team will follow up to confirm availability, rates and next steps.
@@ -721,9 +702,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
                 <ol className="space-y-5">
                   {PROCESS.slice(1).map(({ icon: I, title, text }) => (
                     <li key={title} className="flex gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center shrink-0">
-                        <I className="w-5 h-5 text-primary" />
-                      </div>
+                      <FeatureIcon icon={I} size="sm" className="shrink-0" />
                       <div>
                         <p className="font-bold text-foreground text-sm">{title}</p>
                         <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>

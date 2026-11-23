@@ -42,9 +42,9 @@ const Meta = ({ post }: { post: BlogPost }) => (
 const PostCard = ({ post, i, big = false }: { post: BlogPost; i: number; big?: boolean }) => (
   <AnimatedSection delay={Math.min(i, 3) * 0.06} className="h-full">
     <Link to={`/blog/${post.slug}`}
-      className="group h-full flex flex-col bg-background rounded-[24px] p-3 transition-shadow duration-300">
+      className="group h-full flex flex-col bg-background rounded-[20px] p-3 transition-shadow duration-300">
       {/* Designed cover (no stock photos) */}
-      <div className={`relative overflow-hidden rounded-[18px] bg-accent ${big ? "h-56 md:h-72" : "h-40"}`}>
+      <div className={`relative overflow-hidden rounded-[16px] bg-accent ${big ? "h-56 md:h-72" : "h-40"}`}>
         <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full border border-accent-foreground/10" />
         <div className="absolute -bottom-4 -right-4 w-28 h-28 rounded-full border border-accent-foreground/10" />
         <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-xs font-bold text-foreground bg-background rounded-full px-3 py-1.5">
@@ -65,7 +65,7 @@ const PostCard = ({ post, i, big = false }: { post: BlogPost; i: number; big?: b
 );
 
 const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; title: string; text: ReactNode }) => (
-  <div className="rounded-[32px] bg-accent px-6 py-10 sm:px-10 text-center">
+  <div className="rounded-[28px] bg-accent px-6 py-10 sm:px-10 text-center">
     <div className="max-w-xl mx-auto">
       <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
       <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-7">{text}</p>
@@ -101,7 +101,7 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
               Blog
             </div>
             <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-              Care <span className="text-primary">Articles</span>
+              Care articles
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-[600px]">
               Practical advice for families caring for an aging parent or a loved one recovering at home.
@@ -119,7 +119,7 @@ const BlogIndex = ({ tel, phone }: { tel: string; phone: string }) => {
             </div>
           </div>
           <AnimatedSection className="mt-10">
-            <Link to="/resources/guides" className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-foreground text-background p-6 md:px-8">
+            <Link to="/resources/guides" className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-[20px] bg-foreground text-background p-6 md:px-8">
               <FeatureIcon icon={ListChecks} size="md" onDark />
               <span className="flex-1">
                 <span className="block font-bold">Family Guides & Checklists</span>

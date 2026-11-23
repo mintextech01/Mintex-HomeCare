@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
-import { ArrowRight, Check, Award, Users, Heart, Clock } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 
 const features = [
@@ -8,13 +8,6 @@ const features = [
   "Personalized care plans for every client",
   "Available 24/7 — including holidays",
   "State-licensed & insured agency in NJ",
-];
-
-const stats = [
-  { value: "500+", label: "Families Served",   icon: Users  },
-  { value: "10+",  label: "Years Experience",  icon: Award  },
-  { value: "99%",  label: "Client Satisfaction", icon: Heart },
-  { value: "24/7", label: "Always Available",  icon: Clock  },
 ];
 
 const AboutSection = () => {
@@ -34,27 +27,6 @@ const AboutSection = () => {
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-
-              {/* Families badge — sits inside the photo, bottom-left */}
-              <div className="el-chip absolute bottom-4 left-4 md:bottom-6 md:left-6 pr-5">
-                <div className="flex -space-x-2">
-                  {[
-                    siteImages.aboutAvatar1,
-                    siteImages.aboutAvatar2,
-                    siteImages.aboutAvatar3,
-                  ].map((url, i) => (
-                    <img key={i} src={url} alt="Happy MintexCare client" loading="lazy" width={32} height={32}
-                      className="w-8 h-8 rounded-full border-2 border-background object-cover" />
-                  ))}
-                  <div className="w-8 h-8 rounded-full border-2 border-background bg-accent flex items-center justify-center">
-                    <span className="text-accent-foreground text-[9px] font-bold">500+</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-foreground leading-none">Happy Families</p>
-                  <p className="text-xs text-muted-foreground mt-1">Across New Jersey</p>
-                </div>
-              </div>
             </div>
           </AnimatedSection>
 
@@ -65,8 +37,8 @@ const AboutSection = () => {
 
             <h2 className="font-bold text-foreground leading-[1.1] mb-5"
               style={{ fontSize: "clamp(2.2rem, 3.8vw, 3.2rem)" }}>
-              Trusted Home Care<br />
-              Built on Compassion
+              Trusted home care<br />
+              built on compassion
             </h2>
 
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-7 max-w-[520px]">
@@ -85,20 +57,6 @@ const AboutSection = () => {
                 </li>
               ))}
             </ul>
-
-            <div className="grid grid-cols-2 gap-3 mb-9">
-              {stats.map(({ value, label, icon: Icon }) => (
-                <div key={label} className="el-card flex items-center gap-3 px-4 py-4">
-                  <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-foreground leading-none">{value}</p>
-                    <p className="text-xs text-muted-foreground mt-1 leading-tight">{label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
 
             <Link to="/about" className="el-btn-soft group">
               Learn More About Us <ArrowRight className="h-4 w-4 transition-transform" />

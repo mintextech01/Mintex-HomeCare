@@ -1,3 +1,4 @@
+import PhotoFacts from "@/components/PhotoFacts";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -100,7 +101,7 @@ const ServiceDetail = () => {
         ══════════════════════════════════════ */}
         <section className="pt-32 md:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
-            <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 xl:gap-16 items-center">
+            <div className="grid lg:grid-cols-[1.1fr_1fr] 2xl:grid-cols-[minmax(0,680px)_minmax(0,1fr)] gap-12 xl:gap-16 items-center">
 
               {/* Text */}
               <AnimatedSection>
@@ -124,8 +125,8 @@ const ServiceDetail = () => {
                 </div>
 
                 <h1 className="font-bold text-foreground leading-[1.07] mb-6" style={{ fontSize: "clamp(2.3rem, 5vw, 3.6rem)" }}>
-                  {page.heading[0]}<br />
-                  <span className="text-primary">{page.heading[1]}</span>
+                  {page.heading[0]}{" "}<br />
+                  {page.heading[1]}
                 </h1>
 
                 <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[560px]">{page.intro}</p>
@@ -154,9 +155,9 @@ const ServiceDetail = () => {
               </AnimatedSection>
 
               {/* Visual: admin photo if uploaded, otherwise a calm icon panel */}
-              <AnimatedSection delay={0.1} className="relative max-w-[520px] w-full mx-auto lg:mx-0 lg:justify-self-end">
-                <div className="el-card p-3">
-                  <div className="relative rounded-[16px] overflow-hidden aspect-[4/4.2]">
+              <AnimatedSection delay={0.1} className="relative max-w-[520px] 2xl:max-w-none w-full mx-auto lg:mx-0 lg:justify-self-end">
+                <div>
+                  <div className="relative rounded-[28px] overflow-hidden aspect-[4/4.2] 2xl:aspect-auto 2xl:h-[560px]">
                     {hasPhoto ? (
                       <img src={photo} alt={`MintexCare ${svc.name.toLowerCase()} at home`} className="w-full h-full object-cover" loading="eager" />
                     ) : (
@@ -168,32 +169,13 @@ const ServiceDetail = () => {
                         </div>
                       </div>
                     )}
-                    <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-background/95 px-5 py-4">
-                      <p className="text-muted-foreground text-sm mb-1 font-semibold">MintexCare</p>
-                      <p className="text-foreground font-bold text-lg leading-snug">{svc.name}</p>
-                    </div>
                   </div>
                 </div>
 
-                {/* Floating cards */}
-                <div className="el-chip absolute top-6 -left-2 sm:-left-8 z-10 px-4 py-3">
-                  <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                    <CalendarCheck className="w-5 h-5 text-accent-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-foreground leading-none">Free assessment</p>
-                    <p className="text-xs text-muted-foreground mt-1">In your home</p>
-                  </div>
-                </div>
-                <div className="el-chip absolute top-28 -left-2 sm:-left-8 z-10 px-4 py-3 hidden sm:flex">
-                  <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-5 h-5 text-background" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-foreground leading-none">{page.highlights[0].title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Care you can believe in</p>
-                  </div>
-                </div>
+                <PhotoFacts facts={[
+                  { icon: CalendarCheck, title: "Free assessment", text: "In your home" },
+                  { icon: ShieldCheck, title: page.highlights[0].title, text: "Care you can believe in" },
+                ]} />
               </AnimatedSection>
             </div>
           </div>
@@ -226,7 +208,7 @@ const ServiceDetail = () => {
             <div className="grid lg:grid-cols-[1fr_360px] gap-10 xl:gap-14 items-start">
               <div>
                 <AnimatedSection>
-                  <div className="el-eyebrow mb-3">What's Included</div>
+                  <div className="el-eyebrow mb-3">What's included</div>
                   <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">
                     How we help with {svc.name.split(" (")[0].toLowerCase()}
                   </h2>
@@ -282,7 +264,7 @@ const ServiceDetail = () => {
 
               {/* Is it right for you */}
               <AnimatedSection>
-                <div className="el-eyebrow mb-3">Is It Right for You?</div>
+                <div className="el-eyebrow mb-3">Is it right for you?</div>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">
                   Signs it may be time for help
                 </h2>
@@ -305,14 +287,12 @@ const ServiceDetail = () => {
               {/* How it works */}
               <AnimatedSection delay={0.1}>
                 <div className="el-card rounded-[28px] p-7 md:p-9 h-full">
-                  <div className="el-eyebrow mb-3">How It Works</div>
+                  <div className="el-eyebrow mb-3">How it works</div>
                   <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight mb-8">How to get started</h2>
                   <ol className="space-y-3">
                     {STEPS.map(({ icon: I, title, text }, i) => (
                       <li key={title} className="flex gap-4 bg-background rounded-2xl p-4">
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-accent">
-                          <I className="w-5 h-5 text-accent-foreground" />
-                        </div>
+                        <FeatureIcon icon={I} size="sm" className="shrink-0" />
                         <div>
                           <p className="text-sm font-bold text-primary mb-0.5">Step {i + 1}</p>
                           <p className="font-bold text-foreground mb-1">{title}</p>
@@ -378,7 +358,7 @@ const ServiceDetail = () => {
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
-                <div className="el-eyebrow mb-3">Related Services</div>
+                <div className="el-eyebrow mb-3">Related services</div>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Often combined with</h2>
               </div>
               <Link to="/services" className="el-btn-outline group self-start md:self-auto">
@@ -392,7 +372,7 @@ const ServiceDetail = () => {
                 return (
                   <AnimatedSection key={r.slug} delay={i * 0.06} className="h-full">
                     <Link to={`/services/${r.slug}`}
-                      className="group h-full flex flex-col el-card rounded-[24px] p-7 transition-shadow duration-300">
+                      className="group h-full flex flex-col el-card rounded-[20px] p-7 transition-shadow duration-300">
                       <FeatureIcon icon={RIcon} className="mb-6" />
                       <p className="text-sm font-semibold text-muted-foreground mb-2">{SERVICE_GROUP_LABEL[r.group]}</p>
                       <h3 className="text-xl font-bold text-foreground mb-2">{r.name}</h3>
@@ -414,7 +394,7 @@ const ServiceDetail = () => {
         <section className="pb-14 md:pb-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
-              <div className="rounded-[32px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
+              <div className="rounded-[28px] bg-accent px-6 py-12 sm:px-10 sm:py-16 md:px-16 text-center">
                 <div className="max-w-2xl mx-auto">
                   <div className="el-eyebrow mb-3">
                     <Clock className="w-3.5 h-3.5 text-primary" />

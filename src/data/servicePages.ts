@@ -20,7 +20,7 @@ export interface ServicePageContent {
 
 export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   "personal-care": {
-    heading: ["Personal Care", "at Home"],
+    heading: ["Personal care", "at home"],
     intro:
       "Everyday tasks like bathing and dressing can become hard after an illness, injury or simply with age. Our trained caregivers help with personal care respectfully and privately, so your loved one can stay clean, comfortable and safe in their own home.",
     imageKey: "svcPersonalCare",
@@ -56,7 +56,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "companion-care": {
-    heading: ["Companion Care", "& Homemaking"],
+    heading: ["Companion care", "& homemaking"],
     intro:
       "Loneliness and an untidy, unsafe home can affect health as much as illness. Our companion caregivers bring friendly conversation, help around the house and a reliable pair of hands for errands and appointments, so your loved one can stay independent at home.",
     imageKey: "svcCompanionCare",
@@ -92,7 +92,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "hourly-care": {
-    heading: ["Hourly Home Care", "on Your Schedule"],
+    heading: ["Hourly home care", "on your schedule"],
     intro:
       "Not every family needs around-the-clock help. With hourly care, a caregiver comes when you need one most, whether that's a morning routine, a few afternoons a week or evening help, and the plan can grow as needs change.",
     imageKey: "svcHourlyCare",
@@ -128,7 +128,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "live-in-24-hour-care": {
-    heading: ["Live-In & 24-Hour", "Home Care"],
+    heading: ["Live-in & 24-hour", "home care"],
     intro:
       "When your loved one shouldn't be alone, day or night, round-the-clock care at home is often the best alternative to a facility. We provide live-in caregivers and 24-hour shift care, supervised by our nurses, so someone is always there.",
     imageKey: "svcLiveInCare",
@@ -164,7 +164,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "respite-care": {
-    heading: ["Respite Care", "for Family Caregivers"],
+    heading: ["Respite care", "for family caregivers"],
     intro:
       "Caring for someone you love is rewarding, and exhausting. Respite care gives you a break: a trained caregiver steps in for a few hours, a weekend or a few weeks, so you can rest, work, travel or simply recharge, knowing your loved one is in good hands.",
     imageKey: "svcRespiteCare",
@@ -199,7 +199,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "post-surgery-care": {
-    heading: ["Post-Surgery &", "Hospital-to-Home Care"],
+    heading: ["Post-surgery &", "hospital-to-home care"],
     intro:
       "The first days and weeks after surgery or a hospital stay are when falls, missed medications and readmissions are most likely. We help your loved one get home safely and recover with the right mix of caregiver support and nurse visits, following the discharge plan.",
     imageKey: "svcPostSurgeryCare",
@@ -235,7 +235,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "skilled-nursing": {
-    heading: ["Skilled Nursing", "at Home"],
+    heading: ["Skilled nursing", "at home"],
     intro:
       "Some care can only be provided by a licensed nurse. Our registered nurses (RNs) and licensed practical nurses (LPNs) bring clinical care into the home, from assessments and chronic condition management to medical tasks ordered by your physician.",
     imageKey: "svcSkilledNursing",
@@ -271,7 +271,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "therapy-support": {
-    heading: ["Rehab & Therapy", "Support at Home"],
+    heading: ["Rehab & therapy", "support at home"],
     intro:
       "Getting stronger after surgery, a stroke, a fall or a long illness takes steady practice between therapy sessions. Our team supports your loved one's physical, occupational and speech therapy goals at home, so progress continues every day, not just on therapy days.",
     imageKey: "svcTherapySupport",
@@ -306,7 +306,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "wound-care-iv-therapy": {
-    heading: ["Wound Care", "& IV Therapy at Home"],
+    heading: ["Wound care", "& IV therapy at home"],
     intro:
       "Healing wounds and IV treatments no longer have to mean long stays in a hospital or clinic. Our licensed nurses provide wound care and IV infusion at home, following your physician's orders and watching closely for any signs of complications.",
     imageKey: "svcWoundCareIv",
@@ -345,7 +345,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   // Same conservative wording as therapy-support / wound-care-iv-therapy above.
 
   "physical-therapy": {
-    heading: ["Physical Therapy", "Support at Home"],
+    heading: ["Physical therapy", "support at home"],
     intro:
       "Rebuilding strength, balance and mobility takes regular practice, not just a session or two a week. Our team helps your loved one follow the home exercise plan from their licensed physical therapist safely, so progress continues every day.",
     imageKey: "svcPhysicalTherapy",
@@ -379,7 +379,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "occupational-therapy": {
-    heading: ["Occupational Therapy", "Support at Home"],
+    heading: ["Occupational therapy", "support at home"],
     intro:
       "After an illness, injury or stroke, everyday tasks like dressing, bathing and cooking can feel hard again. Our team helps your loved one practice these daily skills at home, following the plan from their licensed occupational therapist, so they can do more for themselves.",
     imageKey: "svcOccupationalTherapy",
@@ -413,7 +413,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "speech-therapy": {
-    heading: ["Speech Therapy", "Support at Home"],
+    heading: ["Speech therapy", "support at home"],
     intro:
       "Speaking, understanding and swallowing can be affected by a stroke, Parkinson's or other conditions. Our team helps your loved one practice the exercises from their licensed speech-language pathologist at home, with patience and encouragement.",
     imageKey: "svcSpeechTherapy",
@@ -445,7 +445,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "iv-therapy": {
-    heading: ["IV Therapy", "at Home"],
+    heading: ["IV therapy", "at home"],
     intro:
       "IV treatments no longer have to mean long stays in a hospital or trips to an infusion clinic. Our licensed nurses provide IV therapy at home, following your physician's orders and watching closely for any signs of complications.",
     imageKey: "svcIvTherapy",
@@ -478,7 +478,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "wound-care": {
-    heading: ["Wound Care", "at Home"],
+    heading: ["Wound care", "at home"],
     intro:
       "Healing wounds need regular, careful attention. Our licensed nurses provide wound assessment, dressing changes and treatment at home, following your physician's orders and watching closely for any signs of infection.",
     imageKey: "svcWoundCare",
@@ -511,7 +511,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "dementia-care": {
-    heading: ["Alzheimer's & Dementia", "Care at Home"],
+    heading: ["Alzheimer's & dementia", "care at home"],
     intro:
       "Memory loss changes daily life for the whole family. Our specially trained caregivers help your loved one stay safe, calm and as independent as possible at home, with familiar routines, patient support and supervision, while giving family caregivers the break they need.",
     imageKey: "svcDementiaCare",
@@ -548,7 +548,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
   },
 
   "medication-management": {
-    heading: ["Medication", "Management at Home"],
+    heading: ["Medication", "management at home"],
     intro:
       "Missed doses, double doses and confusing prescriptions are a common reason older adults end up back in hospital. We help keep medicines safe and on schedule, with nurse reviews, organized pill boxes and reminders from caregivers who notice when something isn't right.",
     imageKey: "svcMedicationManagement",

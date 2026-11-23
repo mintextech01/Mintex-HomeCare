@@ -20,7 +20,7 @@ export function BenefitCard({ benefit }: BenefitCardProps) {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="h-full"
     >
-      <Card className="h-full rounded-[24px] border-0 shadow-none bg-background transition-shadow duration-300 overflow-hidden group">
+      <Card className="h-full rounded-[20px] border-0 shadow-none bg-background transition-shadow duration-300 overflow-hidden group">
         <CardContent className="p-6 md:p-8 flex flex-col h-full">
           {/* Icon Container */}
           <FeatureIcon icon={IconComponent} className="mb-7" />

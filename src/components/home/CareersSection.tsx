@@ -11,15 +11,15 @@ const CareersSection = () => {
   <section className="py-12 md:py-16">
     <div className="container mx-auto px-6 md:px-10">
       <AnimatedSection>
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-14 items-center rounded-[32px] bg-accent p-4 md:p-6 lg:p-8">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-14 items-center rounded-[28px] bg-accent p-4 md:p-6 lg:p-8">
           <img
             src={siteImages.careers}
             alt="Healthcare team members"
-            className="rounded-[24px] w-full object-cover h-[280px] md:h-[420px]"
+            className="rounded-[20px] w-full object-cover h-[280px] md:h-[420px]"
             loading="lazy"
           />
           <div className="px-2 pb-4 md:pb-0 md:pr-4">
-            <div className="el-eyebrow mb-3">Join Us</div>
+            <div className="el-eyebrow mb-3">Join us</div>
             <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-accent-foreground mb-3 leading-tight">Join the MintexCare team</h2>
             <p className="text-base text-accent-foreground/80 leading-relaxed mb-6 font-sans">
               Are you a compassionate, dedicated caregiver looking for a rewarding career? MintexCare is always looking for qualified home health aides, certified nursing assistants, and licensed practical nurses to join our growing team.

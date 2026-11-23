@@ -23,7 +23,7 @@ const ServicesSection = () => {
         {/* Heading — left, with "View all" on the right */}
         <AnimatedSection className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div className="max-w-2xl">
-            <div className="el-eyebrow mb-3">What We Offer</div>
+            <div className="el-eyebrow mb-3">What we offer</div>
             <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground mb-3 leading-tight">
               Our home care services
             </h2>
@@ -38,26 +38,19 @@ const ServicesSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map((service, i) => {
-            const Icon = service.icon;
             return (
               <AnimatedSection key={service.label} delay={i * 0.06} className="h-full">
                 <Link
                   to={service.link}
-                  className="group flex flex-col h-full rounded-[24px] bg-background p-3 transition-shadow duration-300"
+                  className="group flex flex-col h-full rounded-[20px] bg-background p-3 transition-shadow duration-300"
                 >
-                  <div className="relative h-[220px] md:h-[240px] rounded-[18px] overflow-hidden">
+                  <div className="relative h-[220px] md:h-[240px] rounded-[16px] overflow-hidden">
                     <img
                       src={service.image}
                       alt={service.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out"
                       loading="lazy"
                     />
-                    <div className="absolute top-3 left-3 flex items-center gap-2 rounded-full bg-background/95 px-3.5 py-1.5 shadow-sm">
-                      <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="text-foreground text-xs font-semibold font-sans leading-none">
-                        {service.label}
-                      </span>
-                    </div>
                   </div>
 
                   <div className="flex flex-col flex-1 px-3 pt-5 pb-3">

@@ -59,7 +59,7 @@ export function JobsSection({
       <div className="container mx-auto px-6 md:px-10">
         {/* Header */}
         <AnimatedSection className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <div className="el-eyebrow mb-3">Career Opportunities</div>
+          <div className="el-eyebrow mb-3">Career opportunities</div>
           <h2 className="heading-h2 mb-4 text-balance">
             {title}
           </h2>

@@ -42,18 +42,11 @@ const HowItWorksSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.65 }}
           >
-            <div className="el-eyebrow mb-3">Our Process</div>
+            <div className="el-eyebrow mb-3">Our process</div>
             <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
               How to get started
             </h2>
           </motion.div>
-          {/* Decorative watermark. Drawn by CSS (::before) rather than as text, so it isn't treated as
-              low-contrast content by accessibility checks. */}
-          <div
-            aria-hidden="true"
-            data-watermark="04"
-            className="hidden md:block text-[100px] lg:text-[140px] font-serif font-bold leading-none select-none pointer-events-none text-foreground/[0.06] before:content-[attr(data-watermark)]"
-          />
         </div>
 
         {/* ── Steps ── */}
@@ -66,11 +59,11 @@ const HowItWorksSection = () => {
                 initial={{ opacity: 0, y: 12 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="rounded-[24px] bg-background p-6 md:p-7"
+                className="rounded-[20px] bg-background p-6 md:p-7"
               >
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between gap-3 mb-6">
                   <FeatureIcon icon={Icon} />
-                  <span className="text-sm font-bold text-primary">Step {i + 1}</span>
+                  <span className="rounded-full bg-accent px-3.5 py-1 text-sm font-bold text-primary">Step {i + 1}</span>
                 </div>
                 <h3 className="font-serif font-bold text-foreground text-xl mb-2 leading-snug">
                   {step.title}

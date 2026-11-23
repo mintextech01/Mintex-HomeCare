@@ -1,40 +1,11 @@
 import { Link } from "react-router-dom";
-import { Phone, ShieldCheck, ArrowRight, Clock, MapPin, Users, Award, HeartPulse, CheckCircle2 } from "lucide-react";
+import { Phone, ShieldCheck, ArrowRight, Clock, MapPin, Users, Award, CheckCircle2 } from "lucide-react";
+import PhotoFacts from "@/components/PhotoFacts";
 import { motion } from "@/lib/motion";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PENDING_IMAGE } from "@/config/siteImageConfig";
 
 const ease = [0.22, 1, 0.36, 1] as const;
-
-/* ─── small floating info chip (sits over a photo) ─────────────────────────── */
-const InfoChip = ({
-  icon,
-  value,
-  label,
-  className = "",
-  delay = 0,
-}: {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  className?: string;
-  delay?: number;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay, ease }}
-    className={`el-chip absolute z-10 ${className}`}
-  >
-    <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-      {icon}
-    </div>
-    <div>
-      <p className="text-sm font-bold text-foreground leading-none">{value}</p>
-      <p className="text-[11px] text-muted-foreground mt-1 leading-none">{label}</p>
-    </div>
-  </motion.div>
-);
 
 /* ─── photo in the band under the hero ───────────────────────────────────────── */
 /* The band is hidden below lg: <picture> + media gives smaller screens the 1x1 placeholder
@@ -84,23 +55,23 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.05, ease }}
-              className="el-pill mb-6"
+              className="el-eyebrow mb-5"
             >
-              <HeartPulse className="w-4 h-4 text-primary" />
               Trusted Home Care · Edison, NJ
             </motion.div>
 
             <motion.h1
+              data-keep-breaks
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1, ease }}
               className="text-4xl sm:text-5xl md:text-6xl xl:text-[4.25rem] font-serif font-bold text-foreground leading-[1.08] mb-6"
             >
               Compassionate
-              <br />
+              {" "}<br />
               Home Care
-              <br />
-              <span className="text-primary">in New Jersey</span>
+              {" "}<br />
+              in New Jersey
             </motion.h1>
 
             {/* Visible from the first frame (slide only, no fade from 0): this paragraph is the
@@ -160,8 +131,8 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2, ease }}
             className="relative hidden lg:block"
           >
-            <div className="el-card p-3">
-              <div className="relative rounded-[16px] overflow-hidden w-full h-[560px] 2xl:h-[600px]">
+            <div>
+              <div className="relative rounded-[28px] overflow-hidden w-full h-[520px] 2xl:h-[560px]">
                 {/* Desktop LCP image. <picture> + media: the card is hidden below lg, so smaller
                     screens get the 1x1 placeholder instead of downloading the photo. */}
                 <picture>
@@ -179,20 +150,12 @@ const HeroSection = () => {
                 </picture>
               </div>
             </div>
-            <InfoChip
-              icon={<Award className="w-5 h-5" />}
-              value="10+ Years"
-              label="Trusted Experience"
-              className="top-8 -left-8"
-              delay={0.6}
-            />
-            <InfoChip
-              icon={<Clock className="w-5 h-5" />}
-              value="24/7"
-              label="Care Available"
-              className="bottom-8 -left-8"
-              delay={0.75}
-            />
+            {/* The facts that used to float over the photo, now in a calm row under it (same text). */}
+            <PhotoFacts className="mt-5" facts={[
+              { icon: Award, title: "10+ Years", text: "Trusted Experience" },
+              { icon: Clock, title: "24/7", text: "Care Available" },
+              { icon: Users, title: "500+", text: "Happy Families" },
+            ]} />
           </motion.div>
         </div>
 
@@ -203,21 +166,14 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.35, ease }}
           className="hidden lg:grid grid-cols-12 gap-4 mt-14"
         >
-          <div className="col-span-6 h-[320px] rounded-[24px] overflow-hidden group">
+          <div className="col-span-6 h-[320px] rounded-[28px] overflow-hidden group">
             <BandPhoto src={imgs.topLeft} alt="Caring professional" />
           </div>
-          <div className="col-span-3 h-[320px] rounded-[24px] overflow-hidden group">
+          <div className="col-span-3 h-[320px] rounded-[28px] overflow-hidden group">
             <BandPhoto src={imgs.bottomLeft} alt="Senior receiving care" />
           </div>
-          <div className="relative col-span-3 h-[320px] rounded-[24px] overflow-hidden group">
+          <div className="col-span-3 h-[320px] rounded-[28px] overflow-hidden group">
             <BandPhoto src={imgs.bottomRight} alt="Compassionate home care" />
-            <InfoChip
-              icon={<Users className="w-5 h-5" />}
-              value="500+"
-              label="Happy Families"
-              className="bottom-4 left-4"
-              delay={0.9}
-            />
           </div>
         </motion.div>
       </div>

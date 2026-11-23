@@ -1,3 +1,4 @@
+import { FeatureIcon } from "@/components/Feature";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -35,9 +36,7 @@ const NotFound = () => {
           <div className="grid sm:grid-cols-3 gap-4 mb-10 text-left">
             {LINKS.map(({ to, icon: I, label, text }) => (
               <Link key={to} to={to} className="group el-card p-5 transition-shadow">
-                <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors">
-                  <I className="w-5 h-5 text-accent-foreground transition-colors" />
-                </span>
+                <FeatureIcon icon={I} size="sm" className="mb-4" />
                 <span className="block font-bold text-foreground mb-1">{label}</span>
                 <span className="block text-sm text-muted-foreground leading-snug">{text}</span>
               </Link>

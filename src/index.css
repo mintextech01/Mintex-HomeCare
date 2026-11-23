@@ -266,6 +266,17 @@
     font-size: 1rem;
     line-height: 1.6;
   }
+  /* Page titles: hand-placed <br> line breaks suit desktop, but on phones they leave single words alone on a line
+     ("Reliable staffing / for / NJ care facilities"). Phones ignore them and balance the lines instead. */
+  h1 { text-wrap: balance; }
+  @media (max-width: 639px) {
+    .theme-el h1:not([data-keep-breaks]) br { display: none; }
+  }
+  /* Form fields: one size everywhere (inputs were 18px on phones / 14px on desktop, selects and textareas 14px).
+     16px also stops iPhones zooming in when a field is tapped. */
+  .theme-el :is(input:not([type="checkbox"]):not([type="radio"]), textarea, button[role="combobox"]) {
+    font-size: 1rem;
+  }
 
   strong, b { font-weight: 700; }
 }
@@ -403,11 +414,6 @@
     content: "";
     @apply block h-0.5 w-10 rounded-full bg-primary;
   }
-  /* The original pill badge, kept only on the home hero. */
-  .el-pill {
-    @apply inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface
-           px-3.5 py-1.5 text-xs font-semibold font-sans text-foreground/80;
-  }
   /* Style tile buttons: rounded rectangles, 48px minimum height. */
   .el-btn {
     @apply inline-flex items-center justify-center gap-2 rounded-xl min-h-12 px-7 text-base font-bold font-sans
@@ -420,9 +426,6 @@
   .el-btn-outline { @apply el-btn border-2 border-primary bg-background text-primary; }
   /* Style tile card: white, hairline border, soft rounded corners */
   .el-card        { @apply rounded-[20px] bg-card border border-border; }
-  .el-chip {
-    @apply flex items-center gap-2.5 rounded-2xl bg-background/95 px-3.5 py-2.5 shadow-lg border border-border/60;
-  }
 }
 
 /* ════════════════════════════════════════

@@ -1,6 +1,7 @@
+import { FeatureIcon } from "@/components/Feature";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Phone, Menu, X, ChevronDown, MessageCircle, Briefcase, MapPin, ArrowRight, Clock, Building2, Search, ListChecks, HelpCircle, Mail, ClipboardList, Newspaper, Calculator, Wallet, Receipt, Heart, ShieldCheck, Quote } from "lucide-react";
+import { Phone, Menu, X, ChevronDown, MessageCircle, Briefcase, MapPin, ArrowRight, Clock, Building2, Search, ListChecks, HelpCircle, Mail, ClipboardList, Newspaper, Calculator, Wallet, Receipt, Heart, ShieldCheck, Quote, type LucideIcon } from "lucide-react";
 import logo from "@/assets/Mintex-care-logo.svg";
 import { motion } from "@/lib/motion";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -57,9 +58,7 @@ const ServicesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
           {SERVICE_INDEX.filter(s => s.group === group).map(s => (
             <li key={s.slug}>
               <Link to={`/services/${s.slug}`} className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors">
-                <span className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0 transition-colors">
-                  <s.icon className="w-[18px] h-[18px] text-accent-foreground transition-colors" />
-                </span>
+                <FeatureIcon icon={s.icon} size="xs" className="shrink-0" />
                 <span className="min-w-0">
                   <span className="block text-sm font-semibold text-foreground transition-colors">{s.name}</span>
                   <span className="text-xs text-muted-foreground leading-snug line-clamp-1">{s.short}</span>
@@ -125,17 +124,20 @@ const COST_LINKS = [
   { to: "/paying-for-care",             icon: Receipt,    title: "Costs & Payment overview", text: "How pricing works, from first call to quote" },
 ];
 
+/** Dropdown link: open row (no border box) with the icon beside the text and a soft hover background. */
+const PanelLink = ({ to, icon: I, title, text }: { to: string; icon: LucideIcon; title: string; text: string }) => (
+  <Link to={to} className="group flex items-start gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-surface">
+    <FeatureIcon icon={I} size="sm" className="shrink-0" />
+    <span className="min-w-0">
+      <span className="block font-semibold text-foreground group-hover:text-primary transition-colors">{title}</span>
+      <span className="block text-sm text-muted-foreground mt-0.5 leading-snug">{text}</span>
+    </span>
+  </Link>
+);
+
 const CostsPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
-    {COST_LINKS.map(({ to, icon: I, title, text }) => (
-      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 transition-colors">
-        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors">
-          <I className="w-5 h-5 text-accent-foreground transition-colors" />
-        </span>
-        <span className="font-semibold text-foreground transition-colors">{title}</span>
-        <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
-      </Link>
-    ))}
+    {COST_LINKS.map(l => <PanelLink key={l.to} {...l} />)}
     <div className={PROMO_CARD}>
       <p className="relative text-sm font-semibold text-background/70 mb-2">Free, no obligation</p>
       <p className="relative text-lg font-bold leading-snug mb-4">Get a clear, written quote</p>
@@ -154,15 +156,7 @@ const ABOUT_LINKS = [
 
 const AboutPanel = () => (
   <div className="grid grid-cols-[1fr_1fr_1fr_280px] gap-5">
-    {ABOUT_LINKS.map(({ to, icon: I, title, text }) => (
-      <Link key={to} to={to} className="group flex flex-col rounded-2xl border border-border p-5 transition-colors">
-        <span className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center mb-4 transition-colors">
-          <I className="w-5 h-5 text-accent-foreground transition-colors" />
-        </span>
-        <span className="font-semibold text-foreground transition-colors">{title}</span>
-        <span className="text-xs text-muted-foreground mt-1 leading-snug">{text}</span>
-      </Link>
-    ))}
+    {ABOUT_LINKS.map(l => <PanelLink key={l.to} {...l} />)}
     <div className={PROMO_CARD}>
       <ShieldCheck className="relative w-8 h-8 mb-3" />
       <p className="relative text-lg font-bold leading-snug">Licensed by the State of New Jersey</p>
@@ -173,18 +167,8 @@ const AboutPanel = () => (
 
 const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
   <div className="grid grid-cols-[1fr_280px] gap-5">
-    <div className="grid grid-cols-3 gap-3">
-      {RESOURCE_LINKS.map(({ to, icon: I, title, text }) => (
-        <Link key={to} to={to} className="group flex items-start gap-3 rounded-2xl border border-border p-4 transition-colors">
-          <span className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0 transition-colors">
-            <I className="w-5 h-5 text-accent-foreground transition-colors" />
-          </span>
-          <span className="min-w-0">
-            <span className="block font-semibold text-sm text-foreground transition-colors">{title}</span>
-            <span className="block text-xs text-muted-foreground mt-0.5 leading-snug">{text}</span>
-          </span>
-        </Link>
-      ))}
+    <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+      {RESOURCE_LINKS.map(l => <PanelLink key={l.to} {...l} />)}
     </div>
     <div className={PROMO_CARD}>
       <p className="relative text-sm font-semibold text-background/70 mb-2">Still have questions?</p>

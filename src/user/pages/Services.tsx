@@ -1,3 +1,4 @@
+import StatsRow from "@/components/StatsRow";
 import { FeatureIcon } from "@/components/Feature";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -11,10 +12,10 @@ import { useEffect } from "react";
 import { SERVICE_INDEX, SERVICE_GROUP_LABEL, type ServiceGroup, type ServiceIndexEntry } from "@/data/serviceIndex";
 
 const stats = [
-  { value: "500+", label: "Families Served",  icon: Users       },
-  { value: "99%",  label: "Satisfying Care",   icon: Star        },
-  { value: "24/7", label: "Always Available",  icon: Clock       },
-  { value: "10+",  label: "Years of Service",  icon: ShieldCheck },
+  { value: "500+", label: "Families served",  icon: Users       },
+  { value: "99%",  label: "Satisfying care",   icon: Star        },
+  { value: "24/7", label: "Always available",  icon: Clock       },
+  { value: "10+",  label: "Years of service",  icon: ShieldCheck },
 ];
 
 /* ── Service card (links to the service's own page) ── */
@@ -24,7 +25,7 @@ const ServiceCard = ({ s, i, onSurface }: { s: ServiceIndexEntry; i: number; onS
     <AnimatedSection delay={Math.min(i, 4) * 0.06} className="h-full">
       <Link
         to={`/services/${s.slug}`}
-        className={`group h-full flex flex-col rounded-[24px] p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 ${
+        className={`group h-full flex flex-col rounded-[20px] p-7 transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 ${
           onSurface ? "bg-background" : "bg-surface"
         }`}
       >
@@ -97,10 +98,10 @@ const Services = () => {
         <section className="pt-32 lg:pt-40 pb-12 md:pb-14">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="text-center max-w-3xl mx-auto">
-              <div className="el-eyebrow mb-3">Our Services</div>
+              <div className="el-eyebrow mb-3">Our services</div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.05] tracking-tight mb-6">
-                Home Care Services<br />
-                <span className="text-primary">in Edison &amp; Central&nbsp;NJ</span>
+                Home care services{" "}<br />
+                in Edison &amp; Central&nbsp;NJ
               </h1>
               <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
                 We are dedicated to providing exceptional home care through a compassionate,
@@ -115,21 +116,7 @@ const Services = () => {
                 </a>
               </div>
             </AnimatedSection>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 max-w-5xl mx-auto">
-              {stats.map(({ value, label, icon: Icon }, i) => (
-                <AnimatedSection key={label} delay={i * 0.06}>
-                  <div className="el-card flex flex-col justify-between gap-6 p-5 md:p-6 min-h-[140px]">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-3xl md:text-4xl font-bold text-foreground leading-none">{value}</p>
-                      <div className="w-9 h-9 rounded-full bg-background flex items-center justify-center shrink-0">
-                        <Icon className="w-4 h-4 text-primary" />
-                      </div>
-                    </div>
-                    <p className="text-sm font-semibold text-foreground/80 leading-snug">{label}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
+            <StatsRow stats={stats} className="max-w-6xl mx-auto" />
           </div>
         </section>
 
@@ -157,7 +144,7 @@ const Services = () => {
         <section id="specialized-care" className="py-14 md:py-20">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection className="text-center mb-12 md:mb-14">
-              <div className="el-eyebrow mb-3">Specialized Care</div>
+              <div className="el-eyebrow mb-3">Specialized care</div>
               <h2 className="text-3xl md:text-[2.625rem] font-bold text-foreground mb-3 leading-tight">
                 Specialized &amp; clinical services
               </h2>
@@ -174,7 +161,8 @@ const Services = () => {
         ══════════════════════════════════════ */}
         <section className="pb-6">
           <div className="container mx-auto px-6 md:px-10">
-            <div className="rounded-[28px] bg-foreground text-background px-6 py-10 md:px-12">
+            {/* Open row between hairlines (no heavy dark box). */}
+            <div className="border-y border-border py-10">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
                   { icon: ShieldCheck, title: "Building Trust",       desc: "We earn your confidence through consistent, quality care every single day." },
@@ -182,12 +170,10 @@ const Services = () => {
                   { icon: CheckCircle, title: "Security and Privacy",  desc: "Your health information is always handled with the highest standards."      },
                 ].map(({ icon: Icon, title, desc }) => (
                   <AnimatedSection key={title} className="flex gap-4 items-start">
-                    <div className="w-11 h-11 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-accent-foreground" />
-                    </div>
+                    <FeatureIcon icon={Icon} size="sm" className="shrink-0" />
                     <div>
-                      <h4 className="font-bold text-sm mb-1">{title}</h4>
-                      <p className="text-xs text-background/70 leading-relaxed">{desc}</p>
+                      <h4 className="font-bold text-foreground text-base mb-1">{title}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
                     </div>
                   </AnimatedSection>
                 ))}
@@ -202,8 +188,8 @@ const Services = () => {
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-6 md:px-10">
             <AnimatedSection>
-              <div className="rounded-[32px] bg-accent px-6 py-14 md:px-16 text-center">
-                <div className="el-eyebrow mb-3">Let Us Help</div>
+              <div className="rounded-[28px] bg-accent px-6 py-14 md:px-16 text-center">
+                <div className="el-eyebrow mb-3">Let us help</div>
                 <h2 className="text-3xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">
                   Need help choosing a service?
                 </h2>

@@ -276,7 +276,7 @@ const NursingSection = () => {
 
         {/* Heading */}
         <AnimatedSection className="text-center mb-12 max-w-2xl mx-auto">
-          <div className="el-eyebrow mb-3">Specialized Care</div>
+          <div className="el-eyebrow mb-3">Specialized care</div>
           <h2 className="text-3xl md:text-[2.625rem] font-serif font-bold text-foreground leading-tight">
             Nursing care at home
           </h2>
