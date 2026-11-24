@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import StatsRow from "@/components/StatsRow";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
@@ -24,7 +25,7 @@ const STATS = [
   { icon: Users, value: "500+", label: "Families served" },
   { icon: Award, value: "10+", label: "Years of care" },
   { icon: Star,  value: "99%", label: "Client satisfaction" },
-  { icon: Clock, value: "24/7", label: "Always available" },
+  { icon: Clock, value: "24/7", label: "Care available" },
 ];
 
 /* ════════════════════════════════════════════
@@ -82,7 +83,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
               <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground whitespace-nowrap">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
@@ -103,7 +104,7 @@ const PILLARS = [
   { icon: UserCheck, title: "Thoroughly screened caregivers", text: "Every caregiver goes through a seven-step screening before they ever meet your family." },
   { icon: ClipboardList, title: "Personalized care plans", text: "Care is built around your loved one's needs, routines and preferences, never a one-size-fits-all package." },
   { icon: Brain, title: "Specially trained for memory care", text: "Caregivers supporting clients with Alzheimer's and dementia receive dementia care training." },
-  { icon: Clock, title: "Here 24/7", text: "Someone is always available to talk, day or night, every day of the year." },
+  { icon: Clock, title: "Easy to reach", text: "Call us Monday to Friday, 9 AM – 5 PM." },
 ];
 
 const SCREENING = [
@@ -125,7 +126,7 @@ const CHECKLIST = [
   "Dementia-trained caregivers",
   "Free consultation and in-home assessment",
   "Written care plan and clear pricing before care starts",
-  "Available 24 hours a day, 7 days a week",
+  "Care available 24 hours a day, 7 days a week",
 ];
 
 const WHY_FAQS = [
@@ -150,7 +151,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
               </h1>
               <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8 max-w-[580px]">
                 Letting someone into your home to care for a person you love takes trust. Here's how MintexCare earns it:
-                state licensing, nurse supervision, thorough caregiver screening and support around the clock.
+                state licensing, nurse supervision, thorough caregiver screening and care around the clock.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/free-consultation" className="el-btn-primary group">
@@ -171,7 +172,7 @@ const WhyMintexCare = ({ tel, phone }: { tel: string; phone: string }) => {
                 <p className="text-sm text-background/60 font-semibold mb-2">MintexCare is</p>
                 <p className="text-2xl font-bold leading-snug mb-7">Licensed by the State<br />of New Jersey</p>
                 <ul className="space-y-2.5 text-left max-w-[260px] mx-auto">
-                  {["Bonded & insured", "RN-supervised care plans", "7-step caregiver screening", "Available 24/7"].map(t => (
+                  {["Bonded & insured", "RN-supervised care plans", "7-step caregiver screening", "Office: Mon–Fri, 9–5"].map(t => (
                     <li key={t} className="flex items-center gap-2.5 text-base text-background/85">
                       <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0">
                         <Check className="w-3 h-3 text-accent-foreground" strokeWidth={3} />

@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import PhotoFacts from "@/components/PhotoFacts";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
@@ -33,7 +34,7 @@ const PROMISES = [
   { icon: ShieldCheck, text: "NJ licensed, bonded & insured" },
   { icon: UserCheck,   text: "Background-checked, trained caregivers" },
   { icon: HeartPulse,  text: "Care plans overseen by registered nurses" },
-  { icon: Clock,       text: "Someone to talk to 24/7" },
+  { icon: Clock,       text: "Office open Mon–Fri, 9 AM – 5 PM" },
 ];
 
 const SERVICE_SCHEMA_ID = "service-schema";
@@ -144,7 +145,7 @@ const ServiceDetail = () => {
                   {[
                     { icon: ShieldCheck, label: "NJ State Licensed" },
                     { icon: Award,       label: "Bonded & Insured" },
-                    { icon: Clock,       label: "Available 24/7" },
+                    { icon: Clock,       label: "Office: Mon–Fri, 9–5" },
                   ].map(({ icon: I, label }) => (
                     <div key={label} className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
                       <I className="w-4 h-4 text-primary" />
@@ -398,7 +399,7 @@ const ServiceDetail = () => {
                 <div className="max-w-2xl mx-auto">
                   <div className="el-eyebrow mb-3">
                     <Clock className="w-3.5 h-3.5 text-primary" />
-                    We're here 24/7
+                    We're here Mon–Fri, 9 AM – 5 PM
                   </div>
                   <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">
                     Talk to us about {svc.name.split(" (")[0].toLowerCase()} for your loved one
@@ -412,7 +413,7 @@ const ServiceDetail = () => {
                     <a href={`tel:+1${tel}`} className="el-btn-primary">
                       <Phone className="h-4 w-4" /> Call {contactInfo.phone}
                     </a>
-                    <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
+                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
                       className="el-btn bg-background text-foreground">
                       <MessageCircle className="h-4 w-4" /> WhatsApp Us
                     </a>

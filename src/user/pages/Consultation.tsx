@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
@@ -162,7 +163,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
                 {[
                   { icon: ShieldCheck, label: "NJ State Licensed" },
                   { icon: Award,       label: "Bonded & Insured" },
-                  { icon: Clock,       label: "Available 24/7" },
+                  { icon: Clock,       label: "Office: Mon–Fri, 9–5" },
                 ].map(({ icon: I, label }) => (
                   <div key={label} className="flex items-center gap-2 text-sm font-semibold text-foreground/80"><I className="w-4 h-4 text-primary" /><span>{label}</span></div>
                 ))}
@@ -238,7 +239,7 @@ const FreeConsultation = ({ tel, phone }: { tel: string; phone: string }) => {
                     <a href={`tel:+1${tel}`} className="inline-flex items-center gap-1.5 font-semibold rounded-full px-4 py-2 bg-accent text-accent-foreground whitespace-nowrap">
                       <Phone className="h-4 w-4" /> {phone}
                     </a>
-                    <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-semibold rounded-full px-4 py-2 border border-border text-foreground">
+                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-semibold rounded-full px-4 py-2 border border-border text-foreground">
                       <MessageCircle className="h-4 w-4" /> WhatsApp
                     </a>
                   </div>
@@ -309,7 +310,7 @@ const ThankYou = ({ tel, phone }: { tel: string; phone: string }) => {
               <FeatureIcon icon={Phone} size="sm" className="shrink-0" />
               <div className="flex-1">
                 <p className="font-bold text-foreground">{urgent}, call us now</p>
-                <p className="text-sm text-muted-foreground">We're available 24 hours a day, 7 days a week.</p>
+                <p className="text-sm text-muted-foreground">We're available Monday to Friday, 9 AM – 5 PM.</p>
               </div>
               <a href={`tel:+1${tel}`} className="el-btn-primary whitespace-nowrap">
                 <Phone className="h-4 w-4" /> {phone}

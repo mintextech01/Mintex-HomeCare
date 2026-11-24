@@ -30,7 +30,7 @@ const NotFound = () => {
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">We couldn't find that page</h1>
           <p className="text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
-            The page may have moved or the link may be out of date. These pages might help, or call us any time.
+            The page may have moved or the link may be out of date. These pages might help, or call us Monday to Friday, 9 AM – 5 PM.
           </p>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-10 text-left">

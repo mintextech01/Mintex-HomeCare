@@ -20,7 +20,7 @@ const FloatingCTA = () => {
       <div className="hidden md:block fixed bottom-0 left-0 right-0 z-30 bg-primary/95 backdrop-blur-sm border-t border-white/10 py-3 animate-fade-in">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <p className="text-primary-foreground text-sm font-sans">
-            Need compassionate home care? <span className="font-semibold">We're here 24/7.</span>
+            Need compassionate home care? <span className="font-semibold">Call us Mon–Fri, 9 AM – 5 PM.</span>
           </p>
           <div className="flex items-center gap-3">
             <a href="tel:+17322685112" className="text-primary-foreground text-sm font-medium flex items-center gap-1.5 font-sans transition-colors">

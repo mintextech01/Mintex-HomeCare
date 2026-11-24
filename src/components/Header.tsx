@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -172,7 +173,7 @@ const ResourcesPanel = ({ tel, phone }: { tel: string; phone: string }) => (
     </div>
     <div className={PROMO_CARD}>
       <p className="relative text-sm font-semibold text-background/70 mb-2">Still have questions?</p>
-      <p className="relative text-lg font-bold leading-snug mb-4">We're here 24/7</p>
+      <p className="relative text-lg font-bold leading-snug mb-4">We're here Mon–Fri, 9–5</p>
       <a href={`tel:+1${tel}`} className="relative mt-auto flex items-center justify-center gap-2 text-sm font-bold rounded-xl px-4 min-h-12 bg-accent text-primary transition-colors">
         <Phone className="h-4 w-4" /> {phone}
       </a>
@@ -210,7 +211,7 @@ const Header = () => {
   const { isDark } = useTheme();
   const { contactInfo } = useAdmin();
   const phoneLink = contactInfo.phone.replace(/[^\d+]/g, "");
-  const whatsapp = `https://wa.me/1${phoneLink}`;
+  const whatsapp = WHATSAPP_URL;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -276,7 +277,7 @@ const Header = () => {
             </Link>
             <div className="flex items-center gap-5">
               <a href={`tel:+1${phoneLink}`} className="flex items-center gap-1.5 font-semibold text-foreground transition-colors">
-                <Clock className="h-3.5 w-3.5" /> 24/7: {contactInfo.phone}
+                <Clock className="h-3.5 w-3.5" /> Mon–Fri 9–5: {contactInfo.phone}
               </a>
               <span className="h-3.5 w-px bg-border" />
               <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 transition-colors">
@@ -555,7 +556,7 @@ const Header = () => {
               href={`tel:+1${phoneLink}`}
               className="flex items-center justify-center gap-2 text-sm font-semibold px-3 py-3.5 rounded-full bg-accent text-accent-foreground"
             >
-              <Phone className="h-4 w-4 flex-shrink-0" /> Call 24/7
+              <Phone className="h-4 w-4 flex-shrink-0" /> Call us
             </a>
             <a
               href={whatsapp} target="_blank" rel="noopener noreferrer"

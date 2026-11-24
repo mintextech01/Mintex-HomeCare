@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
@@ -147,7 +148,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
               <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground whitespace-nowrap">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="el-btn bg-background text-foreground whitespace-nowrap">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>

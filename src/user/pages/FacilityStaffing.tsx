@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import PhotoFacts from "@/components/PhotoFacts";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
@@ -82,7 +83,7 @@ const CtaBanner = ({ tel, phone, title, text }: { tel: string; phone: string; ti
               <a href={`tel:+1${tel}`} className="el-btn bg-background text-foreground">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
                 className="el-btn bg-background text-foreground">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
@@ -183,7 +184,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
                 {[
                   { icon: ShieldCheck, label: "Screened & verified staff" },
                   { icon: Users,       label: "HHA · CNA · LPN · RN" },
-                  { icon: Clock,       label: "Available 24/7" },
+                  { icon: Clock,       label: "Office: Mon–Fri, 9–5" },
                 ].map(({ icon: I, label }) => (
                   <div key={label} className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
                     <I className="w-4 h-4 text-primary" /><span>{label}</span>
@@ -358,7 +359,7 @@ const Overview = ({ tel, phone }: { tel: string; phone: string }) => {
 
       <CtaBanner tel={tel} phone={phone}
         title="Need coverage for an upcoming shift?"
-        text="Send us your staffing request and our team will follow up to confirm details, or call us any time for urgent coverage." />
+        text="Send us your staffing request and our team will follow up to confirm details, or call us Monday to Friday, 9 AM – 5 PM for urgent coverage." />
     </>
   );
 };
@@ -692,7 +693,7 @@ const RequestStaff = ({ tel, phone }: { tel: string; phone: string }) => {
               <div className="rounded-[28px] p-7 bg-foreground text-background">
                 <p className="text-sm font-semibold text-background/60 mb-2">Urgent shift?</p>
                 <p className="text-xl font-bold mb-2 leading-snug">Call our staffing line</p>
-                <p className="text-background/70 text-sm mb-6">Available 24/7 for same-day and next-day coverage requests.</p>
+                <p className="text-background/70 text-sm mb-6">Monday to Friday, 9 AM – 5 PM, for same-day and next-day coverage requests.</p>
                 <a href={`tel:+1${tel}`} className="el-btn bg-accent text-accent-foreground w-full">
                   <Phone className="h-4 w-4" /> {phone}
                 </a>

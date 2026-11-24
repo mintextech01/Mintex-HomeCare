@@ -18,9 +18,9 @@ export interface PageMeta {
 
 const pageMeta: Record<string, PageMeta> = {
   "/": {
-    title: "Home Care in Edison, NJ | 24/7 In-Home Care | MintexCare",
+    title: "Home Care in Edison, NJ | In-Home Care | MintexCare",
     description:
-      "Home care agency in Edison, NJ: personal care, companion care, skilled nursing and live-in care across Central New Jersey, 24/7. Call (732) 268-5112.",
+      "Home care agency in Edison, NJ: personal care, companion care, skilled nursing and live-in care across Central New Jersey. Call (732) 268-5112.",
     canonical: "https://mintexcare.com/",
   },
   "/about": {
@@ -47,7 +47,7 @@ const pageMeta: Record<string, PageMeta> = {
   "/contact": {
     title: "Contact MintexCare | Home Care in Edison, NJ",
     description:
-      "Visit MintexCare at 2163 Oak Tree Road, Edison, NJ, call (732) 268-5112, or send a message for a free home care consultation. Available 24/7.",
+      "Visit MintexCare at 2163 Oak Tree Road, Edison, NJ, call (732) 268-5112, or send a message for a free home care consultation. Office hours: Mon–Fri, 9 AM – 5 PM.",
     canonical: "https://mintexcare.com/contact",
     crumb: "Contact",
   },
@@ -134,7 +134,7 @@ const pageMeta: Record<string, PageMeta> = {
   "/about/why-mintexcare": {
     title: "Why MintexCare | Licensed, Nurse-Supervised Home Care in NJ",
     description:
-      "Why families trust MintexCare: licensed by the State of New Jersey, bonded and insured, RN-supervised care plans, a 7-step caregiver screening and support 24/7.",
+      "Why families trust MintexCare: licensed by the State of New Jersey, bonded and insured, RN-supervised care plans, a 7-step caregiver screening and care available 24/7.",
     canonical: "https://mintexcare.com/about/why-mintexcare",
     crumb: "Why MintexCare",
     parent: { name: "About", url: "https://mintexcare.com/about" },
@@ -142,7 +142,7 @@ const pageMeta: Record<string, PageMeta> = {
   "/reviews": {
     title: "Reviews & Testimonials | What Families Say | MintexCare",
     description:
-      "Read what New Jersey families say about MintexCare's home care, caregivers and nurses. 500+ families served, available 24/7.",
+      "Read what New Jersey families say about MintexCare's home care, caregivers and nurses. 500+ families served, care available 24/7.",
     canonical: "https://mintexcare.com/reviews",
     crumb: "Reviews",
     parent: { name: "About", url: "https://mintexcare.com/about" },

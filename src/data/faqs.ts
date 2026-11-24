@@ -11,7 +11,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     id: "getting-started",
     title: "Getting started",
     items: [
-      { q: "How do I get started with home care?", a: "Call us 24/7, message us on WhatsApp, or request a free consultation online. A care coordinator will talk through your loved one's needs, answer your questions and arrange a free in-home assessment.", link: { to: "/how-it-works", label: "How it works" } },
+      { q: "How do I get started with home care?", a: "Call us Monday to Friday, 9 AM – 5 PM, message us on WhatsApp, or request a free consultation online. A care coordinator will talk through your loved one's needs, answer your questions and arrange a free in-home assessment.", link: { to: "/how-it-works", label: "How it works" } },
       { q: "Is the consultation really free?", a: "Yes. The phone consultation and the in-home assessment are free, and there's no obligation to start care." },
       { q: "How quickly can care start?", a: "In many cases care can begin within a few days of the assessment, and sooner when it's urgent, such as a hospital discharge. Call us as soon as you know a date." },
       { q: "What should I have ready for the assessment?", a: "A list of current medications, your loved one's doctors and their contact details, any hospital discharge papers, and an idea of the days and hours you need help. Notes about routines, likes and dislikes help us match the right caregiver." },
@@ -42,7 +42,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     title: "Scheduling & service area",
     items: [
       { q: "What areas do you serve?", a: "We serve 12 New Jersey counties: Middlesex, Monmouth, Somerset, Union, Mercer, Essex, Bergen, Hudson, Passaic, Morris, Ocean and Burlington.", link: { to: "/areas-we-serve", label: "Find your town" } },
-      { q: "Is care available at night, on weekends and on holidays?", a: "Yes. Care is available 24 hours a day, 7 days a week, and someone is always available to talk to." },
+      { q: "Is care available at night, on weekends and on holidays?", a: "Yes. Care is available 24 hours a day, 7 days a week. Our office is open Monday to Friday, 9 AM – 5 PM." },
       { q: "Is there a minimum number of hours?", a: "Visit lengths depend on the care needed and scheduling in your area. We'll explain the options during your free consultation." },
       { q: "Can we change the care plan later?", a: "Yes. Care plans are flexible. Hours, days and services can be adjusted as your loved one's needs change." },
     ],

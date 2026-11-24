@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -25,7 +26,7 @@ const PROMISES = [
   { icon: ShieldCheck, title: "Licensed & insured", text: "A New Jersey licensed agency, bonded and insured." },
   { icon: UserCheck,   title: "Screened caregivers", text: "Background-checked, trained and supervised by our nurses." },
   { icon: HeartPulse,  title: "Personalized plans", text: "Care built around your loved one's needs and routines." },
-  { icon: Clock,       title: "Here 24/7",          text: "Someone to talk to day or night, every day of the year." },
+  { icon: Clock,       title: "Office hours",       text: "Call us Monday to Friday, 9 AM – 5 PM." },
 ];
 
 /* ════════════════════════════════════════════
@@ -72,7 +73,7 @@ const TrustRow = () => (
     {[
       { icon: ShieldCheck, label: "NJ State Licensed" },
       { icon: Award,       label: "Bonded & Insured" },
-      { icon: Clock,       label: "Available 24/7" },
+      { icon: Clock,       label: "Office: Mon–Fri, 9–5" },
     ].map(({ icon: I, label }) => (
       <div key={label} className="flex items-center gap-2 text-sm font-semibold text-foreground/80"><I className="w-4 h-4 text-primary" /><span>{label}</span></div>
     ))}
@@ -116,7 +117,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
           <div className="max-w-2xl mx-auto">
             <div className="el-eyebrow mb-3">
               <Clock className="w-3.5 h-3.5 text-primary" />
-              We're here 24/7
+              We're here Mon–Fri, 9 AM – 5 PM
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
@@ -126,7 +127,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
               <a href={`tel:+1${tel}`} className="el-btn-primary">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
                 className="el-btn bg-background text-foreground">
                 <MessageCircle className="h-4 w-4" /> WhatsApp Us
               </a>
@@ -256,7 +257,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
                 <div className="flex flex-wrap gap-x-5 gap-y-2 mt-3 text-sm text-background/75">
                   <span className="flex items-center gap-1.5"><Landmark className="h-4 w-4" /> 12 counties</span>
                   <span className="flex items-center gap-1.5"><Building2 className="h-4 w-4" /> Office in Edison</span>
-                  <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> 24/7</span>
+                  <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> Mon–Fri, 9–5</span>
                 </div>
               </div>
             </AnimatedSection>
@@ -419,7 +420,7 @@ const County = ({ c, tel, phone }: { c: CountyArea; tel: string; phone: string }
                   { icon: Landmark, k: "County seat", v: c.seat },
                   { icon: Home,     k: "Towns listed", v: `${c.towns.length}+` },
                   { icon: Building2, k: "Our office", v: "Edison, NJ" },
-                  { icon: Clock,    k: "Availability", v: "24/7" },
+                  { icon: Clock,    k: "Office hours", v: "Mon–Fri, 9–5" },
                 ]}
                 cta={{ href: "#towns", label: "See towns we serve" }}
               />
@@ -563,7 +564,7 @@ const Town = ({ t, tel, phone }: { t: TownArea; tel: string; phone: string }) =>
                   { icon: Landmark,  k: "County",       v: county.name },
                   { icon: Home,      k: t.zips.length > 1 ? "ZIP codes" : "ZIP code", v: t.zips.length > 3 ? `${t.zips.slice(0, 3).join(", ")}…` : t.zips.join(", ") },
                   { icon: Building2, k: "Our office",   v: isOfficeTown ? "Right here in Edison" : "Edison, NJ" },
-                  { icon: Clock,     k: "Availability", v: "24/7" },
+                  { icon: Clock,     k: "Office hours", v: "Mon–Fri, 9–5" },
                 ]}
                 cta={{ href: "#local-area", label: `Areas we cover in ${t.name}` }}
               />

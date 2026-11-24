@@ -379,7 +379,7 @@ const docs: Record<string, (c: ContactInfo, tel: string) => LegalDoc> = {
         body: (
           <P>
             If you have difficulty using any part of this website, or need information in a different format,
-            call us 24/7 at <A href={`tel:+1${tel}`}>{c.phone}</A> or email{" "}
+            call us (Monday to Friday, 9 AM – 5 PM) at <A href={`tel:+1${tel}`}>{c.phone}</A> or email{" "}
             <A href={`mailto:${c.email}`}>{c.email}</A>. Please tell us the page and the problem, and we will
             respond and provide the information another way.
           </P>
@@ -585,7 +585,7 @@ const Legal = () => {
 
                 <div className="rounded-[20px] p-5 bg-foreground text-background">
                   <p className="font-bold text-lg mb-1">Have a question?</p>
-                  <p className="text-background/70 text-sm mb-4">Our team is available 24/7.</p>
+                  <p className="text-background/70 text-sm mb-4">Our team is available Monday to Friday, 9 AM – 5 PM.</p>
                   <a href={`tel:+1${tel}`} className="flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2.5 mb-2 bg-accent text-accent-foreground transition-colors">
                     <Phone className="h-4 w-4" /> {contactInfo.phone}
                   </a>
@@ -626,7 +626,7 @@ const Legal = () => {
                 <AnimatedSection>
                   <div className="mt-5 grid sm:grid-cols-3 gap-4">
                     {[
-                      { icon: Phone,  label: "Call 24/7", value: contactInfo.phone,   href: `tel:+1${tel}` },
+                      { icon: Phone,  label: "Call us", value: contactInfo.phone,   href: `tel:+1${tel}` },
                       { icon: Mail,   label: "Email",     value: contactInfo.email,   href: `mailto:${contactInfo.email}` },
                       { icon: MapPin, label: "Office",    value: contactInfo.address, href: undefined },
                     ].map(({ icon: Icon, label, value, href }) => {

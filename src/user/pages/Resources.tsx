@@ -1,3 +1,4 @@
+import { WHATSAPP_URL } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -69,7 +70,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
           <div className="max-w-2xl mx-auto">
             <div className="el-eyebrow mb-3">
               <Clock className="w-3.5 h-3.5 text-primary" />
-              We're here 24/7
+              We're here Mon–Fri, 9 AM – 5 PM
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-accent-foreground leading-snug mb-3">{title}</h2>
             <p className="text-accent-foreground/75 text-sm md:text-base leading-relaxed mb-9">{text}</p>
@@ -79,7 +80,7 @@ const CtaBlock = ({ tel, phone, title, text }: { tel: string; phone: string; tit
               <a href={`tel:+1${tel}`} className="el-btn-primary">
                 <Phone className="h-4 w-4" /> Call {phone}
               </a>
-              <a href={`https://wa.me/1${tel}`} target="_blank" rel="noopener noreferrer"
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
                 className="el-btn bg-background text-foreground">
                 <MessageCircle className="h-4 w-4" /> WhatsApp Us
               </a>
@@ -299,7 +300,7 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
         </div>
       </section>
 
-      <CtaBlock tel={tel} phone={phone} title="Still have questions?" text="Our care coordinators are happy to talk through your situation, day or night, with no obligation." />
+      <CtaBlock tel={tel} phone={phone} title="Still have questions?" text="Our care coordinators are happy to talk through your situation, with no obligation." />
     </>
   );
 };
@@ -309,10 +310,10 @@ const Hub = ({ tel, phone }: { tel: string; phone: string }) => {
    ════════════════════════════════════════════ */
 
 const STEPS = [
-  { icon: PhoneCall, title: "Reach out", time: "Day 1", text: "Call us 24/7, message us on WhatsApp or request a free consultation online. A care coordinator listens to what's going on, answers your questions and explains your options." },
+  { icon: PhoneCall, title: "Reach out", time: "Day 1", text: "Call us Monday to Friday, 9 AM – 5 PM, message us on WhatsApp or request a free consultation online. A care coordinator listens to what's going on, answers your questions and explains your options." },
   { icon: ClipboardList, title: "Free in-home assessment", time: "Within days", text: "We visit your loved one at home to understand their health, daily routines, home safety and what matters most to them. There's no cost and no obligation." },
   { icon: UserCheck, title: "Care plan & caregiver match", time: "Before care starts", text: "We build a personalized care plan, agree the schedule with you and match a caregiver or nurse with the right skills and personality." },
-  { icon: HeartPulse, title: "Care begins, with ongoing support", time: "Ongoing", text: "Care starts on the agreed day. Our nurses oversee the care plan, check in regularly and update it as needs change, and you can reach us 24/7." },
+  { icon: HeartPulse, title: "Care begins, with ongoing support", time: "Ongoing", text: "Care starts on the agreed day. Our nurses oversee the care plan, check in regularly and update it as needs change, and you can reach us Monday to Friday, 9 AM – 5 PM." },
 ];
 
 const PREPARE = [
@@ -393,7 +394,7 @@ const HowItWorks = ({ tel, phone }: { tel: string; phone: string }) => (
                   "Background-checked, trained caregivers",
                   "Care plans overseen by registered nurses",
                   "Change hours or services any time",
-                  "Someone to talk to 24/7",
+                  "Office open Mon–Fri, 9 AM – 5 PM",
                 ].map(t => (
                   <li key={t} className="flex items-start gap-3 text-base text-background/85">
                     <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center shrink-0 mt-0.5">
@@ -437,7 +438,7 @@ const Faq = ({ tel, phone }: { tel: string; phone: string }) => {
           Frequently asked{" "}<br />questions
         </h1>
         <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-[600px]">
-          Answers to the questions families ask us most. Can't find yours? Call us any time at{" "}
+          Answers to the questions families ask us most. Can't find yours? Call us Monday to Friday, 9 AM – 5 PM, at{" "}
           <a href={`tel:+1${tel}`} className="font-semibold text-foreground underline underline-offset-4">{phone}</a>.
         </p>
       </PageHero>

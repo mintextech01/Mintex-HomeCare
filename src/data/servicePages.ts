@@ -171,7 +171,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     highlights: [
       { title: "Time for you", text: "A few hours, overnight, or a week away." },
       { title: "Same routine", text: "We follow your loved one's habits and preferences." },
-      { title: "Short notice", text: "Available 24/7 when you need cover quickly." },
+      { title: "Short notice", text: "Call us Monday to Friday, 9 AM – 5 PM when you need cover quickly." },
     ],
     included: [
       "Short visits, full days, overnights or multi-week stays",
@@ -192,7 +192,7 @@ export const SERVICE_PAGES: Record<string, ServicePageContent> = {
     faqs: [
       { q: "How short or long can respite care be?", a: "Respite can be a few hours, an overnight, a weekend or several weeks. It can be one-off or a regular weekly break." },
       { q: "How do you learn my loved one's routine?", a: "Before care starts we visit to learn routines, preferences, medications and anything that helps your loved one feel comfortable, and we put it in the care plan." },
-      { q: "Can respite care start at short notice?", a: "We are available 24/7. Call us and we'll do our best to arrange care as quickly as possible." },
+      { q: "Can respite care start at short notice?", a: "Call us Monday to Friday, 9 AM – 5 PM and we'll do our best to arrange care as quickly as possible." },
       { q: "Can respite care turn into ongoing care?", a: "Yes. Many families start with respite and continue with regular hourly or live-in care when they see how much it helps." },
     ],
     related: ["hourly-care", "live-in-24-hour-care", "companion-care"],

@@ -77,7 +77,7 @@ export const ALL_SERVICES: ServiceIndexEntry[] = [
     group: "in-home",
     icon: Coffee,
     metaTitle: "Respite Care for Family Caregivers in NJ | MintexCare",
-    metaDescription: "Respite care in New Jersey: a trained caregiver steps in for a few hours, days or weeks so family caregivers can rest, work or travel. Available 24/7.",
+    metaDescription: "Respite care in New Jersey: a trained caregiver steps in for a few hours, days or weeks so family caregivers can rest, work or travel.",
   },
   {
     slug: "post-surgery-care",

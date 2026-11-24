@@ -32,7 +32,7 @@ const faqs = [
 const trustBadges = [
   { icon: ShieldCheck, label: "Licensed & Insured" },
   { icon: MapPin,      label: "Edison, NJ Office" },
-  { icon: Clock,       label: "24/7 Available" },
+  { icon: Clock,       label: "Mon–Fri, 9–5" },
   { icon: MessageCircle, label: "Reply in 24 h" },
 ];
 
