@@ -1,3 +1,4 @@
+import { OFFICE_HOURS } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
@@ -184,7 +185,7 @@ const Contact = () => {
                         </div>
                         <div>
                           <p className="text-background/55 text-sm font-sans">Hours</p>
-                          <p className="font-semibold font-sans">{contactInfo.hours}</p>
+                          <p className="font-semibold font-sans">{OFFICE_HOURS}</p>
                         </div>
                       </div>
                     </li>
@@ -281,7 +282,7 @@ const Contact = () => {
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { val: "24h", label: "Response Time" },
-                    { val: "24/7", label: "Care Available" },
+                    { val: "Mon–Fri", label: "Office hours, 9–5" },
                     { val: "500+", label: "Families Served" },
                     { val: "100%", label: "Licensed Staff" },
                   ].map(stat => (

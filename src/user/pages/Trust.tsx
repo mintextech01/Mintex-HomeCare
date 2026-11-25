@@ -25,7 +25,7 @@ const STATS = [
   { icon: Users, value: "500+", label: "Families served" },
   { icon: Award, value: "10+", label: "Years of care" },
   { icon: Star,  value: "99%", label: "Client satisfaction" },
-  { icon: Clock, value: "24/7", label: "Care available" },
+  { icon: Clock, value: "Mon–Fri", label: "Office hours, 9 AM – 5 PM" },
 ];
 
 /* ════════════════════════════════════════════

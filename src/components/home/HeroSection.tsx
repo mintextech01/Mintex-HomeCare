@@ -153,7 +153,7 @@ const HeroSection = () => {
             {/* The facts that used to float over the photo, now in a calm row under it (same text). */}
             <PhotoFacts className="mt-5" facts={[
               { icon: Award, title: "10+ Years", text: "Trusted Experience" },
-              { icon: Clock, title: "24/7", text: "Care Available" },
+              { icon: Clock, title: "Mon–Fri, 9–5", text: "Office Hours" },
               { icon: Users, title: "500+", text: "Happy Families" },
             ]} />
           </motion.div>

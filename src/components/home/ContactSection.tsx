@@ -1,3 +1,4 @@
+import { OFFICE_HOURS } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -105,7 +106,7 @@ const ContactSection = () => {
                 </li>
                 <li className="flex items-center gap-4">
                   <FeatureIcon icon={Clock} size="sm" onDark className="shrink-0" />
-                  {contactInfo.hours}
+                  {OFFICE_HOURS}
                 </li>
               </ul>
               <Link to="/contact" className="mt-8 inline-flex items-center gap-2 font-sans font-semibold text-background underline underline-offset-4">

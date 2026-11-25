@@ -6,7 +6,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 const features = [
   "Compassionate, certified caregivers",
   "Personalized care plans for every client",
-  "Available 24/7 — including holidays",
+  "Care available 24/7, including holidays",
   "State-licensed & insured agency in NJ",
 ];
 

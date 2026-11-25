@@ -20,7 +20,7 @@ const stats = [
   { value: "500+", label: "Families served",     icon: Users       },
   { value: "10+",  label: "Years of experience", icon: Award       },
   { value: "99%",  label: "Client satisfaction", icon: Star        },
-  { value: "24/7", label: "Care available",    icon: Clock       },
+  { value: "Mon–Fri", label: "Office hours, 9 AM – 5 PM", icon: Clock },
 ];
 
 const values = [

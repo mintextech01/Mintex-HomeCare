@@ -1,3 +1,4 @@
+import { OFFICE_HOURS } from "@/config/contact";
 import { FeatureIcon } from "@/components/Feature";
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock, ShieldCheck } from "lucide-react";
@@ -65,7 +66,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <FeatureIcon icon={Clock} size="xs" className="shrink-0" />
-                {contactInfo.hours}
+                {OFFICE_HOURS}
               </li>
             </ul>
           </div>

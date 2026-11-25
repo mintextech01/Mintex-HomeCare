@@ -3,7 +3,7 @@ import StatsRow from "@/components/StatsRow";
 
 const stats = [
   { icon: Users, value: "500+", label: "Families served" },
-  { icon: Clock, value: "24/7", label: "Care available" },
+  { icon: Clock, value: "Mon–Fri", label: "Office hours, 9 AM – 5 PM" },
   { icon: ShieldCheck, value: "100%", label: "Licensed & bonded caregivers" },
   { icon: Heart, value: "100%", label: "Personalized care plans" },
 ];

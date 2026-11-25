@@ -14,7 +14,7 @@ import { SERVICE_INDEX, SERVICE_GROUP_LABEL, type ServiceGroup, type ServiceInde
 const stats = [
   { value: "500+", label: "Families served",  icon: Users       },
   { value: "99%",  label: "Satisfying care",   icon: Star        },
-  { value: "24/7", label: "Care available",  icon: Clock       },
+  { value: "Mon–Fri", label: "Office hours, 9 AM – 5 PM", icon: Clock },
   { value: "10+",  label: "Years of service",  icon: ShieldCheck },
 ];
 
